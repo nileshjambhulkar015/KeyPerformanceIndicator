@@ -11,6 +11,7 @@ import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
 import com.futurebizops.kpi.utils.KPIUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -81,6 +85,42 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 .responseData(keyPerfParamEntities)
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
+    }
+
+    @Override
+    public KPIResponse getKeyPerfomanceParameter(Integer deptId, Integer desigId, String statusCd) {
+        List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByDeptIdAndDesigIdAndStatusCd(deptId, desigId, statusCd);
+        List<KPPResponse> kppResponses = convertEntityListToResponse(keyPerfParamEntities);
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseData(kppResponses)
+                .responseMessage(KPIConstants.RECORD_FETCH)
+                .build();
+    }
+
+    private List<KPPResponse> convertEntityListToResponse(List<KeyPerfParamEntity> keyPerfParamEntities) {
+        List<KPPResponse> kppResponseList =
+                keyPerfParamEntities.stream()
+                        .map(keyPerfParamEntity -> {
+                            KPPResponse kppResponse = KPPResponse.builder()
+                                    .kppId(keyPerfParamEntity.getKppId())
+                                    .kppObjective(keyPerfParamEntity.getKppObjective())
+                                    .kppPerformanceIndi(keyPerfParamEntity.getKppPerformanceIndi())
+                                    .kppOverallTarget(keyPerfParamEntity.getKppOverallTarget())
+                                    .kppTargetPeriod(keyPerfParamEntity.getKppTargetPeriod())
+                                    .kppUoM(keyPerfParamEntity.getKppUoM())
+                                    .kppOverallWeightage(keyPerfParamEntity.getKppOverallWeightage())
+                                    .kppRating1(keyPerfParamEntity.getKppRating1())
+                                    .kppRating2(keyPerfParamEntity.getKppRating2())
+                                    .kppRating3(keyPerfParamEntity.getKppRating3())
+                                    .kppRating4(keyPerfParamEntity.getKppRating4())
+                                    .kppRating5(keyPerfParamEntity.getKppRating5())
+                                    .build();
+return  kppResponse;
+                        })
+                        .collect(Collectors.toList());
+        return kppResponseList;
+
     }
 
     private KeyPerfParamEntity convertKeyPerfParamCreateRequestToEntity(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {

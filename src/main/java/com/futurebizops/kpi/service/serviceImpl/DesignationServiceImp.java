@@ -81,7 +81,6 @@ public class DesignationServiceImp implements DesignationService {
 
     @Override
     public KPIResponse findDesignationDetails(Integer deptId, String desigName, String statusCd, Pageable requestPageable) {
-        Page<DesignationEntity> departmentEntities = null;
 
         String sortName = null;
         String sortDirection = null;

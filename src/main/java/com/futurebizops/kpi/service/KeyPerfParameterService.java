@@ -14,4 +14,6 @@ public interface KeyPerfParameterService {
     public KPIResponse updateKeyPerfomanceParameter(KeyPerfParamUpdateRequest keyPerfParamUpdateRequest);
 
     public KPIResponse findKeyPerfomanceParameterDetails(KeyPerfParamSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection);
+
+    public KPIResponse getKeyPerfomanceParameter(Integer deptId, Integer desigId, String statusCd);
 }
