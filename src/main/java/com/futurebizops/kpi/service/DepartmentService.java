@@ -20,7 +20,7 @@ public interface DepartmentService {
 
 
 
-    public List<DepartmentReponse> findAllDepartmentDetailsForEmployee();
+    public List<DepartmentReponse> findAllDepartmentDetails();
 
     public DepartmentReponse findAllDepartmentById(Integer deptId);
 

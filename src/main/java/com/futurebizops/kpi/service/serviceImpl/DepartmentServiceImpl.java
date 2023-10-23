@@ -104,7 +104,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 
     @Override
-    public List<DepartmentReponse> findAllDepartmentDetailsForEmployee() {
+    public List<DepartmentReponse> findAllDepartmentDetails() {
         List<DepartmentEntity> departmentEntities =  departmentRepo.findAllDepartmentDetailsForEmployee();
         List<DepartmentReponse> departmentReponses = new ArrayList<>();
         DepartmentReponse departmentReponse = null;
@@ -112,6 +112,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             departmentReponse = new DepartmentReponse();
             departmentReponse.setDeptId(departmentEntity.getDeptId());
             departmentReponse.setDeptName(departmentEntity.getDeptName());
+            departmentReponse.setRemark(departmentEntity.getRemark());
             departmentReponse.setStatusCd(departmentEntity.getStatusCd());
             departmentReponses.add(departmentReponse);
         }

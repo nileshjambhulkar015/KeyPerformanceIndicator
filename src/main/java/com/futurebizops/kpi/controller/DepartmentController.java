@@ -6,6 +6,7 @@ import com.futurebizops.kpi.enums.PageDirection;
 import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.DepartmentCreateRequest;
 import com.futurebizops.kpi.request.DepartmentUpdateRequest;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.utils.KPIUtils;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -59,6 +62,11 @@ public class DepartmentController {
 
     }
 
+    @GetMapping
+    public ResponseEntity<List<DepartmentReponse>> getAllDepartmentDetails() {
+        List<DepartmentReponse> response = departmentService.findAllDepartmentDetails();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 
 
