@@ -10,8 +10,10 @@ import com.futurebizops.kpi.repository.DesignationAuditRepo;
 import com.futurebizops.kpi.repository.DesignationRepo;
 import com.futurebizops.kpi.request.DesignationCreateRequest;
 import com.futurebizops.kpi.request.DesignationUpdateRequest;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.service.DesignationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +44,8 @@ public class DesignationServiceImp implements DesignationService {
     @Autowired
     private DepartmentRepo departmentRepo;
 
+    @Autowired
+    private DepartmentService departmentService;
     @Override
     public KPIResponse saveDesignation(DesignationCreateRequest designationCreateRequest) {
         Optional<DesignationEntity> designationEntities = designationRepo.findByDeptIdAndDesigNameEqualsIgnoreCase(designationCreateRequest.getDeptId(), designationCreateRequest.getDesigName());
@@ -106,6 +113,13 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
+    public DesignationReponse findDesignationById(Integer desigId) {
+        List<Object[]> designationData = designationRepo.getDesignationById(desigId);
+        List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
+        return  designationReponses.get(0);
+    }
+
+    @Override
     public List<DesignationReponse> findAllDesignationDetails(Integer deptId) {
 
         List<DesignationEntity> designationEntities = null;
@@ -127,6 +141,24 @@ public class DesignationServiceImp implements DesignationService {
         }
         return designationReponses;
     }
+
+    @Override
+    public List<DepartmentReponse> getAllDepartmentByDesig() {
+        List<DepartmentEntity> departmentEntities =  departmentRepo.findAllDepartments();
+        List<DepartmentReponse> departmentReponses = new ArrayList<>();
+        DepartmentReponse departmentReponse = null;
+        for(DepartmentEntity departmentEntity : departmentEntities){
+            departmentReponse = new DepartmentReponse();
+            departmentReponse.setDeptId(departmentEntity.getDeptId());
+            departmentReponse.setDeptName(departmentEntity.getDeptName());
+            departmentReponse.setRemark(departmentEntity.getRemark());
+            departmentReponse.setStatusCd(departmentEntity.getStatusCd());
+            departmentReponses.add(departmentReponse);
+        }
+        return departmentReponses;
+    }
+
+
 
     private String getDepartmentName(Integer deptId) {
         Optional<DepartmentEntity> departmentEntity = departmentRepo.findById(deptId);

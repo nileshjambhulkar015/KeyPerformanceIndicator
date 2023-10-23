@@ -101,22 +101,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .build();
     }
 
-    @Override
-    public List<DepartmentReponse> findAllDepartmentDetails() {
 
-        List<DepartmentEntity> departmentEntities =  departmentRepo.findAllDepartments();
-        List<DepartmentReponse> departmentReponses = new ArrayList<>();
-        DepartmentReponse departmentReponse = null;
-        for(DepartmentEntity departmentEntity : departmentEntities){
-            departmentReponse = new DepartmentReponse();
-
-            departmentReponse.setDeptId(departmentEntity.getDeptId());
-            departmentReponse.setDeptName(departmentEntity.getDeptName());
-            departmentReponse.setStatusCd(departmentEntity.getStatusCd());
-            departmentReponses.add(departmentReponse);
-        }
-        return departmentReponses;
-    }
 
     @Override
     public List<DepartmentReponse> findAllDepartmentDetailsForEmployee() {

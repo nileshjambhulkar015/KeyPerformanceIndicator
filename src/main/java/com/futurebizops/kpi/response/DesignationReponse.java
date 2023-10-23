@@ -18,11 +18,14 @@ public class DesignationReponse {
     private String desigName;
     private String statusCd;
 
+    private String remark;
+
     public DesignationReponse(Object[] objects){
         this.deptId=Integer.parseInt(String.valueOf(objects[0]));
         this.deptName=String.valueOf(objects[1]);
         this.desigId=Integer.parseInt(String.valueOf(objects[2]));
         this.desigName=String.valueOf(objects[3]);
-        this.statusCd=String.valueOf(objects[4]);
+        this.remark=String.valueOf(objects[4]);
+        this.statusCd=String.valueOf(objects[5]);
     }
 }

@@ -172,11 +172,15 @@ create table roles_audit(
 );
 
 
+
+
 create table employee(
     emp_id serial  PRIMARY key,
 	dept_id INTEGER,
 	desig_id INTEGER,
 	role_id INTEGER,
+	region_id INTEGER,
+    	site_id INTEGER,
 	emp_fname VARCHAR(20) ,
 	emp_mname VARCHAR(20),
 	emp_lname VARCHAR(20),
@@ -204,6 +208,8 @@ create table employee_audit(
 	dept_id INTEGER,
 	desig_id INTEGER,
 	role_id INTEGER,
+	region_id INTEGER,
+    	site_id INTEGER,
 	emp_fname VARCHAR(20) ,
 	emp_mname VARCHAR(20),
 	emp_lname VARCHAR(20),
@@ -224,7 +230,6 @@ create table employee_audit(
 	lst_updt_ts TIMESTAMP null,
 	lst_updt_user_id VARCHAR(20) null
 );
-
 
 create table employee_login(
     emp_mbno VARCHAR(20)  PRIMARY key,

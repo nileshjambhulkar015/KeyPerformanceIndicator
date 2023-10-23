@@ -1,10 +1,12 @@
 package com.futurebizops.kpi.repository;
 
+import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.EmployeeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,27 +15,18 @@ import java.util.Optional;
 @Repository
 public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
-    @Query(value = "select * from employee where status_cd='A'", nativeQuery = true)
-    public List<EmployeeEntity> findAllEmployeeDetails();
+
     public Optional<EmployeeEntity> findByEmpMobileNoOrEmailIdEqualsIgnoreCase(String empMobileNo, String emailId);
-
-    public Page<EmployeeEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd, Pageable pageable);
-
-    public Page<EmployeeEntity> findByEmpFirstNameAndStatusCd(String empFirstName, String statusCd, Pageable pageable);
-
-    public Page<EmployeeEntity> findByDeptIdAndStatusCd(Integer deptId, String statusCd, Pageable pageable);
-
-    public Page<EmployeeEntity> findByDesigIdAndStatusCd(Integer desigId, String statusCd, Pageable pageable);
-
-    public Page<EmployeeEntity> findByRoleIdAndStatusCd(Integer roleId, String statusCd, Pageable pageable);
-
-    public Page<EmployeeEntity> findByEmpMobileNoAndStatusCd(String empMobileNo, String statusCd, Pageable pageable);
-
-    public Page<EmployeeEntity> findByEmpGenderAndStatusCd(String empGender, String statusCd, Pageable pageable);
-
-    public Page<EmployeeEntity> findByStatusCd(String statusCd, Pageable pageable);
-
-
     public EmployeeEntity findByEmpMobileNoAndStatusCd(String empMobileNo, String statusCd);
+
+
+    @Query(value = SQLQueryConstants.EMPLOYEE_QUERY, nativeQuery = true)
+    List<Object[]> getEmployeeDetail(@Param("empId") Integer empId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,  @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.EMPLOYEE_COUNT_QUERY, nativeQuery = true)
+    Integer getEmployeeCount(@Param("empId") Integer empId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd);
+
+    @Query(value = SQLQueryConstants.EMPLOYEE_BY_ID_QUERY, nativeQuery = true)
+    List<Object[]> getEmployeeById(@Param("empId") Integer empId);
 
 }

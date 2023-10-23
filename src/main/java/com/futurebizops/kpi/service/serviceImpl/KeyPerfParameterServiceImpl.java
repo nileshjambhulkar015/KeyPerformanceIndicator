@@ -10,6 +10,7 @@ import com.futurebizops.kpi.repository.KeyPerfParameterAuditRepo;
 import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
+import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
@@ -17,10 +18,14 @@ import com.futurebizops.kpi.utils.KPIUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,23 +74,42 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
     @Override
-    public KPIResponse findKeyPerfomanceParameterDetails(KeyPerfParamSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
-        Page<KeyPerfParamEntity> keyPerfParamEntities = null;
-        Pageable pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
-        switch (searchEnum.getSearchType()) {
-            case "BY_STATUS":
-                keyPerfParamEntities = keyPerfParameterRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
-                break;
-            case "ALL":
-            default:
-                keyPerfParamEntities = keyPerfParameterRepo.findAll(pageable);
+    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer deptId, Integer desigId, String kppObjective, String statusCd, Pageable pageable) {
+        String sortName = null;
+        String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+
+        Integer totalCount = keyPerfParameterRepo.getKeyPerfParameterCount(kppId, deptId, desigId, kppObjective, statusCd);
+        List<Object[]> designationData = keyPerfParameterRepo.getKeyPerfParameterDetail(kppId, deptId, desigId, kppObjective, statusCd, sortName, pageSize, pageOffset);
+
+        List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
+        kppResponses = kppResponses.stream()
+                .sorted(Comparator.comparing(KPPResponse::getDeptName))
+                .collect(Collectors.toList());
+
         return KPIResponse.builder()
                 .isSuccess(true)
-                .responseData(keyPerfParamEntities)
+                .responseData(new PageImpl(kppResponses, pageable, totalCount))
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
     }
+
+    @Override
+    public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId) {
+        List<Object[]> designationData = keyPerfParameterRepo.getKeyPerfParameterDetailById(kppId);
+
+        List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
+
+        return kppResponses.get(0);
+    }
+
 
     @Override
     public KPIResponse getKeyPerfomanceParameter(Integer deptId, Integer desigId, String statusCd) {

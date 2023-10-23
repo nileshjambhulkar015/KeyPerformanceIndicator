@@ -14,6 +14,7 @@ import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,17 +59,8 @@ public class DepartmentController {
 
     }
 
-    @GetMapping
-    public ResponseEntity<Object> findAllDepartmentDetailsForDesig() {
-        return new ResponseEntity<>(departmentService.findAllDepartmentDetails(), HttpStatus.OK);
 
-    }
 
-    @GetMapping(value = "/employee")
-    public ResponseEntity<Object> findAllDepartmentDetailsForEmployee() {
-        return new ResponseEntity<>(departmentService.findAllDepartmentDetailsForEmployee(), HttpStatus.OK);
-
-    }
 
     @GetMapping(value = "/{deptId}")
     public ResponseEntity<Object> findAllDepartmentById(@PathVariable Integer deptId) {

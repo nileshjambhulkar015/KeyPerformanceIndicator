@@ -3,6 +3,8 @@ package com.futurebizops.kpi.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import javax.persistence.Column;
+
 @Data
 public class EmployeeCreateRequest {
 
@@ -14,6 +16,12 @@ public class EmployeeCreateRequest {
 
     @Schema(example = "1", description = "This field is used for employee role id")
     private Integer roleId;
+
+    @Schema(example = "1", description = "This field is used for region id")
+    private Integer regionId;
+
+    @Schema(example = "1", description = "This field is used for site id")
+    private Integer siteId;
 
     @Schema(example = "Nilesh", description = "This field is used for employee first name")
     private String empFirstName;

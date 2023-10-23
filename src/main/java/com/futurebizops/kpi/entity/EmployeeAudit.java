@@ -35,6 +35,14 @@ public class EmployeeAudit extends AuditEnabledEntity{
     @Column(name = "role_id")
     private Integer roleId;
 
+    @Column(name = "region_id")
+    private Integer regionId;
+
+    @Column(name = "site_id")
+    private Integer siteId;
+
+
+
     @Column(name = "emp_fname")
     private String empFirstName;
 
@@ -83,6 +91,8 @@ public class EmployeeAudit extends AuditEnabledEntity{
         this.depId = employeeEntity.getDeptId();
         this.desigId = employeeEntity.getDesigId();
         this.roleId = employeeEntity.getRoleId();
+        this.regionId=employeeEntity.getRegionId();
+        this.siteId=employeeEntity.getSiteId();
         this.empFirstName = employeeEntity.getEmpFirstName();
         this.empMiddleName = employeeEntity.getEmpMiddleName();
         this.empLastName = employeeEntity.getEmpLastName();

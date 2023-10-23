@@ -9,6 +9,7 @@ import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
 import com.futurebizops.kpi.utils.KPIUtils;
@@ -49,13 +50,21 @@ public class KeyPerfParameterController {
 
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> findKeyPerfomanceParam(@RequestParam(required = false) KeyPerfParamSearchEnum searchEnum,
-                                                             @RequestParam(required = false) String searchString,
-                                                             @RequestParam(required = false) StatusCdEnum statusCdEnum,
-                                                             @Parameter(hidden = true) Pageable pageable,
-                                                             @Parameter(hidden = true) PageDirection pageDirection,
-                                                             @Parameter(hidden = true) String sortParam) {
-        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, KPIUtils.getDirection(pageDirection));
+    public ResponseEntity<KPIResponse> findKeyPerfomanceParam(@RequestParam(required = false) Integer kppId,
+                                                              @RequestParam(required = false) Integer deptId,
+                                                              @RequestParam(required = false) Integer desigId,
+                                                              @RequestParam(required = false) String kppObjective,
+                                                              @RequestParam(required = false) String statusCd,
+                                                              @Parameter(hidden = true) Pageable pageable) {
+        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, deptId, desigId, kppObjective, statusCd, pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+
+    @GetMapping(value = "/kppId")
+    public ResponseEntity<KPPResponse> findKeyPerfomanceParamById(@RequestParam(required = false) Integer kppId) {
+        KPPResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetailById(kppId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

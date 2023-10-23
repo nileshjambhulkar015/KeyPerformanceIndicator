@@ -1,13 +1,10 @@
 package com.futurebizops.kpi.controller;
 
-import com.futurebizops.kpi.enums.EmployeeSearchEnum;
-import com.futurebizops.kpi.enums.PageDirection;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
+import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeService;
-import com.futurebizops.kpi.utils.KPIUtils;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,19 +39,25 @@ public class EmployeeController {
 
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> getAllEmployee(@RequestParam(required = false) EmployeeSearchEnum searchEnum,
-                                                     @RequestParam(required = false) String searchString,
-                                                     @RequestParam(required = false) StatusCdEnum statusCdEnum,
-                                                     @Parameter(hidden = true) Pageable pageable,
-                                                     @Parameter(hidden = true) PageDirection pageDirection,
-                                                     @Parameter(hidden = true) String sortParam) {
-        KPIResponse response = employeeService.findEmployee(searchEnum, searchString, statusCdEnum, pageable, sortParam, KPIUtils.getDirection(pageDirection));
+    public ResponseEntity<KPIResponse> getAllEmployee(@RequestParam(required = false) Integer empId,
+                                                      @RequestParam(required = false) Integer deptId,
+                                                      @RequestParam(required = false) Integer desigId,
+                                                      @RequestParam(required = false) String empFirstName,
+                                                      @RequestParam(required = false) String empMiddleName,
+                                                      @RequestParam(required = false) String empLastName,
+                                                      @RequestParam(required = false) String empMobileNo,
+                                                      @RequestParam(required = false) String emailId,
+                                                      @RequestParam(required = false) String statusCd,
+                                                      @Parameter(hidden = true) Pageable pageable) {
+        KPIResponse response = employeeService.getAllEmployeeDetails(empId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<Object> findAllDepartmentDetailsForEmployee() {
-        return new ResponseEntity<>(employeeService.findAllEmployeeDetails(), HttpStatus.OK);
-
+    @GetMapping(value = "/empId")
+    public ResponseEntity<EmployeeResponse> getAllEmployee(@RequestParam(required = false) Integer empId) {
+        EmployeeResponse response = employeeService.getAllEmployeeById(empId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
 }

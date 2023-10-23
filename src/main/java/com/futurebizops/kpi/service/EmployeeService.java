@@ -1,7 +1,5 @@
 package com.futurebizops.kpi.service;
 
-import com.futurebizops.kpi.enums.EmployeeSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
@@ -15,7 +13,9 @@ public interface EmployeeService {
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeRequest);
 
     public KPIResponse updateEmployee(EmployeeUpdateRequest employeeUpdateRequest);
-    public KPIResponse findEmployee(EmployeeSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection );
 
-    public List<EmployeeResponse> findAllEmployeeDetails();
+    public KPIResponse getAllEmployeeDetails(Integer empId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable);
+
+    public EmployeeResponse getAllEmployeeById(Integer empId);
+
 }

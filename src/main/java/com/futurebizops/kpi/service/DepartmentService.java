@@ -18,7 +18,7 @@ public interface DepartmentService {
 
     public KPIResponse findDepartmentDetails(DepartmentSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection );
 
-    public List<DepartmentReponse> findAllDepartmentDetails();
+
 
     public List<DepartmentReponse> findAllDepartmentDetailsForEmployee();
 

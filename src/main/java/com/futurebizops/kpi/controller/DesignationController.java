@@ -5,6 +5,8 @@ import com.futurebizops.kpi.enums.PageDirection;
 import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.DesignationCreateRequest;
 import com.futurebizops.kpi.request.DesignationUpdateRequest;
+import com.futurebizops.kpi.response.DepartmentReponse;
+import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.DesignationService;
 import com.futurebizops.kpi.utils.KPIUtils;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -54,8 +58,22 @@ public class DesignationController {
 
     }
 
+    @GetMapping(value = "/desigId")
+    public ResponseEntity<DesignationReponse> findDesignationDetails(@RequestParam(required = false) Integer desigId) {
+        DesignationReponse response = designationService.findDesignationById(desigId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
     @GetMapping
     public ResponseEntity<Object> findAllDesignationDetails(@RequestParam(required = false) Integer deptId) {
         return new ResponseEntity<>(designationService.findAllDesignationDetails(deptId), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/department")
+    public ResponseEntity<Object> findAllDepartmentByDesig() {
+        return new ResponseEntity<>(designationService.getAllDepartmentByDesig(), HttpStatus.OK);
+
+    }
+
 }
