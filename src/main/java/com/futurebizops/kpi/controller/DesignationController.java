@@ -71,8 +71,8 @@ public class DesignationController {
     }
 
     @GetMapping(value = "/department")
-    public ResponseEntity<Object> findAllDepartmentByDesig() {
-        return new ResponseEntity<>(designationService.getAllDepartmentByDesig(), HttpStatus.OK);
+    public ResponseEntity<Object> findAllDepartmentByDesig(@RequestParam(required = false) Integer deptId) {
+        return new ResponseEntity<>(designationService.getAllDepartmentByDesig(deptId), HttpStatus.OK);
 
     }
 

@@ -143,19 +143,10 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
-    public List<DepartmentReponse> getAllDepartmentByDesig() {
-        List<DepartmentEntity> departmentEntities =  departmentRepo.findAllDepartments();
-        List<DepartmentReponse> departmentReponses = new ArrayList<>();
-        DepartmentReponse departmentReponse = null;
-        for(DepartmentEntity departmentEntity : departmentEntities){
-            departmentReponse = new DepartmentReponse();
-            departmentReponse.setDeptId(departmentEntity.getDeptId());
-            departmentReponse.setDeptName(departmentEntity.getDeptName());
-            departmentReponse.setRemark(departmentEntity.getRemark());
-            departmentReponse.setStatusCd(departmentEntity.getStatusCd());
-            departmentReponses.add(departmentReponse);
-        }
-        return departmentReponses;
+    public List<DepartmentReponse> getAllDepartmentByDesig(Integer deptId) {
+        List<Object[]> designationData = designationRepo.getDesignationById(deptId);
+        List<DepartmentReponse> designationReponses = designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
+        return  designationReponses;
     }
 
 
