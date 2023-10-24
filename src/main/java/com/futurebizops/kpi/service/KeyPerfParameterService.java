@@ -8,6 +8,8 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface KeyPerfParameterService {
 
     public KPIResponse saveKeyPerfomanceParameter(KeyPerfParamCreateRequest keyPerfParamCreateRequest);
@@ -17,5 +19,5 @@ public interface KeyPerfParameterService {
     public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer deptId,Integer desigId,String kppObjective,String statusCd,Pageable pageable);
     public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId);
 
-    public KPIResponse getKeyPerfomanceParameter(Integer deptId, Integer desigId, String statusCd);
+    public List<KPPResponse> getKeyPerfomanceParameter(Integer deptId, Integer desigId, String statusCd);
 }

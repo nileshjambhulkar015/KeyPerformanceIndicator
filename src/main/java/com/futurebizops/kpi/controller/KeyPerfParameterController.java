@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/key-perform-parameter")
@@ -70,11 +72,11 @@ public class KeyPerfParameterController {
     }
 
     @GetMapping
-    public ResponseEntity<KPIResponse> findAllKeyPerfomanceParam(@RequestParam(required = false) Integer deptId,
+    public ResponseEntity<List<KPPResponse>> findAllKeyPerfomanceParam(@RequestParam(required = false) Integer deptId,
                                                               @RequestParam(required = false) Integer desigId,
                                                               @RequestParam(required = false) StatusCdEnum statusCdEnum
                                                               ) {
-        KPIResponse response = keyPerfParameterService.getKeyPerfomanceParameter(deptId, desigId, statusCdEnum.getSearchType());
+        List<KPPResponse> response = keyPerfParameterService.getKeyPerfomanceParameter(deptId, desigId, statusCdEnum.getSearchType());
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
