@@ -23,6 +23,12 @@ public class EmployeeLoginAudit extends AuditEnabledEntity {
     @Column(name = "emp_audit_login_id")
     private Integer empAuditLoginId;
 
+    @Column(name = "dept_id")
+    private Integer deptId;
+
+    @Column(name = "desig_id")
+    private Integer desigId;
+
     @Column(name = "emp_mbno")
     private String empMobileNo;
 
@@ -42,6 +48,8 @@ public class EmployeeLoginAudit extends AuditEnabledEntity {
 
     public EmployeeLoginAudit(EmployeeLoginEntity employeeLoginEntity) {
         super(employeeLoginEntity.getCreatedDate(), employeeLoginEntity.getCreatedUserId(), employeeLoginEntity.getUpdatedDate(), employeeLoginEntity.getUpdatedUserId());
+       this.deptId=employeeLoginEntity.getDeptId();
+       this.desigId=employeeLoginEntity.getDesigId();
         this.empMobileNo = employeeLoginEntity.getEmpMobileNo();
         this.emailId = employeeLoginEntity.getEmailId();
         this.roleId = employeeLoginEntity.getRoleId();

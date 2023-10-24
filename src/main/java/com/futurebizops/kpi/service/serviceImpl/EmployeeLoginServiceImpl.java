@@ -35,11 +35,14 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
             EmployeeEntity employeeEntity = employeeRepo.findByEmpMobileNoAndStatusCd(empMbNo, "A");
             LoginResponse loginResponse = LoginResponse.builder()
                     .empId(employeeEntity.getEmpId())
+                    .deptId(employeeEntity.getDeptId())
+                    .desigId(employeeEntity.getDesigId())
                     .empFirstName(employeeEntity.getEmpFirstName())
                     .empMiddleName(employeeEntity.getEmpMiddleName())
                     .empLastName(employeeEntity.getEmpLastName())
                     .roleId(employeeEntity.getRoleId())
                     .empMobileNo(employeeEntity.getEmpMobileNo())
+                    .remark(employeeEntity.getRemark())
                     .emailId(employeeEntity.getEmailId())
                     .build();
             return KPIResponse.builder()

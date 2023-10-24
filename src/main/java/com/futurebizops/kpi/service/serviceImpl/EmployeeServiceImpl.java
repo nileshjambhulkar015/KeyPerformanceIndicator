@@ -130,6 +130,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeLoginEntity.employeeLoginEntityBuilder()
+                .deptId(employeeCreateRequest.getDeptId())
+                .desigId(employeeCreateRequest.getDesigId())
                 .empMobileNo(employeeCreateRequest.getEmpMobileNo())
                 .emailId(employeeCreateRequest.getEmailId())
                 .roleId(employeeCreateRequest.getRoleId())
