@@ -37,5 +37,10 @@ public interface DesignationRepo extends JpaRepository<DesignationEntity, Intege
     @Query(value = SQLQueryConstants.DESIGNATION_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getDesignationById(@Param("desigId") Integer desigId);
 
+
+    @Query(value = SQLQueryConstants.DESIGNATION_BY_DEPT_ID_QUERY, nativeQuery = true)
+    List<Object[]> getDesignationByDeptId(@Param("deptId") Integer deptId);
+
+
 }
 

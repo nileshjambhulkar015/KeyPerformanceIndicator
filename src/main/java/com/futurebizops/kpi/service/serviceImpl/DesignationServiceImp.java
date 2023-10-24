@@ -120,30 +120,15 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
-    public List<DesignationReponse> findAllDesignationDetails(Integer deptId) {
+    public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId) {
 
-        List<DesignationEntity> designationEntities = null;
-        if (null == deptId) {
-            designationEntities = designationRepo.findAll();
-        } else {
-            designationEntities = designationRepo.findAllDesignation(deptId);
-        }
-        List<DesignationReponse> designationReponses = new ArrayList<>();
-        DesignationReponse designationReponse = null;
-        for (DesignationEntity designationEntity : designationEntities) {
-            designationReponse = new DesignationReponse();
-            designationReponse.setDesigId(designationEntity.getDesigId());
-            designationReponse.setDeptId(designationEntity.getDeptId());
-            designationReponse.setDeptName(getDepartmentName(designationEntity.getDeptId()));
-            designationReponse.setDesigName(designationEntity.getDesigName());
-            designationReponse.setStatusCd(designationEntity.getStatusCd());
-            designationReponses.add(designationReponse);
-        }
-        return designationReponses;
+        List<Object[]> designationData = designationRepo.getDesignationByDeptId(deptId);
+        List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
+        return  designationReponses;
     }
 
     @Override
-    public List<DepartmentReponse> getAllDepartmentByDesig(Integer deptId) {
+    public List<DepartmentReponse> getAllDepartmentFromDesig(Integer deptId) {
         List<Object[]> designationData = designationRepo.getDesignationById(deptId);
         List<DepartmentReponse> designationReponses = designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
         return  designationReponses;

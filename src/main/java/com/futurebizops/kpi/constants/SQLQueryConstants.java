@@ -8,6 +8,8 @@ public final class SQLQueryConstants {
     //for designation
 
     public static final String DESIGNATION_QUERY = "select dept.dept_id ,dept.dept_name, desig.desig_id , desig.desig_name, desig.remark,desig.status_cd  from designation desig, department dept where dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.dept_id = coalesce(:deptId, desig.dept_id) and desig.desig_name =coalesce (:desigName, desig.desig_name) and desig.status_cd =coalesce (:statusCd, desig.status_cd) order by :sortName asc limit :pageSize offset :pageOffset";
+
+    public static final String DESIGNATION_BY_DEPT_ID_QUERY = "select dept.dept_id ,dept.dept_name, desig.desig_id , desig.desig_name, desig.remark,desig.status_cd  from designation desig, department dept where dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.dept_id = coalesce(:deptId, desig.dept_id) and desig.status_cd ='A'";
     public static final String DESIGNATION_COUNT_QUERY = "select count(desig.desig_id) from designation desig, department dept where dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.dept_id = coalesce(:deptId, desig.dept_id) and desig.desig_name =coalesce (:desigName, desig.desig_name) and desig.status_cd =coalesce (:statusCd, desig.status_cd)";
 
     public static final String DESIGNATION_BY_ID_QUERY = "select dept.dept_id ,dept.dept_name, desig.desig_id , desig.desig_name, desig.remark, desig.status_cd  from designation desig, department dept where dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.desig_id = coalesce(:desigId, desig.desig_id)";

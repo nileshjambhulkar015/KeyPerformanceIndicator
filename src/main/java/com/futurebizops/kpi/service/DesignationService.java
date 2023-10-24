@@ -1,7 +1,5 @@
 package com.futurebizops.kpi.service;
 
-import com.futurebizops.kpi.enums.DesignationSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.DesignationCreateRequest;
 import com.futurebizops.kpi.request.DesignationUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
@@ -22,7 +20,9 @@ public interface DesignationService {
 
     public DesignationReponse findDesignationById(Integer desigId);
 
-    public List<DesignationReponse> findAllDesignationDetails(Integer deptId);
 
-    public List<DepartmentReponse> getAllDepartmentByDesig(Integer deptId);
+
+    public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId);
+
+    public List<DepartmentReponse> getAllDepartmentFromDesig(Integer deptId);
 }
