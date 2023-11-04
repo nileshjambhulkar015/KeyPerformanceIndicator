@@ -26,6 +26,9 @@ public class DesignationAudit extends AuditEnabledEntity{
     @Column(name = "desig_id")
     private Integer desigId;
 
+    @Column(name = "role_id")
+    private Integer roleId;
+
     @Column(name = "dept_id")
     private Integer deptId;
 
@@ -42,6 +45,7 @@ public class DesignationAudit extends AuditEnabledEntity{
     public DesignationAudit(DesignationEntity designationEntity) {
         super(designationEntity.getCreatedDate(), designationEntity.getCreatedUserId(), designationEntity.getUpdatedDate(), designationEntity.getUpdatedUserId());
         this.desigId = designationEntity.getDesigId();
+        this.roleId=designationEntity.getRoleId();
         this.deptId = designationEntity.getDeptId();
         this.desigName = designationEntity.getDesigName();
         this.remark = designationEntity.getRemark();

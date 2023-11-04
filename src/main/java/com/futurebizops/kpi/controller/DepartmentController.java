@@ -51,13 +51,12 @@ public class DepartmentController {
 
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> findDepartmentDetails(@RequestParam(required = false) DepartmentSearchEnum searchEnum,
-                                                      @RequestParam(required = false) String searchString,
-                                                      @RequestParam(required = false) StatusCdEnum statusCdEnum,
-                                                      @Parameter(hidden = true) Pageable pageable,
-                                                      @Parameter(hidden = true) PageDirection pageDirection,
-                                                      @Parameter(hidden = true) String sortParam) {
-        KPIResponse response = departmentService.findDepartmentDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, KPIUtils.getDirection(pageDirection));
+    public ResponseEntity<KPIResponse> findDepartmentDetails(@RequestParam(required = false) Integer roleId,
+                                                             @RequestParam(required = false) Integer deptId,
+                                                             @RequestParam(required = false) String deptName,
+                                                             @RequestParam(required = false) String statusCd,
+                                                             @Parameter(hidden = true) Pageable pageable) {
+        KPIResponse response = departmentService.findDepartmentDetails(roleId, deptId, deptName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -73,5 +72,18 @@ public class DepartmentController {
     @GetMapping(value = "/{deptId}")
     public ResponseEntity<Object> findAllDepartmentById(@PathVariable Integer deptId) {
         return new ResponseEntity<>(departmentService.findAllDepartmentById(deptId), HttpStatus.OK);
+    }
+
+
+    //for Role which is present in department table
+    @GetMapping(value = "/role")
+    public ResponseEntity<Object> findAllRole() {
+        return new ResponseEntity<>(departmentService.getAllRoleFromDeptId(), HttpStatus.OK);
+    }
+
+    //get All department base on role Id which is present in department table
+    @GetMapping(value = "/roleId/{roleId}")
+    public ResponseEntity<Object> findAllDepartmentByRoleId(@PathVariable Integer roleId) {
+        return new ResponseEntity<>(departmentService.getAllDepartmentByRoleId(roleId), HttpStatus.OK);
     }
 }

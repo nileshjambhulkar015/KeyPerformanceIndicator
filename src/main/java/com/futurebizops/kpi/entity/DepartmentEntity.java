@@ -26,6 +26,8 @@ public class DepartmentEntity extends AuditEnabledEntity {
     @Column(name = "dept_id")
     private Integer deptId;
 
+    @Column(name = "role_id")
+    private Integer roleId;
     @Column(name = "dept_name")
     private String deptName;
 
@@ -36,8 +38,9 @@ public class DepartmentEntity extends AuditEnabledEntity {
     private String statusCd;
 
     @Builder(builderMethodName = "departmentEntityBuilder")
-    public DepartmentEntity(Integer deptId, String deptName, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public DepartmentEntity(Integer roleId, Integer deptId, String deptName, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
+        this.roleId=roleId;
         this.deptId = deptId;
         this.deptName = deptName;
         this.remark = remark;

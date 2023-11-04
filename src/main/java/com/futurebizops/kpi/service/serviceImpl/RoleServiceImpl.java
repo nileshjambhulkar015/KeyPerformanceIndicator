@@ -1,6 +1,7 @@
 package com.futurebizops.kpi.service.serviceImpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
+import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.entity.RoleAudit;
 import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.enums.RoleSearchEnum;
@@ -10,6 +11,7 @@ import com.futurebizops.kpi.repository.RoleAuditRepo;
 import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RoleResponse;
 import com.futurebizops.kpi.service.RoleService;
@@ -113,6 +115,20 @@ public class RoleServiceImpl implements RoleService {
             roleResponses.add(roleResponse);
         }
         return roleResponses;
+    }
+
+    @Override
+    public RoleResponse findAllRoleById(Integer roleId) {
+        Optional<RoleEntity> optionalRoleEntity = roleRepo.findById(roleId);
+        if(optionalRoleEntity.isPresent()){
+            return RoleResponse.builder()
+                    .roleId(optionalRoleEntity.get().getRoleId())
+                    .roleName(optionalRoleEntity.get().getRoleName())
+                    .remark(optionalRoleEntity.get().getRemark())
+                    .statusCd(optionalRoleEntity.get().getStatusCd())
+                    .build();
+        }
+        return null;
     }
 
     private RoleEntity convertRoleCreateRequestToEntity(RoleCreateRequest roleCreateRequest) {

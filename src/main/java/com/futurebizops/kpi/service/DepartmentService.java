@@ -6,6 +6,7 @@ import com.futurebizops.kpi.request.DepartmentCreateRequest;
 import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.RoleResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -16,12 +17,15 @@ public interface DepartmentService {
 
     public KPIResponse updateDepartment(DepartmentUpdateRequest departmentUpdateRequest);
 
-    public KPIResponse findDepartmentDetails(DepartmentSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection );
-
+    public KPIResponse findDepartmentDetails(Integer roleId, Integer deptId, String deptName, String statusCd, Pageable pageable);
 
 
     public List<DepartmentReponse> findAllDepartmentDetails();
 
     public DepartmentReponse findAllDepartmentById(Integer deptId);
+
+    public List<RoleResponse> getAllRoleFromDeptId();
+
+    public List<DepartmentReponse> getAllDepartmentByRoleId(Integer roleId);
 
 }

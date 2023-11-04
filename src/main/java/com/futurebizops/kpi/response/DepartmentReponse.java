@@ -11,15 +11,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DepartmentReponse {
 
+    private Integer roleId;
+    private String roleName;
     private Integer deptId;
     private String deptName;
     private String remark;
     private String statusCd;
 
     public DepartmentReponse(Object[] objects){
-        deptId=Integer.parseInt(String.valueOf(objects[0]));
-        deptName=String.valueOf(objects[1]);
-        remark=String.valueOf(objects[2]);
-        statusCd=String.valueOf(objects[3]);
+        roleId=Integer.parseInt(String.valueOf(objects[0]));
+        roleName=String.valueOf(objects[1]);
+        deptId=Integer.parseInt(String.valueOf(objects[2]));
+        deptName=String.valueOf(objects[3]);
+        remark=String.valueOf(objects[4]);
+        statusCd=String.valueOf(objects[5]);
     }
 }

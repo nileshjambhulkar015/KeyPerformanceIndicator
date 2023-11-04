@@ -87,7 +87,7 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
-    public KPIResponse findDesignationDetails(Integer deptId, String desigName, String statusCd, Pageable requestPageable) {
+    public KPIResponse findDesignationDetails( Integer roleId, Integer deptId, String desigName, String statusCd, Pageable requestPageable) {
 
         String sortName = null;
         String sortDirection = null;
@@ -100,8 +100,8 @@ public class DesignationServiceImp implements DesignationService {
             sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = designationRepo.getDesignationCount(deptId, desigName, statusCd);
-        List<Object[]> designationData = designationRepo.getDesignationDetail(deptId, desigName, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = designationRepo.getDesignationCount(roleId,deptId, desigName, statusCd);
+        List<Object[]> designationData = designationRepo.getDesignationDetail(roleId,deptId, desigName, statusCd, sortName, pageSize, pageOffset);
 
         List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
 
@@ -114,7 +114,7 @@ public class DesignationServiceImp implements DesignationService {
 
     @Override
     public DesignationReponse findDesignationById(Integer desigId) {
-        List<Object[]> designationData = designationRepo.getDesignationById(desigId);
+        List<Object[]> designationData = designationRepo.getDesignationByDesigId(desigId);
         List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
         return  designationReponses.get(0);
     }
@@ -122,14 +122,14 @@ public class DesignationServiceImp implements DesignationService {
     @Override
     public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId) {
 
-        List<Object[]> designationData = designationRepo.getDesignationByDeptId(deptId);
+        List<Object[]> designationData = designationRepo.getAllDesigByDeptId(deptId);
         List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
         return  designationReponses;
     }
 
     @Override
     public List<DepartmentReponse> getAllDepartmentFromDesig(Integer deptId) {
-        List<Object[]> designationData = designationRepo.getDesignationById(deptId);
+        List<Object[]> designationData = designationRepo.getDeptInDesigById(deptId);
         List<DepartmentReponse> designationReponses = designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
         return  designationReponses;
     }
@@ -146,6 +146,7 @@ public class DesignationServiceImp implements DesignationService {
 
     private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {
         return DesignationEntity.designationEntityBuilder()
+                .roleId(designationCreateRequest.getRoleId())
                 .deptId(designationCreateRequest.getDeptId())
                 .desigName(designationCreateRequest.getDesigName())
                 .remark(designationCreateRequest.getRemark())
@@ -157,6 +158,7 @@ public class DesignationServiceImp implements DesignationService {
     private DesignationEntity convertDesignationUpdateRequestToEntity(DesignationUpdateRequest designationUpdateRequest) {
         return DesignationEntity.designationEntityBuilder()
                 .desigId(designationUpdateRequest.getDesigId())
+                .roleId(designationUpdateRequest.getRoleId())
                 .deptId(designationUpdateRequest.getDeptId())
                 .desigName(designationUpdateRequest.getDesigName())
                 .remark(designationUpdateRequest.getRemark())

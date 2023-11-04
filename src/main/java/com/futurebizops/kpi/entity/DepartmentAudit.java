@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,13 +17,15 @@ import javax.persistence.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepartmentAudit extends AuditEnabledEntity{
+public class DepartmentAudit extends AuditEnabledEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dept_aud_id")
     private Integer deptAuditId;
 
+    @Column(name = "role_id")
+    private Integer roleId;
     @Column(name = "dept_id")
     private Integer deptId;
 
@@ -37,6 +40,7 @@ public class DepartmentAudit extends AuditEnabledEntity{
 
     public DepartmentAudit(DepartmentEntity departmentEntity) {
         super(departmentEntity.getCreatedDate(), departmentEntity.getCreatedUserId(), departmentEntity.getUpdatedDate(), departmentEntity.getUpdatedUserId());
+        this.roleId = departmentEntity.getRoleId();
         this.deptId = departmentEntity.getDeptId();
         this.deptName = departmentEntity.getDeptName();
         this.remark = departmentEntity.getRemark();

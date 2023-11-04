@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,5 +59,11 @@ public class RoleController {
     @GetMapping
     public ResponseEntity<Object> findAllRoleDetails() {
         return new ResponseEntity<>(roleService.findAllRolesDetails(), HttpStatus.OK);
+    }
+
+    //for Department
+    @GetMapping(value = "/{roleId}")
+    public ResponseEntity<Object> findAllDepartmentById(@PathVariable Integer roleId) {
+        return new ResponseEntity<>(roleService.findAllRoleById(roleId), HttpStatus.OK);
     }
 }
