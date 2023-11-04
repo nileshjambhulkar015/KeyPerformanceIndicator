@@ -18,6 +18,4 @@ public interface KeyPerfParameterService {
 
     public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId,Integer desigId,String kppObjective,String statusCd,Pageable pageable);
     public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId);
-
-    public List<KPPResponse> getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd);
 }

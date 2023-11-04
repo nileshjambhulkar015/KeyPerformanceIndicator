@@ -110,39 +110,6 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         return kppResponses.get(0);
     }
 
-
-    @Override
-    public List<KPPResponse>  getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd) {
-        List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigIdAndStatusCd(roleId,deptId, desigId, statusCd);
-        List<KPPResponse> kppResponses = convertEntityListToResponse(keyPerfParamEntities);
-        return kppResponses;
-    }
-
-    private List<KPPResponse> convertEntityListToResponse(List<KeyPerfParamEntity> keyPerfParamEntities) {
-        List<KPPResponse> kppResponseList =
-                keyPerfParamEntities.stream()
-                        .map(keyPerfParamEntity -> {
-                            KPPResponse kppResponse = KPPResponse.builder()
-                                    .kppId(keyPerfParamEntity.getKppId())
-                                    .kppObjective(keyPerfParamEntity.getKppObjective())
-                                    .kppPerformanceIndi(keyPerfParamEntity.getKppPerformanceIndi())
-                                    .kppOverallTarget(keyPerfParamEntity.getKppOverallTarget())
-                                    .kppTargetPeriod(keyPerfParamEntity.getKppTargetPeriod())
-                                    .kppUoM(keyPerfParamEntity.getKppUoM())
-                                    .kppOverallWeightage(keyPerfParamEntity.getKppOverallWeightage())
-                                    .kppRating1(keyPerfParamEntity.getKppRating1())
-                                    .kppRating2(keyPerfParamEntity.getKppRating2())
-                                    .kppRating3(keyPerfParamEntity.getKppRating3())
-                                    .kppRating4(keyPerfParamEntity.getKppRating4())
-                                    .kppRating5(keyPerfParamEntity.getKppRating5())
-                                    .build();
-return  kppResponse;
-                        })
-                        .collect(Collectors.toList());
-        return kppResponseList;
-
-    }
-
     private KeyPerfParamEntity convertKeyPerfParamCreateRequestToEntity(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         return KeyPerfParamEntity.keyPerfParamEntityBuilder()
                 .roleId(keyPerfParamCreateRequest.getRoleId())

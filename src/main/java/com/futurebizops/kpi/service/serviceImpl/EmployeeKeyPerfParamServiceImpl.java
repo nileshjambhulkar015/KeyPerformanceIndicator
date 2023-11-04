@@ -3,14 +3,17 @@ package com.futurebizops.kpi.service.serviceImpl;
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.EmployeeKeyPerfParamAudit;
 import com.futurebizops.kpi.entity.EmployeeKeyPerfParamEntity;
+import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EmployeeKeyPerfParamAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeKeyPerfParamRepo;
+import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.request.GMUpdateRequest;
 import com.futurebizops.kpi.request.HODApprovalUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,6 +34,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Autowired
     private EmployeeKeyPerfParamAuditRepo keyPerfParamAuditRepo;
 
+    @Autowired
+    private KeyPerfParameterRepo keyPerfParameterRepo;
 
     @Override
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
@@ -89,8 +95,39 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         }
     }
 
+    @Override
+    public List<KPPResponse>  getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd) {
+        List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigIdAndStatusCd(roleId,deptId, desigId, statusCd);
+        List<KPPResponse> kppResponses = convertEntityListToResponse(keyPerfParamEntities);
+        return kppResponses;
+    }
 
 
+
+    private List<KPPResponse> convertEntityListToResponse(List<KeyPerfParamEntity> keyPerfParamEntities) {
+        List<KPPResponse> kppResponseList =
+                keyPerfParamEntities.stream()
+                        .map(keyPerfParamEntity -> {
+                            KPPResponse kppResponse = KPPResponse.builder()
+                                    .kppId(keyPerfParamEntity.getKppId())
+                                    .kppObjective(keyPerfParamEntity.getKppObjective())
+                                    .kppPerformanceIndi(keyPerfParamEntity.getKppPerformanceIndi())
+                                    .kppOverallTarget(keyPerfParamEntity.getKppOverallTarget())
+                                    .kppTargetPeriod(keyPerfParamEntity.getKppTargetPeriod())
+                                    .kppUoM(keyPerfParamEntity.getKppUoM())
+                                    .kppOverallWeightage(keyPerfParamEntity.getKppOverallWeightage())
+                                    .kppRating1(keyPerfParamEntity.getKppRating1())
+                                    .kppRating2(keyPerfParamEntity.getKppRating2())
+                                    .kppRating3(keyPerfParamEntity.getKppRating3())
+                                    .kppRating4(keyPerfParamEntity.getKppRating4())
+                                    .kppRating5(keyPerfParamEntity.getKppRating5())
+                                    .build();
+                            return  kppResponse;
+                        })
+                        .collect(Collectors.toList());
+        return kppResponseList;
+
+    }
     private EmployeeKeyPerfParamEntity convertEmployeeKPPCreateRequestToEntity(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         return EmployeeKeyPerfParamEntity.keyEmployeePerfParamEntityBuilder()
                 .ekppMonth(keyPerfParamCreateRequest.getEkppMonth())

@@ -9,6 +9,7 @@ import com.futurebizops.kpi.request.HODApprovalUpdateRequest;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.response.RoleResponse;
 import org.springframework.data.domain.Pageable;
 
@@ -24,6 +25,7 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse updateGMApprovalRequest(List<GMUpdateRequest> hodApprovalUpdateRequests);
 
+    public List<KPPResponse> getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd);
 
 
    // public KPIResponse findRoleDetails(RoleSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection);

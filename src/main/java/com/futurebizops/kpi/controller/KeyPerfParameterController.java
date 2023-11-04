@@ -66,14 +66,5 @@ public class KeyPerfParameterController {
 
     }
 
-    @GetMapping
-    public ResponseEntity<List<KPPResponse>> findAllKeyPerfomanceParam(@RequestParam(required = false) Integer roleId,
-                                                                       @RequestParam(required = false) Integer deptId,
-                                                                       @RequestParam(required = false) Integer desigId,
-                                                                       @RequestParam(required = false) StatusCdEnum statusCdEnum
-    ) {
-        List<KPPResponse> response = keyPerfParameterService.getKeyPerfomanceParameter(roleId, deptId, desigId, statusCdEnum.getSearchType());
-        return new ResponseEntity<>(response, HttpStatus.OK);
 
-    }
 }
