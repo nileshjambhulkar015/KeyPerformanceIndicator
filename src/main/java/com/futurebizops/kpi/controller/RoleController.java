@@ -63,7 +63,19 @@ public class RoleController {
 
     //for Department
     @GetMapping(value = "/{roleId}")
-    public ResponseEntity<Object> findAllDepartmentById(@PathVariable Integer roleId) {
+    public ResponseEntity<Object> findAllRoleById(@PathVariable Integer roleId) {
         return new ResponseEntity<>(roleService.findAllRoleById(roleId), HttpStatus.OK);
+    }
+
+    //for Role which is present in department table
+    @GetMapping(value = "department/role")
+    public ResponseEntity<Object> findAllRole() {
+        return new ResponseEntity<>(roleService.getAllRoleFromDeptId(), HttpStatus.OK);
+    }
+
+    //for Key perform indicator
+    @GetMapping(value = "/designation/roles")
+    public ResponseEntity<Object> findAllRoleForKpp() {
+        return new ResponseEntity<>(roleService.findAllRoleForKpp(), HttpStatus.OK);
     }
 }

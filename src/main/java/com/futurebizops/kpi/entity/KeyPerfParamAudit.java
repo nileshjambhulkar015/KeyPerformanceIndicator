@@ -26,6 +26,9 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
     @Column(name = "kpp_id")
     private Integer kppId;
 
+    @Column(name = "role_id")
+    private Integer roleId;
+
     @Column(name = "dept_id")
     private Integer deptId;
 
@@ -76,6 +79,7 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
     public KeyPerfParamAudit(KeyPerfParamEntity keyPerfParamEntity) {
         super(keyPerfParamEntity.getCreatedDate(), keyPerfParamEntity.getCreatedUserId(), keyPerfParamEntity.getUpdatedDate(), keyPerfParamEntity.getUpdatedUserId());
         this.kppId = keyPerfParamEntity.getKppId();
+        this.roleId = keyPerfParamEntity.getRoleId();
         this.deptId = keyPerfParamEntity.getDeptId();
         this.desigId = keyPerfParamEntity.getDesigId();
         this.kppObjective = keyPerfParamEntity.getKppObjective();

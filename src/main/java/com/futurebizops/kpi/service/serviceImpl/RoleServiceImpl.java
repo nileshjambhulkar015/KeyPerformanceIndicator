@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -131,6 +132,20 @@ public class RoleServiceImpl implements RoleService {
         return null;
     }
 
+    //for roles from department table
+    @Override
+    public List<RoleResponse> getAllRoleFromDeptId() {
+        List<Object[]> roleData = roleRepo.getAllRoleFromDept();
+        List<RoleResponse> roleResponses = roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
+        return  roleResponses;
+    }
+    @Override
+    public List<RoleResponse> findAllRoleForKpp() {
+        List<Object[]> roleData = roleRepo.getAllRoleFromDesignation();
+        List<RoleResponse> roleResponses = roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
+        return  roleResponses;
+    }
+
     private RoleEntity convertRoleCreateRequestToEntity(RoleCreateRequest roleCreateRequest) {
         return RoleEntity.roleEntityBuilder()
                 .roleName(roleCreateRequest.getRoleName())
@@ -149,4 +164,6 @@ public class RoleServiceImpl implements RoleService {
                 .createdUserId(roleUpdateRequest.getEmployeeId())
                 .build();
     }
+
+
 }

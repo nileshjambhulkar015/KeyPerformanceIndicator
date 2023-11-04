@@ -131,16 +131,19 @@ public class DepartmentServiceImpl implements DepartmentService {
         return  designationReponses.get(0);
     }
 
-    @Override
-    public List<RoleResponse> getAllRoleFromDeptId() {
-        List<Object[]> roleData = departmentRepo.getAllRoleFromDept();
-        List<RoleResponse> roleResponses = roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
-        return  roleResponses;
-    }
+
 
     @Override
     public List<DepartmentReponse> getAllDepartmentByRoleId(Integer roleId) {
         List<Object[]> deptData = departmentRepo.getAllDepartByRoleId(roleId);
+        List<DepartmentReponse> departmentReponses = deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
+        return  departmentReponses;
+    }
+
+    //for KPP load department from role id. role id taking from designation table
+    @Override
+    public List<DepartmentReponse> findAllDepartmentFromDesigByRoleId(Integer roleId) {
+        List<Object[]> deptData = departmentRepo.getAllDepartmentFromDesigByRoleId(roleId);
         List<DepartmentReponse> departmentReponses = deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
         return  departmentReponses;
     }

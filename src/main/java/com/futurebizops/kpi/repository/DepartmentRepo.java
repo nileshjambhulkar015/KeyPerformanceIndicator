@@ -42,9 +42,10 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity, Integer>
     @Query(value = SQLQueryConstants.DEPT_IN_DESIGNATION_QUERY, nativeQuery = true)
     List<Object[]> getDeptInDesigById(@Param("deptId") Integer deptId);
 
-    //only for role id and name which is inside department table
-    @Query(value = SQLQueryConstants.ROLE_IN_DEPARTMENT_QUERY, nativeQuery = true)
-    List<Object[]> getAllRoleFromDept();
+
+
+    @Query(value = SQLQueryConstants.DEPT_BY_ROLE_ID_FROM_DESIG, nativeQuery = true)
+    List<Object[]> getAllDepartmentFromDesigByRoleId(@Param("roleId") Integer roleId);
 
     @Query(value = SQLQueryConstants.DEPT_BY_ROLE_ID, nativeQuery = true)
     List<Object[]> getAllDepartByRoleId(@Param("roleId") Integer roleId);

@@ -177,12 +177,12 @@ create table location_audit(
 
 
 
-
 create table employee(
     emp_id serial  PRIMARY key,
+    emp_eid VARCHAR(20) ,
+    role_id INTEGER,
 	dept_id INTEGER,
 	desig_id INTEGER,
-	role_id INTEGER,
 	employee_id INTEGER,
 	region_id INTEGER,
     site_id INTEGER,
@@ -193,7 +193,7 @@ create table employee(
 	emp_mbno VARCHAR(20),
 	emp_emer_mbno  VARCHAR(20),
 	emp_photo VARCHAR(20),
-	emp_email_id VARCHAR(40),
+	emp_email_id VARCHAR(50),
 	emp_temp_address VARCHAR(100),
 	emp_perm_address VARCHAR(100),
 	emp_gender VARCHAR(10),
@@ -210,9 +210,10 @@ create table employee(
 create table employee_audit(
     emp_aud_id serial  PRIMARY key,
 	emp_id INTEGER,
+	emp_eid VARCHAR(20) ,
+    role_id INTEGER,
 	dept_id INTEGER,
 	desig_id INTEGER,
-	role_id INTEGER,
 	employee_id INTEGER,
 	region_id INTEGER,
    	site_id INTEGER,
@@ -223,7 +224,7 @@ create table employee_audit(
 	emp_mbno VARCHAR(20),
 	emp_emer_mbno  VARCHAR(20),
 	emp_photo VARCHAR(20),
-	emp_email_id VARCHAR(40),
+	emp_email_id VARCHAR(50),
 	emp_temp_address VARCHAR(100),
 	emp_perm_address VARCHAR(100),
 	emp_gender VARCHAR(10),
@@ -238,8 +239,9 @@ create table employee_audit(
 
 create table employee_login(
     emp_mbno VARCHAR(20)  PRIMARY key,
-	emp_email_id VARCHAR(20),
-	role_id INTEGER,
+	emp_email_id VARCHAR(50),
+	emp_eid VARCHAR(20) ,
+    role_id INTEGER,
 	dept_id INTEGER,
     desig_id INTEGER,
 	EMP_PASSWORD VARCHAR(20),
@@ -253,11 +255,12 @@ create table employee_login(
 
 create table employee_login_audit(
 	emp_audit_login_id serial  PRIMARY key,
+	 emp_mbno VARCHAR(20) ,
+	emp_email_id VARCHAR(50),
+	 emp_eid VARCHAR(20) ,
+    role_id INTEGER,
 	dept_id INTEGER,
     desig_id INTEGER,
-    emp_mbno VARCHAR(20) ,
-	emp_email_id VARCHAR(20),
-	role_id INTEGER,
 	EMP_PASSWORD VARCHAR(20),
     REMARK VARCHAR(100),
     STATUS_CD VARCHAR(10),
@@ -269,7 +272,8 @@ create table employee_login_audit(
 
 
 create table key_perf_parameter(
-    kpp_id serial PRIMARY key,    
+    kpp_id serial PRIMARY key,
+    ROLE_ID INTEGER,
     dept_id INTEGER,
 	desig_id INTEGER,
 	kpp_objective VARCHAR(200),
@@ -296,6 +300,7 @@ create table key_perf_parameter(
 create table key_perf_parameter_audit(
     kpp_aud_id serial PRIMARY key,
     kpp_id INTEGER,
+    ROLE_ID INTEGER,
     dept_id INTEGER,
 	desig_id INTEGER,
 	kpp_objective VARCHAR(200),

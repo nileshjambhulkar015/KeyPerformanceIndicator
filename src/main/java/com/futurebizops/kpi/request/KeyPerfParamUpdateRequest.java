@@ -9,6 +9,9 @@ public class KeyPerfParamUpdateRequest {
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private Integer kppId;
 
+    @Schema(example = "1", description = "This field is used for role id")
+    private Integer roleId;
+
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private Integer deptId;
 

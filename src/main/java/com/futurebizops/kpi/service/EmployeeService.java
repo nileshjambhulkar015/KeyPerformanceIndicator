@@ -14,7 +14,7 @@ public interface EmployeeService {
 
     public KPIResponse updateEmployee(EmployeeUpdateRequest employeeUpdateRequest);
 
-    public KPIResponse getAllEmployeeDetails(Integer empId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable);
+    public KPIResponse getAllEmployeeDetails(Integer empId,Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable);
 
     public EmployeeResponse getAllEmployeeById(Integer empId);
 

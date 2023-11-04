@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.repository;
 
+import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.RoleEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +24,11 @@ public interface RoleRepo extends JpaRepository<RoleEntity, Integer> {
 
     @Query(value = "select * from roles where status_cd ='A'", nativeQuery = true)
     public List<RoleEntity> findAllRolesDetails();
+
+    //only for role id and name which is inside department table
+    @Query(value = SQLQueryConstants.ROLE_IN_DEPARTMENT_QUERY, nativeQuery = true)
+    List<Object[]> getAllRoleFromDept();
+
+    @Query(value = SQLQueryConstants.ROLE_IN_DESIGNATION_QUERY, nativeQuery = true)
+    List<Object[]> getAllRoleFromDesignation();
 }

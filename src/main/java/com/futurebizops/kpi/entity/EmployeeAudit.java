@@ -26,14 +26,17 @@ public class EmployeeAudit extends AuditEnabledEntity{
     @Column(name = "emp_id")
     private Integer empId;
 
+    @Column(name = "emp_eid")
+    private String empEId;
+
+    @Column(name = "role_id")
+    private Integer roleId;
+
     @Column(name = "dept_id")
     private Integer depId;
 
     @Column(name = "desig_id")
     private Integer desigId;
-
-    @Column(name = "role_id")
-    private Integer roleId;
 
     @Column(name = "region_id")
     private Integer regionId;
@@ -88,9 +91,11 @@ public class EmployeeAudit extends AuditEnabledEntity{
     public EmployeeAudit(EmployeeEntity employeeEntity) {
         super(employeeEntity.getCreatedDate(), employeeEntity.getCreatedUserId(), employeeEntity.getUpdatedDate(), employeeEntity.getUpdatedUserId());
         this.empId = employeeEntity.getEmpId();
+        this.empEId=employeeEntity.getEmpEId();
+        this.roleId = employeeEntity.getRoleId();
         this.depId = employeeEntity.getDeptId();
         this.desigId = employeeEntity.getDesigId();
-        this.roleId = employeeEntity.getRoleId();
+
         this.regionId=employeeEntity.getRegionId();
         this.siteId=employeeEntity.getSiteId();
         this.empFirstName = employeeEntity.getEmpFirstName();

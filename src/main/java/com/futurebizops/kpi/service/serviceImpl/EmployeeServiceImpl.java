@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -45,7 +46,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeLoginAuditRepo employeeLoginAuditRepo;
 
-
+    //Generate random number for employee till 1000 only.. increase size if you want to create more
+    Random randEid = new Random();
+    int empEId = randEid.nextInt(1000);
     @Override
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
 
@@ -93,7 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public KPIResponse getAllEmployeeDetails(Integer empId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable) {
+    public KPIResponse getAllEmployeeDetails(Integer empId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable) {
         String sortName = null;
         String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -105,8 +108,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = employeeRepo.getEmployeeCount(empId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd);
-        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = employeeRepo.getEmployeeCount(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd);
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, roleId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, sortName, pageSize, pageOffset);
 
         List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
         employeeResponses = employeeResponses.stream()
@@ -130,11 +133,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeLoginEntity.employeeLoginEntityBuilder()
+                .empEId("e"+empEId)
+                .roleId(employeeCreateRequest.getRoleId())
                 .deptId(employeeCreateRequest.getDeptId())
                 .desigId(employeeCreateRequest.getDesigId())
                 .empMobileNo(employeeCreateRequest.getEmpMobileNo())
                 .emailId(employeeCreateRequest.getEmailId())
-                .roleId(employeeCreateRequest.getRoleId())
                 .empPassword(employeeCreateRequest.getEmpMobileNo())
                 .remark(employeeCreateRequest.getRemark())
                 .statusCd(employeeCreateRequest.getStatusCd())
@@ -144,9 +148,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeEntity convertEmployeeCreateRequestToEntity(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeEntity.employeeEntityBuilder()
+                .empEId("e"+empEId)
+                .roleId(employeeCreateRequest.getRoleId())
                 .depId(employeeCreateRequest.getDeptId())
                 .desigId(employeeCreateRequest.getDesigId())
-                .roleId(employeeCreateRequest.getRoleId())
                 .regionId(employeeCreateRequest.getRegionId())
                 .siteId(employeeCreateRequest.getSiteId())
                 .empFirstName(employeeCreateRequest.getEmpFirstName())
@@ -170,9 +175,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeEntity convertEmployeeUpdateRequestToEntity(EmployeeUpdateRequest employeeUpdateRequest) {
         return EmployeeEntity.employeeEntityBuilder()
                 .empId(employeeUpdateRequest.getEmpId())
+                .empEId(employeeUpdateRequest.getEmpEId())
+                .roleId(employeeUpdateRequest.getRoleId())
                 .depId(employeeUpdateRequest.getDeptId())
                 .desigId(employeeUpdateRequest.getDesigId())
-                .roleId(employeeUpdateRequest.getRoleId())
                 .regionId(employeeUpdateRequest.getRegionId())
                 .siteId(employeeUpdateRequest.getSiteId())
                 .empFirstName(employeeUpdateRequest.getEmpFirstName())

@@ -22,4 +22,8 @@ public interface RoleService {
     public List<RoleResponse> findAllRolesDetails();
 
     public RoleResponse findAllRoleById(Integer roleId);
+
+    public List<RoleResponse> getAllRoleFromDeptId();
+
+    public List<RoleResponse> findAllRoleForKpp();
 }

@@ -19,10 +19,10 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     public List<KeyPerfParamEntity> findByDeptIdAndDesigIdAndStatusCd(Integer deptId, Integer degidId, String status);
 
     @Query(value = SQLQueryConstants.KPP_QUERY, nativeQuery = true)
-    List<Object[]> getKeyPerfParameterDetail(@Param("kppId") Integer kppId,@Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getKeyPerfParameterDetail(@Param("kppId") Integer kppId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.KPP_COUNT_QUERY, nativeQuery = true)
-    Integer getKeyPerfParameterCount(@Param("kppId") Integer kppId,@Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd);
+    Integer getKeyPerfParameterCount(@Param("kppId") Integer kppId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd);
 
     @Query(value = SQLQueryConstants.KPP_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getKeyPerfParameterDetailById(@Param("kppId") Integer kppId);

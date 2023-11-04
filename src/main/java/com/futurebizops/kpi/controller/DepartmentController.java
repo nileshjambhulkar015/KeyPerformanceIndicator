@@ -75,15 +75,17 @@ public class DepartmentController {
     }
 
 
-    //for Role which is present in department table
-    @GetMapping(value = "/role")
-    public ResponseEntity<Object> findAllRole() {
-        return new ResponseEntity<>(departmentService.getAllRoleFromDeptId(), HttpStatus.OK);
-    }
 
-    //get All department base on role Id which is present in department table
-    @GetMapping(value = "/roleId/{roleId}")
+
+    //get All department base on role Id which is present in department table for designation
+    @GetMapping(value = "/dept/{roleId}")
     public ResponseEntity<Object> findAllDepartmentByRoleId(@PathVariable Integer roleId) {
         return new ResponseEntity<>(departmentService.getAllDepartmentByRoleId(roleId), HttpStatus.OK);
+    }
+
+    //get All department base on role Id which is present in department table for designation
+    @GetMapping(value = "/desig/{roleId}")
+    public ResponseEntity<Object> findAllDepartmentFromDesigByRoleId(@PathVariable Integer roleId) {
+        return new ResponseEntity<>(departmentService.findAllDepartmentFromDesigByRoleId(roleId), HttpStatus.OK);
     }
 }

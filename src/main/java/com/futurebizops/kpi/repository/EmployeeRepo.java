@@ -21,10 +21,10 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
 
     @Query(value = SQLQueryConstants.EMPLOYEE_QUERY, nativeQuery = true)
-    List<Object[]> getEmployeeDetail(@Param("empId") Integer empId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,  @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getEmployeeDetail(@Param("empId") Integer empId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,  @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_COUNT_QUERY, nativeQuery = true)
-    Integer getEmployeeCount(@Param("empId") Integer empId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd);
+    Integer getEmployeeCount(@Param("empId") Integer empId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeById(@Param("empId") Integer empId);

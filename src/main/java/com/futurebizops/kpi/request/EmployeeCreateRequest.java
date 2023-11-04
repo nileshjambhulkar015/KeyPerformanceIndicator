@@ -8,14 +8,14 @@ import javax.persistence.Column;
 @Data
 public class EmployeeCreateRequest {
 
+    @Schema(example = "1", description = "This field is used for employee role id")
+    private Integer roleId;
+
     @Schema(example = "1", description = "This field is used for department id")
     private Integer deptId;
 
     @Schema(example = "1", description = "This field is used for designation id")
     private Integer desigId;
-
-    @Schema(example = "1", description = "This field is used for employee role id")
-    private Integer roleId;
 
     @Schema(example = "1", description = "This field is used for region id")
     private Integer regionId;
@@ -41,7 +41,7 @@ public class EmployeeCreateRequest {
     @Schema(example = "9503232728", description = "This field is used for employee emergency number")
     private String empEmerMobileNo;
 
-    @Schema(example = "1", description = "This field is used for employee photo")
+    @Schema(example = "", description = "This field is used for employee photo")
     private String empPhoto;
 
     @Schema(example = "nileshj@gmail.com", description = "This field is used for employee photo")

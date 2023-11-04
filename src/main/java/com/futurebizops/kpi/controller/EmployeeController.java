@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,7 @@ public class EmployeeController {
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> getAllEmployee(@RequestParam(required = false) Integer empId,
+                                                      @RequestParam(required = false) Integer roleId,
                                                       @RequestParam(required = false) Integer deptId,
                                                       @RequestParam(required = false) Integer desigId,
                                                       @RequestParam(required = false) String empFirstName,
@@ -49,12 +51,12 @@ public class EmployeeController {
                                                       @RequestParam(required = false) String emailId,
                                                       @RequestParam(required = false) String statusCd,
                                                       @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = employeeService.getAllEmployeeDetails(empId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
+        KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/empId")
-    public ResponseEntity<EmployeeResponse> getAllEmployee(@RequestParam(required = false) Integer empId) {
+    @GetMapping(value = "/{empId}")
+    public ResponseEntity<EmployeeResponse> getAllEmployee(@PathVariable Integer empId) {
         EmployeeResponse response = employeeService.getAllEmployeeById(empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

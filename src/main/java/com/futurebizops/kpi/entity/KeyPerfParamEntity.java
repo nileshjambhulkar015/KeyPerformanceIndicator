@@ -25,6 +25,9 @@ public class KeyPerfParamEntity extends AuditEnabledEntity {
     @Column(name = "kpp_id")
     private Integer kppId;
 
+    @Column(name = "role_id")
+    private Integer roleId;
+
     @Column(name = "dept_id")
     private Integer deptId;
 
@@ -73,9 +76,10 @@ public class KeyPerfParamEntity extends AuditEnabledEntity {
     private String statusCd;
 
     @Builder(builderMethodName = "keyPerfParamEntityBuilder")
-    public KeyPerfParamEntity(Integer kppId, Integer deptId, Integer desigId, String kppObjective, String kppPerformanceIndi, String kppOverallTarget, String kppTargetPeriod, String kppUoM, String kppOverallWeightage, String kppRating1, String kppRating2, String kppRating3, String kppRating4, String kppRating5, String kppDescription, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public KeyPerfParamEntity(Integer kppId, Integer roleId, Integer deptId, Integer desigId, String kppObjective, String kppPerformanceIndi, String kppOverallTarget, String kppTargetPeriod, String kppUoM, String kppOverallWeightage, String kppRating1, String kppRating2, String kppRating3, String kppRating4, String kppRating5, String kppDescription, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.kppId = kppId;
+        this.roleId = roleId;
         this.deptId = deptId;
         this.desigId = desigId;
         this.kppObjective = kppObjective;

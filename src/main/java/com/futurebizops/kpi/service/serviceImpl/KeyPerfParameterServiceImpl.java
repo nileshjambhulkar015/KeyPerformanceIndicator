@@ -74,7 +74,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
     @Override
-    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer deptId, Integer desigId, String kppObjective, String statusCd, Pageable pageable) {
+    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId, Integer desigId, String kppObjective, String statusCd, Pageable pageable) {
         String sortName = null;
         String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -86,8 +86,8 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
             sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = keyPerfParameterRepo.getKeyPerfParameterCount(kppId, deptId, desigId, kppObjective, statusCd);
-        List<Object[]> designationData = keyPerfParameterRepo.getKeyPerfParameterDetail(kppId, deptId, desigId, kppObjective, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = keyPerfParameterRepo.getKeyPerfParameterCount(kppId, roleId, deptId, desigId, kppObjective, statusCd);
+        List<Object[]> designationData = keyPerfParameterRepo.getKeyPerfParameterDetail(kppId, roleId, deptId, desigId, kppObjective, statusCd, sortName, pageSize, pageOffset);
 
         List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
         kppResponses = kppResponses.stream()
@@ -145,6 +145,7 @@ return  kppResponse;
 
     private KeyPerfParamEntity convertKeyPerfParamCreateRequestToEntity(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         return KeyPerfParamEntity.keyPerfParamEntityBuilder()
+                .roleId(keyPerfParamCreateRequest.getRoleId())
                 .deptId(keyPerfParamCreateRequest.getDeptId())
                 .desigId(keyPerfParamCreateRequest.getDesigId())
                 .kppObjective(keyPerfParamCreateRequest.getKppObjective())
@@ -168,6 +169,7 @@ return  kppResponse;
     private KeyPerfParamEntity convertKeyPerfParamUpdateRequestToEntity(KeyPerfParamUpdateRequest keyPerfParamUpdateRequest) {
         return KeyPerfParamEntity.keyPerfParamEntityBuilder()
                 .kppId(keyPerfParamUpdateRequest.getKppId())
+                .roleId(keyPerfParamUpdateRequest.getRoleId())
                 .deptId(keyPerfParamUpdateRequest.getDeptId())
                 .desigId(keyPerfParamUpdateRequest.getDesigId())
                 .kppObjective(keyPerfParamUpdateRequest.getKppObjective())

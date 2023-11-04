@@ -6,6 +6,9 @@ import lombok.Data;
 @Data
 public class KeyPerfParamCreateRequest {
 
+    @Schema(example = "1", description = "This field is used for role id")
+    private Integer roleId;
+
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private Integer deptId;
 

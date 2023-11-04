@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,19 +54,20 @@ public class KeyPerfParameterController {
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> findKeyPerfomanceParam(@RequestParam(required = false) Integer kppId,
+                                                              @RequestParam(required = false) Integer roleId,
                                                               @RequestParam(required = false) Integer deptId,
                                                               @RequestParam(required = false) Integer desigId,
                                                               @RequestParam(required = false) String kppObjective,
                                                               @RequestParam(required = false) String statusCd,
                                                               @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, deptId, desigId, kppObjective, statusCd, pageable);
+        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, roleId, deptId, desigId, kppObjective, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
 
-    @GetMapping(value = "/kppId")
-    public ResponseEntity<KPPResponse> findKeyPerfomanceParamById(@RequestParam(required = false) Integer kppId) {
+    @GetMapping(value = "/{kppId}")
+    public ResponseEntity<KPPResponse> findKeyPerfomanceParamById(@PathVariable Integer kppId) {
         KPPResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetailById(kppId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
