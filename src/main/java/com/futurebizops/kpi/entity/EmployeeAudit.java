@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeAudit extends AuditEnabledEntity{
+public class EmployeeAudit extends AuditEnabledEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +38,14 @@ public class EmployeeAudit extends AuditEnabledEntity{
     @Column(name = "desig_id")
     private Integer desigId;
 
+    @Column(name = "reporting_emp_id")
+    private Integer reportingEmpId;
+
     @Column(name = "region_id")
     private Integer regionId;
 
     @Column(name = "site_id")
     private Integer siteId;
-
 
 
     @Column(name = "emp_fname")
@@ -91,26 +93,26 @@ public class EmployeeAudit extends AuditEnabledEntity{
     public EmployeeAudit(EmployeeEntity employeeEntity) {
         super(employeeEntity.getCreatedDate(), employeeEntity.getCreatedUserId(), employeeEntity.getUpdatedDate(), employeeEntity.getUpdatedUserId());
         this.empId = employeeEntity.getEmpId();
-        this.empEId=employeeEntity.getEmpEId();
+        this.empEId = employeeEntity.getEmpEId();
         this.roleId = employeeEntity.getRoleId();
         this.depId = employeeEntity.getDeptId();
         this.desigId = employeeEntity.getDesigId();
-
-        this.regionId=employeeEntity.getRegionId();
-        this.siteId=employeeEntity.getSiteId();
+        this.reportingEmpId = employeeEntity.getReportingEmpId();
+        this.regionId = employeeEntity.getRegionId();
+        this.siteId = employeeEntity.getSiteId();
         this.empFirstName = employeeEntity.getEmpFirstName();
         this.empMiddleName = employeeEntity.getEmpMiddleName();
         this.empLastName = employeeEntity.getEmpLastName();
         this.empDob = employeeEntity.getEmpDob();
-        this.empMobileNo =employeeEntity.getEmpMobileNo();
+        this.empMobileNo = employeeEntity.getEmpMobileNo();
         this.empEmerMobileNo = employeeEntity.getEmpEmerMobileNo();
-        this.empPhoto =employeeEntity.getEmpPhoto();
-        this.emailId= employeeEntity.getEmailId();
+        this.empPhoto = employeeEntity.getEmpPhoto();
+        this.emailId = employeeEntity.getEmailId();
         this.tempAddress = employeeEntity.getTempAddress();
-        this.permAddress= employeeEntity.getPermAddress();
-        this.empGender =employeeEntity.getEmpGender();
-        this.empBloodgroup= employeeEntity.getEmpBloodgroup();
+        this.permAddress = employeeEntity.getPermAddress();
+        this.empGender = employeeEntity.getEmpGender();
+        this.empBloodgroup = employeeEntity.getEmpBloodgroup();
         this.remark = employeeEntity.getRemark();
-        this.statusCd =employeeEntity.getStatusCd();
+        this.statusCd = employeeEntity.getStatusCd();
     }
 }

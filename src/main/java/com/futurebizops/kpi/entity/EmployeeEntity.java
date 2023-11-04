@@ -37,6 +37,9 @@ public class EmployeeEntity extends AuditEnabledEntity{
 	@Column(name = "desig_id")
 	private Integer desigId;
 
+	@Column(name = "reporting_emp_id")
+	private Integer reportingEmpId;
+
 	@Column(name = "region_id")
 	private Integer regionId;
 
@@ -85,13 +88,15 @@ public class EmployeeEntity extends AuditEnabledEntity{
 	private String statusCd;
 
 	@Builder(builderMethodName = "employeeEntityBuilder")
-	public EmployeeEntity(Integer empId,String empEId, Integer depId,  Integer desigId, Integer roleId, Integer regionId, Integer siteId,String empFirstName, String empMiddleName, String empLastName, String empDob, String empMobileNo, String empEmerMobileNo, String empPhoto, String emailId, String tempAddress, String permAddress, String empGender, String empBloodgroup, String remark,String statusCd, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
+	public EmployeeEntity(Integer empId,String empEId, Integer roleId, Integer depId,  Integer desigId, Integer reportingEmpId, Integer regionId, Integer siteId,String empFirstName, String empMiddleName, String empLastName, String empDob, String empMobileNo, String empEmerMobileNo, String empPhoto, String emailId, String tempAddress, String permAddress, String empGender, String empBloodgroup, String remark,String statusCd, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
 		super(createdDate, createdUserId, updatedDate, updatedUserId);
 		this.empId = empId;
 		this.empEId=empEId;
+		this.roleId = roleId;
 		this.deptId = depId;
 		this.desigId = desigId;
-		this.roleId = roleId;
+
+		this.reportingEmpId=reportingEmpId;
 		this.regionId=regionId;
 		this.siteId=siteId;
 		this.empFirstName = empFirstName;

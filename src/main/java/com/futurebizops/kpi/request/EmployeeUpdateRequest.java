@@ -21,6 +21,9 @@ public class EmployeeUpdateRequest {
     @Schema(example = "1", description = "This field is used for designation id")
     private Integer desigId;
 
+    @Schema(example = "1", description = "This field is used for reporting employee id")
+    private Integer reportingEmpId;
+
     @Schema(example = "1", description = "This field is used for region id")
     private Integer regionId;
 
