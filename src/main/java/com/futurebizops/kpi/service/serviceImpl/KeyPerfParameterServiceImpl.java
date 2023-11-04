@@ -112,8 +112,8 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
 
     @Override
-    public List<KPPResponse>  getKeyPerfomanceParameter(Integer deptId, Integer desigId, String statusCd) {
-        List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByDeptIdAndDesigIdAndStatusCd(deptId, desigId, statusCd);
+    public List<KPPResponse>  getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd) {
+        List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigIdAndStatusCd(roleId,deptId, desigId, statusCd);
         List<KPPResponse> kppResponses = convertEntityListToResponse(keyPerfParamEntities);
         return kppResponses;
     }

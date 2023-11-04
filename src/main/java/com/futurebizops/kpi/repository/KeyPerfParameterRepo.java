@@ -16,7 +16,7 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
 
     public Page<KeyPerfParamEntity> findByStatusCd(String status, Pageable pageable);
 
-    public List<KeyPerfParamEntity> findByDeptIdAndDesigIdAndStatusCd(Integer deptId, Integer degidId, String status);
+    public List<KeyPerfParamEntity> findByRoleIdAndDeptIdAndDesigIdAndStatusCd(Integer roleId, Integer deptId, Integer degidId, String status);
 
     @Query(value = SQLQueryConstants.KPP_QUERY, nativeQuery = true)
     List<Object[]> getKeyPerfParameterDetail(@Param("kppId") Integer kppId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
