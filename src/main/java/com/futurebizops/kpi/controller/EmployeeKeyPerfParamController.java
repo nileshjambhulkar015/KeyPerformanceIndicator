@@ -2,6 +2,7 @@ package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
+import com.futurebizops.kpi.request.EmployeeKeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +35,14 @@ public class EmployeeKeyPerfParamController {
         KPIResponse response = employeeKeyPerfParamService.saveEmployeeKeyPerfParamDetails(keyPerfParamCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PutMapping
+    public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceParamDetails(@RequestBody List<EmployeeKeyPerfParamUpdateRequest> keyPerfParamUpdateRequest) {
+        KPIResponse response = employeeKeyPerfParamService.updateEmployeeKeyPerfParamDetails(keyPerfParamUpdateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 
     //load kpp details as per role , dept and designation of employee
     @GetMapping

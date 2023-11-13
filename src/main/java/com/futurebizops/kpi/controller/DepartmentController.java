@@ -88,4 +88,9 @@ public class DepartmentController {
     public ResponseEntity<Object> findAllDepartmentFromDesigByRoleId(@PathVariable Integer roleId) {
         return new ResponseEntity<>(departmentService.findAllDepartmentFromDesigByRoleId(roleId), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/suggest")
+    public ResponseEntity<Object> findAllDepartmentById(@RequestParam(required = false) String deptName) {
+        return new ResponseEntity<>(departmentService.getAllDepartments(deptName), HttpStatus.OK);
+    }
 }

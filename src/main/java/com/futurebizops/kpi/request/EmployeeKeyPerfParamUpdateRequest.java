@@ -3,7 +3,9 @@ package com.futurebizops.kpi.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 public class EmployeeKeyPerfParamUpdateRequest {
@@ -12,10 +14,19 @@ public class EmployeeKeyPerfParamUpdateRequest {
     private Integer ekppId;
 
     @Schema(example = "2023-10-01", description = "This field is used for Employee Key Performance month")
-    private Timestamp ekppMonth;
+    private Instant ekppMonth;
 
     @Schema(example = "1", description = "This field is used for Employee Key Performance Id")
     private Integer kppId;
+
+    @Schema(example = "1", description = "This field is used for Employee E Id")
+    private Integer empId;
+
+    @Schema(example = "e1111", description = "This field is used for Employee E Id")
+    private String empEId;
+
+    @Schema(example = "1", description = "This field is used for Employee E Id")
+    private Integer roleId;
 
     @Schema(example = "1", description = "This field is used for Department Id")
     private Integer deptId;
@@ -33,46 +44,17 @@ public class EmployeeKeyPerfParamUpdateRequest {
     private String ekppOverallTaskComp;
 
     @Schema(example = "2023-10-01", description = "This field is used for Applied date")
-    private String ekppAppliedDate;
+    private Instant ekppAppliedDate;
 
     @Schema(example = "http://data", description = "This field is used for evidence")
     private String ekppEvidence;
 
-    @Schema(example = "e11", description = "This field is used for HOD Id")
-    private String hodEmpId;
-
-    @Schema(example = "Accept", description = "This field is used for HOD status")
-    private String hodKppStatus;
-
-    @Schema(example = "5", description = "This field is used for HOD rating")
-    private String hodRating;
-
-    @Schema(example = "HOD Remark", description = "This field is used for HOD remark")
-    private String hodRemark;
-
-    @Schema(example = "2023-10-01", description = "This field is used for HOD Approval date")
-    private Timestamp hodApprovedDate;
-
-    @Schema(example = "e1333", description = "This field is used for General Manager Id")
-    private String gmEmpId;
-
-    @Schema(example = "Accept", description = "This field is used for General Manager KPP Status")
-    private String gmKppStatus;
-
-    @Schema(example = "8", description = "This field is used for General Manager ratings")
-    private String gmRating;
-
-    @Schema(example = "GM remark", description = "This field is used for Employee Key Performance General Manager Remark")
-    private String gmRemark;
-
-    @Schema(example = "2023-10-01", description = "This field is used for General Manager Approval date")
-    private Timestamp gmApprovedDate;
 
     @Schema(example = "Accept", description = "This field is used for General Manager KPP status")
     private String ekppStatus;
 
     @Schema(example = "Remark", description = "This field is used for remark")
-    private String remark;
+    private String empRemark;
 
     @Schema(example = "A", description = "This field is used for Acive / Inactive")
     private String statusCd;

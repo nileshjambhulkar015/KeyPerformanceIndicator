@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public KPIResponse saveDepartment(DepartmentCreateRequest departmentCreateRequest) {
 
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDeptName());
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(departmentCreateRequest.getDeptName(),departmentCreateRequest.getRoleId() );
         if(optionalDepartmentEntity.isPresent()){
             log.error("Inside DepartmentServiceImpl >> saveDepartment()");
             throw new KPIException("DepartmentServiceImpl", false, "Department name already exist");
@@ -97,11 +98,15 @@ public class DepartmentServiceImpl implements DepartmentService {
         Integer totalCount = departmentRepo.getDepartmentCount(roleId, deptId, deptName, statusCd);
         List<Object[]> departmentData = departmentRepo.getDepartmentDetail(roleId, deptId, deptName, statusCd, sortName, pageSize, pageOffset);
 
-        List<DepartmentReponse> designationReponses = departmentData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
+        List<DepartmentReponse> departmentReponses = departmentData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
+
+        departmentReponses= departmentReponses.stream()
+                .sorted(Comparator.comparing(DepartmentReponse::getDeptName))
+                .collect(Collectors.toList());
 
         return KPIResponse.builder()
                 .isSuccess(true)
-                .responseData(new PageImpl(designationReponses, requestPageable, totalCount))
+                .responseData(new PageImpl(departmentReponses, requestPageable, totalCount))
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
     }
@@ -146,6 +151,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<Object[]> deptData = departmentRepo.getAllDepartmentFromDesigByRoleId(roleId);
         List<DepartmentReponse> departmentReponses = deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
         return  departmentReponses;
+    }
+
+    @Override
+    public List<DepartmentReponse> getAllDepartments(String deptName) {
+
+       // List<DepartmentReponse> departmentReponses =
+        return  null;
     }
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest departmentCreateRequest) {

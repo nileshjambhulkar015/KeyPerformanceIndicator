@@ -28,7 +28,7 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity, Integer>
     @Query(value = "select * from department dept where dept.status_cd ='A'", nativeQuery = true)
     public List<DepartmentEntity> findAllDepartmentDetailsForEmployee();
 
-    public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCase(String deptName);
+    public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCaseAndRoleId(String deptName, Integer roleId);
 
     @Query(value = SQLQueryConstants.DEPARTMENT_QUERY, nativeQuery = true)
     List<Object[]> getDepartmentDetail(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("deptName") String deptName, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
@@ -49,6 +49,9 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity, Integer>
 
     @Query(value = SQLQueryConstants.DEPT_BY_ROLE_ID, nativeQuery = true)
     List<Object[]> getAllDepartByRoleId(@Param("roleId") Integer roleId);
+
+    @Query(value = SQLQueryConstants.DEPT_SUGGEST, nativeQuery = true)
+    List<Object[]> getAllDepartmentByDeptName(@Param("deptName") String deptName);
 
 
 }

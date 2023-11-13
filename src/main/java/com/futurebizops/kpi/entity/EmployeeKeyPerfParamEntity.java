@@ -27,11 +27,19 @@ public class EmployeeKeyPerfParamEntity extends AuditEnabledEntity {
 
     @Column(name = "ekpp_month")
     private Instant ekppMonth;
+
     @Column(name = "kpp_id")
     private Integer kppId;
 
     @Column(name = "emp_id")
     private Integer empId;
+
+    @Column(name = "emp_eid")
+    private String empEId;
+
+    @Column(name = "role_id")
+    private Integer roleId;
+
     @Column(name = "dept_id")
     private Integer deptId;
 
@@ -85,6 +93,7 @@ public class EmployeeKeyPerfParamEntity extends AuditEnabledEntity {
 
     @Column(name = "ekpp_status")
     private String ekppStatus;
+
     @Column(name = "remark")
     private String remark;
 
@@ -92,11 +101,13 @@ public class EmployeeKeyPerfParamEntity extends AuditEnabledEntity {
     private String statusCd;
 
     @Builder(builderMethodName = "keyEmployeePerfParamEntityBuilder")
-    public EmployeeKeyPerfParamEntity(Integer ekppId, Integer kppId, Integer empId, Integer deptId, Integer desigId, Instant ekppMonth, String ekppAchivedWeight, String ekppOverallAchieve, String ekppOverallTaskComp, Instant ekppAppliedDate, String ekppEvidence, String ekppStatus, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public EmployeeKeyPerfParamEntity(Integer ekppId, Integer kppId, Integer empId, String empEId, Integer roleId,Integer deptId, Integer desigId, Instant ekppMonth, String ekppAchivedWeight, String ekppOverallAchieve, String ekppOverallTaskComp, Instant ekppAppliedDate, String ekppEvidence, String ekppStatus, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.ekppId = ekppId;
         this.kppId = kppId;
         this.empId = empId;
+        this.empEId=empEId;
+        this.roleId=roleId;
         this.deptId = deptId;
         this.desigId = desigId;
         this.ekppMonth = ekppMonth;

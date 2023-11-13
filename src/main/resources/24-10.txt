@@ -7,12 +7,12 @@ drop TABLE designation;
 drop TABLE designation_audit;
 drop TABLE roles;
 drop TABLE roles_audit;
-DROP TABLE employee;
-DROP TABLE employee_audit;
-drop TABLE employee_login;
-drop TABLE employee_login_audit;
-drop table rating_ratio;
-drop table rating_ratio_audit; 
+drop table employee
+drop table employee_audit
+drop table employee_login
+drop table employee_login_audit
+drop table employee_key_perf_parameter
+drop table employee_key_perf_parameter_audit
 **/
 
 create table roles(
@@ -70,7 +70,7 @@ create table designation(
     DESIG_ID serial  PRIMARY key,
     ROLE_ID INTEGER,
 	DEPT_ID INTEGER,
-	DESIG_NAME VARCHAR(20),
+	DESIG_NAME VARCHAR(30),
     REMARK VARCHAR(100),
     STATUS_CD VARCHAR(10),
 	crte_user_id VARCHAR(20) ,
@@ -86,7 +86,7 @@ create table designation_audit(
 	DESIG_ID INTEGER,
 	ROLE_ID INTEGER,
 	DEPT_ID INTEGER,
-    DESIG_NAME VARCHAR(20),
+    DESIG_NAME VARCHAR(30),
     REMARK VARCHAR(100),
     STATUS_CD VARCHAR(10),
 	crte_user_id VARCHAR(20) ,
@@ -175,6 +175,56 @@ create table location_audit(
 	lst_updt_user_id VARCHAR(20) null
 );
 
+create table key_perf_parameter(
+    kpp_id serial PRIMARY key,
+    ROLE_ID INTEGER,
+    dept_id INTEGER,
+	desig_id INTEGER,
+	kpp_objective VARCHAR(200),
+	kpp_performance_indi VARCHAR(200),
+	kpp_overall_tar VARCHAR(50),
+	kpp_target_period VARCHAR(50),
+	kpp_unit_of_measu VARCHAR(50),
+	kpp_overall_weightage VARCHAR(50),
+    kpp_rating1 VARCHAR(10),
+    kpp_rating2 VARCHAR(10),
+    kpp_rating3 VARCHAR(10),
+    kpp_rating4 VARCHAR(10),
+	kpp_rating5 VARCHAR(10),
+	kpp_description VARCHAR(100),
+    remark VARCHAR(100),
+    status_cd VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+create table key_perf_parameter_audit(
+    kpp_aud_id serial PRIMARY key,
+    kpp_id INTEGER,
+    ROLE_ID INTEGER,
+    dept_id INTEGER,
+	desig_id INTEGER,
+	kpp_objective VARCHAR(200),
+	kpp_performance_indi VARCHAR(200),
+	kpp_overall_tar VARCHAR(50),
+	kpp_target_period VARCHAR(50),
+	kpp_unit_of_measu VARCHAR(50),
+	kpp_overall_weightage VARCHAR(50),
+    kpp_rating1 VARCHAR(10),
+    kpp_rating2 VARCHAR(10),
+    kpp_rating3 VARCHAR(10),
+    kpp_rating4 VARCHAR(10),
+	kpp_rating5 VARCHAR(10),
+	kpp_description VARCHAR(100),
+    remark VARCHAR(100),
+    status_cd VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null);
 
 
 create table employee(
@@ -271,63 +321,12 @@ create table employee_login_audit(
 );
 
 
-create table key_perf_parameter(
-    kpp_id serial PRIMARY key,
-    ROLE_ID INTEGER,
-    dept_id INTEGER,
-	desig_id INTEGER,
-	kpp_objective VARCHAR(200),
-	kpp_performance_indi VARCHAR(200),
-	kpp_overall_tar VARCHAR(50),
-	kpp_target_period VARCHAR(50),
-	kpp_unit_of_measu VARCHAR(50),
-	kpp_overall_weightage VARCHAR(50),
-    kpp_rating1 VARCHAR(10),
-    kpp_rating2 VARCHAR(10),
-    kpp_rating3 VARCHAR(10),
-    kpp_rating4 VARCHAR(10),
-	kpp_rating5 VARCHAR(10),
-	kpp_description VARCHAR(100),
-    remark VARCHAR(100),
-    status_cd VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null
-);
-
-
-create table key_perf_parameter_audit(
-    kpp_aud_id serial PRIMARY key,
-    kpp_id INTEGER,
-    ROLE_ID INTEGER,
-    dept_id INTEGER,
-	desig_id INTEGER,
-	kpp_objective VARCHAR(200),
-	kpp_performance_indi VARCHAR(200),
-	kpp_overall_tar VARCHAR(50),
-	kpp_target_period VARCHAR(50),
-	kpp_unit_of_measu VARCHAR(50),
-	kpp_overall_weightage VARCHAR(50),
-    kpp_rating1 VARCHAR(10),
-    kpp_rating2 VARCHAR(10),
-    kpp_rating3 VARCHAR(10),
-    kpp_rating4 VARCHAR(10),
-	kpp_rating5 VARCHAR(10),
-	kpp_description VARCHAR(100),
-    remark VARCHAR(100),
-    status_cd VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null);
-
-
-
 create table employee_key_perf_parameter(
     ekpp_id serial PRIMARY key,   
     ekpp_month timestamp,
 	emp_id INTEGER,
+	emp_eid VARCHAR(20) ,
+	role_id INTEGER,
     dept_id INTEGER,
 	desig_id INTEGER,
 	kpp_id INTEGER,
@@ -336,6 +335,7 @@ create table employee_key_perf_parameter(
 	ekpp_overall_task_comp VARCHAR(50),
 	ekpp_applied_date timestamp,
 	ekpp_evidence varchar(100),
+	emp_remark  VARCHAR(200),
 	hod_emp_id varchar(20),
 	hod_kpp_status varchar(20),
 	hod_rating varchar(20),
@@ -358,9 +358,11 @@ create table employee_key_perf_parameter(
 
 create table employee_key_perf_parameter_audit(
     ekpp_aud_id serial PRIMARY key,    
-      ekpp_id INTEGER,
+    ekpp_id INTEGER,
     ekpp_month timestamp,
 	emp_id INTEGER,
+	emp_eid VARCHAR(20) ,
+    role_id INTEGER,
     dept_id INTEGER,
 	desig_id INTEGER,
 	kpp_id INTEGER,
@@ -369,6 +371,7 @@ create table employee_key_perf_parameter_audit(
 	ekpp_overall_task_comp VARCHAR(50),
 	ekpp_applied_date timestamp,
 	ekpp_evidence varchar(100),
+	emp_remark  VARCHAR(200),
 	hod_emp_id varchar(20),
 	hod_kpp_status varchar(20),
 	hod_rating varchar(20),
@@ -392,8 +395,10 @@ create table employee_key_perf_parameter_audit(
 
 create table report_employee_key_perf_parameter(
     report_ekpp_id serial PRIMARY key,
-    emp_id integer,   
     ekpp_month timestamp,
+    emp_id integer,
+    emp_eid VARCHAR(20) ,
+    role_id INTEGER,
     dept_id INTEGER,
 	desig_id INTEGER,
 	kpp_id INTEGER,
@@ -425,8 +430,10 @@ create table report_employee_key_perf_parameter(
 create table report_employee_key_perf_parameter_audit(
 report_ekpp_aud_id serial PRIMARY key,
     report_ekpp_id integer,
-    emp_id integer,   
     ekpp_month timestamp,
+    emp_id integer,
+    emp_eid VARCHAR(20) ,
+    role_id INTEGER,
     dept_id INTEGER,
 	desig_id INTEGER,
 	kpp_id INTEGER,

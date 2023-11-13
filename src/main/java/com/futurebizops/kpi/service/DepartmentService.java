@@ -30,4 +30,6 @@ public interface DepartmentService {
 
     public List<DepartmentReponse> findAllDepartmentFromDesigByRoleId(Integer roleId);
 
+    public List<DepartmentReponse> getAllDepartments(String deptName);
+
 }

@@ -8,6 +8,7 @@ import com.futurebizops.kpi.request.GMUpdateRequest;
 import com.futurebizops.kpi.request.HODApprovalUpdateRequest;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
+import com.futurebizops.kpi.response.HodEmployeeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.response.RoleResponse;
@@ -19,7 +20,7 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest);
 
-    public KPIResponse updateEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamUpdateRequest keyPerfParamUpdateRequest);
+    public KPIResponse updateEmployeeKeyPerfParamDetails(List<EmployeeKeyPerfParamUpdateRequest> keyPerfParamUpdateRequest);
 
     public KPIResponse updateHoDApprovalRequest(List<HODApprovalUpdateRequest> hodApprovalUpdateRequests);
 
@@ -27,6 +28,7 @@ public interface EmployeeKeyPerfParamService {
 
     public List<KPPResponse> getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd);
 
+    public KPIResponse getAllEmployeeDetailsForHod(Integer reportingEmployee,Integer empId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable);
 
    // public KPIResponse findRoleDetails(RoleSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection);
 

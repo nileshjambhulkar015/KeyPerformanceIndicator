@@ -31,8 +31,18 @@ public class EmployeeKeyPerfParamAudit extends AuditEnabledEntity{
 
     @Column(name = "ekpp_month")
     private Instant ekppMonth;
+
     @Column(name = "kpp_id")
     private Integer kppId;
+
+    @Column(name = "emp_id")
+    private Integer empId;
+
+    @Column(name = "emp_eid")
+    private String empEId;
+
+    @Column(name = "role_id")
+    private Integer roleId;
 
     @Column(name = "dept_id")
     private Integer deptId;
@@ -87,6 +97,7 @@ public class EmployeeKeyPerfParamAudit extends AuditEnabledEntity{
 
     @Column(name = "ekpp_status")
     private String ekppStatus;
+
     @Column(name = "remark")
     private String remark;
 
@@ -97,6 +108,9 @@ public class EmployeeKeyPerfParamAudit extends AuditEnabledEntity{
         super(employeeKeyPerfParamEntity.getCreatedDate(), employeeKeyPerfParamEntity.getCreatedUserId(), employeeKeyPerfParamEntity.getUpdatedDate(), employeeKeyPerfParamEntity.getUpdatedUserId());
         this.ekppId = employeeKeyPerfParamEntity.getEkppId();
         this.kppId = employeeKeyPerfParamEntity.getKppId();
+        this.empId=employeeKeyPerfParamEntity.getEmpId();
+        this.empEId=employeeKeyPerfParamEntity.getEmpEId();
+        this.roleId=employeeKeyPerfParamEntity.getRoleId();
         this.deptId = employeeKeyPerfParamEntity.getDeptId();
         this.desigId = employeeKeyPerfParamEntity.getDesigId();
         this.ekppMonth = employeeKeyPerfParamEntity.getEkppMonth();

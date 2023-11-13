@@ -3,13 +3,19 @@ package com.futurebizops.kpi.service.serviceImpl;
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.EmployeeAudit;
 import com.futurebizops.kpi.entity.EmployeeEntity;
+import com.futurebizops.kpi.entity.EmployeeKeyPerfParamAudit;
+import com.futurebizops.kpi.entity.EmployeeKeyPerfParamEntity;
 import com.futurebizops.kpi.entity.EmployeeLoginAudit;
 import com.futurebizops.kpi.entity.EmployeeLoginEntity;
+import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EmployeeAuditRepo;
+import com.futurebizops.kpi.repository.EmployeeKeyPerfParamAuditRepo;
+import com.futurebizops.kpi.repository.EmployeeKeyPerfParamRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginRepo;
 import com.futurebizops.kpi.repository.EmployeeRepo;
+import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
@@ -23,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -37,6 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepo employeeRepo;
+
     @Autowired
     private EmployeeAuditRepo employeeAuditRepo;
 
@@ -46,11 +54,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeLoginAuditRepo employeeLoginAuditRepo;
 
-    //Generate random number for employee till 1000 only.. increase size if you want to create more
-    Random randEid = new Random();
-    int empEId = randEid.nextInt(1000);
+    @Autowired
+    private KeyPerfParameterRepo keyPerfParameterRepo;
+
+    @Autowired
+    private EmployeeKeyPerfParamRepo employeeKeyPerfParamRepo;
+
+    @Autowired
+    private EmployeeKeyPerfParamAuditRepo employeeKeyPerfParamAuditRepo;
+
+
+
+    @Transactional
     @Override
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
+        //Generate random number for employee till 1000 only.. increase size if you want to create more
+        Random randEid = new Random();
+        int empEId = randEid.nextInt(1000);
 
         Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findByEmpMobileNoOrEmailIdEqualsIgnoreCase(employeeCreateRequest.getEmpMobileNo(), employeeCreateRequest.getEmailId());
         if (optionalEmployeeEntity.isPresent()) {
@@ -58,12 +78,33 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new KPIException("EmployeeServiceImpl", false, "Employee Mobile number or email id already exist");
         }
         EmployeeEntity employeeEntity = convertEmployeeCreateRequestToEntity(employeeCreateRequest);
+        employeeEntity.setEmpEId("e"+empEId);
         try {
+
+            List<KeyPerfParamEntity> empKpp= keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
+           List<EmployeeKeyPerfParamEntity> paramEntities = new ArrayList<>();
+            for(KeyPerfParamEntity keyPerfParam : empKpp){
+                EmployeeKeyPerfParamEntity keyPerfParamEntity = new EmployeeKeyPerfParamEntity();
+                keyPerfParamEntity.setEmpEId("e"+empEId);
+                keyPerfParamEntity.setRoleId(employeeEntity.getRoleId());
+                keyPerfParamEntity.setDeptId(employeeEntity.getDeptId());
+                keyPerfParamEntity.setDesigId(employeeEntity.getDesigId());
+                keyPerfParamEntity.setKppId(keyPerfParam.getKppId());
+                keyPerfParamEntity.setStatusCd("A");
+                keyPerfParamEntity.setRemark("Employee KPP added at the time of registration");
+                paramEntities.add(keyPerfParamEntity);
+
+                EmployeeKeyPerfParamAudit keyPerfParamAudit = new EmployeeKeyPerfParamAudit(keyPerfParamEntity);
+                employeeKeyPerfParamAuditRepo.save(keyPerfParamAudit);
+            }
+            employeeKeyPerfParamRepo.saveAll(paramEntities);
+
             employeeRepo.save(employeeEntity);
             EmployeeAudit employeeAudit = new EmployeeAudit(employeeEntity);
             employeeAuditRepo.save(employeeAudit);
 
             EmployeeLoginEntity employeeLoginEntity = convertRequestToEmployeeLogin(employeeCreateRequest);
+            employeeLoginEntity.setEmpEId("e"+empEId);
             employeeLoginRepo.save(employeeLoginEntity);
             EmployeeLoginAudit employeeLoginAudit = new EmployeeLoginAudit(employeeLoginEntity);
             employeeLoginAuditRepo.save(employeeLoginAudit);
@@ -133,7 +174,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeLoginEntity.employeeLoginEntityBuilder()
-                .empEId("e"+empEId)
+
                 .roleId(employeeCreateRequest.getRoleId())
                 .deptId(employeeCreateRequest.getDeptId())
                 .desigId(employeeCreateRequest.getDesigId())
@@ -148,7 +189,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeEntity convertEmployeeCreateRequestToEntity(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeEntity.employeeEntityBuilder()
-                .empEId("e"+empEId)
                 .roleId(employeeCreateRequest.getRoleId())
                 .depId(employeeCreateRequest.getDeptId())
                 .desigId(employeeCreateRequest.getDesigId())

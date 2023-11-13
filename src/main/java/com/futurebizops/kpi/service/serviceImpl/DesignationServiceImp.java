@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -81,7 +82,7 @@ public class DesignationServiceImp implements DesignationService {
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside DesignationServiceImp >> updateDesignation()");
+            log.error("Inside DesignationServiceImp >> updateDesignation() : {}",ex);
             throw new KPIException("DesignationServiceImp", false, ex.getMessage());
         }
     }
@@ -104,6 +105,10 @@ public class DesignationServiceImp implements DesignationService {
         List<Object[]> designationData = designationRepo.getDesignationDetail(roleId,deptId, desigName, statusCd, sortName, pageSize, pageOffset);
 
         List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
+
+        designationReponses= designationReponses.stream()
+                .sorted(Comparator.comparing(DesignationReponse::getDeptName))
+                .collect(Collectors.toList());
 
         return KPIResponse.builder()
                 .isSuccess(true)
