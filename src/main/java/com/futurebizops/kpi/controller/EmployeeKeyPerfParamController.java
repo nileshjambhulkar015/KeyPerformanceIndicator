@@ -4,6 +4,7 @@ import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
+import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
@@ -45,7 +46,7 @@ public class EmployeeKeyPerfParamController {
 
 
     //load kpp details as per role , dept and designation of employee
-    @GetMapping
+    @GetMapping(value = "/kpp")
     public ResponseEntity<List<KPPResponse>> findAllKeyPerfomanceParam(@RequestParam(required = false) Integer roleId,
                                                                        @RequestParam(required = false) Integer deptId,
                                                                        @RequestParam(required = false) Integer desigId,
@@ -55,4 +56,6 @@ public class EmployeeKeyPerfParamController {
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
+
+
 }

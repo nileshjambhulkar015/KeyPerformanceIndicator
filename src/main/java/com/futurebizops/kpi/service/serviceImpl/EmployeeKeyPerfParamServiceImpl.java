@@ -13,6 +13,7 @@ import com.futurebizops.kpi.request.EmployeeKeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.request.GMUpdateRequest;
 import com.futurebizops.kpi.request.HODApprovalUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
+import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.HodEmployeeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
@@ -120,6 +121,16 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     public List<KPPResponse>  getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd) {
         List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigIdAndStatusCd(roleId,deptId, desigId, statusCd);
         return  convertEntityListToResponse(keyPerfParamEntities);
+    }
+
+    @Override
+    public List<HodEmploeeKppResponse> getEmployeeForHodRatings(Integer empId, String statusCd) {
+        List<Object[]> employeeKppData = keyPerfParameterRepo.getEmployeeKeyPerfParameterDetail(empId, statusCd);
+        List<HodEmploeeKppResponse> hodEmployeeResponses = employeeKppData.stream().map(HodEmploeeKppResponse::new).collect(Collectors.toList());
+        hodEmployeeResponses = hodEmployeeResponses.stream()
+                .sorted(Comparator.comparing(HodEmploeeKppResponse::getKppObjective))
+                .collect(Collectors.toList());
+        return hodEmployeeResponses;
     }
 
     @Override

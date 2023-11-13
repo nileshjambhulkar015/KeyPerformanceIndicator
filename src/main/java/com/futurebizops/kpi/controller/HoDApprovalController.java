@@ -1,9 +1,7 @@
 package com.futurebizops.kpi.controller;
 
-import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.HODApprovalUpdateRequest;
-import com.futurebizops.kpi.response.EmployeeResponse;
-import com.futurebizops.kpi.response.HodEmployeeResponse;
+import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +48,13 @@ public class HoDApprovalController {
         KPIResponse response = keyPerfParamService.getAllEmployeeDetailsForHod(reportingEmployee, empId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    //load kpp details as per employee id for hod ratings
+    @GetMapping(value = "/employee-kpp")
+    public ResponseEntity<List<HodEmploeeKppResponse>> getEmployeeForHodRatings(@RequestParam(required = false) Integer empId,
+                                                                        @RequestParam(required = false) String statusCd) {
+        List<HodEmploeeKppResponse> response = keyPerfParamService.getEmployeeForHodRatings(empId, statusCd);
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
 
 }

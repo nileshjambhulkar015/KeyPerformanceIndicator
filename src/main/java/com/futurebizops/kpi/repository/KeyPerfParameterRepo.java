@@ -36,4 +36,8 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     @Query(value = SQLQueryConstants.HOD_EMPLOYEE_COUNT_QUERY, nativeQuery = true)
     Integer getEmployeeCount(@Param("reportingEmployee") Integer reportingEmployee,@Param("empId") Integer empId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd);
 
+    //When hod want to give rating to employee
+    @Query(value = SQLQueryConstants.EMPLOYEE_KPP_QUERY, nativeQuery = true)
+    List<Object[]> getEmployeeKeyPerfParameterDetail(@Param("empId") Integer empId, @Param("statusCd") String statusCd);
+
 }
