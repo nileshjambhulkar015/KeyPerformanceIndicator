@@ -11,6 +11,7 @@ import com.futurebizops.kpi.service.EmployeeLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -54,6 +55,22 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
         return KPIResponse.builder()
                 .isSuccess(false)
                 .responseMessage("User name or password is wrong")
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse updateLoginPassword(String userName, String userPassword) {
+        int result=employeeLoginRepo.updatePassword(userName, userPassword);
+        if(result>0){
+           return KPIResponse.builder()
+                   .isSuccess(true)
+                   .responseMessage("Password changed successfully")
+                   .build();
+        }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Try again..")
                 .build();
     }
 }

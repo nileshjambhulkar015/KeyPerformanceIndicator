@@ -6,4 +6,6 @@ public interface EmployeeLoginService {
     
 
     public KPIResponse employeeLogin(String userName, String userPassword);
+
+    public KPIResponse updateLoginPassword(String userName, String userPassword);
 }
