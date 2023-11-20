@@ -24,9 +24,10 @@ public class EmployeeLoginController {
     private EmployeeLoginService employeeLoginService;
 
     @GetMapping
-    public ResponseEntity<KPIResponse> findPartDetails(@RequestParam(required = false) String userName,
+    public ResponseEntity<KPIResponse> findPartDetails(@RequestParam(required = false) Integer roleId,
+                                                       @RequestParam(required = false) String userName,
                                                        @RequestParam(required = false) String userPassword) {
-        KPIResponse response = employeeLoginService.employeeLogin(userName, userPassword);
+        KPIResponse response = employeeLoginService.employeeLogin(roleId, userName, userPassword);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
