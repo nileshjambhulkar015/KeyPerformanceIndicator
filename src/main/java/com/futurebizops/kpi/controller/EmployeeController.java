@@ -3,6 +3,7 @@ package com.futurebizops.kpi.controller;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
+import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -58,6 +61,20 @@ public class EmployeeController {
     @GetMapping(value = "/{empId}")
     public ResponseEntity<EmployeeResponse> getAllEmployee(@PathVariable Integer empId) {
         EmployeeResponse response = employeeService.getAllEmployeeById(empId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/search-by-id")
+    public ResponseEntity<EmployeeSearchResponse> getEmployeeSearchById(@RequestParam(required = false) Integer empId) {
+        EmployeeSearchResponse response = employeeService.getEmployeeSearchById(empId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/suggest")
+    public ResponseEntity<List<EmployeeSearchResponse>> getEmployeeSuggest(@RequestParam(required = false) Integer roleId,
+                                                                           @RequestParam(required = false) Integer deptId,
+                                                                           @RequestParam(required = false) Integer desigId) {
+        List<EmployeeSearchResponse> response = employeeService.getEmployeeSuggestByName(roleId,deptId,desigId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

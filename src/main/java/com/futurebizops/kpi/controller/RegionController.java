@@ -1,11 +1,8 @@
 package com.futurebizops.kpi.controller;
 
-import com.futurebizops.kpi.request.DepartmentCreateRequest;
-import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.request.RegionCreateRequest;
 import com.futurebizops.kpi.request.RegionUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.service.RegionService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;

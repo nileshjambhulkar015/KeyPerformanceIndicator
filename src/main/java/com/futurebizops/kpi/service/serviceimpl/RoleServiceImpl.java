@@ -1,7 +1,6 @@
-package com.futurebizops.kpi.service.serviceImpl;
+package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
-import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.entity.RoleAudit;
 import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.enums.RoleSearchEnum;
@@ -11,7 +10,6 @@ import com.futurebizops.kpi.repository.RoleAuditRepo;
 import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
-import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RoleResponse;
 import com.futurebizops.kpi.service.RoleService;
@@ -42,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
         Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleCreateRequest.getRoleName());
         if(optionalRoleEntity.isPresent()){
             log.error("Inside RoleServiceImpl >> saveRole()");
-            throw new KPIException("RoleServiceImpl", false, "Role name already exist");
+            throw new KPIException("RoleServiceImpl Class", false, "Role name already exist");
         }
 
         RoleEntity roleEntity = convertRoleCreateRequestToEntity(roleCreateRequest);
@@ -136,14 +134,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleResponse> getAllRoleFromDeptId() {
         List<Object[]> roleData = roleRepo.getAllRoleFromDept();
-        List<RoleResponse> roleResponses = roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
-        return  roleResponses;
+        return roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
     }
     @Override
     public List<RoleResponse> findAllRoleForKpp() {
         List<Object[]> roleData = roleRepo.getAllRoleFromDesignation();
-        List<RoleResponse> roleResponses = roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
-        return  roleResponses;
+        return roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
     }
 
     private RoleEntity convertRoleCreateRequestToEntity(RoleCreateRequest roleCreateRequest) {

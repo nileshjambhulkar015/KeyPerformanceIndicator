@@ -1,23 +1,18 @@
-package com.futurebizops.kpi.service.serviceImpl;
+package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.KeyPerfParamAudit;
 import com.futurebizops.kpi.entity.KeyPerfParamEntity;
-import com.futurebizops.kpi.enums.KeyPerfParamSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.KeyPerfParameterAuditRepo;
 import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
-import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
-import com.futurebizops.kpi.utils.KPIUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -76,14 +71,14 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     @Override
     public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId, Integer desigId, String kppObjective, String statusCd, Pageable pageable) {
         String sortName = null;
-        String sortDirection = null;
+        //String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
         Integer pageOffset = (int) pageable.getOffset();
         // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
         Optional<Sort.Order> order = pageable.getSort().get().findFirst();
         if (order.isPresent()) {
             sortName = order.get().getProperty();  //order by this field
-            sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+          //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
         Integer totalCount = keyPerfParameterRepo.getKeyPerfParameterCount(kppId, roleId, deptId, desigId, kppObjective, statusCd);
@@ -96,7 +91,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
         return KPIResponse.builder()
                 .isSuccess(true)
-                .responseData(new PageImpl(kppResponses, pageable, totalCount))
+                .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
     }

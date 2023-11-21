@@ -60,7 +60,6 @@ public class DesignationController {
 
     }
 
-
     // for dropdown list
     @GetMapping(value = "by/{deptId}")
     public ResponseEntity<Object> findAllDesignationDetails(@PathVariable Integer deptId) {

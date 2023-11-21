@@ -1,25 +1,19 @@
-package com.futurebizops.kpi.service.serviceImpl;
+package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.DepartmentAudit;
 import com.futurebizops.kpi.entity.DepartmentEntity;
-import com.futurebizops.kpi.enums.DepartmentSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.DepartmentAuditRepo;
 import com.futurebizops.kpi.repository.DepartmentRepo;
 import com.futurebizops.kpi.request.DepartmentCreateRequest;
 import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
-import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.response.RoleResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 
-import com.futurebizops.kpi.utils.KPIUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,7 +41,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(departmentCreateRequest.getDeptName(),departmentCreateRequest.getRoleId() );
         if(optionalDepartmentEntity.isPresent()){
             log.error("Inside DepartmentServiceImpl >> saveDepartment()");
-            throw new KPIException("DepartmentServiceImpl", false, "Department name already exist");
+            throw new KPIException("DepartmentServiceImpl Class", false, "Department name already exist");
         }
 
         DepartmentEntity departmentEntity = convertDepartmentCreateRequestToEntity(departmentCreateRequest);
@@ -85,14 +79,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public KPIResponse findDepartmentDetails(Integer roleId, Integer deptId, String deptName, String statusCd, Pageable requestPageable) {
         String sortName = null;
-        String sortDirection = null;
+      //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
         Integer pageOffset = (int) requestPageable.getOffset();
         // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
         Optional<Sort.Order> order = requestPageable.getSort().get().findFirst();
         if (order.isPresent()) {
             sortName = order.get().getProperty();  //order by this field
-            sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+            //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
         Integer totalCount = departmentRepo.getDepartmentCount(roleId, deptId, deptName, statusCd);
@@ -106,7 +100,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         return KPIResponse.builder()
                 .isSuccess(true)
-                .responseData(new PageImpl(departmentReponses, requestPageable, totalCount))
+                .responseData(new PageImpl<>(departmentReponses, requestPageable, totalCount))
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
     }
@@ -141,16 +135,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<DepartmentReponse> getAllDepartmentByRoleId(Integer roleId) {
         List<Object[]> deptData = departmentRepo.getAllDepartByRoleId(roleId);
-        List<DepartmentReponse> departmentReponses = deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
-        return  departmentReponses;
+        return deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
     }
 
     //for KPP load department from role id. role id taking from designation table
     @Override
     public List<DepartmentReponse> findAllDepartmentFromDesigByRoleId(Integer roleId) {
         List<Object[]> deptData = departmentRepo.getAllDepartmentFromDesigByRoleId(roleId);
-        List<DepartmentReponse> departmentReponses = deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
-        return  departmentReponses;
+        return deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
     }
 
     @Override

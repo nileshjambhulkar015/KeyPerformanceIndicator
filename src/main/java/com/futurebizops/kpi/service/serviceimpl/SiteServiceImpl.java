@@ -1,4 +1,4 @@
-package com.futurebizops.kpi.service.serviceImpl;
+package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.SiteAudit;
@@ -32,7 +32,7 @@ public class SiteServiceImpl implements SiteService {
         Optional<SiteEntity> designationEntities = siteRepo.findByRegionIdAndSiteNameEqualsIgnoreCase(siteCreateRequest.getRegionId(), siteCreateRequest.getSiteName());
         if (designationEntities.isPresent()) {
             log.error("Inside SiteServiceImpl >> saveSite()");
-            throw new KPIException("SiteServiceImpl", false, "Site name already exist");
+            throw new KPIException("SiteServiceImpl class", false, "Site name already exist");
         }
 
         SiteEntity siteEntity = convertSiteCreateRequestToEntity(siteCreateRequest);

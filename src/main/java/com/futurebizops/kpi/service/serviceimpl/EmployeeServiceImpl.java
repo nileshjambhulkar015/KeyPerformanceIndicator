@@ -1,6 +1,7 @@
-package com.futurebizops.kpi.service.serviceImpl;
+package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
+import com.futurebizops.kpi.entity.AuditEnabledEntity;
 import com.futurebizops.kpi.entity.EmployeeAudit;
 import com.futurebizops.kpi.entity.EmployeeEntity;
 import com.futurebizops.kpi.entity.EmployeeKeyPerfParamAudit;
@@ -19,8 +20,8 @@ import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
+import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,19 +64,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeKeyPerfParamAuditRepo employeeKeyPerfParamAuditRepo;
 
-
+    Random randEid=null;
 
     @Transactional
     @Override
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
         //Generate random number for employee till 1000 only.. increase size if you want to create more
-        Random randEid = new Random();
+        randEid = new Random();
         int empEId = randEid.nextInt(1000);
 
         Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findByEmpMobileNoOrEmailIdEqualsIgnoreCase(employeeCreateRequest.getEmpMobileNo(), employeeCreateRequest.getEmailId());
         if (optionalEmployeeEntity.isPresent()) {
             log.error("Inside EmployeeServiceImpl >> saveEmployee()");
-            throw new KPIException("EmployeeServiceImpl", false, "Employee Mobile number or email id already exist");
+            throw new KPIException("EmployeeServiceImpl Class", false, "Employee Mobile number or email id already exist");
         }
         EmployeeEntity employeeEntity = convertEmployeeCreateRequestToEntity(employeeCreateRequest);
         employeeEntity.setEmpEId("e"+empEId);
@@ -139,14 +140,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public KPIResponse getAllEmployeeDetails(Integer empId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable) {
         String sortName = null;
-        String sortDirection = null;
+      //  String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
         Integer pageOffset = (int) pageable.getOffset();
         // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
         Optional<Sort.Order> order = pageable.getSort().get().findFirst();
         if (order.isPresent()) {
             sortName = order.get().getProperty();  //order by this field
-            sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+          //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
         Integer totalCount = employeeRepo.getEmployeeCount(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd);
@@ -159,7 +160,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return KPIResponse.builder()
                 .isSuccess(true)
-                .responseData(new PageImpl(employeeResponses, pageable, totalCount))
+                .responseData(new PageImpl<>(employeeResponses, pageable, totalCount))
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
     }
@@ -171,10 +172,37 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeResponses.get(0);
     }
 
+    @Override
+    public EmployeeSearchResponse getEmployeeSearchById(Integer empId) {
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeSearchById(empId);
+        List<EmployeeSearchResponse> employeeResponses = employeeDetail.stream().map(EmployeeSearchResponse::new).collect(Collectors.toList());
+        return employeeResponses.get(0);
+    }
+
+    @Override
+    public List<EmployeeSearchResponse> getEmployeeSuggestByName(Integer roleId, Integer deptId, Integer desigId) {
+        if(1==roleId){
+            return new ArrayList<>();
+        }
+        List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleIdAndDeptIdAndDesigId(roleId,deptId,desigId);
+        return  employeeEntities.stream()
+                .map(empDetails->EmployeeSearchResponse.builder()
+                        .empId(empDetails.getEmpId())
+                        .empEId(empDetails.getEmpEId())
+                        .roleId(empDetails.getRoleId())
+                        .deptId(empDetails.getDeptId())
+                        .desigId(empDetails.getDesigId())
+                        .empFirstName(empDetails.getEmpFirstName())
+                        .empMiddleName(empDetails.getEmpMiddleName())
+                        .empLastName(empDetails.getEmpLastName())
+                        .build())
+                .collect(Collectors.toList());
+
+    }
+
 
     private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeLoginEntity.employeeLoginEntityBuilder()
-
                 .roleId(employeeCreateRequest.getRoleId())
                 .deptId(employeeCreateRequest.getDeptId())
                 .desigId(employeeCreateRequest.getDesigId())
@@ -245,18 +273,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private String getCreatedEmployeeName(Integer empId) {
         Optional<EmployeeEntity> employeeEntity = employeeRepo.findById(empId);
-        if (employeeEntity.isPresent()) {
-            return employeeEntity.get().getCreatedUserId();
-        }
-        return null;
+        return employeeEntity.map(AuditEnabledEntity::getCreatedUserId).orElse(null);
     }
 
     private Instant getCreatedDateTime(Integer empId) {
         Optional<EmployeeEntity> employeeEntity = employeeRepo.findById(empId);
-        if (employeeEntity.isPresent()) {
-            return employeeEntity.get().getCreatedDate();
-        }
-        return null;
+        return employeeEntity.map(AuditEnabledEntity::getCreatedDate).orElse(null);
     }
 
 }

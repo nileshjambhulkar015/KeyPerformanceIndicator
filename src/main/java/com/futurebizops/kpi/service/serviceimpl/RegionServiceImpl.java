@@ -1,25 +1,18 @@
-package com.futurebizops.kpi.service.serviceImpl;
+package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
-import com.futurebizops.kpi.entity.DepartmentAudit;
-import com.futurebizops.kpi.entity.DepartmentEntity;
-import com.futurebizops.kpi.entity.DesignationEntity;
 import com.futurebizops.kpi.entity.RegionAudit;
 import com.futurebizops.kpi.entity.RegionEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.RegionAuditRepo;
 import com.futurebizops.kpi.repository.RegionRepo;
-import com.futurebizops.kpi.request.DepartmentCreateRequest;
-import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.request.RegionCreateRequest;
 import com.futurebizops.kpi.request.RegionUpdateRequest;
-import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RegionResponse;
 import com.futurebizops.kpi.service.RegionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -42,7 +35,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public KPIResponse saveRegion(RegionCreateRequest regionCreateRequest) {
         Optional<RegionEntity> optionalRegionEntity = regionRepo.findByRegionNameEqualsIgnoreCase(regionCreateRequest.getRegionName());
-        if(optionalRegionEntity.isPresent()){
+        if (optionalRegionEntity.isPresent()) {
             log.error("Inside RegionServiceImpl >> saveRegion()");
             throw new KPIException("RegionServiceImpl", false, "Region name already exist");
         }
@@ -81,17 +74,15 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public KPIResponse findRegionDetails(Integer regionId, String regionName, String statusCd, Pageable requestPageable) {
-        Page<DesignationEntity> departmentEntities = null;
-
         String sortName = null;
-        String sortDirection = null;
+        // String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
         Integer pageOffset = (int) requestPageable.getOffset();
 
         Optional<Sort.Order> order = requestPageable.getSort().get().findFirst();
         if (order.isPresent()) {
             sortName = order.get().getProperty();  //order by this field
-            sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+            // sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
         Integer totalCount = regionRepo.getRegionCount(regionId, regionName, statusCd);

@@ -1,12 +1,9 @@
-package com.futurebizops.kpi.service.serviceImpl;
+package com.futurebizops.kpi.service.serviceimpl;
 
-import com.futurebizops.kpi.entity.EmployeeEntity;
-import com.futurebizops.kpi.entity.EmployeeLoginEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EmployeeLoginAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginRepo;
 import com.futurebizops.kpi.repository.EmployeeRepo;
-import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.LoginResponse;
 import com.futurebizops.kpi.service.EmployeeLoginService;
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +32,7 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
     public KPIResponse employeeLogin(Integer roleId, String userName, String userPassword) {
         List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(roleId, userName, userPassword);
         List<LoginResponse> loginResponses = employeeLogin.stream().map(LoginResponse::new).collect(Collectors.toList());
-        if (loginResponses.size() > 0) {
+        if (!loginResponses.isEmpty()) {
             log.info("Login successfully");
             return KPIResponse.builder()
                     .isSuccess(true)
