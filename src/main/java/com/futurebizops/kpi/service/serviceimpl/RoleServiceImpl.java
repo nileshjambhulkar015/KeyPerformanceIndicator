@@ -84,7 +84,7 @@ public class RoleServiceImpl implements RoleService {
                 roleEntities = roleRepo.findByRoleIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                roleEntities = roleRepo.findByRoleNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                roleEntities = roleRepo.findByRoleNameContainingIgnoreCaseAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_STATUS":
                 roleEntities = roleRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);

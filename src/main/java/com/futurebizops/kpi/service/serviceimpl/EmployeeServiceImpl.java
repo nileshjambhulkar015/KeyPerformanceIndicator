@@ -176,15 +176,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeSearchResponse getEmployeeSearchById(Integer empId) {
         List<Object[]> employeeDetail = employeeRepo.getEmployeeSearchById(empId);
         List<EmployeeSearchResponse> employeeResponses = employeeDetail.stream().map(EmployeeSearchResponse::new).collect(Collectors.toList());
-        return employeeResponses.get(0);
+        return employeeResponses.get(0) ;
     }
 
     @Override
     public List<EmployeeSearchResponse> getEmployeeSuggestByName(Integer roleId, Integer deptId, Integer desigId) {
+       // 1 is for Employee role
         if(1==roleId){
             return new ArrayList<>();
         }
-        List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleIdAndDeptIdAndDesigId(roleId,deptId,desigId);
+      //  List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleIdAndDeptIdAndDesigId(roleId,deptId,desigId);
+        List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleId(roleId);
         return  employeeEntities.stream()
                 .map(empDetails->EmployeeSearchResponse.builder()
                         .empId(empDetails.getEmpId())

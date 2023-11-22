@@ -18,7 +18,7 @@ public interface RoleRepo extends JpaRepository<RoleEntity, Integer> {
 
     public Page<RoleEntity> findByRoleIdAndStatusCd(Integer roleId, String statusCd, Pageable pageable);
 
-    public Page<RoleEntity> findByRoleNameAndStatusCd(String roleName, String statusCd, Pageable pageable);
+    public Page<RoleEntity> findByRoleNameContainingIgnoreCaseAndStatusCd(String roleName, String statusCd, Pageable pageable);
 
     public Page<RoleEntity> findByStatusCd(String status, Pageable pageable);
 
