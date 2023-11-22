@@ -115,8 +115,13 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Override
     public List<KPPResponse> getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd) {
-        List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigIdAndStatusCd(roleId, deptId, desigId, statusCd);
-        return convertEntityListToResponse(keyPerfParamEntities);
+        try {
+            List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigIdAndStatusCd(roleId, deptId, desigId, statusCd);
+            return convertEntityListToResponse(keyPerfParamEntities);
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> updateGMApprovalRequest()");
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
+        }
     }
 
     @Override

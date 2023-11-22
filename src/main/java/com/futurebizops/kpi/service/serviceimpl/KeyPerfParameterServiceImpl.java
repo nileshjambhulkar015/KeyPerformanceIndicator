@@ -98,11 +98,16 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
     @Override
     public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId) {
-        List<Object[]> designationData = keyPerfParameterRepo.getKeyPerfParameterDetailById(kppId);
+        try {
+            List<Object[]> designationData = keyPerfParameterRepo.getKeyPerfParameterDetailById(kppId);
 
-        List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
+            List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
 
-        return kppResponses.get(0);
+            return kppResponses.get(0);
+        } catch (Exception ex) {
+            log.error("Inside KeyPerfParameterServiceImpl >> findKeyPerfomanceParameterDetailById()");
+            throw new KPIException("KeyPerfParameterServiceImpl class", false, ex.getMessage());
+        }
     }
 
     private KeyPerfParamEntity convertKeyPerfParamCreateRequestToEntity(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
