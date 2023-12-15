@@ -1,8 +1,9 @@
 package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.enums.StatusCdEnum;
+import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
-import com.futurebizops.kpi.request.EmployeeKeyPerfParamUpdateRequest;
+import com.futurebizops.kpi.request.EmpKPPUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
@@ -35,11 +36,10 @@ public class EmployeeKeyPerfParamController {
     }
 
     @PutMapping
-    public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceParamDetails(@RequestBody List<EmployeeKeyPerfParamUpdateRequest> keyPerfParamUpdateRequest) {
-        KPIResponse response = employeeKeyPerfParamService.updateEmployeeKeyPerfParamDetails(keyPerfParamUpdateRequest);
+    public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceParamDetails(@RequestBody EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
+        KPIResponse response = employeeKeyPerfParamService.updateEmployeeKeyPerfParamDetails(empKPPMasterUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 
 
     //load kpp details as per role , dept and designation of employee

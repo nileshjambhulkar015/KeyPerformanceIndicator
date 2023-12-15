@@ -34,5 +34,5 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
    // public List<EmployeeEntity> findByRoleIdAndDeptIdAndDesigId(Integer roleId, Integer deptId, Integer desigId);
 
-    public List<EmployeeEntity> findByRoleId(Integer roleId);
+    public List<EmployeeEntity> findByRoleIdOrDeptIdOrDesigId(Integer roleId,Integer deptId,Integer desigId);
 }

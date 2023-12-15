@@ -3,15 +3,10 @@ package com.futurebizops.kpi.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.persistence.Column;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @Data
-public class EmployeeKeyPerfParamUpdateRequest {
-
-    @Schema(example = "1", description = "This field is used for Employee Key Performance Id")
-    private Integer ekppId;
+public class EmpKPPUpdateRequest {
 
     @Schema(example = "2023-10-01", description = "This field is used for Employee Key Performance month")
     private Instant ekppMonth;
@@ -42,22 +37,6 @@ public class EmployeeKeyPerfParamUpdateRequest {
 
     @Schema(example = "90", description = "This field is used for Overall Task Completed")
     private String ekppOverallTaskComp;
-
-    @Schema(example = "2023-10-01", description = "This field is used for Applied date")
-    private Instant ekppAppliedDate;
-
-    @Schema(example = "http://data", description = "This field is used for evidence")
-    private String ekppEvidence;
-
-
-    @Schema(example = "Accept", description = "This field is used for General Manager KPP status")
-    private String ekppStatus;
-
-    @Schema(example = "Remark", description = "This field is used for remark")
-    private String empRemark;
-
-    @Schema(example = "A", description = "This field is used for Acive / Inactive")
-    private String statusCd;
 
     @Schema(example = "e111", description = "This field is used for General Manager KPP status")
     private String employeeId;

@@ -70,7 +70,7 @@ public class EmployeeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/suggest")
+    @GetMapping(value = "/reportToEmpName")
     public ResponseEntity<List<EmployeeSearchResponse>> getEmployeeSuggest(@RequestParam(required = false) Integer roleId,
                                                                            @RequestParam(required = false) Integer deptId,
                                                                            @RequestParam(required = false) Integer desigId) {

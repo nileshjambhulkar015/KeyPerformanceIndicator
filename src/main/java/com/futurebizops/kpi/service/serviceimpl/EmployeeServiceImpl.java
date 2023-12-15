@@ -4,15 +4,19 @@ import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.AuditEnabledEntity;
 import com.futurebizops.kpi.entity.EmployeeAudit;
 import com.futurebizops.kpi.entity.EmployeeEntity;
-import com.futurebizops.kpi.entity.EmployeeKeyPerfParamAudit;
-import com.futurebizops.kpi.entity.EmployeeKeyPerfParamEntity;
+import com.futurebizops.kpi.entity.EmployeeKeyPerfParamDetailsAudit;
+import com.futurebizops.kpi.entity.EmployeeKeyPerfParamDetailsEntity;
+import com.futurebizops.kpi.entity.EmployeeKeyPerfParamMasterAudit;
+import com.futurebizops.kpi.entity.EmployeeKeyPerfParamMasterEntity;
 import com.futurebizops.kpi.entity.EmployeeLoginAudit;
 import com.futurebizops.kpi.entity.EmployeeLoginEntity;
 import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EmployeeAuditRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamAuditRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamRepo;
+import com.futurebizops.kpi.repository.EmployeeKeyPerfParamDetailsAuditRepo;
+import com.futurebizops.kpi.repository.EmployeeKeyPerfParamMasterAuditRepo;
+import com.futurebizops.kpi.repository.EmployeeKeyPerfParamMasterRepo;
+import com.futurebizops.kpi.repository.EmployeeKeyPerfParamDetailsRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginRepo;
 import com.futurebizops.kpi.repository.EmployeeRepo;
@@ -59,12 +63,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     private KeyPerfParameterRepo keyPerfParameterRepo;
 
     @Autowired
-    private EmployeeKeyPerfParamRepo employeeKeyPerfParamRepo;
+    private EmployeeKeyPerfParamDetailsRepo employeeKeyPerfParamRepo;
 
     @Autowired
-    private EmployeeKeyPerfParamAuditRepo employeeKeyPerfParamAuditRepo;
+    private EmployeeKeyPerfParamDetailsAuditRepo employeeKeyPerfParamAuditRepo;
 
-    Random randEid=null;
+    @Autowired
+    private EmployeeKeyPerfParamMasterRepo employeeKeyPerfParamMasterRepo;
+
+    @Autowired
+    private EmployeeKeyPerfParamMasterAuditRepo employeeKeyPerfParamMasterAuditRepo;
+
+    Random randEid = null;
 
     @Transactional
     @Override
@@ -79,33 +89,44 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new KPIException("EmployeeServiceImpl Class", false, "Employee Mobile number or email id already exist");
         }
         EmployeeEntity employeeEntity = convertEmployeeCreateRequestToEntity(employeeCreateRequest);
-        employeeEntity.setEmpEId("e"+empEId);
+        employeeEntity.setEmpEId("e" + empEId);
         try {
 
-            List<KeyPerfParamEntity> empKpp= keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
-           List<EmployeeKeyPerfParamEntity> paramEntities = new ArrayList<>();
-            for(KeyPerfParamEntity keyPerfParam : empKpp){
-                EmployeeKeyPerfParamEntity keyPerfParamEntity = new EmployeeKeyPerfParamEntity();
-                keyPerfParamEntity.setEmpEId("e"+empEId);
+            List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
+            List<EmployeeKeyPerfParamDetailsEntity> paramEntities = new ArrayList<>();
+            for (KeyPerfParamEntity keyPerfParam : empKpp) {
+                EmployeeKeyPerfParamDetailsEntity keyPerfParamEntity = new EmployeeKeyPerfParamDetailsEntity();
+                keyPerfParamEntity.setEmpEId("e" + empEId);
                 keyPerfParamEntity.setRoleId(employeeEntity.getRoleId());
                 keyPerfParamEntity.setDeptId(employeeEntity.getDeptId());
                 keyPerfParamEntity.setDesigId(employeeEntity.getDesigId());
                 keyPerfParamEntity.setKppId(keyPerfParam.getKppId());
                 keyPerfParamEntity.setStatusCd("A");
-                keyPerfParamEntity.setRemark("Employee KPP added at the time of registration");
+                keyPerfParamEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
                 paramEntities.add(keyPerfParamEntity);
 
-                EmployeeKeyPerfParamAudit keyPerfParamAudit = new EmployeeKeyPerfParamAudit(keyPerfParamEntity);
+                EmployeeKeyPerfParamDetailsAudit keyPerfParamAudit = new EmployeeKeyPerfParamDetailsAudit(keyPerfParamEntity);
                 employeeKeyPerfParamAuditRepo.save(keyPerfParamAudit);
             }
             employeeKeyPerfParamRepo.saveAll(paramEntities);
+
+            EmployeeKeyPerfParamMasterEntity employeeKeyPerfParamMasterEntity = new EmployeeKeyPerfParamMasterEntity();
+            employeeKeyPerfParamMasterEntity.setEmpEId("e" + empEId);
+            employeeKeyPerfParamMasterEntity.setRoleId(employeeEntity.getRoleId());
+            employeeKeyPerfParamMasterEntity.setDeptId(employeeEntity.getDeptId());
+            employeeKeyPerfParamMasterEntity.setDesigId(employeeEntity.getDesigId());
+            employeeKeyPerfParamMasterEntity.setStatusCd("A");
+            employeeKeyPerfParamMasterEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
+            employeeKeyPerfParamMasterRepo.save(employeeKeyPerfParamMasterEntity);
+            EmployeeKeyPerfParamMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKeyPerfParamMasterAudit();
+            employeeKeyPerfParamMasterAuditRepo.save(employeeKeyPerfParamMasterAudit);
 
             employeeRepo.save(employeeEntity);
             EmployeeAudit employeeAudit = new EmployeeAudit(employeeEntity);
             employeeAuditRepo.save(employeeAudit);
 
             EmployeeLoginEntity employeeLoginEntity = convertRequestToEmployeeLogin(employeeCreateRequest);
-            employeeLoginEntity.setEmpEId("e"+empEId);
+            employeeLoginEntity.setEmpEId("e" + empEId);
             employeeLoginRepo.save(employeeLoginEntity);
             EmployeeLoginAudit employeeLoginAudit = new EmployeeLoginAudit(employeeLoginEntity);
             employeeLoginAuditRepo.save(employeeLoginAudit);
@@ -140,18 +161,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public KPIResponse getAllEmployeeDetails(Integer empId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable) {
         String sortName = null;
-      //  String sortDirection = null;
+        //  String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
         Integer pageOffset = (int) pageable.getOffset();
         // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
         Optional<Sort.Order> order = pageable.getSort().get().findFirst();
         if (order.isPresent()) {
             sortName = order.get().getProperty();  //order by this field
-          //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+            //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
         Integer totalCount = employeeRepo.getEmployeeCount(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd);
-        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, roleId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, sortName, pageSize, pageOffset);
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, sortName, pageSize, pageOffset);
 
         List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
         employeeResponses = employeeResponses.stream()
@@ -176,19 +197,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeSearchResponse getEmployeeSearchById(Integer empId) {
         List<Object[]> employeeDetail = employeeRepo.getEmployeeSearchById(empId);
         List<EmployeeSearchResponse> employeeResponses = employeeDetail.stream().map(EmployeeSearchResponse::new).collect(Collectors.toList());
-        return employeeResponses.get(0) ;
+        return employeeResponses.get(0);
     }
 
     @Override
     public List<EmployeeSearchResponse> getEmployeeSuggestByName(Integer roleId, Integer deptId, Integer desigId) {
-       // 1 is for Employee role
-        if(1==roleId){
-            return new ArrayList<>();
-        }
-      //  List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleIdAndDeptIdAndDesigId(roleId,deptId,desigId);
-        List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleId(roleId);
-        return  employeeEntities.stream()
-                .map(empDetails->EmployeeSearchResponse.builder()
+       //  List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleIdAndDeptIdAndDesigId(roleId,deptId,desigId);
+        List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleIdOrDeptIdOrDesigId(roleId,deptId,desigId);
+        return employeeEntities.stream()
+                .map(empDetails -> EmployeeSearchResponse.builder()
                         .empId(empDetails.getEmpId())
                         .empEId(empDetails.getEmpEId())
                         .roleId(empDetails.getRoleId())
