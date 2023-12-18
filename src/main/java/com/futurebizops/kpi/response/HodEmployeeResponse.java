@@ -15,6 +15,7 @@ public class HodEmployeeResponse {
     private String empMobileNo;
     private String emailId;
     private String kppOverallAchivement;
+    private String empEKppStatus;
 
     public  HodEmployeeResponse(Object[] objects) {
         empId = Integer.parseInt(String.valueOf(objects[0]));
@@ -27,5 +28,7 @@ public class HodEmployeeResponse {
         empMobileNo=String.valueOf(objects[7]);
         emailId=String.valueOf(objects[8]);
         kppOverallAchivement=String.valueOf(objects[9]);
+        empEKppStatus=String.valueOf(objects[10]);
+
     }
 }

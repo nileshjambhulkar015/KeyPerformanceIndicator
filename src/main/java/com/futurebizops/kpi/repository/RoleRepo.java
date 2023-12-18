@@ -31,4 +31,6 @@ public interface RoleRepo extends JpaRepository<RoleEntity, Integer> {
 
     @Query(value = SQLQueryConstants.ROLE_IN_DESIGNATION_QUERY, nativeQuery = true)
     List<Object[]> getAllRoleFromDesignation();
+
+
 }

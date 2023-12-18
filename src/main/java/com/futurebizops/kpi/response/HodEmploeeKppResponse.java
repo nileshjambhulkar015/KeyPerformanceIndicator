@@ -1,8 +1,12 @@
 package com.futurebizops.kpi.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class HodEmploeeKppResponse {
     private Integer eKppId;
     private String ekppMonth;
@@ -55,13 +59,11 @@ public class HodEmploeeKppResponse {
         ekppAchivedWeight = String.valueOf(objects[17]);
         ekppOverallAchieve = String.valueOf(objects[18]);
         ekppOverallTaskComp = String.valueOf(objects[19]);
-        ekppAppliedDate = String.valueOf(objects[20]);
-        ekppEvidence = String.valueOf(objects[21]);
-        kppRating1 = String.valueOf(objects[22]);
-        kppRating2 = String.valueOf(objects[23]);
-        kppRating3 = String.valueOf(objects[24]);
-        kppRating4 = String.valueOf(objects[25]);
-        kppRating5 = String.valueOf(objects[26]);
-        ekppStatus= String.valueOf(objects[27]);
+
+        kppRating1 = String.valueOf(objects[20]);
+        kppRating2 = String.valueOf(objects[21]);
+        kppRating3 = String.valueOf(objects[22]);
+        kppRating4 = String.valueOf(objects[23]);
+        kppRating5 = String.valueOf(objects[24]);
     }
 }

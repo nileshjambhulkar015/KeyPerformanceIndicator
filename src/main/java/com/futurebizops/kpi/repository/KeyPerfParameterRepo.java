@@ -31,10 +31,10 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     ArrayList<KeyPerfParamEntity> findByRoleIdAndDeptIdAndDesigId(Integer roleId, Integer deptId, Integer desigId);
 
     @Query(value = SQLQueryConstants.HOD_EMPLOYEE_QUERY, nativeQuery = true)
-    List<Object[]> getEmployeeDetail(@Param("reportingEmployee") Integer reportingEmployee, @Param("empId") Integer empId,@Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,  @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getEmployeeDetail(@Param("reportingEmployee") Integer reportingEmployee, @Param("empId") Integer empId,@Param("empEId") String empEId,@Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,  @Param("statusCd") String statusCd,@Param("empKppStatus") String empKppStatus, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.HOD_EMPLOYEE_COUNT_QUERY, nativeQuery = true)
-    Integer getEmployeeCount(@Param("reportingEmployee") Integer reportingEmployee,@Param("empId") Integer empId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd);
+    Integer getEmployeeCount(@Param("reportingEmployee") Integer reportingEmployee,@Param("empId") Integer empId,@Param("empEId") String empEId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd,@Param("empKppStatus") String empKppStatus);
 
     //When hod want to give rating to employee
     @Query(value = SQLQueryConstants.EMPLOYEE_KPP_QUERY, nativeQuery = true)

@@ -115,6 +115,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeKeyPerfParamMasterEntity.setRoleId(employeeEntity.getRoleId());
             employeeKeyPerfParamMasterEntity.setDeptId(employeeEntity.getDeptId());
             employeeKeyPerfParamMasterEntity.setDesigId(employeeEntity.getDesigId());
+            employeeKeyPerfParamMasterEntity.setTotalOverallAchieve("0");
+            employeeKeyPerfParamMasterEntity.setEmpKppStatus("Pending");
             employeeKeyPerfParamMasterEntity.setStatusCd("A");
             employeeKeyPerfParamMasterEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
             employeeKeyPerfParamMasterRepo.save(employeeKeyPerfParamMasterEntity);

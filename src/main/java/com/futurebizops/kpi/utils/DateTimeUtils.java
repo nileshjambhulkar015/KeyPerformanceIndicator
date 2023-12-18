@@ -19,7 +19,7 @@ public class DateTimeUtils {
     }
 
     public static Instant convertStringToInstant(String dateTime) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
             return dateFormatter.parse(dateTime).toInstant();
         } catch (ParseException ex) {

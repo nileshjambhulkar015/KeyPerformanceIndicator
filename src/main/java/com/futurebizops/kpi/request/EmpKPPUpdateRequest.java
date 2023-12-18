@@ -9,7 +9,7 @@ import java.time.Instant;
 public class EmpKPPUpdateRequest {
 
     @Schema(example = "2023-10-01", description = "This field is used for Employee Key Performance month")
-    private Instant ekppMonth;
+    private String ekppMonth;
 
     @Schema(example = "1", description = "This field is used for Employee Key Performance Id")
     private Integer kppId;
