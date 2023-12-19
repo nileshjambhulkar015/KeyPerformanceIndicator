@@ -95,21 +95,30 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         }
     }
 
+    //when employee fill kpp then coming for hod approval
     @Override
     @Transactional
-    public KPIResponse updateHoDApprovalRequest(List<HODApprovalUpdateRequest> hodApprovalUpdateRequests) {
-
+    public KPIResponse updateHoDApprovalRequest(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
+        String empKppStatus="In-Progress";
         try {
-            for (HODApprovalUpdateRequest hodApprovalUpdateRequest : hodApprovalUpdateRequests) {
-               // keyPerfParamRepo.updateHODEmplyeeKppStatus(hodApprovalUpdateRequest.getHodEmpId(), hodApprovalUpdateRequest.getHodKppStatus(), hodApprovalUpdateRequest.getHodRating(), hodApprovalUpdateRequest.getHodRemark(), hodApprovalUpdateRequest.getHodApprovedDate(), hodApprovalUpdateRequest.getLastUpdatedUserId(), hodApprovalUpdateRequest.getEkppId(), hodApprovalUpdateRequest.getEmpId(), hodApprovalUpdateRequest.getDeptId(), hodApprovalUpdateRequest.getDesigId());
+            for (EmpKPPUpdateRequest paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
+
+                //employeeKeyPerfParamDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpEId(), paramUpdateRequest.getRoleId(), paramUpdateRequest.getDeptId(), paramUpdateRequest.getDesigId());
+                employeeKeyPerfParamDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
+            if("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())){
+                empKppStatus="Completed";
+            }
+            employeeKeyPerfParamMasterRepo.updateEmpKppApproveOrRejectByHod(empKppStatus,empKPPMasterUpdateRequest.getTotalAchivedWeightage(),empKPPMasterUpdateRequest.getTotalOverAllAchive(),empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(),empKPPMasterUpdateRequest.getRemark(),empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
+
+
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside EmployeeKeyPerfParamServiceImpl >> updateHoDApprovalRequest()");
-            throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> updateEmployeeKeyPerfParamDetails()");
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl Class", false, ex.getMessage());
         }
     }
 
@@ -155,6 +164,11 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Override
     public KPIResponse getAllEmployeeDetailsForHod(Integer reportingEmployee, Integer empId,String empEId,Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,String empKppStatus, Pageable pageable) {
         String sortName = null;
+
+        //for all records
+        if("All".equalsIgnoreCase(empKppStatus)){
+            empKppStatus=null;
+        }
         // String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
         Integer pageOffset = (int) pageable.getOffset();

@@ -1,5 +1,7 @@
 package com.futurebizops.kpi.controller;
 
+import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
+import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.HODApprovalUpdateRequest;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
@@ -28,8 +30,8 @@ public class HoDApprovalController {
     private EmployeeKeyPerfParamService keyPerfParamService;
 
     @PutMapping
-    public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceDetails(@RequestBody List<HODApprovalUpdateRequest> hodApprovalUpdateRequests) {
-        KPIResponse response = keyPerfParamService.updateHoDApprovalRequest(hodApprovalUpdateRequests);
+    public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceDetails(@RequestBody EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
+        KPIResponse response = keyPerfParamService.updateHoDApprovalRequest(empKPPMasterUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

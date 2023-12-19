@@ -28,15 +28,18 @@ import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.hql.internal.CollectionSubqueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +96,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         try {
 
             List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
+            if(CollectionUtils.isEmpty(empKpp)){
+                log.error("Inside EmployeeServiceImpl >> saveEmployee()");
+                throw new KPIException("EmployeeServiceImpl Class", false, "Please set the KPP for Designation first");
+            }
             List<EmployeeKeyPerfParamDetailsEntity> paramEntities = new ArrayList<>();
             for (KeyPerfParamEntity keyPerfParam : empKpp) {
                 EmployeeKeyPerfParamDetailsEntity keyPerfParamEntity = new EmployeeKeyPerfParamDetailsEntity();

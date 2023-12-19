@@ -18,7 +18,7 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest);
 
-    public KPIResponse updateHoDApprovalRequest(List<HODApprovalUpdateRequest> hodApprovalUpdateRequests);
+    public KPIResponse updateHoDApprovalRequest(EmpKPPMasterUpdateRequest keyPerfParamCreateRequest);
 
     public KPIResponse updateGMApprovalRequest(List<GMUpdateRequest> hodApprovalUpdateRequests);
 
