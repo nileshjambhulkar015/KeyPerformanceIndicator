@@ -56,7 +56,7 @@ public class EmployeeKeyPerfParamDetailsEntity extends AuditEnabledEntity {
     private String empOverallTaskComp;
 
     @Column(name = "hod_emp_id")
-    private String hodEmpId;
+    private Integer hodEmpId;
 
     @Column(name = "ekpp_hod_achived_weight")
     private String hodAchivedWeight;
@@ -68,7 +68,7 @@ public class EmployeeKeyPerfParamDetailsEntity extends AuditEnabledEntity {
     private String hodOverallTaskComp;
 
     @Column(name = "gm_emp_id")
-    private String gmEmpId;
+    private Integer gmEmpId;
 
     @Column(name = "ekpp_gm_achived_weight")
     private String gmAchivedWeight;

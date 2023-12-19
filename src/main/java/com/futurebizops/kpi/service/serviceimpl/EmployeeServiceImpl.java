@@ -101,6 +101,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 keyPerfParamEntity.setDeptId(employeeEntity.getDeptId());
                 keyPerfParamEntity.setDesigId(employeeEntity.getDesigId());
                 keyPerfParamEntity.setKppId(keyPerfParam.getKppId());
+                keyPerfParamEntity.setHodEmpId(employeeCreateRequest.getReportingEmpId());
+                keyPerfParamEntity.setGmEmpId(getGmEmpId(employeeCreateRequest.getReportingEmpId()));
                 keyPerfParamEntity.setStatusCd("A");
                 keyPerfParamEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
                 paramEntities.add(keyPerfParamEntity);
@@ -117,6 +119,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeKeyPerfParamMasterEntity.setDesigId(employeeEntity.getDesigId());
             employeeKeyPerfParamMasterEntity.setTotalOverallAchieve("0");
             employeeKeyPerfParamMasterEntity.setEmpKppStatus("Pending");
+
+            employeeKeyPerfParamMasterEntity.setHodEmpId(employeeCreateRequest.getReportingEmpId());
+            employeeKeyPerfParamMasterEntity.setHodKppStatus("Pending");
+            employeeKeyPerfParamMasterEntity.setGmEmpId(getGmEmpId(employeeCreateRequest.getReportingEmpId()));
+            employeeKeyPerfParamMasterEntity.setGmKppStatus("Pending");
             employeeKeyPerfParamMasterEntity.setStatusCd("A");
             employeeKeyPerfParamMasterEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
             employeeKeyPerfParamMasterRepo.save(employeeKeyPerfParamMasterEntity);
@@ -140,6 +147,14 @@ public class EmployeeServiceImpl implements EmployeeService {
             log.error("Inside EmployeeServiceImpl >> saveEmployee()");
             throw new KPIException("EmployeeServiceImpl", false, ex.getMessage());
         }
+    }
+
+    private Integer getGmEmpId(Integer reportinEmpId){
+        Optional<EmployeeEntity> employeeEntity = employeeRepo.findById(reportinEmpId);
+        if(employeeEntity.isPresent()){
+            return  employeeEntity.get().getReportingEmpId();
+        }
+        return null;
     }
 
     @Override
