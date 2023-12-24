@@ -41,6 +41,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.updateEmployee(employeeUpdateRequest));
     }
 
+    //for employee master page to get details of employee
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> getAllEmployee(@RequestParam(required = false) Integer empId,
@@ -74,9 +75,31 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeSearchResponse>> getEmployeeSuggest(@RequestParam(required = false) Integer roleId,
                                                                            @RequestParam(required = false) Integer deptId,
                                                                            @RequestParam(required = false) Integer desigId) {
-        List<EmployeeSearchResponse> response = employeeService.getEmployeeSuggestByName(roleId,deptId,desigId);
+        List<EmployeeSearchResponse> response = employeeService.getEmployeeSuggestByName(roleId, deptId, desigId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    //get status of kpp  for employee, HOD and GM to approve or reject kpp details
+    @GetMapping(value = "/employee-kpp-status")
+    @PageableAsQueryParam
+    public ResponseEntity<KPIResponse> getAllEmployeeKPPForApproveOrReject(@RequestParam(required = false) Integer reportingEmployee,
+                                                                           @RequestParam(required = false) Integer gmEmployeedId,
+                                                                           @RequestParam(required = false) Integer empId,
+                                                                           @RequestParam(required = false) String empEId,
+                                                                           @RequestParam(required = false) Integer deptId,
+                                                                           @RequestParam(required = false) Integer desigId,
+                                                                           @RequestParam(required = false) String empFirstName,
+                                                                           @RequestParam(required = false) String empMiddleName,
+                                                                           @RequestParam(required = false) String empLastName,
+                                                                           @RequestParam(required = false) String empMobileNo,
+                                                                           @RequestParam(required = false) String emailId,
+                                                                           @RequestParam(required = false) String statusCd,
+                                                                           @RequestParam(required = false) String empKppStatus,
+                                                                           @RequestParam(required = false) String hodKppStatus,
+                                                                           @RequestParam(required = false) String gmKppStatus,
+                                                                           @Parameter(hidden = true) Pageable pageable) {
+        KPIResponse response = employeeService.getAllEmployeeKPPStatus(reportingEmployee,gmEmployeedId, empId, empEId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus, pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }

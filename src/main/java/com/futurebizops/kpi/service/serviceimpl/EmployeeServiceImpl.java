@@ -25,10 +25,11 @@ import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
+import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.hql.internal.CollectionSubqueryFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,6 @@ import org.springframework.util.CollectionUtils;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -86,12 +86,29 @@ public class EmployeeServiceImpl implements EmployeeService {
         randEid = new Random();
         int empEId = randEid.nextInt(1000);
 
+        //When hod is inserted then gm set to reporing employee id only
+        Integer gmEmpId=null;
+        //2 is for HOD role
+        if(2==employeeCreateRequest.getRoleId()){
+            gmEmpId=employeeCreateRequest.getReportingEmpId();
+        }
+        else {
+            gmEmpId=getGmEmpId(employeeCreateRequest.getReportingEmpId());
+        }
+
+
+        if(null==employeeCreateRequest.getReportingEmpId())
+        {
+            log.error("Inside EmployeeServiceImpl >> saveEmployee()");
+            throw new KPIException("EmployeeServiceImpl Class", false, "Reporting Employee must be present");
+        }
         Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findByEmpMobileNoOrEmailIdEqualsIgnoreCase(employeeCreateRequest.getEmpMobileNo(), employeeCreateRequest.getEmailId());
         if (optionalEmployeeEntity.isPresent()) {
             log.error("Inside EmployeeServiceImpl >> saveEmployee()");
             throw new KPIException("EmployeeServiceImpl Class", false, "Employee Mobile number or email id already exist");
         }
         EmployeeEntity employeeEntity = convertEmployeeCreateRequestToEntity(employeeCreateRequest);
+        employeeEntity.setGmEmpId(gmEmpId);
         employeeEntity.setEmpEId("e" + empEId);
         try {
 
@@ -109,7 +126,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 keyPerfParamEntity.setDesigId(employeeEntity.getDesigId());
                 keyPerfParamEntity.setKppId(keyPerfParam.getKppId());
                 keyPerfParamEntity.setHodEmpId(employeeCreateRequest.getReportingEmpId());
-                keyPerfParamEntity.setGmEmpId(getGmEmpId(employeeCreateRequest.getReportingEmpId()));
+                keyPerfParamEntity.setGmEmpId(gmEmpId);
                 keyPerfParamEntity.setStatusCd("A");
                 keyPerfParamEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
                 paramEntities.add(keyPerfParamEntity);
@@ -129,7 +146,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             employeeKeyPerfParamMasterEntity.setHodEmpId(employeeCreateRequest.getReportingEmpId());
             employeeKeyPerfParamMasterEntity.setHodKppStatus("Pending");
-            employeeKeyPerfParamMasterEntity.setGmEmpId(getGmEmpId(employeeCreateRequest.getReportingEmpId()));
+            employeeKeyPerfParamMasterEntity.setGmEmpId(gmEmpId);
             employeeKeyPerfParamMasterEntity.setGmKppStatus("Pending");
             employeeKeyPerfParamMasterEntity.setStatusCd("A");
             employeeKeyPerfParamMasterEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
@@ -243,7 +260,43 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    //get details for employee, HOD and GM to approve or reject kpp details
+    @Override
+    public KPIResponse getAllEmployeeKPPStatus(Integer reportingEmployee,Integer gmEmpId, Integer empId,String empEId,Integer deptId,Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,String empKppStatus,String hodKppStatus, String gmKppStatus, Pageable pageable) {
+        String sortName = null;
 
+        //for all records
+        if("All".equalsIgnoreCase(empKppStatus)){
+            empKppStatus=null;
+        }
+        // String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+        try {
+            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee,gmEmpId, empId, empEId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus);
+            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusDetail(reportingEmployee,gmEmpId, empId, empEId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus, sortName, pageSize, pageOffset);
+
+            List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
+            employeeKppStatusResponses = employeeKppStatusResponses.stream()
+                    .sorted(Comparator.comparing(EmployeeKppStatusResponse::getDesigName))
+                    .collect(Collectors.toList());
+
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> getAllEmployeeDetailsForHod()");
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
+        }
+    }
     private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeLoginEntity.employeeLoginEntityBuilder()
                 .roleId(employeeCreateRequest.getRoleId())

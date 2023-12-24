@@ -41,6 +41,9 @@ public class EmployeeAudit extends AuditEnabledEntity {
     @Column(name = "reporting_emp_id")
     private Integer reportingEmpId;
 
+    @Column(name = "gm_emp_id")
+    private Integer gmEmpId;
+
     @Column(name = "region_id")
     private Integer regionId;
 
@@ -98,6 +101,7 @@ public class EmployeeAudit extends AuditEnabledEntity {
         this.depId = employeeEntity.getDeptId();
         this.desigId = employeeEntity.getDesigId();
         this.reportingEmpId = employeeEntity.getReportingEmpId();
+        this.gmEmpId=employeeEntity.getGmEmpId();
         this.regionId = employeeEntity.getRegionId();
         this.siteId = employeeEntity.getSiteId();
         this.empFirstName = employeeEntity.getEmpFirstName();

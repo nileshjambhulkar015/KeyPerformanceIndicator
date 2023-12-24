@@ -23,4 +23,5 @@ public interface EmployeeService {
 
     public List<EmployeeSearchResponse> getEmployeeSuggestByName(Integer roleId, Integer deptId, Integer desigId);
 
+    public KPIResponse getAllEmployeeKPPStatus(Integer reportingEmployee,Integer gmEmpId,Integer empId,String empEId, Integer deptId,Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable);
 }

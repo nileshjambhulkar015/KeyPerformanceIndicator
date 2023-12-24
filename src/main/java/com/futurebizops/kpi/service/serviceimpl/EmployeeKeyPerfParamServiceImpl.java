@@ -14,9 +14,7 @@ import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.EmpKPPUpdateRequest;
 import com.futurebizops.kpi.request.GMUpdateRequest;
-import com.futurebizops.kpi.request.HODApprovalUpdateRequest;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
-import com.futurebizops.kpi.response.HodEmployeeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
@@ -24,16 +22,12 @@ import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,7 +101,9 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 employeeKeyPerfParamDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
             if("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())){
-                empKppStatus="Completed";
+                empKppStatus="Approved";
+            } else if("Reject".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())){
+                empKppStatus="Reject";
             }
             employeeKeyPerfParamMasterRepo.updateEmpKppApproveOrRejectByHod(empKppStatus,empKPPMasterUpdateRequest.getTotalAchivedWeightage(),empKPPMasterUpdateRequest.getTotalOverAllAchive(),empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(),empKPPMasterUpdateRequest.getRemark(),empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
 
@@ -161,42 +157,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         return hodEmployeeResponses;
     }
 
-    @Override
-    public KPIResponse getAllEmployeeDetailsForHod(Integer reportingEmployee, Integer empId,String empEId,Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,String empKppStatus, Pageable pageable) {
-        String sortName = null;
 
-        //for all records
-        if("All".equalsIgnoreCase(empKppStatus)){
-            empKppStatus=null;
-        }
-        // String sortDirection = null;
-        Integer pageSize = pageable.getPageSize();
-        Integer pageOffset = (int) pageable.getOffset();
-        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
-        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
-        if (order.isPresent()) {
-            sortName = order.get().getProperty();  //order by this field
-            //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
-        }
-        try {
-            Integer totalCount = keyPerfParameterRepo.getEmployeeCount(reportingEmployee, empId, empEId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus);
-            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeDetail(reportingEmployee, empId, empEId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, sortName, pageSize, pageOffset);
-
-            List<HodEmployeeResponse> hodEmployeeResponses = employeeDetail.stream().map(HodEmployeeResponse::new).collect(Collectors.toList());
-            hodEmployeeResponses = hodEmployeeResponses.stream()
-                    .sorted(Comparator.comparing(HodEmployeeResponse::getDesigName))
-                    .collect(Collectors.toList());
-
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(new PageImpl<>(hodEmployeeResponses, pageable, totalCount))
-                    .responseMessage(KPIConstants.RECORD_FETCH)
-                    .build();
-        } catch (Exception ex) {
-            log.error("Inside EmployeeKeyPerfParamServiceImpl >> getAllEmployeeDetailsForHod()");
-            throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
-        }
-    }
 
 
     private List<KPPResponse> convertEntityListToResponse(List<KeyPerfParamEntity> keyPerfParamEntities) {

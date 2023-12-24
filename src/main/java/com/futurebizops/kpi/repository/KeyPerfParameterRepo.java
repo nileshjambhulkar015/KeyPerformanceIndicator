@@ -30,11 +30,11 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
 
     ArrayList<KeyPerfParamEntity> findByRoleIdAndDeptIdAndDesigId(Integer roleId, Integer deptId, Integer desigId);
 
-    @Query(value = SQLQueryConstants.HOD_EMPLOYEE_QUERY, nativeQuery = true)
-    List<Object[]> getEmployeeDetail(@Param("reportingEmployee") Integer reportingEmployee, @Param("empId") Integer empId,@Param("empEId") String empEId,@Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,  @Param("statusCd") String statusCd,@Param("empKppStatus") String empKppStatus, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    @Query(value = SQLQueryConstants.EMPLOYEE_KPP_STATUS_QUERY, nativeQuery = true)
+    List<Object[]> getEmployeeKppStatusDetail(@Param("reportingEmployee") Integer reportingEmployee, @Param("gmEmpId")Integer gmEmpId, @Param("empId") Integer empId, @Param("empEId") String empEId,@Param("deptId") Integer deptId, @Param("desigId") Integer desigId, @Param("firstName") String firstName, @Param("middleName") String middleName, @Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId, @Param("statusCd") String statusCd, @Param("empKppStatus") String empKppStatus, @Param("hodKppStatus")String hodKppStatus, @Param("gmKppStatus") String gmKppStatus, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
-    @Query(value = SQLQueryConstants.HOD_EMPLOYEE_COUNT_QUERY, nativeQuery = true)
-    Integer getEmployeeCount(@Param("reportingEmployee") Integer reportingEmployee,@Param("empId") Integer empId,@Param("empEId") String empEId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd,@Param("empKppStatus") String empKppStatus);
+    @Query(value = SQLQueryConstants.EMPLOYEE_KPP_STATUS_COUNT_QUERY, nativeQuery = true)
+    Integer getEmployeeKppStatusDetailCount(@Param("reportingEmployee") Integer reportingEmployee, @Param("gmEmpId")Integer gmEmpId, @Param("empId") Integer empId, @Param("empEId") String empEId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId, @Param("firstName") String firstName, @Param("middleName") String middleName, @Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId, @Param("statusCd") String statusCd, @Param("empKppStatus") String empKppStatus, @Param("hodKppStatus")String hodKppStatus, @Param("gmKppStatus") String gmKppStatus);
 
     //When hod want to give rating to employee
     @Query(value = SQLQueryConstants.EMPLOYEE_KPP_QUERY, nativeQuery = true)

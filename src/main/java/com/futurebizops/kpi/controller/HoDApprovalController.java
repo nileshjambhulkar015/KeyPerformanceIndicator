@@ -35,22 +35,7 @@ public class HoDApprovalController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/employee")
-    @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> getAllEmployee(@RequestParam(required = false) Integer reportingEmployee,
-            @RequestParam(required = false) Integer empId,@RequestParam(required = false) String empEId,
-                                                      @RequestParam(required = false) Integer desigId,
-                                                      @RequestParam(required = false) String empFirstName,
-                                                      @RequestParam(required = false) String empMiddleName,
-                                                      @RequestParam(required = false) String empLastName,
-                                                      @RequestParam(required = false) String empMobileNo,
-                                                      @RequestParam(required = false) String emailId,
-                                                      @RequestParam(required = false) String statusCd,
-                                                      @RequestParam(required = false) String empKppStatus,
-                                                      @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = keyPerfParamService.getAllEmployeeDetailsForHod(reportingEmployee, empId, empEId,desigId,empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empKppStatus, pageable);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+
     //load kpp details as per employee id for hod ratings
     @GetMapping(value = "/employee-kpp")
     public ResponseEntity<List<HodEmploeeKppResponse>> getEmployeeForHodRatings(@RequestParam(required = false) Integer empId,
