@@ -262,7 +262,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     //get details for employee, HOD and GM to approve or reject kpp details
     @Override
-    public KPIResponse getAllEmployeeKPPStatus(Integer reportingEmployee,Integer gmEmpId, Integer empId,String empEId,Integer deptId,Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,String empKppStatus,String hodKppStatus, String gmKppStatus, Pageable pageable) {
+    public KPIResponse getAllEmployeeKPPStatus(Integer reportingEmployee,Integer gmEmpId, Integer empId,String empEId,Integer roleId,Integer deptId,Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,String empKppStatus,String hodKppStatus, String gmKppStatus, Pageable pageable) {
         String sortName = null;
 
         //for all records
@@ -279,8 +279,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
         try {
-            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee,gmEmpId, empId, empEId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus);
-            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusDetail(reportingEmployee,gmEmpId, empId, empEId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus, sortName, pageSize, pageOffset);
+            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee,gmEmpId, empId, empEId,roleId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus);
+            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusDetail(reportingEmployee,gmEmpId, empId, empEId,roleId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus, sortName, pageSize, pageOffset);
 
             List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
             employeeKppStatusResponses = employeeKppStatusResponses.stream()

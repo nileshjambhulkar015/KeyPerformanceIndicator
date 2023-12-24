@@ -86,6 +86,7 @@ public class EmployeeController {
                                                                            @RequestParam(required = false) Integer gmEmployeedId,
                                                                            @RequestParam(required = false) Integer empId,
                                                                            @RequestParam(required = false) String empEId,
+                                                                           @RequestParam(required = false) Integer roleId,
                                                                            @RequestParam(required = false) Integer deptId,
                                                                            @RequestParam(required = false) Integer desigId,
                                                                            @RequestParam(required = false) String empFirstName,
@@ -98,7 +99,7 @@ public class EmployeeController {
                                                                            @RequestParam(required = false) String hodKppStatus,
                                                                            @RequestParam(required = false) String gmKppStatus,
                                                                            @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = employeeService.getAllEmployeeKPPStatus(reportingEmployee,gmEmployeedId, empId, empEId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus, pageable);
+        KPIResponse response = employeeService.getAllEmployeeKPPStatus(reportingEmployee,gmEmployeedId, empId, empEId,roleId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
