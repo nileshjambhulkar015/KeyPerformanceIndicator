@@ -119,20 +119,28 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
-    public KPIResponse updateGMApprovalRequest(List<GMUpdateRequest> hodApprovalUpdateRequests) {
+    public KPIResponse updateGMApprovalRequest(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
+        log.info("Request comming");
+        String empKppStatus="In-Progress";
         try {
-            for (GMUpdateRequest gmApprovalUpdateRequest : hodApprovalUpdateRequests) {
-              //  keyPerfParamRepo.updateGMEmplyeeKppStatus(gmApprovalUpdateRequest.getHodEmpId(), gmApprovalUpdateRequest.getGmKppStatus(), gmApprovalUpdateRequest.getGmRating(), gmApprovalUpdateRequest.getGmRemark(), gmApprovalUpdateRequest.getGmApprovedDate(), gmApprovalUpdateRequest.getLastUpdatedUserId(), gmApprovalUpdateRequest.getEkppId(), gmApprovalUpdateRequest.getEkppId(), gmApprovalUpdateRequest.getDeptId(), gmApprovalUpdateRequest.getDesigId());
-
-
+            for (EmpKPPUpdateRequest paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
+                employeeKeyPerfParamDetailsRepo.updateGMApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
+            if("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())){
+                empKppStatus="Approved";
+            } else if("Reject".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())){
+                empKppStatus="Reject";
+            }
+            employeeKeyPerfParamMasterRepo.updateGMKppApproveOrRejectByHod(empKppStatus,empKPPMasterUpdateRequest.getTotalAchivedWeightage(),empKPPMasterUpdateRequest.getTotalOverAllAchive(),empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(),empKPPMasterUpdateRequest.getRemark(),empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
+
+
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside EmployeeKeyPerfParamServiceImpl >> updateGMApprovalRequest()");
-            throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> updateEmployeeKeyPerfParamDetails()");
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl Class", false, ex.getMessage());
         }
     }
 

@@ -20,4 +20,9 @@ public interface EmployeeKeyPerfParamMasterRepo extends JpaRepository<EmployeeKe
     @Query(value = "update employee_key_perf_parameter_master set emp_ekpp_status=:empKppStatus,total_hod_achived_weight =:totalAchivedWeightage,total_hod_overall_achieve =:totalOverAllAchive,total_hod_overall_task_comp = :totalOverallTaskCompleted,hod_approved_date=:eKppAppliedDate,hod_ekpp_status=:empKppHodStatus, hod_remark = :remark where emp_id =:empId", nativeQuery = true)
     public int updateEmpKppApproveOrRejectByHod(@Param("empKppStatus") String empKppStatus,@Param("totalAchivedWeightage") String totalAchivedWeightage, @Param("totalOverAllAchive") String totalOverAllAchive, @Param("totalOverallTaskCompleted") String totalOverallTaskCompleted, @Param("eKppAppliedDate") Instant eKppAppliedDate,@Param("empKppHodStatus") String empKppHodStatus, @Param("remark") String remark, @Param("empId") Integer empId);
 
+
+    @Modifying
+    @Query(value = "update employee_key_perf_parameter_master set emp_ekpp_status=:empKppStatus,total_gm_achived_weight =:totalAchivedWeightage,total_gm_overall_achieve =:totalOverAllAchive,total_gm_overall_task_comp = :totalOverallTaskCompleted,gm_approved_date=:eKppAppliedDate,gm_ekpp_status=:empKppHodStatus, gm_remark = :remark where emp_id =:empId", nativeQuery = true)
+    public int updateGMKppApproveOrRejectByHod(@Param("empKppStatus") String empKppStatus,@Param("totalAchivedWeightage") String totalAchivedWeightage, @Param("totalOverAllAchive") String totalOverAllAchive, @Param("totalOverallTaskCompleted") String totalOverallTaskCompleted, @Param("eKppAppliedDate") Instant eKppAppliedDate,@Param("empKppHodStatus") String empKppHodStatus, @Param("remark") String remark, @Param("empId") Integer empId);
+
 }

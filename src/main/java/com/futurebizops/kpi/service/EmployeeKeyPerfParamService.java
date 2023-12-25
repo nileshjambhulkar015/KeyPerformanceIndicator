@@ -20,7 +20,7 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse updateHoDApprovalRequest(EmpKPPMasterUpdateRequest keyPerfParamCreateRequest);
 
-    public KPIResponse updateGMApprovalRequest(List<GMUpdateRequest> hodApprovalUpdateRequests);
+    public KPIResponse updateGMApprovalRequest(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest);
 
     public List<KPPResponse> getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd);
 

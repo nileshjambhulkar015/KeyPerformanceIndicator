@@ -28,4 +28,8 @@ public interface EmployeeKeyPerfParamDetailsRepo extends JpaRepository<EmployeeK
     @Query(value = "update employee_key_perf_parameter_details set ekpp_hod_achived_weight =:ekppAchivedWeight,ekpp_hod_overall_achieve =:ekppOverallAchieve,ekpp_hod_overall_task_comp = :ekppOverallTaskComp where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
     public int updateEmpApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 
+    @Modifying
+    @Query(value = "update employee_key_perf_parameter_details set ekpp_gm_achived_weight =:ekppAchivedWeight,ekpp_gm_overall_achieve =:ekppOverallAchieve,ekpp_gm_overall_task_comp = :ekppOverallTaskComp where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
+    public int updateGMApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
+
 }

@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.controller;
 
+import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.GMUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
@@ -25,8 +26,9 @@ public class GMApprovalController {
 
     @Transactional
     @PutMapping
-    public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceDetails(@RequestBody List<GMUpdateRequest> gmUpdateRequests) {
-        KPIResponse response = keyPerfParamService.updateGMApprovalRequest(gmUpdateRequests);
+    public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceDetails(@RequestBody EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
+        KPIResponse response = keyPerfParamService.updateGMApprovalRequest(empKPPMasterUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }
