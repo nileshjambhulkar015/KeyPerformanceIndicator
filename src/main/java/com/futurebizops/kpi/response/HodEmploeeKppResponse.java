@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,14 +32,26 @@ public class HodEmploeeKppResponse {
     private String ekppOverallAchieve;
     private String ekppOverallTaskComp;
     private String ekppAppliedDate;
-
     private String ekppEvidence;
+
+    private Integer hodEmpId;
+    private String hodAchivedWeight;
+    private String hodOverallAchieve;
+    private String hodOverallTaskComp;
+    private Integer gmEmpId;
+    private String gmAchivedWeight;
+    private String gmOverallAchieve;
+    private String gmOverallTaskComp;
+
+
     private String kppRating1;
     private String kppRating2;
     private String kppRating3;
     private String kppRating4;
     private String kppRating5;
     private String ekppStatus;
+
+    private String empName;
 
     public HodEmploeeKppResponse(Object[] objects) {
         eKppId = Integer.parseInt(String.valueOf(objects[0]));
@@ -61,10 +75,20 @@ public class HodEmploeeKppResponse {
         ekppOverallAchieve = String.valueOf(objects[18]);
         ekppOverallTaskComp = String.valueOf(objects[19]);
 
-        kppRating1 = String.valueOf(objects[20]);
-        kppRating2 = String.valueOf(objects[21]);
-        kppRating3 = String.valueOf(objects[22]);
-        kppRating4 = String.valueOf(objects[23]);
-        kppRating5 = String.valueOf(objects[24]);
+       hodEmpId=Integer.parseInt(String.valueOf(objects[20]));
+        hodAchivedWeight= String.valueOf(objects[21]);
+      hodOverallAchieve= String.valueOf(objects[22]);
+       hodOverallTaskComp= String.valueOf(objects[23]);
+       gmEmpId= Integer.parseInt(String.valueOf(objects[24]));
+       gmAchivedWeight= String.valueOf(objects[25]);
+       gmOverallAchieve= String.valueOf(objects[26]);
+        gmOverallTaskComp= String.valueOf(objects[27]);
+        kppRating1 = String.valueOf(objects[28]);
+        kppRating2 = String.valueOf(objects[29]);
+        kppRating3 = String.valueOf(objects[30]);
+        kppRating4 = String.valueOf(objects[31]);
+        kppRating5 = String.valueOf(objects[32]);
+
+        empName=String.valueOf(objects[33])+" "+String.valueOf(objects[34])+" "+String.valueOf(objects[35]);
     }
 }
