@@ -1,6 +1,7 @@
 package com.futurebizops.kpi.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,18 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 
-@Table(name = "employee_key_perf_parameter_details_audit")
+@Table(name = "employee_kpp_details")
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeKeyPerfParamDetailsAudit extends AuditEnabledEntity{
+public class EmployeeKppDetailsEntity extends AuditEnabledEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ekpp_aud_did")
-    private Integer ekppAuditId;
-
     @Column(name = "ekpp_did")
     private Integer ekppId;
 
@@ -84,19 +82,19 @@ public class EmployeeKeyPerfParamDetailsAudit extends AuditEnabledEntity{
     @Column(name = "status_cd")
     private String statusCd;
 
-    public EmployeeKeyPerfParamDetailsAudit(EmployeeKeyPerfParamDetailsEntity employeeKeyPerfParamEntity) {
-        super(employeeKeyPerfParamEntity.getCreatedDate(), employeeKeyPerfParamEntity.getCreatedUserId(), employeeKeyPerfParamEntity.getUpdatedDate(), employeeKeyPerfParamEntity.getUpdatedUserId());
-        this.ekppId = employeeKeyPerfParamEntity.getEkppId();
-        this.kppId = employeeKeyPerfParamEntity.getKppId();
-        this.empId=employeeKeyPerfParamEntity.getEmpId();
-        this.empEId=employeeKeyPerfParamEntity.getEmpEId();
-        this.roleId=employeeKeyPerfParamEntity.getRoleId();
-        this.deptId = employeeKeyPerfParamEntity.getDeptId();
-        this.desigId = employeeKeyPerfParamEntity.getDesigId();
-        this.ekppMonth = employeeKeyPerfParamEntity.getEkppMonth();
-        this.empAchivedWeight = employeeKeyPerfParamEntity.getEmpAchivedWeight();
-        this.empOverallAchieve = employeeKeyPerfParamEntity.getEmpOverallAchieve();
-        this.empOverallTaskComp = employeeKeyPerfParamEntity.getEmpOverallTaskComp();
-        this.statusCd = employeeKeyPerfParamEntity.getStatusCd();
+    @Builder(builderMethodName = "keyEmployeePerfParamEntityBuilder")
+    public EmployeeKppDetailsEntity(Integer ekppId, Integer kppId, Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, Instant ekppMonth, String ekppAchivedWeight, String ekppOverallAchieve, String ekppOverallTaskComp, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+        super(createdDate, createdUserId, updatedDate, updatedUserId);
+        this.ekppId = ekppId;
+        this.kppId = kppId;
+        this.empId = empId;
+        this.empEId=empEId;
+        this.roleId=roleId;
+        this.deptId = deptId;
+        this.desigId = desigId;
+        this.ekppMonth = ekppMonth;
+        this.empAchivedWeight = ekppAchivedWeight;
+        this.empOverallAchieve = ekppOverallAchieve;
+        this.empOverallTaskComp = ekppOverallTaskComp;
     }
 }

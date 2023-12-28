@@ -3,7 +3,6 @@ package com.futurebizops.kpi.controller;
 import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
-import com.futurebizops.kpi.request.EmpKPPUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
@@ -24,7 +23,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/employee-key-perform-parameter")
-public class EmployeeKeyPerfParamController {
+public class EmployeeKppController {
 
     @Autowired
     private EmployeeKeyPerfParamService employeeKeyPerfParamService;

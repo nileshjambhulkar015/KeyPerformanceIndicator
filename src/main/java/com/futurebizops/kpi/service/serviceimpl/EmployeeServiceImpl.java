@@ -4,19 +4,19 @@ import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.AuditEnabledEntity;
 import com.futurebizops.kpi.entity.EmployeeAudit;
 import com.futurebizops.kpi.entity.EmployeeEntity;
-import com.futurebizops.kpi.entity.EmployeeKeyPerfParamDetailsAudit;
-import com.futurebizops.kpi.entity.EmployeeKeyPerfParamDetailsEntity;
-import com.futurebizops.kpi.entity.EmployeeKeyPerfParamMasterAudit;
-import com.futurebizops.kpi.entity.EmployeeKeyPerfParamMasterEntity;
+import com.futurebizops.kpi.entity.EmployeeKppDetailsAudit;
+import com.futurebizops.kpi.entity.EmployeeKppDetailsEntity;
+import com.futurebizops.kpi.entity.EmployeeKppMasterAudit;
+import com.futurebizops.kpi.entity.EmployeeKppMasterEntity;
 import com.futurebizops.kpi.entity.EmployeeLoginAudit;
 import com.futurebizops.kpi.entity.EmployeeLoginEntity;
 import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EmployeeAuditRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamDetailsAuditRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamMasterAuditRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamMasterRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamDetailsRepo;
+import com.futurebizops.kpi.repository.EmployeeKppDetailsAuditRepo;
+import com.futurebizops.kpi.repository.EmployeeKppMasterAuditRepo;
+import com.futurebizops.kpi.repository.EmployeeKppMasterRepo;
+import com.futurebizops.kpi.repository.EmployeeKppDetailsRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginRepo;
 import com.futurebizops.kpi.repository.EmployeeRepo;
@@ -29,7 +29,6 @@ import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -66,16 +65,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     private KeyPerfParameterRepo keyPerfParameterRepo;
 
     @Autowired
-    private EmployeeKeyPerfParamDetailsRepo employeeKeyPerfParamRepo;
+    private EmployeeKppDetailsRepo employeeKeyPerfParamRepo;
 
     @Autowired
-    private EmployeeKeyPerfParamDetailsAuditRepo employeeKeyPerfParamAuditRepo;
+    private EmployeeKppDetailsAuditRepo employeeKeyPerfParamAuditRepo;
 
     @Autowired
-    private EmployeeKeyPerfParamMasterRepo employeeKeyPerfParamMasterRepo;
+    private EmployeeKppMasterRepo employeeKeyPerfParamMasterRepo;
 
     @Autowired
-    private EmployeeKeyPerfParamMasterAuditRepo employeeKeyPerfParamMasterAuditRepo;
+    private EmployeeKppMasterAuditRepo employeeKeyPerfParamMasterAuditRepo;
 
     Random randEid = null;
 
@@ -117,9 +116,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 log.error("Inside EmployeeServiceImpl >> saveEmployee()");
                 throw new KPIException("EmployeeServiceImpl Class", false, "Please set the KPP for Designation first");
             }
-            List<EmployeeKeyPerfParamDetailsEntity> paramEntities = new ArrayList<>();
+            List<EmployeeKppDetailsEntity> paramEntities = new ArrayList<>();
             for (KeyPerfParamEntity keyPerfParam : empKpp) {
-                EmployeeKeyPerfParamDetailsEntity keyPerfParamEntity = new EmployeeKeyPerfParamDetailsEntity();
+                EmployeeKppDetailsEntity keyPerfParamEntity = new EmployeeKppDetailsEntity();
                 keyPerfParamEntity.setEmpEId("e" + empEId);
                 keyPerfParamEntity.setRoleId(employeeEntity.getRoleId());
                 keyPerfParamEntity.setDeptId(employeeEntity.getDeptId());
@@ -131,12 +130,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 keyPerfParamEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
                 paramEntities.add(keyPerfParamEntity);
 
-                EmployeeKeyPerfParamDetailsAudit keyPerfParamAudit = new EmployeeKeyPerfParamDetailsAudit(keyPerfParamEntity);
+                EmployeeKppDetailsAudit keyPerfParamAudit = new EmployeeKppDetailsAudit(keyPerfParamEntity);
                 employeeKeyPerfParamAuditRepo.save(keyPerfParamAudit);
             }
             employeeKeyPerfParamRepo.saveAll(paramEntities);
 
-            EmployeeKeyPerfParamMasterEntity employeeKeyPerfParamMasterEntity = new EmployeeKeyPerfParamMasterEntity();
+            EmployeeKppMasterEntity employeeKeyPerfParamMasterEntity = new EmployeeKppMasterEntity();
             employeeKeyPerfParamMasterEntity.setEmpEId("e" + empEId);
             employeeKeyPerfParamMasterEntity.setRoleId(employeeEntity.getRoleId());
             employeeKeyPerfParamMasterEntity.setDeptId(employeeEntity.getDeptId());
@@ -151,7 +150,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeKeyPerfParamMasterEntity.setStatusCd("A");
             employeeKeyPerfParamMasterEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
             employeeKeyPerfParamMasterRepo.save(employeeKeyPerfParamMasterEntity);
-            EmployeeKeyPerfParamMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKeyPerfParamMasterAudit();
+            EmployeeKppMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKppMasterAudit();
             employeeKeyPerfParamMasterAuditRepo.save(employeeKeyPerfParamMasterAudit);
 
             employeeRepo.save(employeeEntity);

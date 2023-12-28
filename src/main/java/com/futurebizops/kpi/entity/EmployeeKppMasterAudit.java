@@ -12,15 +12,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 
-@Table(name = "employee_key_perf_parameter_master")
+@Table(name = "employee_kpp_master_audit")
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeKeyPerfParamMasterEntity extends AuditEnabledEntity {
+public class EmployeeKppMasterAudit extends AuditEnabledEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ekpp_aud_mid")
+    private Integer eKppAuditMId;
+
     @Column(name = "ekpp_mid")
     private Integer eKppMId;
 

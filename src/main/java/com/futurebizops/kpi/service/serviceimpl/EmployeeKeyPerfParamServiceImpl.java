@@ -1,19 +1,18 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
-import com.futurebizops.kpi.entity.EmployeeKeyPerfParamDetailsAudit;
-import com.futurebizops.kpi.entity.EmployeeKeyPerfParamDetailsEntity;
+import com.futurebizops.kpi.entity.EmployeeKppDetailsAudit;
+import com.futurebizops.kpi.entity.EmployeeKppDetailsEntity;
 import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import com.futurebizops.kpi.exception.KPIException;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamDetailsAuditRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamDetailsRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamMasterAuditRepo;
-import com.futurebizops.kpi.repository.EmployeeKeyPerfParamMasterRepo;
+import com.futurebizops.kpi.repository.EmployeeKppDetailsAuditRepo;
+import com.futurebizops.kpi.repository.EmployeeKppDetailsRepo;
+import com.futurebizops.kpi.repository.EmployeeKppMasterAuditRepo;
+import com.futurebizops.kpi.repository.EmployeeKppMasterRepo;
 import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.EmpKPPUpdateRequest;
-import com.futurebizops.kpi.request.GMUpdateRequest;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
@@ -35,28 +34,28 @@ import java.util.stream.Collectors;
 public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamService {
 
     @Autowired
-    private EmployeeKeyPerfParamDetailsRepo employeeKeyPerfParamDetailsRepo;
+    private EmployeeKppDetailsRepo employeeKeyPerfParamDetailsRepo;
 
     @Autowired
-    private EmployeeKeyPerfParamDetailsAuditRepo keyPerfParamAuditRepo;
+    private EmployeeKppDetailsAuditRepo keyPerfParamAuditRepo;
 
     @Autowired
     private KeyPerfParameterRepo keyPerfParameterRepo;
 
     @Autowired
-    EmployeeKeyPerfParamMasterRepo employeeKeyPerfParamMasterRepo;
+    EmployeeKppMasterRepo employeeKeyPerfParamMasterRepo;
 
     @Autowired
-    EmployeeKeyPerfParamMasterAuditRepo employeeKeyPerfParamMasterAuditRepo;
+    EmployeeKppMasterAuditRepo employeeKeyPerfParamMasterAuditRepo;
 
 
 
     @Override
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
-        EmployeeKeyPerfParamDetailsEntity keyPerfParamEntity = convertEmployeeKPPCreateRequestToEntity(keyPerfParamCreateRequest);
+        EmployeeKppDetailsEntity keyPerfParamEntity = convertEmployeeKPPCreateRequestToEntity(keyPerfParamCreateRequest);
         try {
             employeeKeyPerfParamDetailsRepo.save(keyPerfParamEntity);
-            EmployeeKeyPerfParamDetailsAudit partAudit = new EmployeeKeyPerfParamDetailsAudit(keyPerfParamEntity);
+            EmployeeKppDetailsAudit partAudit = new EmployeeKppDetailsAudit(keyPerfParamEntity);
             keyPerfParamAuditRepo.save(partAudit);
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -193,8 +192,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
 
-    private EmployeeKeyPerfParamDetailsEntity convertEmployeeKPPCreateRequestToEntity(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
-        return EmployeeKeyPerfParamDetailsEntity.keyEmployeePerfParamEntityBuilder()
+    private EmployeeKppDetailsEntity convertEmployeeKPPCreateRequestToEntity(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
+        return EmployeeKppDetailsEntity.keyEmployeePerfParamEntityBuilder()
                 .ekppMonth(keyPerfParamCreateRequest.getEkppMonth())
                 .kppId(keyPerfParamCreateRequest.getKppId())
                 .empId(keyPerfParamCreateRequest.getEmpId())
