@@ -155,8 +155,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
-    public List<HodEmploeeKppResponse> getEmployeeForHodRatings(Integer empId, String statusCd) {
-        List<Object[]> employeeKppData = keyPerfParameterRepo.getEmployeeKeyPerfParameterDetail(empId, statusCd);
+    public List<HodEmploeeKppResponse> getEmployeeForHodRatings(Integer empId,String empEId, String statusCd) {
+        List<Object[]> employeeKppData = keyPerfParameterRepo.getEmployeeKeyPerfParameterDetail(empId,empEId, statusCd);
         List<HodEmploeeKppResponse> hodEmployeeResponses = employeeKppData.stream().map(HodEmploeeKppResponse::new).collect(Collectors.toList());
         hodEmployeeResponses = hodEmployeeResponses.stream()
                 .sorted(Comparator.comparing(HodEmploeeKppResponse::getKppObjective))

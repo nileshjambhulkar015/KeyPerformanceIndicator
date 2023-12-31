@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
 
-    public Optional<EmployeeEntity> findByEmpMobileNoOrEmailIdEqualsIgnoreCase(String empMobileNo, String emailId);
+    public Optional<EmployeeEntity> findByEmpEIdEqualsIgnoreCase(String empEId);
     public EmployeeEntity findByEmpMobileNoAndStatusCd(String empMobileNo, String statusCd);
 
 

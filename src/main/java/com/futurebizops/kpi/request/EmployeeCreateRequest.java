@@ -9,6 +9,9 @@ import javax.persistence.Column;
 public class EmployeeCreateRequest {
 
     @Schema(example = "1", description = "This field is used for employee role id")
+    private String empEId;
+
+    @Schema(example = "1", description = "This field is used for employee role id")
     private Integer roleId;
 
     @Schema(example = "1", description = "This field is used for department id")

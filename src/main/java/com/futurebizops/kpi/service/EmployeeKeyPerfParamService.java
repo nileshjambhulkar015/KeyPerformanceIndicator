@@ -24,7 +24,7 @@ public interface EmployeeKeyPerfParamService {
 
     public List<KPPResponse> getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd);
 
-    public List<HodEmploeeKppResponse> getEmployeeForHodRatings(Integer empId, String statusCd);
+    public List<HodEmploeeKppResponse> getEmployeeForHodRatings(Integer empId, String empEId,String statusCd);
 
 
 

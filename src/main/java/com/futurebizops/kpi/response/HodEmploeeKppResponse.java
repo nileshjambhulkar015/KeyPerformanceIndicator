@@ -3,6 +3,7 @@ package com.futurebizops.kpi.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Column;
 
@@ -56,7 +57,7 @@ public class HodEmploeeKppResponse {
     public HodEmploeeKppResponse(Object[] objects) {
         eKppId = Integer.parseInt(String.valueOf(objects[0]));
         ekppMonth = String.valueOf(objects[1]);
-        empId = Integer.parseInt(String.valueOf(objects[2]));
+        empId = null!=objects[2]? Integer.parseInt(String.valueOf(objects[2])):null;
         empEId = String.valueOf(objects[3]);
         roleId = Integer.parseInt(String.valueOf(objects[4]));
         roleName = String.valueOf(objects[5]);

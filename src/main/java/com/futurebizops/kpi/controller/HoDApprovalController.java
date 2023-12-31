@@ -38,9 +38,9 @@ public class HoDApprovalController {
 
     //load kpp details as per employee id for hod ratings
     @GetMapping(value = "/employee-kpp")
-    public ResponseEntity<List<HodEmploeeKppResponse>> getEmployeeForHodRatings(@RequestParam(required = false) Integer empId,
+    public ResponseEntity<List<HodEmploeeKppResponse>> getEmployeeForHodRatings(@RequestParam(required = false) Integer empId,@RequestParam(required = false) String empEId,
                                                                         @RequestParam(required = false) String statusCd) {
-        List<HodEmploeeKppResponse> response = keyPerfParamService.getEmployeeForHodRatings(empId, statusCd);
+        List<HodEmploeeKppResponse> response = keyPerfParamService.getEmployeeForHodRatings(empId,empEId, statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

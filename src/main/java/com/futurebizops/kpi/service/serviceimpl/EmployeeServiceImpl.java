@@ -76,14 +76,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeKppMasterAuditRepo employeeKeyPerfParamMasterAuditRepo;
 
-    Random randEid = null;
+
 
     @Transactional
     @Override
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
-        //Generate random number for employee till 1000 only.. increase size if you want to create more
-        randEid = new Random();
-        int empEId = randEid.nextInt(1000);
 
         //When hod is inserted then gm set to reporing employee id only
         Integer gmEmpId=null;
@@ -101,14 +98,13 @@ public class EmployeeServiceImpl implements EmployeeService {
             log.error("Inside EmployeeServiceImpl >> saveEmployee()");
             throw new KPIException("EmployeeServiceImpl Class", false, "Reporting Employee must be present");
         }
-        Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findByEmpMobileNoOrEmailIdEqualsIgnoreCase(employeeCreateRequest.getEmpMobileNo(), employeeCreateRequest.getEmailId());
+        Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findByEmpEIdEqualsIgnoreCase(employeeCreateRequest.getEmpEId());
         if (optionalEmployeeEntity.isPresent()) {
             log.error("Inside EmployeeServiceImpl >> saveEmployee()");
-            throw new KPIException("EmployeeServiceImpl Class", false, "Employee Mobile number or email id already exist");
+            throw new KPIException("EmployeeServiceImpl Class", false, "Employee Id is already exist");
         }
         EmployeeEntity employeeEntity = convertEmployeeCreateRequestToEntity(employeeCreateRequest);
         employeeEntity.setGmEmpId(gmEmpId);
-        employeeEntity.setEmpEId("e" + empEId);
         try {
 
             List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
@@ -119,11 +115,14 @@ public class EmployeeServiceImpl implements EmployeeService {
             List<EmployeeKppDetailsEntity> paramEntities = new ArrayList<>();
             for (KeyPerfParamEntity keyPerfParam : empKpp) {
                 EmployeeKppDetailsEntity keyPerfParamEntity = new EmployeeKppDetailsEntity();
-                keyPerfParamEntity.setEmpEId("e" + empEId);
+                keyPerfParamEntity.setEmpEId(employeeEntity.getEmpEId());
                 keyPerfParamEntity.setRoleId(employeeEntity.getRoleId());
                 keyPerfParamEntity.setDeptId(employeeEntity.getDeptId());
                 keyPerfParamEntity.setDesigId(employeeEntity.getDesigId());
                 keyPerfParamEntity.setKppId(keyPerfParam.getKppId());
+                keyPerfParamEntity.setEmpAchivedWeight("0");
+                keyPerfParamEntity.setEmpOverallAchieve("0");
+                keyPerfParamEntity.setEmpOverallTaskComp("0");
                 keyPerfParamEntity.setHodEmpId(employeeCreateRequest.getReportingEmpId());
                 keyPerfParamEntity.setGmEmpId(gmEmpId);
                 keyPerfParamEntity.setStatusCd("A");
@@ -136,7 +135,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeKeyPerfParamRepo.saveAll(paramEntities);
 
             EmployeeKppMasterEntity employeeKeyPerfParamMasterEntity = new EmployeeKppMasterEntity();
-            employeeKeyPerfParamMasterEntity.setEmpEId("e" + empEId);
+            employeeKeyPerfParamMasterEntity.setEmpEId(employeeEntity.getEmpEId());
             employeeKeyPerfParamMasterEntity.setRoleId(employeeEntity.getRoleId());
             employeeKeyPerfParamMasterEntity.setDeptId(employeeEntity.getDeptId());
             employeeKeyPerfParamMasterEntity.setDesigId(employeeEntity.getDesigId());
@@ -158,7 +157,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeAuditRepo.save(employeeAudit);
 
             EmployeeLoginEntity employeeLoginEntity = convertRequestToEmployeeLogin(employeeCreateRequest);
-            employeeLoginEntity.setEmpEId("e" + empEId);
             employeeLoginRepo.save(employeeLoginEntity);
             EmployeeLoginAudit employeeLoginAudit = new EmployeeLoginAudit(employeeLoginEntity);
             employeeLoginAuditRepo.save(employeeLoginAudit);
@@ -298,6 +296,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
     private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeLoginEntity.employeeLoginEntityBuilder()
+                .empEId(employeeCreateRequest.getEmpEId())
                 .roleId(employeeCreateRequest.getRoleId())
                 .deptId(employeeCreateRequest.getDeptId())
                 .desigId(employeeCreateRequest.getDesigId())
@@ -312,6 +311,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeEntity convertEmployeeCreateRequestToEntity(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeEntity.employeeEntityBuilder()
+                .empEId(employeeCreateRequest.getEmpEId())
                 .roleId(employeeCreateRequest.getRoleId())
                 .depId(employeeCreateRequest.getDeptId())
                 .desigId(employeeCreateRequest.getDesigId())
