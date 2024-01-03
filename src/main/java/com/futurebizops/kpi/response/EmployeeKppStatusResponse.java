@@ -19,6 +19,12 @@ public class EmployeeKppStatusResponse {
     private String kppOverallAchivement;
     private String empEKppStatus;
 
+    private String hodOverallAchieve;
+    private String hodKppStatus;
+
+    private String gmOverallAchieve;
+    private String gmKppStatus;
+
     public EmployeeKppStatusResponse(Object[] objects) {
         empId = Integer.parseInt(String.valueOf(objects[0]));
         empEId = String.valueOf(objects[1]);
@@ -33,5 +39,10 @@ public class EmployeeKppStatusResponse {
         emailId=String.valueOf(objects[10]);
         kppOverallAchivement=String.valueOf(objects[11]);
         empEKppStatus=String.valueOf(objects[12]);
+
+        hodOverallAchieve=String.valueOf(objects[13]);
+        hodKppStatus=String.valueOf(objects[14]);
+        gmOverallAchieve=String.valueOf(objects[15]);
+        gmKppStatus=String.valueOf(objects[16]);
     }
 }

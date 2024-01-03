@@ -28,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Column;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -41,8 +40,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamService {
 
-    @Autowired
-    private EmployeeKppDetailsRepo employeeKeyPerfParamDetailsRepo;
+
 
     @Autowired
     private EmployeeKppDetailsAuditRepo keyPerfParamAuditRepo;
@@ -51,17 +49,24 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     private KeyPerfParameterRepo keyPerfParameterRepo;
 
     @Autowired
-    EmployeeKppMasterRepo employeeKeyPerfParamMasterRepo;
-
-    @Autowired
     EmployeeKppMasterAuditRepo employeeKeyPerfParamMasterAuditRepo;
 
+    @Autowired
+    EmployeeKppMasterRepo employeeKppMasterRepo;
 
+    @Autowired
+    EmployeeKppDetailsRepo employeeKppDetailsRepo;
+
+    @Autowired
+    ReportEmployeeKppMasterRepo reportKppMasterRepo;
+
+    @Autowired
+    ReportEmployeeKppDetailsRepo reportEmployeeKppDetailsRepo;
     @Override
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         EmployeeKppDetailsEntity keyPerfParamEntity = convertEmployeeKPPCreateRequestToEntity(keyPerfParamCreateRequest);
         try {
-            employeeKeyPerfParamDetailsRepo.save(keyPerfParamEntity);
+            employeeKppDetailsRepo.save(keyPerfParamEntity);
             EmployeeKppDetailsAudit partAudit = new EmployeeKppDetailsAudit(keyPerfParamEntity);
             keyPerfParamAuditRepo.save(partAudit);
             return KPIResponse.builder()
@@ -81,9 +86,9 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         try {
             for (EmpKPPUpdateRequest paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
                 ekppMonth = StringUtils.isNotEmpty(paramUpdateRequest.getEkppMonth()) ? DateTimeUtils.convertStringToInstant(paramUpdateRequest.getEkppMonth()) : null;
-                employeeKeyPerfParamDetailsRepo.updateEmployeeKppDetails(paramUpdateRequest.getEmpId(), ekppMonth, paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpEId(), paramUpdateRequest.getRoleId(), paramUpdateRequest.getDeptId(), paramUpdateRequest.getDesigId());
+                employeeKppDetailsRepo.updateEmployeeKppDetails(paramUpdateRequest.getEmpId(), ekppMonth, paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpEId(), paramUpdateRequest.getRoleId(), paramUpdateRequest.getDeptId(), paramUpdateRequest.getDesigId());
             }
-            employeeKeyPerfParamMasterRepo.updateEmployeeKppMaster(empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId(), ekppMonth, empKPPMasterUpdateRequest.getTotalAchivedWeightage(), empKPPMasterUpdateRequest.getTotalOverAllAchive(), empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(), empKPPMasterUpdateRequest.getRemark(), empKPPMasterUpdateRequest.getEvidence(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpEId(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getRoleId(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getDeptId(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getDesigId());
+            employeeKppMasterRepo.updateEmployeeKppMaster(empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId(), ekppMonth, empKPPMasterUpdateRequest.getTotalAchivedWeightage(), empKPPMasterUpdateRequest.getTotalOverAllAchive(), empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(), empKPPMasterUpdateRequest.getRemark(), empKPPMasterUpdateRequest.getEvidence(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpEId(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getRoleId(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getDeptId(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getDesigId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -104,14 +109,14 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             for (EmpKPPUpdateRequest paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
 
                 //employeeKeyPerfParamDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpEId(), paramUpdateRequest.getRoleId(), paramUpdateRequest.getDeptId(), paramUpdateRequest.getDesigId());
-                employeeKeyPerfParamDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
+                employeeKppDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
             if ("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())) {
                 empKppStatus = "Approved";
             } else if ("Reject".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())) {
                 empKppStatus = "Reject";
             }
-            employeeKeyPerfParamMasterRepo.updateEmpKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getTotalAchivedWeightage(), empKPPMasterUpdateRequest.getTotalOverAllAchive(), empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(), empKPPMasterUpdateRequest.getRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
+            employeeKppMasterRepo.updateEmpKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getTotalAchivedWeightage(), empKPPMasterUpdateRequest.getTotalOverAllAchive(), empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(), empKPPMasterUpdateRequest.getRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -129,14 +134,14 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         String empKppStatus = "In-Progress";
         try {
             for (EmpKPPUpdateRequest paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
-                employeeKeyPerfParamDetailsRepo.updateGMApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
+                employeeKppDetailsRepo.updateGMApproveOrRejectHod(paramUpdateRequest.getEkppAchivedWeight(), paramUpdateRequest.getEkppOverallAchieve(), paramUpdateRequest.getEkppOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
             if ("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())) {
                 empKppStatus = "Approved";
             } else if ("Reject".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())) {
                 empKppStatus = "Reject";
             }
-            employeeKeyPerfParamMasterRepo.updateGMKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getTotalAchivedWeightage(), empKPPMasterUpdateRequest.getTotalOverAllAchive(), empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(), empKPPMasterUpdateRequest.getRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
+            employeeKppMasterRepo.updateGMKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getTotalAchivedWeightage(), empKPPMasterUpdateRequest.getTotalOverAllAchive(), empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(), empKPPMasterUpdateRequest.getRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -169,17 +174,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         return hodEmployeeResponses;
     }
 
-    @Autowired
-    EmployeeKppMasterRepo employeeKppMasterRepo;
 
-    @Autowired
-    EmployeeKppDetailsRepo employeeKppDetailsRepo;
-
-    @Autowired
-    ReportEmployeeKppMasterRepo kppMasterRepo;
-
-    @Autowired
-    ReportEmployeeKppDetailsRepo reportEmployeeKppDetailsRepo;
     @Transactional
     @Override
     public KPIResponse generateEmployeeKppReport(Integer empId, String statusCd) {
@@ -218,9 +213,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             kppMaster.setRemark(kppMasterEntity.getRemark());
             kppMaster.setStatusCd(kppMasterEntity.getStatusCd());
 
-            kppMasterRepo.save(kppMaster);
-
-
+            reportKppMasterRepo.save(kppMaster);
+         employeeKppMasterRepo.resetEmployeeKppByGM(empId,statusCd);
         }
 
         List<EmployeeKppDetailsEntity> employeeKppDetailsEntities = employeeKppDetailsRepo.findByEmpIdAndStatusCd(empId, statusCd);
@@ -232,13 +226,12 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 detailsEntity = new ReportEmployeeKppDetailsEntity();
 
                 detailsEntity.setEkppMonth(employeeKppDetailsEntity.getEkppMonth());
-                detailsEntity.setEkppDId(employeeKppDetailsEntity.getEkppId());
-
                 detailsEntity.setEmpId(employeeKppDetailsEntity.getEmpId());
                 detailsEntity.setEmpEId(employeeKppDetailsEntity.getEmpEId());
                 detailsEntity.setRoleId(employeeKppDetailsEntity.getRoleId());
                 detailsEntity.setDeptId(employeeKppDetailsEntity.getRoleId());
                 detailsEntity.setDesigId(employeeKppDetailsEntity.getDesigId());
+                detailsEntity.setKppId(employeeKppDetailsEntity.getKppId());
                 detailsEntity.setEmpAchivedWeight(employeeKppDetailsEntity.getEmpAchivedWeight());
                 detailsEntity.setEmpOverallAchieve(employeeKppDetailsEntity.getEmpOverallAchieve());
                 detailsEntity.setEmpOverallTaskComp(employeeKppDetailsEntity.getEmpOverallTaskComp());
@@ -255,6 +248,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 kppDetailsEntities.add(detailsEntity);
             }
             reportEmployeeKppDetailsRepo.saveAll(kppDetailsEntities);
+            employeeKppDetailsRepo.resetEmployeeKpp(empId, statusCd);
         }
         return null;
     }

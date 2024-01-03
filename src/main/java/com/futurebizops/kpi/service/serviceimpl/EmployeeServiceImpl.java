@@ -162,7 +162,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             kppMasterEntity.setGmOverallAchieve("0");
             kppMasterEntity.setGmOverallTaskComp("0");
             kppMasterEntity.setGmKppAppliedDate(null);
-            kppMasterEntity.setGmKppStatus(null);
             kppMasterEntity.setGmRemark(null);
             kppMasterEntity.setRemark(null);
             kppMasterEntity.setStatusCd("A");

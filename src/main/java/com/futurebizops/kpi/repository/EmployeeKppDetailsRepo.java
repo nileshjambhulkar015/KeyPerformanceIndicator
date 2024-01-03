@@ -26,4 +26,11 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     public int updateGMApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 
     List<EmployeeKppDetailsEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd);
+
+    @Modifying
+    @Query(value = "update employee_kpp_details set ekpp_month=null,ekpp_emp_achived_weight='0',ekpp_emp_overall_achieve='0',ekpp_emp_overall_task_comp='0',ekpp_hod_achived_weight='0',ekpp_hod_overall_achieve ='0',ekpp_hod_overall_task_comp='0',ekpp_gm_achived_weight='0',ekpp_gm_overall_achieve ='0',ekpp_gm_overall_task_comp ='0' where emp_id =:empId and status_cd=:statusCd", nativeQuery = true)
+    public int resetEmployeeKpp(@Param("empId") Integer empId, @Param("statusCd") String statusCd);
+
 }
+
+

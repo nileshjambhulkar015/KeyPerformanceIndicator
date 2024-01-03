@@ -522,7 +522,7 @@ report_ekpp_aud_id serial PRIMARY key,
 
 create table report_employee_kpp_details(
 report_ekpp_details_id serial PRIMARY key,
-    ekpp_did Integer,
+
     ekpp_month timestamp,
 	emp_id INTEGER,
 	emp_eid VARCHAR(20) ,
@@ -552,7 +552,6 @@ report_ekpp_details_id serial PRIMARY key,
 create table report_employee_kpp_details_audit(
     report_ekpp_details_aud_id serial PRIMARY key,
     ekpp_aud_did INTEGER,
-    ekpp_did INTEGER,
     ekpp_month timestamp,
 	emp_id INTEGER,
 	emp_eid VARCHAR(20) ,
