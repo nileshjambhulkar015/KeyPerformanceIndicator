@@ -1,31 +1,85 @@
 --create database keyperformance;
 
 /*
-drop TABLE department;
-drop TABLE department_audit;
-drop TABLE designation;
-drop TABLE designation_audit;
-drop TABLE roles;
-drop TABLE roles_audit;
-drop table employee;
-drop table employee_audit;
-drop table employee_login;
-drop table employee_login_audit;
-drop table employee_key_perf_parameter_master;
-drop table employee_key_perf_parameter_master_audit;
-drop table employee_key_perf_parameter_details;
-drop table employee_key_perf_parameter_details_audit;
-drop table key_perf_parameter ;
-drop table key_perf_parameter_audit  ;
 drop table region  ;
 drop table region_audit  ;
 drop table site  ;
 drop table site_audit  ;
+drop TABLE roles;
+drop TABLE roles_audit;
+drop TABLE department;
+drop TABLE department_audit;
+drop TABLE designation;
+drop TABLE designation_audit;
+drop table key_perf_parameter ;
+drop table key_perf_parameter_audit  ;
+drop table employee;
+drop table employee_audit;
+drop table employee_login;
+drop table employee_login_audit;
+drop table employee_kpp_master;
+drop table employee_kpp_master_audit;
+drop table employee_kpp_details;
+drop table employee_kpp_details_audit;
 drop table report_employee_kpp_master  ;
 drop table report_employee_kpp_master_audit  ;
 drop table report_employee_kpp_details  ;
 drop table report_employee_kpp_details_audit  ;
 **/
+
+
+create table region(
+    REGION_ID serial  PRIMARY key,
+	REGION_NAME VARCHAR(20),
+    REMARK VARCHAR(100),
+    STATUS_CD VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+create table region_audit(
+	REGION_AUD_ID serial PRIMARY key,
+	REGION_ID INTEGER,
+    REGION_NAME VARCHAR(20),
+    REMARK VARCHAR(100),
+    STATUS_CD VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+create table site(
+    SITE_ID serial  PRIMARY key,
+	REGION_ID INTEGER,
+	SITE_NAME VARCHAR(20),
+    REMARK VARCHAR(100),
+    STATUS_CD VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+
+create table site_audit(
+	SITE_AUD_ID serial PRIMARY key,
+	SITE_ID INTEGER,
+	REGION_ID INTEGER,
+    SITE_NAME VARCHAR(20),
+    REMARK VARCHAR(100),
+    STATUS_CD VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
 
 create table roles(
     ROLE_ID serial  PRIMARY key,
@@ -107,58 +161,6 @@ create table designation_audit(
 	lst_updt_user_id VARCHAR(20) null
 );
 
-
-create table region(
-    REGION_ID serial  PRIMARY key,
-	REGION_NAME VARCHAR(20),
-    REMARK VARCHAR(100),
-    STATUS_CD VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null
-);
-
-
-create table region_audit(
-	REGION_AUD_ID serial PRIMARY key,
-	REGION_ID INTEGER,
-    REGION_NAME VARCHAR(20),
-    REMARK VARCHAR(100),
-    STATUS_CD VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null
-);
-
-
-create table site(
-    SITE_ID serial  PRIMARY key,
-	REGION_ID INTEGER,
-	SITE_NAME VARCHAR(20),
-    REMARK VARCHAR(100),
-    STATUS_CD VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null
-);
-
-
-
-create table site_audit(
-	SITE_AUD_ID serial PRIMARY key,
-	SITE_ID INTEGER,
-	REGION_ID INTEGER,
-    SITE_NAME VARCHAR(20),
-    REMARK VARCHAR(100),
-    STATUS_CD VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null
-);
 
 create table key_perf_parameter(
     kpp_id serial PRIMARY key,
@@ -481,7 +483,7 @@ create table report_employee_kpp_master(
 
 create table report_employee_kpp_master_audit(
 report_ekpp_aud_id serial PRIMARY key,
-    report_ekpp_id serial PRIMARY key,
+    report_ekpp_id INTEGER,
         ekpp_month timestamp,
         	emp_id INTEGER,
         	emp_eid VARCHAR(20) ,

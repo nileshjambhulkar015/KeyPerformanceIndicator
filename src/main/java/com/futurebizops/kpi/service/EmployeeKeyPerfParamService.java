@@ -26,7 +26,7 @@ public interface EmployeeKeyPerfParamService {
 
     public List<HodEmploeeKppResponse> getEmployeeForHodRatings(Integer empId, String empEId,String statusCd);
 
-
+    public KPIResponse generateEmployeeKppReport(Integer empId, String statusCd);
 
    // public KPIResponse findRoleDetails(RoleSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection);
 

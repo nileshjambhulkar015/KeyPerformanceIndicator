@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetailsEntity, Integer> {
@@ -23,4 +25,5 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     @Query(value = "update employee_kpp_details set ekpp_gm_achived_weight =:ekppAchivedWeight,ekpp_gm_overall_achieve =:ekppOverallAchieve,ekpp_gm_overall_task_comp = :ekppOverallTaskComp where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
     public int updateGMApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 
+    List<EmployeeKppDetailsEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd);
 }
