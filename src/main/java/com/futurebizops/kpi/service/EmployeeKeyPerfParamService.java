@@ -23,7 +23,7 @@ public interface EmployeeKeyPerfParamService {
 
     public List<HodEmploeeKppResponse> getEmployeeForHodRatings(Integer empId, String empEId, String statusCd);
 
-    public List<EmpKppStatusResponse> getEmployeeKppStatus(Integer empId);
+
 
     public KPIResponse generateEmployeeKppReport(Integer empId, String statusCd);
 

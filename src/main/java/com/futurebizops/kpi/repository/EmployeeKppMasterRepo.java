@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.repository;
 
+import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.EmployeeKppMasterEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,6 +33,10 @@ public interface EmployeeKppMasterRepo extends JpaRepository<EmployeeKppMasterEn
     @Modifying
     @Query(value = "update employee_kpp_master set ekpp_month=null,total_emp_achived_weight='0',total_emp_overall_achieve='0',total_emp_overall_task_comp='0',emp_ekpp_applied_date=null, emp_ekpp_status='Pending',emp_remark=null, emp_ekpp_evidence=null,total_hod_achived_weight='0', total_hod_overall_achieve ='0', total_hod_overall_task_comp ='0',hod_ekpp_status='Pending',hod_approved_date=null,hod_remark=null,total_gm_achived_weight ='0',total_gm_overall_achieve='0',total_gm_overall_task_comp='0',gm_ekpp_status='Pending', gm_approved_date=null,gm_remark=null,remark=null where emp_id =:empId and status_cd=:statusCd", nativeQuery = true)
     public int resetEmployeeKppByGM(@Param("empId") Integer empId, @Param("statusCd") String statusCd);
+
+    //Employee KPP status by employee, hod and gm level
+    @Query(value = SQLQueryConstants.EMPLOYEE_KPP_STATUS_INFO_QUERY, nativeQuery = true)
+    List<Object[]> getEmployeeKPPStatus(@Param("empId") Integer empId);
 
 }
 

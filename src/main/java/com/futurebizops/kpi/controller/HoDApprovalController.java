@@ -41,12 +41,6 @@ public class HoDApprovalController {
 
     }
 
-    //load kpp details as per employee id for hod ratings
-    @GetMapping(value = "/employee-kpp-status")
-    public ResponseEntity<List<EmpKppStatusResponse>> getEmployeeKppStatus(@RequestParam(required = false) Integer empId) {
-        List<EmpKppStatusResponse> response = keyPerfParamService.getEmployeeKppStatus(empId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
 
-    }
 
 }

@@ -40,9 +40,7 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     @Query(value = SQLQueryConstants.EMPLOYEE_KPP_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeKeyPerfParameterDetail(@Param("empId") Integer empId, @Param("empEId") String empEId, @Param("statusCd") String statusCd);
 
-    //Employee KPP status by employee, hod and gm level
-    @Query(value = SQLQueryConstants.EMPLOYEE_KPP_STATUS_INFO_QUERY, nativeQuery = true)
-    List<Object[]> getEmployeeKPPStatus(@Param("empId") Integer empId);
+
 
 
 }
