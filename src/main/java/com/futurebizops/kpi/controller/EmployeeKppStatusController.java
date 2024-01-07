@@ -24,8 +24,8 @@ public class EmployeeKppStatusController {
 
     //load kpp details as per employee id for hod ratings
     @GetMapping
-    public ResponseEntity<List<EmpKppStatusResponse>> getEmployeeKppStatus(@RequestParam(required = false) Integer empId) {
-        List<EmpKppStatusResponse> response = employeeKppStatusService.getEmployeeKppStatus(empId);
+    public ResponseEntity<EmpKppStatusResponse> getEmployeeKppStatus(@RequestParam(required = false) Integer empId) {
+        EmpKppStatusResponse response = employeeKppStatusService.getEmployeeKppStatus(empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

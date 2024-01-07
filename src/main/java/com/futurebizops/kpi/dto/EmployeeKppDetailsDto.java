@@ -19,7 +19,20 @@ public class EmployeeKppDetailsDto {
     private String hodOverallAchieve;
     private String hodOverallTaskComp;
     private Integer gmEmployeeId;
-    private String totalGmAchivedWeight;
-    private String totalGmOverallAchieve;
-    private String totalGmOverallTaskComp;
+    private String gmAchivedWeight;
+    private String gmOverallAchieve;
+    private String gmOverallTaskComp;
+
+    private String kppObjective;
+    private String kppPerformanceIndi;
+    private String kppOverallTarget;
+    private String kppTargetPeriod;
+    private String kppUoM;
+    private String kppOverallWeightage;
+    private String kppRating1;
+    private String kppRating2;
+    private String kppRating3;
+    private String kppRating4;
+    private String kppRating5;
+    private String ekppStatus;
 }

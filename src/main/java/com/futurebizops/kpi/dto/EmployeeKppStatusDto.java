@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -104,8 +102,21 @@ public class EmployeeKppStatusDto {
         employeeKppDetailsDto.setHodOverallAchieve(String.valueOf(objects[41]));
         employeeKppDetailsDto.setHodOverallTaskComp(String.valueOf(objects[42]));
         employeeKppDetailsDto.setGmEmployeeId(Integer.parseInt(String.valueOf(objects[43])));
-        employeeKppDetailsDto.setTotalGmAchivedWeight(String.valueOf(objects[44]));
-        employeeKppDetailsDto.setTotalGmOverallAchieve(String.valueOf(objects[45]));
-        employeeKppDetailsDto.setTotalGmOverallTaskComp(String.valueOf(objects[46]));
+        employeeKppDetailsDto.setGmAchivedWeight(String.valueOf(objects[44]));
+        employeeKppDetailsDto.setGmOverallAchieve(String.valueOf(objects[45]));
+        employeeKppDetailsDto.setGmOverallTaskComp(String.valueOf(objects[46]));
+
+        employeeKppDetailsDto.setKppObjective(String.valueOf(objects[47]));
+        employeeKppDetailsDto.setKppPerformanceIndi(String.valueOf(objects[48]));
+        employeeKppDetailsDto.setKppOverallTarget(String.valueOf(objects[49]));
+        employeeKppDetailsDto.setKppTargetPeriod(String.valueOf(objects[50]));
+        employeeKppDetailsDto.setKppUoM(String.valueOf(objects[51]));
+        employeeKppDetailsDto.setKppOverallWeightage(String.valueOf(objects[52]));
+
+        employeeKppDetailsDto.setKppRating1(String.valueOf(objects[53]));
+        employeeKppDetailsDto.setKppRating2(String.valueOf(objects[54]));
+        employeeKppDetailsDto.setKppRating3(String.valueOf(objects[55]));
+        employeeKppDetailsDto.setKppRating4(String.valueOf(objects[56]));
+        employeeKppDetailsDto.setKppRating5(String.valueOf(objects[57]));
     }
 }

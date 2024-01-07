@@ -24,16 +24,16 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
     private EmployeeKppMasterRepo keyPerfParameterRepo;
 
     @Override
-    public List<EmpKppStatusResponse> getEmployeeKppStatus(Integer empId) {
+    public EmpKppStatusResponse getEmployeeKppStatus(Integer empId) {
         List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
         List<Object[]> employeeKppData = keyPerfParameterRepo.getEmployeeKPPStatus(empId);
         List<EmployeeKppStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(EmployeeKppStatusDto::new).collect(Collectors.toList());
-
+        EmpKppStatusResponse statusResponse=null;
         Map<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> employeeKppMasterDtoListMap =
                 employeeKppStatusDtos.stream().collect(Collectors.groupingBy(EmployeeKppStatusDto::getEmployeeKppMasterDto, Collectors.mapping(EmployeeKppStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
 
         for (Map.Entry<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
-            EmpKppStatusResponse statusResponse = new EmpKppStatusResponse();
+            statusResponse = new EmpKppStatusResponse();
             statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
             statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
 
@@ -73,9 +73,6 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
             statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
             empKppStatusResponses.add(statusResponse);
         }
-        //hodEmployeeResponses = hodEmployeeResponses.stream()
-        //      .sorted(Comparator.comparing(EmployeeKppStatusDto::getEKppMId))
-        //    .collect(Collectors.toList());
-        return empKppStatusResponses;
+        return statusResponse;
     }
 }
