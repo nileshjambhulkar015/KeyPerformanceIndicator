@@ -36,15 +36,4 @@ public class SiteEntity extends AuditEnabledEntity{
 
     @Column(name = "status_cd")
     private String statusCd;
-
-    @Builder(builderMethodName = "siteEntityBuilder")
-    public SiteEntity(Integer siteId, Integer regionId, String siteName, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId, updatedDate, updatedUserId);
-        this.siteId = siteId;
-        this.regionId = regionId;
-        this.siteName = siteName;
-        this.remark = remark;
-        this.statusCd = statusCd;
-    }
-
 }

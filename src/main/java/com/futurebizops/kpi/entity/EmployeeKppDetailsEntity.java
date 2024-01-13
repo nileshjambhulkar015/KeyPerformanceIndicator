@@ -81,20 +81,4 @@ public class EmployeeKppDetailsEntity extends AuditEnabledEntity {
 
     @Column(name = "status_cd")
     private String statusCd;
-
-    @Builder(builderMethodName = "keyEmployeePerfParamEntityBuilder")
-    public EmployeeKppDetailsEntity(Integer ekppId, Integer kppId, Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, Instant ekppMonth, String ekppAchivedWeight, String ekppOverallAchieve, String ekppOverallTaskComp, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId, updatedDate, updatedUserId);
-        this.ekppId = ekppId;
-        this.kppId = kppId;
-        this.empId = empId;
-        this.empEId=empEId;
-        this.roleId=roleId;
-        this.deptId = deptId;
-        this.desigId = desigId;
-        this.ekppMonth = ekppMonth;
-        this.empAchivedWeight = ekppAchivedWeight;
-        this.empOverallAchieve = ekppOverallAchieve;
-        this.empOverallTaskComp = ekppOverallTaskComp;
-    }
 }

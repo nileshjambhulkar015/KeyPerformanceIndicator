@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.persistence.Column;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @Data
@@ -33,13 +32,13 @@ public class EmployeeKeyPerfParamCreateRequest {
     private Integer desigId;
 
     @Schema(example = "100", description = "This field is used for Achived Weight")
-    private String ekppAchivedWeight;
+    private String empAchivedWeight;
 
     @Schema(example = "80", description = "This field is used for Overall Achivement")
-    private String ekppOverallAchieve;
+    private String empOverallAchieve;
 
     @Schema(example = "90", description = "This field is used for Overall Task Completed")
-    private String ekppOverallTaskComp;
+    private String empOverallTaskComp;
 
     @Schema(example = "2023-10-01", description = "This field is used for Applied date")
     private Instant ekppAppliedDate;

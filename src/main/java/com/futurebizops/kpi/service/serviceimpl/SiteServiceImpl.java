@@ -1,6 +1,7 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
+import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.entity.SiteAudit;
 import com.futurebizops.kpi.entity.SiteEntity;
 import com.futurebizops.kpi.exception.KPIException;
@@ -73,23 +74,23 @@ public class SiteServiceImpl implements SiteService {
     }
 
     private SiteEntity convertSiteCreateRequestToEntity(SiteCreateRequest siteCreateRequest) {
-        return SiteEntity.siteEntityBuilder()
-                .regionId(siteCreateRequest.getRegionId())
-                .siteName(siteCreateRequest.getSiteName())
-                .remark(siteCreateRequest.getRemark())
-                .statusCd(siteCreateRequest.getStatusCd())
-                .createdUserId(siteCreateRequest.getEmployeeId())
-                .build();
+        SiteEntity siteEntity = new SiteEntity();
+        siteEntity.setRegionId(siteCreateRequest.getRegionId());
+        siteEntity.setSiteName(siteCreateRequest.getSiteName());
+        siteEntity.setRemark(siteCreateRequest.getRemark());
+        siteEntity.setStatusCd(siteCreateRequest.getStatusCd());
+        siteEntity.setCreatedUserId(siteCreateRequest.getEmployeeId());
+        return siteEntity;
     }
 
     private SiteEntity convertSiteUpdateRequestToEntity(SiteUpdateRequest siteUpdateRequest) {
-        return SiteEntity.siteEntityBuilder()
-                .siteId(siteUpdateRequest.getSiteId())
-                .regionId(siteUpdateRequest.getRegionId())
-                .siteName(siteUpdateRequest.getSiteName())
-                .remark(siteUpdateRequest.getRemark())
-                .statusCd(siteUpdateRequest.getStatusCd())
-                .createdUserId(siteUpdateRequest.getEmployeeId())
-                .build();
+        SiteEntity siteEntity = new SiteEntity();
+        siteEntity.setSiteId(siteEntity.getSiteId());
+        siteEntity.setRegionId(siteUpdateRequest.getRegionId());
+        siteEntity.setSiteName(siteUpdateRequest.getSiteName());
+        siteEntity.setRemark(siteUpdateRequest.getRemark());
+        siteEntity.setStatusCd(siteUpdateRequest.getStatusCd());
+        siteEntity.setUpdatedUserId(siteUpdateRequest.getEmployeeId());
+        return siteEntity;
     }
 }

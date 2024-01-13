@@ -33,13 +33,4 @@ public class RoleEntity extends AuditEnabledEntity {
 
     @Column(name = "status_cd")
     private String statusCd;
-
-    @Builder(builderMethodName = "roleEntityBuilder")
-    public RoleEntity(Integer roleId, String roleName, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId, updatedDate, updatedUserId);
-        this.roleId = roleId;
-        this.roleName = roleName;
-        this.remark = remark;
-        this.statusCd = statusCd;
-    }
 }

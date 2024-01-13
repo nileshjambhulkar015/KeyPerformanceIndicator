@@ -36,14 +36,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.Column;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -142,25 +140,25 @@ public class EmployeeServiceImpl implements EmployeeService {
             kppMasterEntity.setRoleId(employeeEntity.getRoleId());
             kppMasterEntity.setDeptId(employeeEntity.getDeptId());
             kppMasterEntity.setDesigId(employeeEntity.getDesigId());
-            kppMasterEntity.setTotalAchivedWeight("0");
-            kppMasterEntity.setTotalOverallAchieve("0");
-            kppMasterEntity.setTotalOverallTaskComp("0");
+            kppMasterEntity.setEmpTotalAchivedWeight("0");
+            kppMasterEntity.setEmpTotalOverallAchieve("0");
+            kppMasterEntity.setEmpTotalOverallTaskComp("0");
             kppMasterEntity.setEmpKppStatus("Pending");
             kppMasterEntity.setEmpKppAppliedDate(null);
             kppMasterEntity.setEmpRemark(null);
             kppMasterEntity.setEmpEvidence(null);
             kppMasterEntity.setHodEmpId(employeeCreateRequest.getReportingEmpId());
-            kppMasterEntity.setHodAchivedWeight("0");
-            kppMasterEntity.setHodOverallAchieve("0");
-            kppMasterEntity.setHodOverallTaskComp("0");
+            kppMasterEntity.setHodTotalAchivedWeight("0");
+            kppMasterEntity.setHodTotalOverallAchieve("0");
+            kppMasterEntity.setHodTotalOverallTaskComp("0");
             kppMasterEntity.setHodKppAppliedDate(null);
             kppMasterEntity.setHodKppStatus("Pending");
             kppMasterEntity.setHodRemark(null);
             kppMasterEntity.setGmEmpId(gmEmpId);
             kppMasterEntity.setGmKppStatus("Pending");
-            kppMasterEntity.setGmAchivedWeight("0");
-            kppMasterEntity.setGmOverallAchieve("0");
-            kppMasterEntity.setGmOverallTaskComp("0");
+            kppMasterEntity.setGmTotalAchivedWeight("0");
+            kppMasterEntity.setGmTotalOverallAchieve("0");
+            kppMasterEntity.setGmTotalOverallTaskComp("0");
             kppMasterEntity.setGmKppAppliedDate(null);
             kppMasterEntity.setGmRemark(null);
             kppMasterEntity.setRemark(null);
@@ -315,75 +313,74 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
-        return EmployeeLoginEntity.employeeLoginEntityBuilder()
-                .empEId(employeeCreateRequest.getEmpEId())
-                .roleId(employeeCreateRequest.getRoleId())
-                .deptId(employeeCreateRequest.getDeptId())
-                .desigId(employeeCreateRequest.getDesigId())
-                .empMobileNo(employeeCreateRequest.getEmpMobileNo())
-                .emailId(employeeCreateRequest.getEmailId())
-                .empPassword(employeeCreateRequest.getEmpMobileNo())
-                .remark(employeeCreateRequest.getRemark())
-                .statusCd(employeeCreateRequest.getStatusCd())
-                .createdUserId(employeeCreateRequest.getEmployeeId())
-                .build();
+        EmployeeLoginEntity employeeLogin = new EmployeeLoginEntity();
+        employeeLogin.setEmpEId(employeeCreateRequest.getEmpEId());
+        employeeLogin.setRoleId(employeeCreateRequest.getRoleId());
+        employeeLogin.setDeptId(employeeCreateRequest.getDeptId());
+        employeeLogin.setDesigId(employeeCreateRequest.getDesigId());
+        employeeLogin.setEmpMobileNo(employeeCreateRequest.getEmpMobileNo());
+        employeeLogin.setEmailId(employeeCreateRequest.getEmailId());
+        employeeLogin.setEmpPassword(employeeCreateRequest.getEmpMobileNo());
+        employeeLogin.setRemark(employeeCreateRequest.getRemark());
+        employeeLogin.setStatusCd(employeeCreateRequest.getStatusCd());
+        employeeLogin.setCreatedUserId(employeeCreateRequest.getEmployeeId());
+        return employeeLogin;
     }
 
     private EmployeeEntity convertEmployeeCreateRequestToEntity(EmployeeCreateRequest employeeCreateRequest) {
-        return EmployeeEntity.employeeEntityBuilder()
-                .empEId(employeeCreateRequest.getEmpEId())
-                .roleId(employeeCreateRequest.getRoleId())
-                .depId(employeeCreateRequest.getDeptId())
-                .desigId(employeeCreateRequest.getDesigId())
-                .reportingEmpId(employeeCreateRequest.getReportingEmpId())
-                .regionId(employeeCreateRequest.getRegionId())
-                .siteId(employeeCreateRequest.getSiteId())
-                .empFirstName(employeeCreateRequest.getEmpFirstName())
-                .empMiddleName(employeeCreateRequest.getEmpMiddleName())
-                .empLastName(employeeCreateRequest.getEmpLastName())
-                .empDob(employeeCreateRequest.getEmpDob())
-                .empMobileNo(employeeCreateRequest.getEmpMobileNo())
-                .empEmerMobileNo(employeeCreateRequest.getEmpEmerMobileNo())
-                .empPhoto(employeeCreateRequest.getEmpPhoto())
-                .emailId(employeeCreateRequest.getEmailId())
-                .tempAddress(employeeCreateRequest.getTempAddress())
-                .permAddress(employeeCreateRequest.getPermAddress())
-                .empGender(employeeCreateRequest.getEmpGender())
-                .empBloodgroup(employeeCreateRequest.getEmpBloodgroup())
-                .remark(employeeCreateRequest.getRemark())
-                .statusCd(employeeCreateRequest.getStatusCd())
-                .createdUserId(employeeCreateRequest.getEmployeeId())
-                .build();
+        EmployeeEntity employeeEntity = new EmployeeEntity();
+        employeeEntity.setEmpEId(employeeCreateRequest.getEmpEId());
+        employeeEntity.setRoleId(employeeCreateRequest.getRoleId());
+        employeeEntity.setDeptId(employeeCreateRequest.getDeptId());
+        employeeEntity.setDesigId(employeeCreateRequest.getDesigId());
+        employeeEntity.setReportingEmpId(employeeCreateRequest.getReportingEmpId());
+        employeeEntity.setRegionId(employeeCreateRequest.getRegionId());
+        employeeEntity.setSiteId(employeeCreateRequest.getSiteId());
+        employeeEntity.setEmpFirstName(employeeCreateRequest.getEmpFirstName());
+        employeeEntity.setEmpMiddleName(employeeCreateRequest.getEmpMiddleName());
+        employeeEntity.setEmpLastName(employeeCreateRequest.getEmpLastName());
+        employeeEntity.setEmpDob(employeeCreateRequest.getEmpDob());
+        employeeEntity.setEmpMobileNo(employeeCreateRequest.getEmpMobileNo());
+        employeeEntity.setEmpEmerMobileNo(employeeCreateRequest.getEmpEmerMobileNo());
+        employeeEntity.setEmpPhoto(employeeCreateRequest.getEmpPhoto());
+        employeeEntity.setEmailId(employeeCreateRequest.getEmailId());
+        employeeEntity.setTempAddress(employeeCreateRequest.getTempAddress());
+        employeeEntity.setPermAddress(employeeCreateRequest.getPermAddress());
+        employeeEntity.setEmpGender(employeeCreateRequest.getEmpGender());
+        employeeEntity.setEmpBloodgroup(employeeCreateRequest.getEmpBloodgroup());
+
+        employeeEntity.setRemark(employeeCreateRequest.getRemark());
+        employeeEntity.setStatusCd(employeeCreateRequest.getStatusCd());
+        employeeEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
+        return employeeEntity;
     }
 
     private EmployeeEntity convertEmployeeUpdateRequestToEntity(EmployeeUpdateRequest employeeUpdateRequest) {
-        return EmployeeEntity.employeeEntityBuilder()
-                .empId(employeeUpdateRequest.getEmpId())
-                .empEId(employeeUpdateRequest.getEmpEId())
-                .roleId(employeeUpdateRequest.getRoleId())
-                .depId(employeeUpdateRequest.getDeptId())
-                .desigId(employeeUpdateRequest.getDesigId())
-                .reportingEmpId(employeeUpdateRequest.getReportingEmpId())
-                .regionId(employeeUpdateRequest.getRegionId())
-                .siteId(employeeUpdateRequest.getSiteId())
-                .empFirstName(employeeUpdateRequest.getEmpFirstName())
-                .empMiddleName(employeeUpdateRequest.getEmpMiddleName())
-                .empLastName(employeeUpdateRequest.getEmpLastName())
-                .empDob(employeeUpdateRequest.getEmpDob())
-                .empMobileNo(employeeUpdateRequest.getEmpMobileNo())
-                .empEmerMobileNo(employeeUpdateRequest.getEmpEmerMobileNo())
-                .empPhoto(employeeUpdateRequest.getEmpPhoto())
-                .emailId(employeeUpdateRequest.getEmailId())
-                .tempAddress(employeeUpdateRequest.getTempAddress())
-                .permAddress(employeeUpdateRequest.getPermAddress())
-                .empGender(employeeUpdateRequest.getEmpGender())
-                .empBloodgroup(employeeUpdateRequest.getEmpBloodgroup())
-                .remark(employeeUpdateRequest.getRemark())
-                .statusCd(employeeUpdateRequest.getStatusCd())
-                .createdUserId(getCreatedEmployeeName(employeeUpdateRequest.getEmpId()))
-                .createdDate(getCreatedDateTime(employeeUpdateRequest.getEmpId()))
-                .updatedUserId(employeeUpdateRequest.getEmployeeId())
-                .build();
+        EmployeeEntity employeeEntity = new EmployeeEntity();
+        employeeEntity.setEmpId(employeeUpdateRequest.getEmpId());
+        employeeEntity.setEmpEId(employeeUpdateRequest.getEmpEId());
+        employeeEntity.setRoleId(employeeUpdateRequest.getRoleId());
+        employeeEntity.setDeptId(employeeUpdateRequest.getDeptId());
+        employeeEntity.setDesigId(employeeUpdateRequest.getDesigId());
+        employeeEntity.setReportingEmpId(employeeUpdateRequest.getReportingEmpId());
+        employeeEntity.setRegionId(employeeUpdateRequest.getRegionId());
+        employeeEntity.setSiteId(employeeUpdateRequest.getSiteId());
+        employeeEntity.setEmpFirstName(employeeUpdateRequest.getEmpFirstName());
+        employeeEntity.setEmpMiddleName(employeeUpdateRequest.getEmpMiddleName());
+        employeeEntity.setEmpLastName(employeeUpdateRequest.getEmpLastName());
+        employeeEntity.setEmpDob(employeeUpdateRequest.getEmpDob());
+        employeeEntity.setEmpMobileNo(employeeUpdateRequest.getEmpMobileNo());
+        employeeEntity.setEmpEmerMobileNo(employeeUpdateRequest.getEmpEmerMobileNo());
+        employeeEntity.setEmpPhoto(employeeUpdateRequest.getEmpPhoto());
+        employeeEntity.setEmailId(employeeUpdateRequest.getEmailId());
+        employeeEntity.setTempAddress(employeeUpdateRequest.getTempAddress());
+        employeeEntity.setPermAddress(employeeUpdateRequest.getPermAddress());
+        employeeEntity.setEmpGender(employeeUpdateRequest.getEmpGender());
+        employeeEntity.setEmpBloodgroup(employeeUpdateRequest.getEmpBloodgroup());
+        employeeEntity.setRemark(employeeUpdateRequest.getRemark());
+        employeeEntity.setStatusCd(employeeUpdateRequest.getStatusCd());
+        employeeEntity.setUpdatedUserId(employeeUpdateRequest.getEmployeeId());
+        return employeeEntity;
     }
 
     private String getCreatedEmployeeName(Integer empId) {

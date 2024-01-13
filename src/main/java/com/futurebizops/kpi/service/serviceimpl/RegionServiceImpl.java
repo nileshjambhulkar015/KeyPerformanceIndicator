@@ -98,21 +98,21 @@ public class RegionServiceImpl implements RegionService {
     }
 
     private RegionEntity convertRegionCreateRequestToEntity(RegionCreateRequest regionCreateRequest) {
-        return RegionEntity.regionEntityBuilder()
-                .regionName(regionCreateRequest.getRegionName())
-                .remark(regionCreateRequest.getRemark())
-                .statusCd(regionCreateRequest.getStatusCd())
-                .createdUserId(regionCreateRequest.getEmployeeId())
-                .build();
+        RegionEntity regionEntity = new RegionEntity();
+        regionEntity.setRegionName(regionCreateRequest.getRegionName());
+        regionEntity.setRemark(regionCreateRequest.getRemark());
+        regionEntity.setStatusCd(regionCreateRequest.getStatusCd());
+        regionEntity.setCreatedUserId(regionCreateRequest.getEmployeeId());
+        return regionEntity;
     }
 
     private RegionEntity convertRegionUpdateRequestToEntity(RegionUpdateRequest regionUpdateRequest) {
-        return RegionEntity.regionEntityBuilder()
-                .regionId(regionUpdateRequest.getRegionId())
-                .regionName(regionUpdateRequest.getRegionName())
-                .remark(regionUpdateRequest.getRemark())
-                .statusCd(regionUpdateRequest.getStatusCd())
-                .createdUserId(regionUpdateRequest.getEmployeeId())
-                .build();
+        RegionEntity regionEntity = new RegionEntity();
+        regionEntity.setRegionId(regionUpdateRequest.getRegionId());
+        regionEntity.setRegionName(regionUpdateRequest.getRegionName());
+        regionEntity.setRemark(regionUpdateRequest.getRemark());
+        regionEntity.setStatusCd(regionUpdateRequest.getStatusCd());
+        regionEntity.setUpdatedUserId(regionUpdateRequest.getEmployeeId());
+        return regionEntity;
     }
 }

@@ -3,8 +3,6 @@ package com.futurebizops.kpi.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.Instant;
-
 @Data
 public class EmpKPPUpdateRequest {
 
@@ -30,13 +28,13 @@ public class EmpKPPUpdateRequest {
     private Integer desigId;
 
     @Schema(example = "100", description = "This field is used for Achived Weight")
-    private String ekppAchivedWeight;
+    private String empAchivedWeight;
 
     @Schema(example = "80", description = "This field is used for Overall Achivement")
-    private String ekppOverallAchieve;
+    private String empOverallAchieve;
 
     @Schema(example = "90", description = "This field is used for Overall Task Completed")
-    private String ekppOverallTaskComp;
+    private String empOverallTaskComp;
 
     @Schema(example = "e111", description = "This field is used for General Manager KPP status")
     private String employeeId;

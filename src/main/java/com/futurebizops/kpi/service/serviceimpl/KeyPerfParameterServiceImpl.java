@@ -111,49 +111,49 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
     private KeyPerfParamEntity convertKeyPerfParamCreateRequestToEntity(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
-        return KeyPerfParamEntity.keyPerfParamEntityBuilder()
-                .roleId(keyPerfParamCreateRequest.getRoleId())
-                .deptId(keyPerfParamCreateRequest.getDeptId())
-                .desigId(keyPerfParamCreateRequest.getDesigId())
-                .kppObjective(keyPerfParamCreateRequest.getKppObjective())
-                .kppPerformanceIndi(keyPerfParamCreateRequest.getKppPerformanceIndi())
-                .kppOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget())
-                .kppTargetPeriod(keyPerfParamCreateRequest.getKppTargetPeriod())
-                .kppUoM(keyPerfParamCreateRequest.getKppUoM())
-                .kppOverallWeightage(keyPerfParamCreateRequest.getKppOverallWeightage())
-                .kppRating1(keyPerfParamCreateRequest.getKppRating1())
-                .kppRating2(keyPerfParamCreateRequest.getKppRating2())
-                .kppRating3(keyPerfParamCreateRequest.getKppRating3())
-                .kppRating4(keyPerfParamCreateRequest.getKppRating4())
-                .kppRating5(keyPerfParamCreateRequest.getKppRating5())
-                .kppDescription(keyPerfParamCreateRequest.getRrDescription())
-                .remark(keyPerfParamCreateRequest.getRemark())
-                .statusCd(keyPerfParamCreateRequest.getStatusCd())
-                .createdUserId(keyPerfParamCreateRequest.getEmployeeId())
-                .build();
+        KeyPerfParamEntity keyPerfParamEntity = new KeyPerfParamEntity();
+        keyPerfParamEntity.setRoleId(keyPerfParamCreateRequest.getRoleId());
+        keyPerfParamEntity.setDeptId(keyPerfParamCreateRequest.getDeptId());
+        keyPerfParamEntity.setDesigId(keyPerfParamCreateRequest.getDesigId());
+        keyPerfParamEntity.setKppObjective(keyPerfParamCreateRequest.getKppObjective());
+        keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamCreateRequest.getKppPerformanceIndi());
+        keyPerfParamEntity.setKppOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget());
+        keyPerfParamEntity.setKppTargetPeriod(keyPerfParamCreateRequest.getKppTargetPeriod());
+        keyPerfParamEntity.setKppUoM(keyPerfParamCreateRequest.getKppUoM());
+        keyPerfParamEntity.setKppOverallWeightage(keyPerfParamCreateRequest.getKppOverallWeightage());
+        keyPerfParamEntity.setKppRating1(keyPerfParamCreateRequest.getKppRating1());
+        keyPerfParamEntity.setKppRating2(keyPerfParamCreateRequest.getKppRating2());
+        keyPerfParamEntity.setKppRating3(keyPerfParamCreateRequest.getKppRating3());
+        keyPerfParamEntity.setKppRating4(keyPerfParamCreateRequest.getKppRating4());
+        keyPerfParamEntity.setKppRating5(keyPerfParamCreateRequest.getKppRating5());
+
+        keyPerfParamEntity.setRemark(keyPerfParamCreateRequest.getRemark());
+        keyPerfParamEntity.setStatusCd(keyPerfParamCreateRequest.getStatusCd());
+        keyPerfParamEntity.setCreatedUserId(keyPerfParamCreateRequest.getEmployeeId());
+        return keyPerfParamEntity;
     }
 
     private KeyPerfParamEntity convertKeyPerfParamUpdateRequestToEntity(KeyPerfParamUpdateRequest keyPerfParamUpdateRequest) {
-        return KeyPerfParamEntity.keyPerfParamEntityBuilder()
-                .kppId(keyPerfParamUpdateRequest.getKppId())
-                .roleId(keyPerfParamUpdateRequest.getRoleId())
-                .deptId(keyPerfParamUpdateRequest.getDeptId())
-                .desigId(keyPerfParamUpdateRequest.getDesigId())
-                .kppObjective(keyPerfParamUpdateRequest.getKppObjective())
-                .kppPerformanceIndi(keyPerfParamUpdateRequest.getKppPerformanceIndi())
-                .kppOverallTarget(keyPerfParamUpdateRequest.getKppOverallTarget())
-                .kppTargetPeriod(keyPerfParamUpdateRequest.getKppTargetPeriod())
-                .kppUoM(keyPerfParamUpdateRequest.getKppUoM())
-                .kppOverallWeightage(keyPerfParamUpdateRequest.getKppOverallWeightage())
-                .kppRating1(keyPerfParamUpdateRequest.getKppRating1())
-                .kppRating2(keyPerfParamUpdateRequest.getKppRating2())
-                .kppRating3(keyPerfParamUpdateRequest.getKppRating3())
-                .kppRating4(keyPerfParamUpdateRequest.getKppRating4())
-                .kppRating5(keyPerfParamUpdateRequest.getKppRating5())
-                .kppDescription(keyPerfParamUpdateRequest.getRrDescription())
-                .remark(keyPerfParamUpdateRequest.getRemark())
-                .statusCd(keyPerfParamUpdateRequest.getStatusCd())
-                .createdUserId(keyPerfParamUpdateRequest.getEmployeeId())
-                .build();
+        KeyPerfParamEntity keyPerfParamEntity = new KeyPerfParamEntity();
+        keyPerfParamEntity.setKppId(keyPerfParamUpdateRequest.getKppId());
+        keyPerfParamEntity.setRoleId(keyPerfParamUpdateRequest.getRoleId());
+        keyPerfParamEntity.setDeptId(keyPerfParamUpdateRequest.getDeptId());
+        keyPerfParamEntity.setDesigId(keyPerfParamUpdateRequest.getDesigId());
+        keyPerfParamEntity.setKppObjective(keyPerfParamUpdateRequest.getKppObjective());
+        keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamUpdateRequest.getKppPerformanceIndi());
+        keyPerfParamEntity.setKppOverallTarget(keyPerfParamUpdateRequest.getKppOverallTarget());
+        keyPerfParamEntity.setKppTargetPeriod(keyPerfParamUpdateRequest.getKppTargetPeriod());
+        keyPerfParamEntity.setKppUoM(keyPerfParamUpdateRequest.getKppUoM());
+        keyPerfParamEntity.setKppOverallWeightage(keyPerfParamUpdateRequest.getKppOverallWeightage());
+        keyPerfParamEntity.setKppRating1(keyPerfParamUpdateRequest.getKppRating1());
+        keyPerfParamEntity.setKppRating2(keyPerfParamUpdateRequest.getKppRating2());
+        keyPerfParamEntity.setKppRating3(keyPerfParamUpdateRequest.getKppRating3());
+        keyPerfParamEntity.setKppRating4(keyPerfParamUpdateRequest.getKppRating4());
+        keyPerfParamEntity.setKppRating5(keyPerfParamUpdateRequest.getKppRating5());
+
+        keyPerfParamEntity.setRemark(keyPerfParamUpdateRequest.getRemark());
+        keyPerfParamEntity.setStatusCd(keyPerfParamUpdateRequest.getStatusCd());
+        keyPerfParamEntity.setUpdatedUserId(keyPerfParamUpdateRequest.getEmployeeId());
+        return keyPerfParamEntity;
     }
 }

@@ -89,33 +89,4 @@ public class EmployeeEntity extends AuditEnabledEntity{
 
 	@Column(name = "status_cd")
 	private String statusCd;
-
-	@Builder(builderMethodName = "employeeEntityBuilder")
-	public EmployeeEntity(Integer empId,String empEId, Integer roleId, Integer depId,  Integer desigId, Integer reportingEmpId,Integer gmEmpId, Integer regionId, Integer siteId,String empFirstName, String empMiddleName, String empLastName, String empDob, String empMobileNo, String empEmerMobileNo, String empPhoto, String emailId, String tempAddress, String permAddress, String empGender, String empBloodgroup, String remark,String statusCd, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
-		super(createdDate, createdUserId, updatedDate, updatedUserId);
-		this.empId = empId;
-		this.empEId=empEId;
-		this.roleId = roleId;
-		this.deptId = depId;
-		this.desigId = desigId;
-
-		this.reportingEmpId=reportingEmpId;
-		this.gmEmpId=gmEmpId;
-		this.regionId=regionId;
-		this.siteId=siteId;
-		this.empFirstName = empFirstName;
-		this.empMiddleName = empMiddleName;
-		this.empLastName = empLastName;
-		this.empDob = empDob;
-		this.empMobileNo =empMobileNo;
-		this.empEmerMobileNo = empEmerMobileNo;
-		this.empPhoto =empPhoto;
-		this.emailId= emailId;
-		this.tempAddress = tempAddress;
-		this.permAddress= permAddress;
-		this.empGender =empGender;
-		this.empBloodgroup= empBloodgroup;
-		this.remark = remark;
-		this.statusCd =statusCd;
-	}
 }

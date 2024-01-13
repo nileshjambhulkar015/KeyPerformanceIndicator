@@ -36,14 +36,4 @@ public class DepartmentEntity extends AuditEnabledEntity {
 
     @Column(name = "status_cd")
     private String statusCd;
-
-    @Builder(builderMethodName = "departmentEntityBuilder")
-    public DepartmentEntity(Integer roleId, Integer deptId, String deptName, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId, updatedDate, updatedUserId);
-        this.roleId=roleId;
-        this.deptId = deptId;
-        this.deptName = deptName;
-        this.remark = remark;
-        this.statusCd = statusCd;
-    }
 }

@@ -46,13 +46,13 @@ public class EmployeeKppMasterAudit extends AuditEnabledEntity{
     private Integer desigId;
 
     @Column(name = "total_emp_achived_weight")
-    private String totalAchivedWeight;
+    private String enpTotalAchivedWeight;
 
     @Column(name = "total_emp_overall_achieve")
-    private String totalOverallAchieve;
+    private String empTotalOverallAchieve;
 
     @Column(name = "total_emp_overall_task_comp")
-    private String totalOverallTaskComp;
+    private String empTotalOverallTaskComp;
 
     @Column(name = "emp_ekpp_applied_date")
     private Instant empKppAppliedDate;
@@ -70,13 +70,13 @@ public class EmployeeKppMasterAudit extends AuditEnabledEntity{
     private Integer hodEmpId;
 
     @Column(name = "total_hod_achived_weight")
-    private String hodAchivedWeight;
+    private String hodTotalAchivedWeight;
 
     @Column(name = "total_hod_overall_achieve")
-    private String hodOverallAchieve;
+    private String hodTotalOverallAchieve;
 
     @Column(name = "total_hod_overall_task_comp")
-    private String hodOverallTaskComp;
+    private String hodTotalOverallTaskComp;
 
     @Column(name = "hod_approved_date")
     private Instant hodKppAppliedDate;
@@ -91,13 +91,13 @@ public class EmployeeKppMasterAudit extends AuditEnabledEntity{
     private Integer gmEmpId;
 
     @Column(name = "total_gm_achived_weight")
-    private String gmAchivedWeight;
+    private String gmTotalAchivedWeight;
 
     @Column(name = "total_gm_overall_achieve")
-    private String gmOverallAchieve;
+    private String gmTotalOverallAchieve;
 
     @Column(name = "total_gm_overall_task_comp")
-    private String gmOverallTaskComp;
+    private String gmTotalOverallTaskComp;
 
     @Column(name = "gm_approved_date")
     private Instant gmKppAppliedDate;

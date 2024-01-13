@@ -67,9 +67,6 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
     @Column(name = "kpp_rating5")
     private String kppRating5;
 
-    @Column(name = "kpp_description")
-    private String kppDescription;
-
     @Column(name = "remark")
     private String remark;
 
@@ -93,7 +90,6 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
         this.kppRating3 = keyPerfParamEntity.getKppRating2();
         this.kppRating4 = keyPerfParamEntity.getKppRating4();
         this.kppRating5 = keyPerfParamEntity.getKppRating5();
-        this.kppDescription = keyPerfParamEntity.getKppDescription();
         this.remark = keyPerfParamEntity.getRemark();
         this.statusCd = keyPerfParamEntity.getStatusCd();
     }

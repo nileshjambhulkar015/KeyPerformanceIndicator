@@ -33,13 +33,4 @@ public class RegionEntity extends AuditEnabledEntity{
 
     @Column(name = "status_cd")
     private String statusCd;
-
-    @Builder(builderMethodName = "regionEntityBuilder")
-    public RegionEntity(Integer regionId, String regionName, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId, updatedDate, updatedUserId);
-        this.regionId = regionId;
-        this.regionName = regionName;
-        this.remark = remark;
-        this.statusCd = statusCd;
-    }
 }

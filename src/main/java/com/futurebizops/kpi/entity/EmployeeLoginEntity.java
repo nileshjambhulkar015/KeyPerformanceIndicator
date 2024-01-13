@@ -45,18 +45,4 @@ public class EmployeeLoginEntity extends AuditEnabledEntity {
 
     @Column(name = "status_cd")
     private String statusCd;
-
-    @Builder(builderMethodName = "employeeLoginEntityBuilder")
-    public EmployeeLoginEntity(Integer deptId, String empEId, Integer desigId,String empMobileNo, String emailId, Integer roleId, String empPassword, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId, updatedDate, updatedUserId);
-        this.empEId=empEId;
-        this.roleId = roleId;
-        this.deptId=deptId;
-        this.desigId=desigId;
-        this.empMobileNo = empMobileNo;
-        this.emailId = emailId;
-        this.empPassword = empPassword;
-        this.remark = remark;
-        this.statusCd = statusCd;
-    }
 }

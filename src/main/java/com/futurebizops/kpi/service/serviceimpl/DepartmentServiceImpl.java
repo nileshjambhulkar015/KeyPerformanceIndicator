@@ -11,7 +11,6 @@ import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.DepartmentService;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
@@ -153,23 +152,23 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest departmentCreateRequest) {
-        return DepartmentEntity.departmentEntityBuilder()
-                .roleId(departmentCreateRequest.getRoleId())
-                .deptName(departmentCreateRequest.getDeptName())
-                .remark(departmentCreateRequest.getRemark())
-                .statusCd(departmentCreateRequest.getStatusCd())
-                .createdUserId(departmentCreateRequest.getEmployeeId())
-                .build();
+        DepartmentEntity departmentEntity = new DepartmentEntity();
+        departmentEntity.setRoleId(departmentCreateRequest.getRoleId());
+        departmentEntity.setDeptName(departmentCreateRequest.getDeptName());
+        departmentEntity.setRemark(departmentCreateRequest.getRemark());
+        departmentEntity.setStatusCd(departmentCreateRequest.getStatusCd());
+        departmentEntity.setCreatedUserId(departmentCreateRequest.getEmployeeId());
+        return  departmentEntity;
     }
 
     private DepartmentEntity convertDepartmentUpdateRequestToEntity(DepartmentUpdateRequest departmentUpdateRequest) {
-        return DepartmentEntity.departmentEntityBuilder()
-                .roleId(departmentUpdateRequest.getRoleId())
-                .deptId(departmentUpdateRequest.getDeptId())
-                .deptName(departmentUpdateRequest.getDeptName())
-                .remark(departmentUpdateRequest.getRemark())
-                .statusCd(departmentUpdateRequest.getStatusCd())
-                .createdUserId(departmentUpdateRequest.getEmployeeId())
-                .build();
+        DepartmentEntity departmentEntity = new DepartmentEntity();
+        departmentEntity.setDeptId(departmentUpdateRequest.getDeptId());
+        departmentEntity.setRoleId(departmentUpdateRequest.getRoleId());
+        departmentEntity.setDeptName(departmentUpdateRequest.getDeptName());
+        departmentEntity.setRemark(departmentUpdateRequest.getRemark());
+        departmentEntity.setStatusCd(departmentUpdateRequest.getStatusCd());
+        departmentEntity.setCreatedUserId(departmentUpdateRequest.getEmployeeId());
+        return  departmentEntity;
     }
 }

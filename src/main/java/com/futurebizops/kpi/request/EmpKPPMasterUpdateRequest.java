@@ -22,7 +22,7 @@ public class EmpKPPMasterUpdateRequest {
     String ekppStatus;
 
     @Schema(example = "This is remark", description = "This field is used for Employee Key Performance month")
-    String remark;
+    String empRemark;
 
     String evidence;
 }

@@ -1,6 +1,7 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
+import com.futurebizops.kpi.entity.RegionEntity;
 import com.futurebizops.kpi.entity.RoleAudit;
 import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.enums.RoleSearchEnum;
@@ -143,22 +144,22 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private RoleEntity convertRoleCreateRequestToEntity(RoleCreateRequest roleCreateRequest) {
-        return RoleEntity.roleEntityBuilder()
-                .roleName(roleCreateRequest.getRoleName())
-                .remark(roleCreateRequest.getRemark())
-                .statusCd(roleCreateRequest.getStatusCd())
-                .createdUserId(roleCreateRequest.getEmployeeId())
-                .build();
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setRoleName(roleCreateRequest.getRoleName());
+        roleEntity.setRemark(roleCreateRequest.getRemark());
+        roleEntity.setStatusCd(roleCreateRequest.getStatusCd());
+        roleEntity.setCreatedUserId(roleCreateRequest.getEmployeeId());
+        return roleEntity;
     }
 
     private RoleEntity convertRoleUpdateRequestToEntity(RoleUpdateRequest roleUpdateRequest) {
-        return RoleEntity.roleEntityBuilder()
-                .roleId(roleUpdateRequest.getRoleId())
-                .roleName(roleUpdateRequest.getRoleName())
-                .remark(roleUpdateRequest.getRemark())
-                .statusCd(roleUpdateRequest.getStatusCd())
-                .createdUserId(roleUpdateRequest.getEmployeeId())
-                .build();
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setRoleId(roleUpdateRequest.getRoleId());
+        roleEntity.setRoleName(roleUpdateRequest.getRoleName());
+        roleEntity.setRemark(roleUpdateRequest.getRemark());
+        roleEntity.setStatusCd(roleUpdateRequest.getStatusCd());
+        roleEntity.setUpdatedUserId(roleUpdateRequest.getEmployeeId());
+        return roleEntity;
     }
 
 

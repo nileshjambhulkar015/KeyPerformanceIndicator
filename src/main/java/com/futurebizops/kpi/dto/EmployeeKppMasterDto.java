@@ -20,9 +20,9 @@ public class EmployeeKppMasterDto {
     private String deptName;
     private Integer desigId;
     private String desigName;
-    private String totalAchivedWeight;
-    private String totalOverallAchieve;
-    private String totalOverallTaskComp;
+    private String totalEmpAchivedWeight;
+    private String totalEmpOverallAchieve;
+    private String totalEmpOverallTaskComp;
     private String empKppAppliedDate;
     private String empKppStatus;
     private String empRemark;

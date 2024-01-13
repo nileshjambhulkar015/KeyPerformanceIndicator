@@ -66,35 +66,9 @@ public class KeyPerfParamEntity extends AuditEnabledEntity {
     @Column(name = "kpp_rating5")
     private String kppRating5;
 
-    @Column(name = "kpp_description")
-    private String kppDescription;
-
     @Column(name = "remark")
     private String remark;
 
     @Column(name = "status_cd")
     private String statusCd;
-
-    @Builder(builderMethodName = "keyPerfParamEntityBuilder")
-    public KeyPerfParamEntity(Integer kppId, Integer roleId, Integer deptId, Integer desigId, String kppObjective, String kppPerformanceIndi, String kppOverallTarget, String kppTargetPeriod, String kppUoM, String kppOverallWeightage, String kppRating1, String kppRating2, String kppRating3, String kppRating4, String kppRating5, String kppDescription, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId, updatedDate, updatedUserId);
-        this.kppId = kppId;
-        this.roleId = roleId;
-        this.deptId = deptId;
-        this.desigId = desigId;
-        this.kppObjective = kppObjective;
-        this.kppPerformanceIndi = kppPerformanceIndi;
-        this.kppOverallTarget = kppOverallTarget;
-        this.kppTargetPeriod = kppTargetPeriod;
-        this.kppUoM = kppUoM;
-        this.kppOverallWeightage = kppOverallWeightage;
-        this.kppRating1 = kppRating1;
-        this.kppRating2 = kppRating2;
-        this.kppRating3 = kppRating3;
-        this.kppRating4 = kppRating4;
-        this.kppRating5 = kppRating5;
-        this.kppDescription = kppDescription;
-        this.remark = remark;
-        this.statusCd = statusCd;
-    }
 }
