@@ -82,7 +82,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Transactional
     @Override
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
-        Instant ekppMonth = StringUtils.isNotEmpty(empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEkppMonth()) ? DateTimeUtils.convertStringToInstant(empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEkppMonth()) : Instant.now();
+        Instant ekppMonth = StringUtils.isNotEmpty(empKPPMasterUpdateRequest.getEkppMonth()) ? DateTimeUtils.convertStringToInstant(empKPPMasterUpdateRequest.getEkppMonth()) : Instant.now();
         try {
             for (EmpKPPUpdateRequest paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
 

@@ -41,5 +41,4 @@ public class EmployeeKppMasterDto {
     private String gmKppStatus;
     private String gmRemark;
     private String remark;
-
 }

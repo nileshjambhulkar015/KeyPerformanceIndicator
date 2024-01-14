@@ -9,6 +9,9 @@ import java.util.List;
 public class EmpKPPMasterUpdateRequest {
     List<EmpKPPUpdateRequest> kppUpdateRequests;
 
+    @Schema(example = "2023-10-01", description = "This field is used for Employee Key Performance month")
+    private String ekppMonth;
+
     @Schema(example = "60", description = "This field is used for Employee Key Performance month")
     String totalAchivedWeightage;
 
