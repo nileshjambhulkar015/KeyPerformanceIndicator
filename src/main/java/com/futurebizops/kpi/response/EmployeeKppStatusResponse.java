@@ -16,7 +16,7 @@ public class EmployeeKppStatusResponse {
     private String desigName;
     private String empMobileNo;
     private String emailId;
-    private String kppOverallAchivement;
+    private String empOverallAchive;
     private String empEKppStatus;
 
     private String hodOverallAchieve;
@@ -37,7 +37,7 @@ public class EmployeeKppStatusResponse {
         desigName = String.valueOf(objects[8]);
         empMobileNo=String.valueOf(objects[9]);
         emailId=String.valueOf(objects[10]);
-        kppOverallAchivement=String.valueOf(objects[11]);
+        empOverallAchive =String.valueOf(objects[11]);
         empEKppStatus=String.valueOf(objects[12]);
 
         hodOverallAchieve=String.valueOf(objects[13]);
