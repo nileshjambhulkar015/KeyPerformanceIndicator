@@ -51,6 +51,7 @@ public class KeyPerfParamEntity extends AuditEnabledEntity {
 
     @Column(name = "kpp_overall_weightage")
     private String kppOverallWeightage;
+
     @Column(name = "kpp_rating1")
     private String kppRating1;
 

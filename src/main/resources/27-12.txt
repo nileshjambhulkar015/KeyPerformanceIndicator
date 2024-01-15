@@ -596,12 +596,23 @@ insert into department_audit (ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(4
 insert into department(ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(3,'General Manager','A','admin');
 insert into department_audit (ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(3,'General Manager','A','admin');
 
+insert into department(ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(2,'Purchase','A','admin');
+insert into department_audit (ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(2,'Purchase','A','admin');
+
+insert into department(ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(1,'Purchase','A','admin');
+insert into department_audit (ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(1,'Purchase','A','admin');
+
 insert into designation(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(4,1,'Human Resource Manager','A','admin');
 insert into designation_audit(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(4,1,'Human Resource Manager','A','admin');
 
 insert into designation(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(3,2,'General Manager','A','admin');
 insert into designation_audit(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(3,2,'General Manager','A','admin');
 
+insert into designation(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(2,3,'Assistant Manager','A','admin');
+insert into designation_audit(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(2,3,'Assistant Manager','A','admin');
+
+insert into designation(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(1,4,'Engineer','A','admin');
+insert into designation_audit(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(1,4,'Engineer','A','admin');
 
 
 insert into employee(emp_id,emp_eid,role_id,dept_id,desig_id ,emp_fname,emp_lname,emp_mbno,emp_email_id, STATUS_CD,crte_user_id) values(1,'admin',4,1,1,'admin', 'admin','admin','admin','A','admin');
@@ -614,5 +625,10 @@ insert into employee_login_audit (emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_
 insert into key_perf_parameter(role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(3,2,2,'Kpp Not requires','Kpp Not requires','A','admin');
 insert into key_perf_parameter_audit(kpp_id,role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,3,2,2,'Kpp Not requires','Kpp Not requires','A','admin');
 
+insert into key_perf_parameter(role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,kpp_overall_tar,kpp_target_period,kpp_unit_of_measu,kpp_overall_weightage,STATUS_CD,crte_user_id)
+values(2,3,3,'100% On time compliance','Legal & Statutory compliances',100, 'Monthly','%','25','A','admin');
+
+insert into key_perf_parameter(role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,kpp_overall_tar,kpp_target_period,kpp_unit_of_measu,kpp_overall_weightage,STATUS_CD,crte_user_id)
+values(1,4,4,'100% On time compliance','Legal & Statutory compliances',100, 'Monthly','%','25','A','admin');
 
 */
