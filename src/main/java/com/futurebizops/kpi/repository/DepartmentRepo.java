@@ -53,5 +53,7 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity, Integer>
     @Query(value = SQLQueryConstants.DEPT_SUGGEST, nativeQuery = true)
     List<Object[]> getAllDepartmentByDeptName(@Param("deptName") String deptName);
 
+    public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCase(String deptName);
+
 
 }

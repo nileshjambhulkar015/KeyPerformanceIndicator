@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @CrossOrigin
 @RestController
@@ -60,8 +63,11 @@ public class KeyPerfParameterController {
     public ResponseEntity<KPPResponse> findKeyPerfomanceParamById(@PathVariable Integer kppId) {
         KPPResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetailById(kppId);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
-
+    //upload excel
+    @GetMapping (value = "/upload-kpp")
+    public void uploadKppExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
+        keyPerfParameterService.uploadKppExcelFile(file);
+    }
 }

@@ -6,7 +6,9 @@ import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface DesignationService {
@@ -25,4 +27,6 @@ public interface DesignationService {
     public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId);
 
     public List<DepartmentReponse> getAllDepartmentFromDesig(Integer deptId);
+
+    public void uploadDesigExcelFile(MultipartFile file) throws IOException;
 }

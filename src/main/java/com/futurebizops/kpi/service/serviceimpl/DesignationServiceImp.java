@@ -1,13 +1,17 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
+import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.entity.DesignationAudit;
 import com.futurebizops.kpi.entity.DesignationEntity;
+import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.DepartmentRepo;
 import com.futurebizops.kpi.repository.DesignationAuditRepo;
 import com.futurebizops.kpi.repository.DesignationRepo;
+import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.DesignationCreateRequest;
+import com.futurebizops.kpi.request.uploadexcel.DesignationExcelReadData;
 import com.futurebizops.kpi.request.DesignationUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.DesignationReponse;
@@ -15,12 +19,21 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.service.DesignationService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +54,9 @@ public class DesignationServiceImp implements DesignationService {
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    RoleRepo roleRepo;
 
     @Override
     public KPIResponse saveDesignation(DesignationCreateRequest designationCreateRequest) {
@@ -132,6 +148,104 @@ public class DesignationServiceImp implements DesignationService {
         return designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
     }
 
+    @Override
+    public  void uploadDesigExcelFile(MultipartFile file) throws IOException {
+
+        Integer currentRow = 0;
+        List<DesignationCreateRequest> designationCreateRequests = new ArrayList<>();
+        List<DesignationCreateRequest> designationNotSavedRecords = new ArrayList<>();
+        List<DesignationExcelReadData> designationData = new ArrayList<>();
+
+        byte[] excelBytes = null;
+        if (file.isEmpty()) {
+            throw new KPIException("DesignationServiceImpl", false, "File not uploaded");
+        }
+
+        try {
+            excelBytes = file.getBytes();
+
+        } catch (Exception ex) {
+            log.error("DesignationServiceImpl >>designationProcessExcel ");
+            throw new KPIException("DesignationServiceImpl", false, ex.getMessage());
+        }
+        try (InputStream inputStream = new ByteArrayInputStream(excelBytes)) {
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            int startRow = 1;
+
+            for (int rowIndex = startRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row != null) {
+                    currentRow = rowIndex;
+                    DesignationExcelReadData model = new DesignationExcelReadData();
+
+                    model.setRoleId(getRoleId(row.getCell(0).getStringCellValue().trim()));
+                    model.setDeptId(getDeptId(row.getCell(1).getStringCellValue().trim()));
+                    model.setDesigName(row.getCell(2).getStringCellValue().trim());
+                    model.setRemark(row.getCell(3).getStringCellValue().trim());
+                    model.setEmployeeId(row.getCell(4).getStringCellValue().trim());
+                    model.setStatusCd("A");
+
+                    designationData.add(model);
+                }
+            }
+            workbook.close();
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile()");
+            throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
+        }
+
+        Integer currentExcelRow = 0;
+        for (DesignationExcelReadData request : designationData) {
+            try {
+                currentExcelRow++;
+                DesignationCreateRequest designationCreateRequest = new DesignationCreateRequest();
+
+                designationCreateRequest.setRoleId(request.getRoleId());
+                designationCreateRequest.setDeptId(request.getDeptId());
+                designationCreateRequest.setDesigName(request.getDesigName());
+                designationCreateRequest.setRemark(request.getRemark());
+                designationCreateRequest.setStatusCd(request.getStatusCd());
+                designationCreateRequest.setEmployeeId(request.getEmployeeId());
+
+
+                designationCreateRequests.add(designationCreateRequest);//final request
+
+            } catch (Exception ex) {
+                throw new KPIException("DesignationServiceImpl", false, "Issue in row no: " + currentExcelRow);
+
+            } finally {
+                System.out.println("employeeCreateRequests::" + designationCreateRequests);
+            }
+        }
+        for (DesignationCreateRequest request : designationCreateRequests) {
+            try {
+                saveDesignation(request);
+
+                log.info("DesignationCreateRequest::" + request);
+            } catch (Exception ex) {
+                designationNotSavedRecords.add(request);
+                log.info("DesignationNotSavedRecords" + request);
+            }
+        }
+    }
+
+    private Integer getRoleId(String roleName) {
+        Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
+        if (optionalRoleEntity.isPresent()) {
+            return optionalRoleEntity.get().getRoleId();
+        }
+        log.error("Inside EmployeeServiceImpl >> getRoleId");
+        throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
+    }
+    private Integer getDeptId(String deptName) {
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
+        if (optionalDepartmentEntity.isPresent()) {
+            return optionalDepartmentEntity.get().getDeptId();
+        }
+        log.error("Inside EmployeeServiceImpl >> getRoleId");
+        throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist");
+    }
 
     private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {
         DesignationEntity designationEntity = new DesignationEntity();

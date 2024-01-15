@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin
@@ -88,4 +91,12 @@ public class DepartmentController {
     public ResponseEntity<Object> findAllDepartmentById(@RequestParam(required = false) String deptName) {
         return new ResponseEntity<>(departmentService.getAllDepartments(deptName), HttpStatus.OK);
     }
+
+    //upload excel
+    @GetMapping (value = "/upload-department")
+    public void uploadDeptExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
+        departmentService.uploadDeptExcelFile(file);
+    }
+
+
 }

@@ -3,21 +3,32 @@ package com.futurebizops.kpi.service.serviceimpl;
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.DepartmentAudit;
 import com.futurebizops.kpi.entity.DepartmentEntity;
+import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.DepartmentAuditRepo;
 import com.futurebizops.kpi.repository.DepartmentRepo;
+import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.DepartmentCreateRequest;
+import com.futurebizops.kpi.request.uploadexcel.DepartmentExcelReadData;
 import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +44,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Autowired
     private DepartmentAuditRepo departmentAuditRepo;
+
+    @Autowired
+    RoleRepo roleRepo;
 
     @Override
     public KPIResponse saveDepartment(DepartmentCreateRequest departmentCreateRequest) {
@@ -149,6 +163,92 @@ public class DepartmentServiceImpl implements DepartmentService {
 
        // List<DepartmentReponse> departmentReponses =
         return  null;
+    }
+
+    @Override
+    public void uploadDeptExcelFile(MultipartFile file) throws IOException {
+        {
+
+            Integer currentRow = 0;
+            List<DepartmentCreateRequest> createRequests = new ArrayList<>();
+            List<DepartmentCreateRequest> departmentNotSavedRecords = new ArrayList<>();
+            List<DepartmentExcelReadData> departmentData = new ArrayList<>();
+
+            byte[] excelBytes = null;
+            if (file.isEmpty()) {
+                throw new KPIException("DepartmentServiceImpl", false, "File not uploaded");
+            }
+
+            try {
+                excelBytes = file.getBytes();
+
+            } catch (Exception ex) {
+                log.error("DepartmentServiceImpl >>departmentProcessExcel ");
+                throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+            }
+            try (InputStream inputStream = new ByteArrayInputStream(excelBytes)) {
+                Workbook workbook = WorkbookFactory.create(inputStream);
+                Sheet sheet = workbook.getSheetAt(0);
+                int startRow = 1;
+                for (int rowIndex = startRow; rowIndex <=sheet.getLastRowNum(); rowIndex++) {
+                    Row row = sheet.getRow(rowIndex);
+                    if (row != null) {
+                        currentRow = rowIndex;
+                        DepartmentExcelReadData model = new DepartmentExcelReadData();
+                        model.setRoleId(getRoleId(row.getCell(0).getStringCellValue()));
+                        model.setDeptName(row.getCell(1).getStringCellValue());
+                        model.setRemark(row.getCell(2).getStringCellValue());
+                        model.setEmployeeId(row.getCell(3).getStringCellValue().trim());
+
+                        model.setStatusCd("A");
+                        departmentData.add(model);
+                    }
+                }
+                workbook.close();
+            } catch (Exception ex) {
+                log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile()");
+                throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
+            }
+
+            Integer currentExcelRow = 0;
+            for (DepartmentExcelReadData request : departmentData) {
+                try {
+                    currentExcelRow++;
+                    DepartmentCreateRequest departmentCreateRequest = new DepartmentCreateRequest();
+                    departmentCreateRequest.setRoleId(request.getRoleId());
+                    departmentCreateRequest.setDeptName(request.getDeptName());
+                    departmentCreateRequest.setRemark(request.getRemark());
+                    departmentCreateRequest.setStatusCd(request.getStatusCd());
+                    departmentCreateRequest.setEmployeeId(request.getEmployeeId());
+                    createRequests.add(departmentCreateRequest);//final request
+                } catch (Exception ex) {
+                    throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
+
+                } finally {
+                    System.out.println("employeeCreateRequests::" + createRequests);
+                }
+            }
+            for (DepartmentCreateRequest request : createRequests) {
+                try {
+                    saveDepartment(request);
+
+                    log.info("DepartmentCreateRequest::" + request);
+                } catch (Exception ex) {
+                    departmentNotSavedRecords.add(request);
+                    log.info("departmentNotSavedRecords"+request);
+                }
+            }
+        }
+    }
+
+
+    private Integer getRoleId(String roleName) {
+        Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
+        if (optionalRoleEntity.isPresent()) {
+            return optionalRoleEntity.get().getRoleId();
+        }
+        log.error("Inside EmployeeServiceImpl >> getRoleId");
+        throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
     }
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest departmentCreateRequest) {
