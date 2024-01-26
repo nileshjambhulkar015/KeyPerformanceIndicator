@@ -21,7 +21,7 @@ import java.util.List;
 public class BackupScheduler {
     @Autowired
     BackupService backupService;
-    @Scheduled(cron = "*/2 * * * * ?") // Execute every day at 5:30 PM
+   // @Scheduled(cron = "*/2 * * * * ?") // Execute every day at 5:30 PM
     public void doDatabaseBackupDaily() {
         log.info("Executing daily scheduled task...");
         backupService.getBckupCommand();

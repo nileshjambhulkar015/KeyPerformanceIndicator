@@ -107,7 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 log.error("Inside EmployeeServiceImpl >> saveEmployee()");
                 throw new KPIException("EmployeeServiceImpl Class", false, "Please set the KPP for Designation first");
             }
-            List<EmployeeKppDetailsEntity> paramEntities = new ArrayList<>();
+          /*  List<EmployeeKppDetailsEntity> paramEntities = new ArrayList<>();
             for (KeyPerfParamEntity keyPerfParam : empKpp) {
                 EmployeeKppDetailsEntity keyPerfParamEntity = new EmployeeKppDetailsEntity();
                 keyPerfParamEntity.setEmpEId(employeeEntity.getEmpEId());
@@ -167,7 +167,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             employeeKeyPerfParamMasterRepo.save(kppMasterEntity);
             EmployeeKppMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKppMasterAudit();
-            employeeKeyPerfParamMasterAuditRepo.save(employeeKeyPerfParamMasterAudit);
+            employeeKeyPerfParamMasterAuditRepo.save(employeeKeyPerfParamMasterAudit);*/
 
             employeeRepo.save(employeeEntity);
             EmployeeAudit employeeAudit = new EmployeeAudit(employeeEntity);

@@ -29,7 +29,7 @@ public class EmployeeKppController {
     private EmployeeKeyPerfParamService employeeKeyPerfParamService;
 
     @PostMapping
-    public ResponseEntity<KPIResponse> saveEmployeeKeyPerfomanceParamDetails(@RequestBody EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
+    public ResponseEntity<KPIResponse> saveEmployeeKeyPerfomanceParamDetails(@RequestBody List<EmployeeKeyPerfParamCreateRequest> keyPerfParamCreateRequest) {
         KPIResponse response = employeeKeyPerfParamService.saveEmployeeKeyPerfParamDetails(keyPerfParamCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

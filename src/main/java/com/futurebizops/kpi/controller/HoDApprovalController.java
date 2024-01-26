@@ -40,7 +40,4 @@ public class HoDApprovalController {
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
-
-
-
 }
