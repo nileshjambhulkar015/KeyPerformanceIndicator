@@ -122,6 +122,35 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 .build();
     }
 
+
+    @Override
+    public KPIResponse assignEmployeeKppSearch(Integer kppId, Integer roleId, Integer deptId, Integer desigId, String kppObjective, String statusCd, Pageable pageable) {
+        String sortName = null;
+        //String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = keyPerfParameterRepo.assignEmployeeKppCount(kppId, roleId, deptId, desigId, kppObjective, statusCd);
+        List<Object[]> designationData = keyPerfParameterRepo.assignEmployeeKpp(kppId, roleId, deptId, desigId, kppObjective, statusCd, sortName, pageSize, pageOffset);
+
+        List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
+        kppResponses = kppResponses.stream()
+                .sorted(Comparator.comparing(KPPResponse::getDeptName))
+                .collect(Collectors.toList());
+
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
+                .responseMessage(KPIConstants.RECORD_FETCH)
+                .build();
+    }
+
     @Override
     public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId) {
         try {

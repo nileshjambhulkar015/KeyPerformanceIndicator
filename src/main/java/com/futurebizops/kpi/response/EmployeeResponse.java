@@ -32,6 +32,7 @@ public class EmployeeResponse {
     private String empBloodgroup;
     private String remark;
     private String statusCd;
+    private Integer reportingEmpId;
 
     public  EmployeeResponse(Object[] objects){
         empId=Integer.parseInt(String.valueOf(objects[0]));
@@ -60,6 +61,7 @@ public class EmployeeResponse {
         empBloodgroup=String.valueOf(objects[23]);
         remark=String.valueOf(objects[24]);
         statusCd=String.valueOf(objects[25]);
+        reportingEmpId=Integer.parseInt(String.valueOf(objects[26]));
     }
 
 }

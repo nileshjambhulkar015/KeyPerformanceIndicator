@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface EmployeeKeyPerfParamService {
 
-    public KPIResponse saveEmployeeKeyPerfParamDetails(List<EmployeeKeyPerfParamCreateRequest> keyPerfParamCreateRequest);
+    public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest);
 
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest);
 

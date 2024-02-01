@@ -72,31 +72,32 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     private EmployeeKppMasterRepo employeeKeyPerfParamMasterRepo;
     
     @Override
-    public KPIResponse saveEmployeeKeyPerfParamDetails(List<EmployeeKeyPerfParamCreateRequest> keyPerfParamCreateRequest) {
+    public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
 
         //When hod is inserted then gm set to reporing employee id only
         Integer gmEmpId = null;
         //2 is for HOD role
-        if (2 == keyPerfParamCreateRequest.get(0).getRoleId()) {
-            gmEmpId = keyPerfParamCreateRequest.get(0).getReportingEmpId();
+        if (2 == keyPerfParamCreateRequest.getRoleId()) {
+            gmEmpId = keyPerfParamCreateRequest.getReportingEmpId();
         } else {
-            gmEmpId = getGmEmpId(keyPerfParamCreateRequest.get(0).getReportingEmpId());
+            gmEmpId = getGmEmpId(keyPerfParamCreateRequest.getReportingEmpId());
         }
 
-        List<EmployeeKppDetailsEntity> employeeKppDetailsEntities = convertEmployeeKPPCreateRequestToEntity(keyPerfParamCreateRequest);
+        EmployeeKppDetailsEntity employeeKppDetailsEntities = convertEmployeeKPPCreateRequestToEntity(keyPerfParamCreateRequest);
         try {
-            employeeKppDetailsRepo.saveAll(employeeKppDetailsEntities);
+            employeeKppDetailsRepo.save(employeeKppDetailsEntities);
 
-            for (EmployeeKppDetailsEntity employeeKppDetailsEntity : employeeKppDetailsEntities) {
-                EmployeeKppDetailsAudit partAudit = new EmployeeKppDetailsAudit(employeeKppDetailsEntity);
+
+                EmployeeKppDetailsAudit partAudit = new EmployeeKppDetailsAudit(employeeKppDetailsEntities);
                 keyPerfParamAuditRepo.save(partAudit);
-            }
+
 
             EmployeeKppMasterEntity kppMasterEntity = new EmployeeKppMasterEntity();
-            kppMasterEntity.setEmpEId(keyPerfParamCreateRequest.get(0).getEmpEId());
-            kppMasterEntity.setRoleId(keyPerfParamCreateRequest.get(0).getRoleId());
-            kppMasterEntity.setDeptId(keyPerfParamCreateRequest.get(0).getDeptId());
-            kppMasterEntity.setDesigId(keyPerfParamCreateRequest.get(0).getDesigId());
+            kppMasterEntity.setEmpId(keyPerfParamCreateRequest.getEmpId());
+            kppMasterEntity.setEmpEId(keyPerfParamCreateRequest.getEmpEId());
+            kppMasterEntity.setRoleId(keyPerfParamCreateRequest.getRoleId());
+            kppMasterEntity.setDeptId(keyPerfParamCreateRequest.getDeptId());
+            kppMasterEntity.setDesigId(keyPerfParamCreateRequest.getDesigId());
             kppMasterEntity.setEmpTotalAchivedWeight("0");
             kppMasterEntity.setEmpTotalOverallAchieve("0");
             kppMasterEntity.setEmpTotalOverallTaskComp("0");
@@ -104,7 +105,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             kppMasterEntity.setEmpKppAppliedDate(null);
             kppMasterEntity.setEmpRemark(null);
             kppMasterEntity.setEmpEvidence(null);
-            kppMasterEntity.setHodEmpId(keyPerfParamCreateRequest.get(0).getReportingEmpId());
+            kppMasterEntity.setHodEmpId(keyPerfParamCreateRequest.getReportingEmpId());
             kppMasterEntity.setHodTotalAchivedWeight("0");
             kppMasterEntity.setHodTotalOverallAchieve("0");
             kppMasterEntity.setHodTotalOverallTaskComp("0");
@@ -120,7 +121,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             kppMasterEntity.setGmRemark(null);
             kppMasterEntity.setRemark(null);
             kppMasterEntity.setStatusCd("A");
-            kppMasterEntity.setCreatedUserId(keyPerfParamCreateRequest.get(0).getEmployeeId());
+            kppMasterEntity.setCreatedUserId(keyPerfParamCreateRequest.getEmployeeId());
 
             employeeKeyPerfParamMasterRepo.save(kppMasterEntity);
             EmployeeKppMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKppMasterAudit();
@@ -337,17 +338,16 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
 
-    private List<EmployeeKppDetailsEntity> convertEmployeeKPPCreateRequestToEntity(List<EmployeeKeyPerfParamCreateRequest> keyPerfParamCreateRequests) {
+    private EmployeeKppDetailsEntity convertEmployeeKPPCreateRequestToEntity(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         //When hod is inserted then gm set to reporing employee id only
         Integer gmEmpId = null;
         //2 is for HOD role
-        if (2 == keyPerfParamCreateRequests.get(0).getRoleId()) {
-            gmEmpId = keyPerfParamCreateRequests.get(0).getReportingEmpId();
+        if (2 == keyPerfParamCreateRequest.getRoleId()) {
+            gmEmpId = keyPerfParamCreateRequest.getReportingEmpId();
         } else {
-            gmEmpId = getGmEmpId(keyPerfParamCreateRequests.get(0).getReportingEmpId());
+            gmEmpId = getGmEmpId(keyPerfParamCreateRequest.getReportingEmpId());
         }
-        List<EmployeeKppDetailsEntity> employeeKppDetailsEntities = new ArrayList<>();
-        for (EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest : keyPerfParamCreateRequests) {
+
             EmployeeKppDetailsEntity employeeKppDetailsEntity = new EmployeeKppDetailsEntity();
             employeeKppDetailsEntity.setEkppMonth(keyPerfParamCreateRequest.getEkppMonth());
             employeeKppDetailsEntity.setKppId(keyPerfParamCreateRequest.getKppId());
@@ -372,9 +372,9 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             employeeKppDetailsEntity.setGmOverallTaskComp("0");
             employeeKppDetailsEntity.setStatusCd("A");
             employeeKppDetailsEntity.setCreatedUserId(keyPerfParamCreateRequest.getEmployeeId());
-            employeeKppDetailsEntities.add(employeeKppDetailsEntity);
-        }
-        return employeeKppDetailsEntities;
+
+
+        return employeeKppDetailsEntity;
     }
 
     private Integer getGmEmpId(Integer reportinEmpId) {

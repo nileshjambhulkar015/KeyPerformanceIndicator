@@ -25,6 +25,13 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     @Query(value = SQLQueryConstants.KPP_COUNT_QUERY, nativeQuery = true)
     Integer getKeyPerfParameterCount(@Param("kppId") Integer kppId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId, @Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd);
 
+    @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP_COUNT_QUERY, nativeQuery = true)
+    Integer assignEmployeeKppCount(@Param("kppId") Integer kppId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId, @Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd);
+
+    @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP, nativeQuery = true)
+    List<Object[]> assignEmployeeKpp(@Param("kppId") Integer kppId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId, @Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+
+
     @Query(value = SQLQueryConstants.KPP_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getKeyPerfParameterDetailById(@Param("kppId") Integer kppId);
 

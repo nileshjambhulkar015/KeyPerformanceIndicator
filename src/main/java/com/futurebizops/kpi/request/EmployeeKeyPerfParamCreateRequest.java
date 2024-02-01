@@ -22,7 +22,7 @@ public class EmployeeKeyPerfParamCreateRequest {
     @Schema(example = "e1111", description = "This field is used for Employee E Id")
     private String empEId;
 
-    @Schema(name = "1")
+    @Schema(example = "1", description = "This field is used for Role Id")
     private Integer roleId;
 
     @Schema(example = "1", description = "This field is used for Department Id")

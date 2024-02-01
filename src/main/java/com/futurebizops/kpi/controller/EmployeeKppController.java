@@ -22,14 +22,14 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/employee-key-perform-parameter")
+@RequestMapping(value = "/employee-kpp")
 public class EmployeeKppController {
 
     @Autowired
     private EmployeeKeyPerfParamService employeeKeyPerfParamService;
 
-    @PostMapping
-    public ResponseEntity<KPIResponse> saveEmployeeKeyPerfomanceParamDetails(@RequestBody List<EmployeeKeyPerfParamCreateRequest> keyPerfParamCreateRequest) {
+    @PostMapping(value = "/assign-kpp")
+    public ResponseEntity<KPIResponse> saveEmployeeKeyPerfomanceParamDetails(@RequestBody EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         KPIResponse response = employeeKeyPerfParamService.saveEmployeeKeyPerfParamDetails(keyPerfParamCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

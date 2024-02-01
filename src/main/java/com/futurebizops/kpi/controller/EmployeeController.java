@@ -102,5 +102,4 @@ public class EmployeeController {
         KPIResponse response = employeeService.getAllEmployeeKPPStatus(reportingEmployee,gmEmployeedId, empId, empEId,roleId,deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus,hodKppStatus,gmKppStatus, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 }
