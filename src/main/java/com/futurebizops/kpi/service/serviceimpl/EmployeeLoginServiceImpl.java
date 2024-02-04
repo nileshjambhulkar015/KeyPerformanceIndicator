@@ -29,8 +29,8 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
     private EmployeeRepo employeeRepo;
 
     @Override
-    public KPIResponse employeeLogin(Integer roleId, String userName, String userPassword) {
-        List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(roleId, userName, userPassword);
+    public KPIResponse employeeLogin(String userName, String userPassword) {
+        List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(userName, userPassword);
         List<LoginResponse> loginResponses = employeeLogin.stream().map(LoginResponse::new).collect(Collectors.toList());
         if (!loginResponses.isEmpty()) {
             log.info("Login successfully");
