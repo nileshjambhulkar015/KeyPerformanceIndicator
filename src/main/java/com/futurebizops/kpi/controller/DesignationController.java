@@ -74,7 +74,7 @@ public class DesignationController {
         return new ResponseEntity<>(designationService.getAllDepartmentFromDesig(deptId), HttpStatus.OK);
     }
 
-    @GetMapping (value = "/upload-designation")
+    @PostMapping (value = "/upload-designation")
     public void uploadDesigExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
 
         designationService.uploadDesigExcelFile(file);

@@ -141,7 +141,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
         List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
         kppResponses = kppResponses.stream()
-                .sorted(Comparator.comparing(KPPResponse::getDeptName))
+                .sorted(Comparator.comparing(KPPResponse::getKppObjective))
                 .collect(Collectors.toList());
 
         return KPIResponse.builder()

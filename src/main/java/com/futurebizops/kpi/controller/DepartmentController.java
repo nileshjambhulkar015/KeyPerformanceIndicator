@@ -93,7 +93,7 @@ public class DepartmentController {
     }
 
     //upload excel
-    @GetMapping (value = "/upload-department")
+    @PostMapping (value = "/upload-department")
     public void uploadDeptExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
         departmentService.uploadDeptExcelFile(file);
     }
