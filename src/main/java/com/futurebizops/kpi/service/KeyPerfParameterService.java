@@ -21,7 +21,7 @@ public interface KeyPerfParameterService {
     public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId,Integer desigId,String kppObjective,String statusCd,Pageable pageable);
 
     //show kpp when assign kpp for employee
-    public KPIResponse assignEmployeeKppSearch(Integer kppId, Integer roleId, Integer deptId,Integer desigId,String kppObjective,String statusCd,Pageable pageable);
+    public KPIResponse assignEmployeeKppSearch(Integer empId,Integer roleId,Integer deptId,Integer desigId,Pageable pageable);
     public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId);
 
     public void uploadKppExcelFile(MultipartFile file) throws IOException;

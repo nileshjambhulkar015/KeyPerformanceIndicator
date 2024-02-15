@@ -33,23 +33,23 @@ public class KPPResponse {
     public  KPPResponse(Object[] objects){
         kppId=Integer.parseInt(String.valueOf(objects[0]));
         roleId=Integer.parseInt(String.valueOf(objects[1]));
-       // roleName=String.valueOf(objects[2]);
-        deptId=Integer.parseInt(String.valueOf(objects[2]));
-       // deptName=String.valueOf(objects[3]);
-        desigId=Integer.parseInt(String.valueOf(objects[3]));
-      //  desigName=String.valueOf(objects[3]);
-        kppObjective=String.valueOf(objects[4]);
-        kppPerformanceIndi=String.valueOf(objects[5]);
-        kppOverallTarget=String.valueOf(objects[6]);
-        kppTargetPeriod=String.valueOf(objects[7]);
-        kppUoM=String.valueOf(objects[8]);
-        kppOverallWeightage=String.valueOf(objects[9]);
-        kppRating1=String.valueOf(objects[10]);
-        kppRating2=String.valueOf(objects[11]);
-        kppRating3=String.valueOf(objects[12]);
-        kppRating4=String.valueOf(objects[13]);
-        kppRating5=String.valueOf(objects[14]);
-        remark=String.valueOf(objects[15]);
+        roleName=String.valueOf(objects[2]);
+        deptId=Integer.parseInt(String.valueOf(objects[3]));
+        deptName=String.valueOf(objects[4]);
+        desigId=Integer.parseInt(String.valueOf(objects[5]));
+        desigName=String.valueOf(objects[6]);
+        kppObjective=String.valueOf(objects[7]);
+        kppPerformanceIndi=String.valueOf(objects[8]);
+        kppOverallTarget=String.valueOf(objects[9]);
+        kppTargetPeriod=String.valueOf(objects[10]);
+        kppUoM=String.valueOf(objects[11]);
+        kppOverallWeightage=String.valueOf(objects[12]);
+        kppRating1=String.valueOf(objects[13]);
+        kppRating2=String.valueOf(objects[14]);
+        kppRating3=String.valueOf(objects[15]);
+        kppRating4=String.valueOf(objects[16]);
+        kppRating5=String.valueOf(objects[17]);
+        remark=String.valueOf(objects[18]);
     }
 
 

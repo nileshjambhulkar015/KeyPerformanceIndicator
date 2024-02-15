@@ -166,8 +166,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public void uploadDeptExcelFile(MultipartFile file) throws IOException {
-        {
+    public void uploadDeptExcelFile(MultipartFile file) throws IOException {        {
 
             Integer currentRow = 0;
             List<DepartmentCreateRequest> createRequests = new ArrayList<>();

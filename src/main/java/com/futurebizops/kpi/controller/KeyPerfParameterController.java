@@ -60,14 +60,12 @@ public class KeyPerfParameterController {
 
     @GetMapping(value = "/assign-employee-kpp-search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> assignEmployeeKppSearch(@RequestParam(required = false) Integer kppId,
-                                                              @RequestParam(required = false) Integer roleId,
-                                                              @RequestParam(required = false) Integer deptId,
-                                                              @RequestParam(required = false) Integer desigId,
-                                                              @RequestParam(required = false) String kppObjective,
-                                                              @RequestParam(required = false) String statusCd,
+    public ResponseEntity<KPIResponse> assignEmployeeKppSearch(@RequestParam(required = false) Integer empId,
+                                                               @RequestParam(required = false) Integer roleId,
+                                                               @RequestParam(required = false) Integer deptId,
+                                                               @RequestParam(required = false) Integer desigId,
                                                               @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = keyPerfParameterService.assignEmployeeKppSearch(kppId, roleId, deptId, desigId, kppObjective, statusCd, pageable);
+        KPIResponse response = keyPerfParameterService.assignEmployeeKppSearch(empId,roleId, deptId, desigId,pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

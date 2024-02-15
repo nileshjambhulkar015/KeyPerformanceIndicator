@@ -2,6 +2,7 @@ package com.futurebizops.kpi.service;
 
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
+import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
@@ -15,7 +16,7 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest);
 
-    public KPIResponse updateHoDApprovalRequest(EmpKPPMasterUpdateRequest keyPerfParamCreateRequest);
+    public KPIResponse updateHoDApprovalRequest(HODUpdateMasterEmployeeRatingReq keyPerfParamCreateRequest);
 
     public KPIResponse updateGMApprovalRequest(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest);
 

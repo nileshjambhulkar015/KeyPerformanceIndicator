@@ -15,6 +15,7 @@ import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.request.uploadexcel.KeyPerfParamExcelReadData;
+import com.futurebizops.kpi.response.AssignKPPResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
@@ -124,7 +125,8 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
 
     @Override
-    public KPIResponse assignEmployeeKppSearch(Integer kppId, Integer roleId, Integer deptId, Integer desigId, String kppObjective, String statusCd, Pageable pageable) {
+    public KPIResponse assignEmployeeKppSearch(Integer empId,Integer roleId,Integer deptId,Integer desigId,Pageable pageable
+    ) {
         String sortName = null;
         //String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -136,12 +138,12 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
             //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = keyPerfParameterRepo.assignEmployeeKppCount(kppId, roleId, deptId, desigId, kppObjective, statusCd);
-        List<Object[]> designationData = keyPerfParameterRepo.assignEmployeeKpp(kppId, roleId, deptId, desigId, kppObjective, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = keyPerfParameterRepo.assignEmployeeKppCount(empId);
+        List<Object[]> designationData = keyPerfParameterRepo.assignEmployeeKpp(empId, roleId, deptId, desigId);
 
-        List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
+        List<AssignKPPResponse> kppResponses = designationData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
         kppResponses = kppResponses.stream()
-                .sorted(Comparator.comparing(KPPResponse::getKppObjective))
+                .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
                 .collect(Collectors.toList());
 
         return KPIResponse.builder()
