@@ -14,7 +14,7 @@ import java.util.List;
 public class EmpKppStatusResponse {
 
     private Integer eKppMId;
-    private Instant ekppMonth;
+    private String ekppMonth;
     private Integer empId;
     private String empName;
     private String empEId;

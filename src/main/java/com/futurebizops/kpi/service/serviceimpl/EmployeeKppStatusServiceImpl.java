@@ -37,7 +37,7 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
             statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
 
             statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-            //  statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
+              statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
             statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
             statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
             statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
