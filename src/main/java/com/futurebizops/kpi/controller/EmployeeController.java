@@ -59,8 +59,8 @@ public class EmployeeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{empId}")
-    public ResponseEntity<EmployeeResponse> getAllEmployee(@PathVariable Integer empId) {
+    @GetMapping(value = "/byEmpId")
+    public ResponseEntity<EmployeeResponse> getAllEmployee(@RequestParam(required = false) Integer empId) {
         EmployeeResponse response = employeeService.getAllEmployeeById(empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

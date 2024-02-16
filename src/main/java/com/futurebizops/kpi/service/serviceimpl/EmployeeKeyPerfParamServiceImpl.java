@@ -21,6 +21,8 @@ import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmpKPPUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
+import com.futurebizops.kpi.request.GMUpdateDetailsEmpRatingsReq;
+import com.futurebizops.kpi.request.GMUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.HODUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
@@ -189,19 +191,19 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
-    public KPIResponse updateGMApprovalRequest(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
+    public KPIResponse updateGMApprovalRequest(GMUpdateMasterEmployeeRatingReq empKPPMasterUpdateRequest) {
         log.info("Request comming");
         String empKppStatus = "In-Progress";
         try {
-            for (EmpKPPUpdateRequest paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
-                employeeKppDetailsRepo.updateGMApproveOrRejectHod(paramUpdateRequest.getEmpAchivedWeight(), paramUpdateRequest.getEmpOverallAchieve(), paramUpdateRequest.getEmpOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
+            for (GMUpdateDetailsEmpRatingsReq paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
+                employeeKppDetailsRepo.updateGMApproveOrRejectHod(paramUpdateRequest.getGmAchivedWeight(), paramUpdateRequest.getGmOverallAchieve(), paramUpdateRequest.getGmOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
-            if ("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())) {
+            if ("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getGmKppStatus())) {
                 empKppStatus = "Approved";
-            } else if ("Reject".equalsIgnoreCase(empKPPMasterUpdateRequest.getEkppStatus())) {
+            } else if ("Reject".equalsIgnoreCase(empKPPMasterUpdateRequest.getGmKppStatus())) {
                 empKppStatus = "Reject";
             }
-            employeeKppMasterRepo.updateGMKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getTotalAchivedWeightage(), empKPPMasterUpdateRequest.getTotalOverAllAchive(), empKPPMasterUpdateRequest.getTotalOverallTaskCompleted(), Instant.now(), empKPPMasterUpdateRequest.getEkppStatus(), empKPPMasterUpdateRequest.getEmpRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
+            employeeKppMasterRepo.updateGMKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getGmTotalAchivedWeight(), empKPPMasterUpdateRequest.getGmTotalOverallAchieve(), empKPPMasterUpdateRequest.getGmTotalOverallTaskComp(), Instant.now(), empKPPMasterUpdateRequest.getGmKppStatus(), empKPPMasterUpdateRequest.getGmRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
