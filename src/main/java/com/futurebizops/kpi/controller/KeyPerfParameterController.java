@@ -78,7 +78,7 @@ public class KeyPerfParameterController {
     }
 
     //upload excel
-    @GetMapping (value = "/upload-kpp")
+        @PostMapping (value = "/upload-kpp")
     public void uploadKppExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
         keyPerfParameterService.uploadKppExcelFile(file);
     }

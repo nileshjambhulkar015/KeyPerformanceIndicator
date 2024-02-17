@@ -11,52 +11,6 @@ public class EmployeeKppStatusDto {
 
     EmployeeKppMasterDto employeeKppMasterDto=new EmployeeKppMasterDto();
     EmployeeKppDetailsDto employeeKppDetailsDto=new EmployeeKppDetailsDto();
-   /* private Integer eKppMId;
-    private String ekppMonth;
-    private Integer empId;
-    private String empName;
-    private String empEId;
-    private Integer roleId;
-    private String roleName;
-    private Integer deptId;
-    private String deptName;
-    private Integer desigId;
-    private String desigName;
-    private String totalAchivedWeight;
-    private String totalOverallAchieve;
-    private String totalOverallTaskComp;
-    private String empKppAppliedDate;
-    private String empKppStatus;
-    private String empRemark;
-    private Integer hodEmpId;
-    private String totalHodAchivedWeight;
-    private String totalHodOverallAchieve;
-    private String totalHodOverallTaskComp;
-    private String hodKppAppliedDate;
-    private String hodKppStatus;
-    private String hodRemark;
-    private Integer gmEmpId;
-    private String gmAchivedWeight;
-    private String gmOverallAchieve;
-    private String gmOverallTaskComp;
-    private String gmKppAppliedDate;
-    private String gmKppStatus;
-    private String gmRemark;
-    private String remark;
-
-    private Integer ekppId;
-    private Integer kppId;
-    private String empAchivedWeight;
-    private String empOverallAchieve;
-    private String empOverallTaskComp;
-    private Integer hodEmployeeId;
-    private String hodAchivedWeight;
-    private String hodOverallAchieve;
-    private String hodOverallTaskComp;
-    private Integer gmEmployeeId;
-    private String totalGmAchivedWeight;
-    private String totalGmOverallAchieve;
-    private String totalGmOverallTaskComp;*/
 
     public EmployeeKppStatusDto(Object[] objects) {
         employeeKppMasterDto.setEKppMId(Integer.parseInt(String.valueOf(objects[0])));
@@ -80,16 +34,18 @@ public class EmployeeKppStatusDto {
         employeeKppMasterDto.setTotalHodAchivedWeight(String.valueOf(objects[20]));
         employeeKppMasterDto.setTotalHodOverallAchieve(String.valueOf(objects[21]));
         employeeKppMasterDto.setTotalHodOverallTaskComp(String.valueOf(objects[22]));
-        employeeKppMasterDto.setHodKppAppliedDate(String.valueOf(objects[23]));
-       // employeeKppMasterDto.setHodKppStatus(String.valueOf(objects[24]));
         employeeKppMasterDto.setHodKppStatus(String.valueOf(objects[23]));
+        employeeKppMasterDto.setHodKppAppliedDate(String.valueOf(objects[24]));
+       // employeeKppMasterDto.setHodKppStatus(String.valueOf(objects[24]));
+
         employeeKppMasterDto.setHodRemark(String.valueOf(objects[25]));
         employeeKppMasterDto.setGmEmpId(Integer.parseInt(String.valueOf(objects[26])));
         employeeKppMasterDto.setTotalGmAchivedWeight(String.valueOf(objects[27]));
         employeeKppMasterDto.setTotalGmOverallAchieve(String.valueOf(objects[28]));
         employeeKppMasterDto.setTotalGmOverallTaskComp(String.valueOf(objects[29]));
-        employeeKppMasterDto.setGmKppAppliedDate(String.valueOf(objects[30]));
-        employeeKppMasterDto.setGmKppStatus(String.valueOf(objects[31]));
+        employeeKppMasterDto.setGmKppStatus(String.valueOf(objects[30]));
+        employeeKppMasterDto.setGmKppAppliedDate(String.valueOf(objects[31]));
+
         employeeKppMasterDto.setGmRemark(String.valueOf(objects[32]));
         employeeKppMasterDto.setRemark(String.valueOf(objects[33]));
 

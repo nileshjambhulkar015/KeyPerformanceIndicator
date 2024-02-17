@@ -49,5 +49,7 @@ public interface DesignationRepo extends JpaRepository<DesignationEntity, Intege
 
     //for designation upload excel
     public Optional<DesignationEntity> findByDesigNameEqualsIgnoreCase(String desigName);
+
+    public Optional<DesignationEntity> findByDesigNameEqualsIgnoreCaseAndDeptIdAndRoleId(String desigName,Integer deptId,Integer roleId);
 }
 

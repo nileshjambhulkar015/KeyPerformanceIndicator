@@ -172,15 +172,15 @@ public class DesignationServiceImp implements DesignationService {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
             int startRow = 1;
-
+            Integer roleId = null;
             for (int rowIndex = startRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row != null) {
                     currentRow = rowIndex;
                     DesignationExcelReadData model = new DesignationExcelReadData();
-
-                    model.setRoleId(getRoleId(row.getCell(0).getStringCellValue().trim()));
-                    model.setDeptId(getDeptId(row.getCell(1).getStringCellValue().trim()));
+                    roleId = getRoleId(row.getCell(0).getStringCellValue().trim());
+                    model.setRoleId(roleId);
+                    model.setDeptId(getDeptId(roleId, row.getCell(1).getStringCellValue().trim()));
                     model.setDesigName(row.getCell(2).getStringCellValue().trim());
                     model.setRemark(row.getCell(3).getStringCellValue().trim());
                     model.setEmployeeId(row.getCell(4).getStringCellValue().trim());
@@ -191,8 +191,8 @@ public class DesignationServiceImp implements DesignationService {
             }
             workbook.close();
         } catch (Exception ex) {
-            log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile()");
-            throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
+            log.error("Inside DesignationServiceImpl >> designationServiceImpl()");
+            throw new KPIException("DesignationServiceImpl", false, "Issue in row no: " + currentRow);
         }
 
         Integer currentExcelRow = 0;
@@ -238,8 +238,8 @@ public class DesignationServiceImp implements DesignationService {
         log.error("Inside EmployeeServiceImpl >> getRoleId");
         throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
     }
-    private Integer getDeptId(String deptName) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
+    private Integer getDeptId(Integer roleId,String deptName) {
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByRoleIdAndDeptNameEqualsIgnoreCase(roleId,deptName);
         if (optionalDepartmentEntity.isPresent()) {
             return optionalDepartmentEntity.get().getDeptId();
         }

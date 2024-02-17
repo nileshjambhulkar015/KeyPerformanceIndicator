@@ -65,15 +65,10 @@ public class DepartmentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
-
     @GetMapping(value = "/{deptId}")
     public ResponseEntity<Object> findAllDepartmentById(@PathVariable Integer deptId) {
         return new ResponseEntity<>(departmentService.findAllDepartmentById(deptId), HttpStatus.OK);
     }
-
-
-
 
     //get All department base on role Id which is present in department table for designation
     @GetMapping(value = "/dept/{roleId}")

@@ -166,7 +166,6 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
             throw new KPIException("KeyPerfParameterServiceImpl class", false, ex.getMessage());
         }
     }
-
     @Override
     public void uploadKppExcelFile(MultipartFile file) throws IOException {
 
@@ -177,7 +176,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
         byte[] excelBytes = null;
         if (file.isEmpty()) {
-            throw new KPIException("DesignationServiceImpl", false, "File not uploaded");
+            throw new KPIException("Inside KeyPerfParameterServiceImpl class", false, "File not uploaded");
         }
 
         try {
@@ -198,20 +197,20 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                     currentRow = rowIndex;
                     KeyPerfParamExcelReadData model = new KeyPerfParamExcelReadData();
                     model.setEmployeeId("1");
-                    model.setRoleId(getRoleId(row.getCell(0).getStringCellValue().trim()));
-                    model.setDeptId(getDeptId(row.getCell(1).getStringCellValue().trim()));
-                    model.setDesigId(getDesigId(row.getCell(2).getStringCellValue().trim()));
-                    model.setKppObjective(row.getCell(3).getStringCellValue().trim());
-                    model.setKppPerformanceIndi(row.getCell(4).getStringCellValue().trim());
-                    model.setKppTargetPeriod(row.getCell(5).getStringCellValue().trim());
-                    model.setKppUoM(row.getCell(6).getStringCellValue().trim());
-                    model.setRrDescription(row.getCell(7).getStringCellValue().trim());
-                    model.setKppOverallTarget(row.getCell(8).getStringCellValue().trim());
-                    model.setKppOverallWeightage(row.getCell(9).getStringCellValue().trim());
-                    model.setKppRating1(row.getCell(10).getStringCellValue().trim());
-                    model.setKppRating2(row.getCell(11).getStringCellValue().trim());
-                    model.setKppRating3(row.getCell(12).getStringCellValue().trim());
-                    model.setKppRating4(row.getCell(13).getStringCellValue().trim());
+                    model.setRoleId(getRoleId(row.getCell(1).getStringCellValue().trim()));
+                    model.setDeptId(getDeptId(row.getCell(2).getStringCellValue().trim(),model.getRoleId()));
+                    model.setDesigId(getDesigId(row.getCell(3).getStringCellValue().trim(),model.getDeptId(),model.getRoleId()));
+                    model.setKppObjective(row.getCell(4).getStringCellValue().trim());
+                    model.setKppPerformanceIndi(row.getCell(5).getStringCellValue().trim());
+
+                    model.setKppOverallTarget(String.valueOf(row.getCell(6).getNumericCellValue()));
+                    model.setKppTargetPeriod(row.getCell(7).getStringCellValue().trim());
+                    model.setKppUoM(row.getCell(8).getStringCellValue().trim());
+                    model.setKppOverallWeightage(String.valueOf(row.getCell(9).getNumericCellValue()));
+                    model.setKppRating1(String.valueOf(row.getCell(10).getNumericCellValue()));
+                    model.setKppRating2(String.valueOf(row.getCell(11).getNumericCellValue()));
+                    model.setKppRating3(String.valueOf(row.getCell(12).getNumericCellValue()));
+                    model.setKppRating4(String.valueOf(row.getCell(13).getNumericCellValue()));
                     model.setKppRating5(row.getCell(14).getStringCellValue().trim());
                     model.setStatusCd("A");
                     model.setRemark(row.getCell(15).getStringCellValue().trim());
@@ -232,6 +231,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 keyPerfParamCreateRequest.setEmployeeId("1");
                 keyPerfParamCreateRequest.setRoleId(request.getRoleId());
                 keyPerfParamCreateRequest.setDeptId(request.getDeptId());
+                keyPerfParamCreateRequest.setDesigId(request.getDesigId());
                 keyPerfParamCreateRequest.setKppObjective(request.getKppObjective());
                 keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
                 keyPerfParamCreateRequest.setKppPerformanceIndi(request.getKppPerformanceIndi());
@@ -260,10 +260,10 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
             try {
                 saveKeyPerfomanceParameter(request);
 
-                log.info("DesignationCreateRequest::" + request);
+                log.info("KeyPerfParamCreateRequest::" + request);
             } catch (Exception ex) {
                 KeyPerfParamNotSavedRecords.add(request);
-                log.info("DesignationNotSavedRecords" + request);
+                log.info("KeyPerfParamNotSavedRecords" + request);
             }
         }
     }
@@ -276,16 +276,18 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         log.error("Inside EmployeeServiceImpl >> getRoleId");
         throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
     }
-    private Integer getDeptId(String deptName) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
+    private Integer getDeptId(String deptName,Integer roleId) {
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(deptName,roleId);
         if (optionalDepartmentEntity.isPresent()) {
             return optionalDepartmentEntity.get().getDeptId();
         }
         log.error("Inside EmployeeServiceImpl >> getRoleId");
         throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist");
     }
-    private Integer getDesigId(String desigName) {
-        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCase(desigName);
+
+
+    private Integer getDesigId(String desigName,Integer deptId,Integer roleId) {
+        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptIdAndRoleId( desigName,deptId,roleId);
         if (optionalDesignationEntity.isPresent()) {
             return optionalDesignationEntity.get().getDesigId();
         }

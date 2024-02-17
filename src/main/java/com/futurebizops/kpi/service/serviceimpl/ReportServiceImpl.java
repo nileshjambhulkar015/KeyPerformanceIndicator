@@ -322,12 +322,12 @@ public class ReportServiceImpl implements ReportService {
         cell009.setCellStyle(kppTotalRowHeaderStyle);
 
 
-        if((kppDataRow-(kppDataRow-1)!=1) && (kppDataRow-(kppDataRow-1)!=0)) {
+       // if((kppDataRow-(kppDataRow-1)!=1) && (kppDataRow-(kppDataRow-1)!=0)) {
             sheet.addMergedRegion(new CellRangeAddress(3, kppDataRow - 1, 1, 1));
             sheet.addMergedRegion(new CellRangeAddress(3, kppDataRow - 1, 2, 2));
             sheet.addMergedRegion(new CellRangeAddress(3, kppDataRow - 1, 3, 3));
             sheet.addMergedRegion(new CellRangeAddress(3, kppDataRow - 1, 4, 4));
-        }
+        //}
         // Create data rows
 
         // Set content type and headers

@@ -2,10 +2,9 @@ package com.futurebizops.kpi.response;
 
 import lombok.Data;
 
-import java.time.Instant;
-
 @Data
-public class EmployeeKppStatusResponse {
+public class ReportEmployeeKppStatusResponse {
+
 
     private Integer empId;
     private String empEId;
@@ -28,8 +27,7 @@ public class EmployeeKppStatusResponse {
     private String gmKppStatus;
 
     private String ekppMonth;
-
-    public EmployeeKppStatusResponse(Object[] objects) {
+    public ReportEmployeeKppStatusResponse(Object[] objects) {
         empId = Integer.parseInt(String.valueOf(objects[0]));
         empEId = String.valueOf(objects[1]);
         empFirstName=String.valueOf(objects[2]);
