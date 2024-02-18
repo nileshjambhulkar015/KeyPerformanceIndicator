@@ -56,17 +56,17 @@ public class DesignationController {
 
     }
 
-    @GetMapping(value = "/{desigId}")
-    public ResponseEntity<DesignationReponse> findDesignationDetails(@PathVariable Integer desigId) {
+    @GetMapping(value = "/by-desig-id")
+    public ResponseEntity<DesignationReponse> findDesignationDetails(@RequestParam(required = false) Integer desigId) {
         DesignationReponse response = designationService.findDesignationById(desigId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
     // for dropdown list
-    @GetMapping(value = "by/{deptId}")
-    public ResponseEntity<Object> findAllDesignationDetails(@PathVariable Integer deptId) {
-        return new ResponseEntity<>(designationService.findAllDesignationByDeptId(deptId), HttpStatus.OK);
+    @GetMapping(value = "/by-role-dept")
+    public ResponseEntity<Object> findAllDesignationDetails(@RequestParam(required = false) Integer roleId,@RequestParam(required = false) Integer deptId) {
+        return new ResponseEntity<>(designationService.findAllDesignationByDeptId(roleId, deptId), HttpStatus.OK);
     }
 
     @GetMapping(value = "/department")

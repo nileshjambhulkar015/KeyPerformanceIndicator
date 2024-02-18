@@ -56,7 +56,7 @@ public class RoleController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(value = "/all")
     public ResponseEntity<Object> findAllRoleDetails() {
         return new ResponseEntity<>(roleService.findAllRolesDetails(), HttpStatus.OK);
     }

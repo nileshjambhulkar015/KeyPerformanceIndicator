@@ -45,7 +45,7 @@ public interface DesignationRepo extends JpaRepository<DesignationEntity, Intege
 
     //only for desig id and desig name from desig table
     @Query(value = SQLQueryConstants.DESIGNATION_BY_DEPT_ID_QUERY, nativeQuery = true)
-    List<Object[]> getAllDesigByDeptId(@Param("deptId") Integer deptId);
+    List<Object[]> getAllDesigByDeptId(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId);
 
     //for designation upload excel
     public Optional<DesignationEntity> findByDesigNameEqualsIgnoreCase(String desigName);

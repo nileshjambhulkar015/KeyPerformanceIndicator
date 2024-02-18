@@ -65,8 +65,9 @@ public class DepartmentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{deptId}")
-    public ResponseEntity<Object> findAllDepartmentById(@PathVariable Integer deptId) {
+    // show department details when click on view button of department ui table
+    @GetMapping(value = "/by-dept-id")
+    public ResponseEntity<Object> findAllDepartmentById(@RequestParam(required = false) Integer deptId) {
         return new ResponseEntity<>(departmentService.findAllDepartmentById(deptId), HttpStatus.OK);
     }
 

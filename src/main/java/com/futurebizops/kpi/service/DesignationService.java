@@ -24,7 +24,8 @@ public interface DesignationService {
 
 
 
-    public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId);
+    public List<DesignationReponse> findAllDesignationByDeptId(Integer roleId, Integer deptId);
+
 
     public List<DepartmentReponse> getAllDepartmentFromDesig(Integer deptId);
 

@@ -136,9 +136,9 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
-    public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId) {
+    public List<DesignationReponse> findAllDesignationByDeptId(Integer roleId, Integer deptId) {
 
-        List<Object[]> designationData = designationRepo.getAllDesigByDeptId(deptId);
+        List<Object[]> designationData = designationRepo.getAllDesigByDeptId(roleId,deptId);
         return designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
     }
 
