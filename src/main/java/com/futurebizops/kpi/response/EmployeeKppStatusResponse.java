@@ -29,6 +29,9 @@ public class EmployeeKppStatusResponse {
 
     private String ekppMonth;
 
+    private Integer sumOfRatings;
+
+
     public EmployeeKppStatusResponse(Object[] objects) {
         empId = Integer.parseInt(String.valueOf(objects[0]));
         empEId = String.valueOf(objects[1]);

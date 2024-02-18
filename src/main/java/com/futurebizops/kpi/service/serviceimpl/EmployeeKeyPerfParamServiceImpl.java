@@ -108,7 +108,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 kppMasterEntity.setEmpTotalOverallTaskComp("0");
                 kppMasterEntity.setEmpKppStatus("Pending");
                 kppMasterEntity.setEmpKppAppliedDate(null);
-                kppMasterEntity.setEmpRemark(null);
+                kppMasterEntity.setEmpRemark("Employee Ratings added");
                 kppMasterEntity.setEmpEvidence(null);
                 kppMasterEntity.setHodEmpId(keyPerfParamCreateRequest.getReportingEmpId());
                 kppMasterEntity.setHodTotalAchivedWeight("0");
@@ -116,14 +116,14 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 kppMasterEntity.setHodTotalOverallTaskComp("0");
                 kppMasterEntity.setHodKppAppliedDate(null);
                 kppMasterEntity.setHodKppStatus("Pending");
-                kppMasterEntity.setHodRemark(null);
+                kppMasterEntity.setHodRemark("HoD Ratings added");
                 kppMasterEntity.setGmEmpId(gmEmpId);
                 kppMasterEntity.setGmKppStatus("Pending");
                 kppMasterEntity.setGmTotalAchivedWeight("0");
                 kppMasterEntity.setGmTotalOverallAchieve("0");
                 kppMasterEntity.setGmTotalOverallTaskComp("0");
                 kppMasterEntity.setGmKppAppliedDate(null);
-                kppMasterEntity.setGmRemark(null);
+                kppMasterEntity.setGmRemark("GM Ratings added");
                 kppMasterEntity.setRemark(null);
                 kppMasterEntity.setStatusCd("A");
                 kppMasterEntity.setCreatedUserId(keyPerfParamCreateRequest.getEmployeeId());
@@ -170,7 +170,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         String empKppStatus = "In-Progress";
         try {
             for (HODUpdateDetailsEmpRatingsReq paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
-                System.out.println(empKPPMasterUpdateRequest.getKppUpdateRequests());
+
                 employeeKppDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getHodAchivedWeight(), paramUpdateRequest.getHodOverallAchieve(), paramUpdateRequest.getHodOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
             if ("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getHodKppStatus())) {
@@ -192,7 +192,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Override
     public KPIResponse updateGMApprovalRequest(GMUpdateMasterEmployeeRatingReq empKPPMasterUpdateRequest) {
-        log.info("Request comming");
+
         String empKppStatus = "In-Progress";
         try {
             for (GMUpdateDetailsEmpRatingsReq paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {

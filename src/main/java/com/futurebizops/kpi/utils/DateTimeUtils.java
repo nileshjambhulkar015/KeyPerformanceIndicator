@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 @Slf4j
 public class DateTimeUtils {
@@ -26,6 +28,16 @@ public class DateTimeUtils {
             log.error("Inside DateTimeUtils >> convertStringToInstant()");
             throw new KPIException("DateTimeUtils", false, ex.getMessage());
         }
+    }
+
+    //Get first day of year
+    public static String getFirstDateOfYear() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(5,1);
+        calendar.set(2,0);
+        Date date = calendar.getTime();
+        return date.toInstant().toString();
+
     }
 
 }

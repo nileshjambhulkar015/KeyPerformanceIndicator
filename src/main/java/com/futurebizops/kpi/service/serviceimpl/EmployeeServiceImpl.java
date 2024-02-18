@@ -23,12 +23,15 @@ import com.futurebizops.kpi.repository.EmployeeRepo;
 import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
+import com.futurebizops.kpi.response.CummalitiveEmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeService;
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -107,67 +110,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 log.error("Inside EmployeeServiceImpl >> saveEmployee()");
                 throw new KPIException("EmployeeServiceImpl Class", false, "Please set the KPP for Designation first");
             }
-          /*  List<EmployeeKppDetailsEntity> paramEntities = new ArrayList<>();
-            for (KeyPerfParamEntity keyPerfParam : empKpp) {
-                EmployeeKppDetailsEntity keyPerfParamEntity = new EmployeeKppDetailsEntity();
-                keyPerfParamEntity.setEmpEId(employeeEntity.getEmpEId());
-                keyPerfParamEntity.setRoleId(employeeEntity.getRoleId());
-                keyPerfParamEntity.setDeptId(employeeEntity.getDeptId());
-                keyPerfParamEntity.setDesigId(employeeEntity.getDesigId());
-                keyPerfParamEntity.setKppId(keyPerfParam.getKppId());
-                keyPerfParamEntity.setEmpAchivedWeight("0");
-                keyPerfParamEntity.setEmpOverallAchieve("0");
-                keyPerfParamEntity.setEmpOverallTaskComp("0");
-                keyPerfParamEntity.setHodEmpId(employeeCreateRequest.getReportingEmpId());
-                keyPerfParamEntity.setHodAchivedWeight("0");
-                keyPerfParamEntity.setHodOverallAchieve("0");
-                keyPerfParamEntity.setHodOverallTaskComp("0");
-                keyPerfParamEntity.setGmEmpId(gmEmpId);
-                keyPerfParamEntity.setGmAchivedWeight("0");
-                keyPerfParamEntity.setGmOverallAchieve("0");
-                keyPerfParamEntity.setGmOverallTaskComp("0");
-                keyPerfParamEntity.setStatusCd("A");
-                keyPerfParamEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
-                paramEntities.add(keyPerfParamEntity);
-
-                EmployeeKppDetailsAudit keyPerfParamAudit = new EmployeeKppDetailsAudit(keyPerfParamEntity);
-                employeeKeyPerfParamAuditRepo.save(keyPerfParamAudit);
-            }
-            employeeKeyPerfParamRepo.saveAll(paramEntities);
-
-            EmployeeKppMasterEntity kppMasterEntity = new EmployeeKppMasterEntity();
-            kppMasterEntity.setEmpEId(employeeEntity.getEmpEId());
-            kppMasterEntity.setRoleId(employeeEntity.getRoleId());
-            kppMasterEntity.setDeptId(employeeEntity.getDeptId());
-            kppMasterEntity.setDesigId(employeeEntity.getDesigId());
-            kppMasterEntity.setEmpTotalAchivedWeight("0");
-            kppMasterEntity.setEmpTotalOverallAchieve("0");
-            kppMasterEntity.setEmpTotalOverallTaskComp("0");
-            kppMasterEntity.setEmpKppStatus("Pending");
-            kppMasterEntity.setEmpKppAppliedDate(null);
-            kppMasterEntity.setEmpRemark(null);
-            kppMasterEntity.setEmpEvidence(null);
-            kppMasterEntity.setHodEmpId(employeeCreateRequest.getReportingEmpId());
-            kppMasterEntity.setHodTotalAchivedWeight("0");
-            kppMasterEntity.setHodTotalOverallAchieve("0");
-            kppMasterEntity.setHodTotalOverallTaskComp("0");
-            kppMasterEntity.setHodKppAppliedDate(null);
-            kppMasterEntity.setHodKppStatus("Pending");
-            kppMasterEntity.setHodRemark(null);
-            kppMasterEntity.setGmEmpId(gmEmpId);
-            kppMasterEntity.setGmKppStatus("Pending");
-            kppMasterEntity.setGmTotalAchivedWeight("0");
-            kppMasterEntity.setGmTotalOverallAchieve("0");
-            kppMasterEntity.setGmTotalOverallTaskComp("0");
-            kppMasterEntity.setGmKppAppliedDate(null);
-            kppMasterEntity.setGmRemark(null);
-            kppMasterEntity.setRemark(null);
-            kppMasterEntity.setStatusCd("A");
-            kppMasterEntity.setCreatedUserId(employeeCreateRequest.getEmployeeId());
-
-            employeeKeyPerfParamMasterRepo.save(kppMasterEntity);
-            EmployeeKppMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKppMasterAudit();
-            employeeKeyPerfParamMasterAuditRepo.save(employeeKeyPerfParamMasterAudit);*/
 
             employeeRepo.save(employeeEntity);
             EmployeeAudit employeeAudit = new EmployeeAudit(employeeEntity);
@@ -304,6 +246,76 @@ public class EmployeeServiceImpl implements EmployeeService {
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseData(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> getAllEmployeeDetailsForHod()");
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
+        }
+    }
+
+    //get details for employee, HOD and GM to approve or reject kpp details
+    @Override
+    public KPIResponse getAllEmployeeKPPStatusReport(String fromDate, String toDate, Integer reportingEmployee, Integer gmEmpId, Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable) {
+        String sortName = null;
+        String startDate = StringUtils.isNotEmpty(fromDate) ? DateTimeUtils.convertStringToInstant(fromDate).toString() : DateTimeUtils.getFirstDateOfYear();
+        String endDate = StringUtils.isNotEmpty(toDate) ? DateTimeUtils.convertStringToInstant(toDate).toString() : Instant.now().toString();
+
+        //for all records
+        if ("All".equalsIgnoreCase(empKppStatus)) {
+            empKppStatus = null;
+        }
+        // String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+        try {
+            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus);
+            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusReportDetail(startDate, endDate, reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, sortName, pageSize, pageOffset);
+
+            List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
+
+            Integer sumOfEmployeeRatings = 0;
+            Integer sumOfHodRatings = 0;
+            Integer sumOfGMRatings = 0;
+
+            Integer cummulativeRatings = 0;
+            Float avgCummulativeRatings = 0.0f;
+            for(EmployeeKppStatusResponse statusResponse : employeeKppStatusResponses){
+                Integer sumOfRatings=0;
+                sumOfRatings = Integer.parseInt(statusResponse.getEmpOverallAchive()) +Integer.parseInt(statusResponse.getHodOverallAchieve())+Integer.parseInt(statusResponse.getGmOverallAchieve());
+                statusResponse.setSumOfRatings(sumOfRatings);
+
+                sumOfEmployeeRatings += Integer.parseInt(statusResponse.getEmpOverallAchive());
+                sumOfHodRatings += Integer.parseInt(statusResponse.getHodOverallAchieve());
+                sumOfGMRatings += Integer.parseInt(statusResponse.getGmOverallAchieve());
+
+                statusResponse.setEmpOverallAchive(String.valueOf(sumOfEmployeeRatings));
+                cummulativeRatings += sumOfRatings;
+
+            }
+            avgCummulativeRatings = Float.valueOf(cummulativeRatings / employeeKppStatusResponses.size());
+            employeeKppStatusResponses = employeeKppStatusResponses.stream()
+                        .sorted(Comparator.comparing(EmployeeKppStatusResponse::getEkppMonth))
+                    .collect(Collectors.toList());
+
+            CummalitiveEmployeeResponse cummalitiveEmployeeResponse = new CummalitiveEmployeeResponse();
+            cummalitiveEmployeeResponse.setEmployeeKppStatusResponses(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount));
+            cummalitiveEmployeeResponse.setSumOfEmployeeRatings(sumOfEmployeeRatings);
+            cummalitiveEmployeeResponse.setSumOfHodRatings(sumOfHodRatings);
+            cummalitiveEmployeeResponse.setSumOfGMRatings(sumOfGMRatings);
+
+            cummalitiveEmployeeResponse.setCummulativeRatings(cummulativeRatings);
+            cummalitiveEmployeeResponse.setAvgCummulativeRatings(avgCummulativeRatings);
+
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(cummalitiveEmployeeResponse)
                     .responseMessage(KPIConstants.RECORD_FETCH)
                     .build();
         } catch (Exception ex) {
