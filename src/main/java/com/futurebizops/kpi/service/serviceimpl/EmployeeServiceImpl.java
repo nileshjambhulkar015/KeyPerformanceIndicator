@@ -82,7 +82,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
 
-        employeeCreateRequest.setReportingEmpId(3);
         //When hod is inserted then gm set to reporing employee id only
         Integer gmEmpId = null;
         //2 is for HOD role
@@ -107,7 +106,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         try {
 
-            List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), 9);
+            List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
             if (CollectionUtils.isEmpty(empKpp)) {
                 log.error("Inside EmployeeServiceImpl >> saveEmployee()");
                 throw new KPIException("EmployeeServiceImpl Class", false, "Please set the KPP for Designation first");
