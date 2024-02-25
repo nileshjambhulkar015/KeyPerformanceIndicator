@@ -26,8 +26,6 @@ public interface DepartmentService {
 
     public DepartmentReponse findAllDepartmentById(Integer deptId);
 
-
-
     public List<DepartmentReponse> getAllDepartmentByRoleId(Integer roleId);
 
     public List<DepartmentReponse> findAllDepartmentFromDesigByRoleId(Integer roleId);

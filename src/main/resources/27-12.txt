@@ -623,14 +623,12 @@
         insert into employee_login(emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password ,STATUS_CD,crte_user_id) values('GM0001',3,2,2,'GM0001','GM0001','GM0001','A','admin');
         insert into employee_login_audit (emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password,STATUS_CD,crte_user_id) values('GM0001',3,2,2,'GM0001','GM0001','GM0001','A','admin');
 
+   insert into key_perf_parameter(role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(4,1,1,'Kpp Not requires','Kpp Not requires','A','admin');
+        insert into key_perf_parameter_audit(kpp_id,role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,4,1,1,'Kpp Not requires','Kpp Not requires','A','admin');
+
 
         insert into key_perf_parameter(role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(3,2,2,'Kpp Not requires','Kpp Not requires','A','admin');
         insert into key_perf_parameter_audit(kpp_id,role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,3,2,2,'Kpp Not requires','Kpp Not requires','A','admin');
 
-        insert into key_perf_parameter(role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,kpp_overall_tar,kpp_target_period,kpp_unit_of_measu,kpp_overall_weightage,STATUS_CD,crte_user_id)
-        values(2,3,3,'100% On time compliance','Legal & Statutory compliances',100, 'Monthly','%','25','A','admin');
-
-        insert into key_perf_parameter(role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,kpp_overall_tar,kpp_target_period,kpp_unit_of_measu,kpp_overall_weightage,STATUS_CD,crte_user_id)
-        values(1,4,4,'100% On time compliance','Legal & Statutory compliances',100, 'Monthly','%','25','A','admin');
 
     */

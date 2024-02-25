@@ -82,6 +82,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
 
+        employeeCreateRequest.setReportingEmpId(3);
         //When hod is inserted then gm set to reporing employee id only
         Integer gmEmpId = null;
         //2 is for HOD role
@@ -103,9 +104,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         EmployeeEntity employeeEntity = convertEmployeeCreateRequestToEntity(employeeCreateRequest);
         employeeEntity.setGmEmpId(gmEmpId);
+
         try {
 
-            List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
+            List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), 9);
             if (CollectionUtils.isEmpty(empKpp)) {
                 log.error("Inside EmployeeServiceImpl >> saveEmployee()");
                 throw new KPIException("EmployeeServiceImpl Class", false, "Please set the KPP for Designation first");
@@ -261,6 +263,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         String startDate = StringUtils.isNotEmpty(fromDate) ? DateTimeUtils.convertStringToInstant(fromDate).toString() : DateTimeUtils.getFirstDateOfYear();
         String endDate = StringUtils.isNotEmpty(toDate) ? DateTimeUtils.convertStringToInstant(toDate).toString() : Instant.now().toString();
 
+        CummalitiveEmployeeResponse cummalitiveEmployeeResponse = new CummalitiveEmployeeResponse();
         //for all records
         if ("All".equalsIgnoreCase(empKppStatus)) {
             empKppStatus = null;
@@ -278,41 +281,49 @@ public class EmployeeServiceImpl implements EmployeeService {
             Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus);
             List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusReportDetail(startDate, endDate, reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, sortName, pageSize, pageOffset);
 
-            List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
+            if(employeeDetail.size()>=1) {
+                List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
 
-            Integer sumOfEmployeeRatings = 0;
-            Integer sumOfHodRatings = 0;
-            Integer sumOfGMRatings = 0;
+                Integer sumOfEmployeeRatings = 0;
+                Integer sumOfHodRatings = 0;
+                Integer sumOfGMRatings = 0;
 
-            Integer cummulativeRatings = 0;
-            Float avgCummulativeRatings = 0.0f;
-            for(EmployeeKppStatusResponse statusResponse : employeeKppStatusResponses){
-                Integer sumOfRatings=0;
-                sumOfRatings = Integer.parseInt(statusResponse.getEmpOverallAchive()) +Integer.parseInt(statusResponse.getHodOverallAchieve())+Integer.parseInt(statusResponse.getGmOverallAchieve());
-                statusResponse.setSumOfRatings(sumOfRatings);
+                Integer cummulativeRatings = 0;
+                Float avgCummulativeRatings = 0.0f;
+                for (EmployeeKppStatusResponse statusResponse : employeeKppStatusResponses) {
+                    Integer sumOfRatings = 0;
+                    sumOfRatings = Integer.parseInt(statusResponse.getEmpOverallAchive()) + Integer.parseInt(statusResponse.getHodOverallAchieve()) + Integer.parseInt(statusResponse.getGmOverallAchieve());
+                    statusResponse.setSumOfRatings(sumOfRatings);
 
-                sumOfEmployeeRatings += Integer.parseInt(statusResponse.getEmpOverallAchive());
-                sumOfHodRatings += Integer.parseInt(statusResponse.getHodOverallAchieve());
-                sumOfGMRatings += Integer.parseInt(statusResponse.getGmOverallAchieve());
+                    sumOfEmployeeRatings += Integer.parseInt(statusResponse.getEmpOverallAchive());
+                    sumOfHodRatings += Integer.parseInt(statusResponse.getHodOverallAchieve());
+                    sumOfGMRatings += Integer.parseInt(statusResponse.getGmOverallAchieve());
 
-                statusResponse.setEmpOverallAchive(String.valueOf(sumOfEmployeeRatings));
-                cummulativeRatings += sumOfRatings;
+                    // statusResponse.setEmpOverallAchive(String.valueOf(sumOfEmployeeRatings));
+                    cummulativeRatings += sumOfRatings;
 
-            }
-            avgCummulativeRatings = Float.valueOf(cummulativeRatings / employeeKppStatusResponses.size());
-            employeeKppStatusResponses = employeeKppStatusResponses.stream()
+                }
+                avgCummulativeRatings = Float.valueOf(cummulativeRatings / employeeKppStatusResponses.size());
+                employeeKppStatusResponses = employeeKppStatusResponses.stream()
                         .sorted(Comparator.comparing(EmployeeKppStatusResponse::getEkppMonth))
-                    .collect(Collectors.toList());
+                        .collect(Collectors.toList());
 
-            CummalitiveEmployeeResponse cummalitiveEmployeeResponse = new CummalitiveEmployeeResponse();
-            cummalitiveEmployeeResponse.setEmployeeKppStatusResponses(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount));
-            cummalitiveEmployeeResponse.setSumOfEmployeeRatings(sumOfEmployeeRatings);
-            cummalitiveEmployeeResponse.setSumOfHodRatings(sumOfHodRatings);
-            cummalitiveEmployeeResponse.setSumOfGMRatings(sumOfGMRatings);
 
-            cummalitiveEmployeeResponse.setCummulativeRatings(cummulativeRatings);
-            cummalitiveEmployeeResponse.setAvgCummulativeRatings(avgCummulativeRatings);
+                cummalitiveEmployeeResponse.setEmployeeKppStatusResponses(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount));
+                cummalitiveEmployeeResponse.setSumOfEmployeeRatings(sumOfEmployeeRatings);
+                cummalitiveEmployeeResponse.setSumOfHodRatings(sumOfHodRatings);
+                cummalitiveEmployeeResponse.setSumOfGMRatings(sumOfGMRatings);
 
+                cummalitiveEmployeeResponse.setCummulativeRatings(cummulativeRatings);
+                cummalitiveEmployeeResponse.setAvgCummulativeRatings(avgCummulativeRatings);
+            }
+            else{
+                return KPIResponse.builder()
+                        .isSuccess(false)
+                        .responseData(cummalitiveEmployeeResponse)
+                        .responseMessage("No Record found")
+                        .build();
+            }
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseData(cummalitiveEmployeeResponse)

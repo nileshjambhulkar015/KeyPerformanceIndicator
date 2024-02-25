@@ -30,6 +30,7 @@ public class DateTimeUtils {
         }
     }
 
+
     //Get first day of year
     public static String getFirstDateOfYear() {
         Calendar calendar = Calendar.getInstance();
