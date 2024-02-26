@@ -50,5 +50,9 @@ public class RegionController {
 
     }
 
-
+    @GetMapping
+    public ResponseEntity<KPIResponse> getRegionDetails(Integer regionId) {
+        KPIResponse response = regionService.findRegionDetails(regionId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

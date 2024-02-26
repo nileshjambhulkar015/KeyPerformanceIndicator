@@ -9,14 +9,21 @@ import com.futurebizops.kpi.repository.SiteAuditRepo;
 import com.futurebizops.kpi.repository.SiteRepo;
 import com.futurebizops.kpi.request.SiteCreateRequest;
 import com.futurebizops.kpi.request.SiteUpdateRequest;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.SiteResponse;
 import com.futurebizops.kpi.service.SiteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -70,7 +77,31 @@ public class SiteServiceImpl implements SiteService {
 
     @Override
     public KPIResponse findSiteDetails(Integer siteId, Integer regionId, String siteName, String statusCd, Pageable requestPageable) {
-        return null;
+        String sortName = null;
+        //  String sortDirection = null;
+        Integer pageSize = requestPageable.getPageSize();
+        Integer pageOffset = (int) requestPageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = requestPageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = siteRepo.getSiteCount(siteId, regionId, siteName, statusCd);
+        List<Object[]> siteData = siteRepo.getSiteDetail(siteId, regionId, siteName, statusCd, sortName, pageSize, pageOffset);
+
+        List<SiteResponse> siteResponses = siteData.stream().map(SiteResponse::new).collect(Collectors.toList());
+
+        siteResponses= siteResponses.stream()
+                .sorted(Comparator.comparing(SiteResponse::getSiteName))
+                .collect(Collectors.toList());
+
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseData(new PageImpl<>(siteResponses, requestPageable, totalCount))
+                .responseMessage(KPIConstants.RECORD_FETCH)
+                .build();
     }
 
     private SiteEntity convertSiteCreateRequestToEntity(SiteCreateRequest siteCreateRequest) {

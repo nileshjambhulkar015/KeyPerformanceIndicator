@@ -1,8 +1,12 @@
 package com.futurebizops.kpi.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
+@Builder
 @Data
+@AllArgsConstructor
 public class RegionResponse {
     private Integer regionId;
     private String regionName;

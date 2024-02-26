@@ -16,5 +16,5 @@ public class RegionCreateRequest {
     private String statusCd;
 
     @Schema(example = "KPI", description = "This field is used for Created User Id")
-    private String employeeId;
+    private String createdUserId;
 }

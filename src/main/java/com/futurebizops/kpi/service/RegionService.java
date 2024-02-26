@@ -12,4 +12,6 @@ public interface RegionService {
     public KPIResponse updateRegion(RegionUpdateRequest regionUpdateRequest);
 
     public KPIResponse findRegionDetails(Integer regionId, String regionName, String statusCd, Pageable requestPageable);
+
+    public KPIResponse findRegionDetails(Integer regionIde);
 }

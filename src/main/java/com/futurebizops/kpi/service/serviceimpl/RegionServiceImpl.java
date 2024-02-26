@@ -97,12 +97,39 @@ public class RegionServiceImpl implements RegionService {
                 .build();
     }
 
+    @Override
+    public KPIResponse findRegionDetails(Integer regionId) {
+        RegionResponse regionResponse = null;
+        KPIResponse kpiResponse = null;
+        Optional<RegionEntity> optionalRegionEntity = regionRepo.findById(regionId);
+        if (optionalRegionEntity.isPresent()) {
+            RegionEntity regionEntity = optionalRegionEntity.get();
+            regionResponse = RegionResponse.builder()
+                    .regionId(regionEntity.getRegionId())
+                    .regionName(regionEntity.getRegionName())
+                    .remark(regionEntity.getRemark())
+                    .build();
+            kpiResponse = KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(regionResponse)
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } else {
+            kpiResponse = KPIResponse.builder()
+                    .isSuccess(false)
+                    .responseMessage("Record not found")
+                    .build();
+        }
+        return kpiResponse;
+    }
+
+
     private RegionEntity convertRegionCreateRequestToEntity(RegionCreateRequest regionCreateRequest) {
         RegionEntity regionEntity = new RegionEntity();
         regionEntity.setRegionName(regionCreateRequest.getRegionName());
         regionEntity.setRemark(regionCreateRequest.getRemark());
         regionEntity.setStatusCd(regionCreateRequest.getStatusCd());
-        regionEntity.setCreatedUserId(regionCreateRequest.getEmployeeId());
+        regionEntity.setCreatedUserId(regionCreateRequest.getCreatedUserId());
         return regionEntity;
     }
 
