@@ -53,5 +53,7 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity, Integer>
 
     public Optional<DepartmentEntity> findByRoleIdAndDeptNameEqualsIgnoreCase(Integer roleId,String deptName);
 
+    public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCase(String deptName);
+
 
 }

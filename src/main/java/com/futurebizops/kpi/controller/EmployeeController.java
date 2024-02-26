@@ -14,13 +14,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/employee")
 public class EmployeeController {
+
     @Autowired
     private EmployeeService employeeService;
 
@@ -127,6 +129,13 @@ public class EmployeeController {
             @RequestParam(required = false) String gmKppStatus,
             @Parameter(hidden = true) Pageable pageable) {
         KPIResponse response = employeeService.getAllEmployeeKPPStatusReport(fromDate, toDate, reportingEmployee, gmEmployeedId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping (value = "/import-employee")
+    public ResponseEntity<KPIResponse> getEmpFromExcel(@RequestPart("file") MultipartFile file) {
+
+        KPIResponse response = employeeService.processExcelFile(file);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

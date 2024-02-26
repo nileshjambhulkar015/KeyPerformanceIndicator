@@ -2,6 +2,8 @@ package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.AuditEnabledEntity;
+import com.futurebizops.kpi.entity.DepartmentEntity;
+import com.futurebizops.kpi.entity.DesignationEntity;
 import com.futurebizops.kpi.entity.EmployeeAudit;
 import com.futurebizops.kpi.entity.EmployeeEntity;
 import com.futurebizops.kpi.entity.EmployeeKppDetailsAudit;
@@ -11,7 +13,10 @@ import com.futurebizops.kpi.entity.EmployeeKppMasterEntity;
 import com.futurebizops.kpi.entity.EmployeeLoginAudit;
 import com.futurebizops.kpi.entity.EmployeeLoginEntity;
 import com.futurebizops.kpi.entity.KeyPerfParamEntity;
+import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.exception.KPIException;
+import com.futurebizops.kpi.repository.DepartmentRepo;
+import com.futurebizops.kpi.repository.DesignationRepo;
 import com.futurebizops.kpi.repository.EmployeeAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeKppDetailsAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeKppMasterAuditRepo;
@@ -21,7 +26,9 @@ import com.futurebizops.kpi.repository.EmployeeLoginAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginRepo;
 import com.futurebizops.kpi.repository.EmployeeRepo;
 import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
+import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
+import com.futurebizops.kpi.request.EmployeeExcelReadData;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.CummalitiveEmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeResponse;
@@ -32,14 +39,21 @@ import com.futurebizops.kpi.service.EmployeeService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -77,6 +91,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeKppMasterAuditRepo employeeKeyPerfParamMasterAuditRepo;
+
+    @Autowired
+    private RoleRepo roleRepo;
+
+    @Autowired
+    private DepartmentRepo departmentRepo;
+
+    @Autowired
+    private DesignationRepo designationRepo;
 
     @Transactional
     @Override
@@ -414,5 +437,144 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<EmployeeEntity> employeeEntity = employeeRepo.findById(empId);
         return employeeEntity.map(AuditEnabledEntity::getCreatedDate).orElse(null);
     }
+
+
+    @Override
+    public KPIResponse processExcelFile(MultipartFile file) {
+        {
+            Integer currentRow = 0;
+            List<EmployeeCreateRequest> employeeCreateRequests = new ArrayList<>();
+            List<EmployeeCreateRequest> employeeNotSavedRecords = new ArrayList<>();
+            List<EmployeeExcelReadData> employeeData = new ArrayList<>();
+            byte[] excelBytes = null;
+            if (file.isEmpty()) {
+                throw new KPIException("EmployeeServiceImpl", false, "File not uploaded");
+            }
+
+            try {
+                excelBytes = file.getBytes();
+
+            } catch (Exception ex) {
+                log.error("Inside EmployeeServiceImpl >> updateEmployee()");
+                throw new KPIException("EmployeeServiceImpl", false, ex.getMessage());
+            }
+            try (InputStream inputStream = new ByteArrayInputStream(excelBytes)) {
+                Workbook workbook = WorkbookFactory.create(inputStream);
+                Sheet sheet = workbook.getSheetAt(0);
+                int startRow = 1;
+
+                for (int rowIndex = startRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                    Row row = sheet.getRow(rowIndex);
+                    log.info("____>" + rowIndex);
+                    if (row != null) {
+                        currentRow = rowIndex;
+                        EmployeeExcelReadData model = new EmployeeExcelReadData();
+                        model.setRoleName(row.getCell(0).getStringCellValue().trim());
+                        model.setDeptName(row.getCell(1).getStringCellValue());
+                        model.setDesigName(row.getCell(2).getStringCellValue());
+                        model.setReportingEmpEid(row.getCell(3).getStringCellValue());
+                        String fullName = row.getCell(4).getStringCellValue();
+                        String[] nameParts = fullName.split("\\s+");
+
+                        model.setEmpFirstName(nameParts[0]);
+                        model.setEmpMiddleName(nameParts[1]);
+                        model.setEmpLastName(nameParts[2]);
+
+                        int mobile1 = (int) row.getCell(5).getNumericCellValue();
+                        int mobile2 = (int) row.getCell(6).getNumericCellValue();
+                        model.setEmpMobileNo(String.valueOf(mobile1));
+                        model.setEmpEmerMobileNo(String.valueOf(mobile2));
+                        model.setEmailId(row.getCell(7).getStringCellValue());
+                        model.setTempAddress(row.getCell(8).getStringCellValue());
+                        model.setPermAddress(row.getCell(9).getStringCellValue());
+                        model.setEmpGender(row.getCell(10).getStringCellValue());
+                        model.setEmpBloodgroup(row.getCell(11).getStringCellValue());
+                        model.setRemark(row.getCell(12).getStringCellValue());
+                        model.setStatusCd("A");
+                        model.setRegionName("PUNE");
+                        model.setSiteName("KONDHAPURI");
+                        model.setEmpDob("2023-11-02");
+                        employeeData.add(model);
+                    }
+                }
+                workbook.close();
+            } catch (Exception ex) {
+                log.error("Inside EmployeeServiceImpl >> processExcelFile()");
+                throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentRow);
+            }
+
+            Integer currentExcelRow = 0;
+            for (EmployeeExcelReadData request : employeeData) {
+                try {
+                    currentExcelRow++;
+                    EmployeeCreateRequest employeeCreateRequest = new EmployeeCreateRequest();
+                    employeeCreateRequest.setRoleId(getRoleId(request.getRoleName().trim()));
+                    employeeCreateRequest.setDeptId(getDeptId(request.getDeptName().trim()));
+                    employeeCreateRequest.setDesigId(getDesigId(request.getDesigName().trim()));
+                    employeeCreateRequest.setEmailId(request.getEmailId());
+                    employeeCreateRequest.setEmpFirstName(request.getEmpFirstName());
+                    employeeCreateRequest.setEmpMiddleName(request.getEmpMiddleName());
+                    employeeCreateRequest.setEmpLastName(request.getEmpLastName());
+                    employeeCreateRequest.setEmpMobileNo(request.getEmpMobileNo());
+                    employeeCreateRequest.setEmpEmerMobileNo(request.getEmpEmerMobileNo());
+                    employeeCreateRequest.setEmpGender(request.getEmpGender());
+                    employeeCreateRequest.setPermAddress(request.getPermAddress());
+                    employeeCreateRequest.setTempAddress(request.getTempAddress());
+                    employeeCreateRequest.setEmpBloodgroup(request.getEmpBloodgroup());
+                    employeeCreateRequest.setRemark(request.getRemark());
+                    employeeCreateRequest.setEmpDob(request.getEmpDob());
+                    employeeCreateRequest.setReportingEmpId(2);
+                    employeeCreateRequest.setStatusCd("A");
+                    employeeCreateRequest.setRegionId(1);
+                    employeeCreateRequest.setSiteId(1);
+                    employeeCreateRequests.add(employeeCreateRequest);//final request
+
+                } catch (Exception ex) {
+                    throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
+
+                } finally {
+                    System.out.println("employeeCreateRequests::" + employeeCreateRequests);
+                }
+            }
+            for (EmployeeCreateRequest request : employeeCreateRequests) {
+                try {
+                    //saveEmployee(request);
+                } catch (Exception ex) {
+                    employeeNotSavedRecords.add(request);
+                }
+            }
+            ///export data in excel logic need to return
+            return KPIResponse.builder().responseData(employeeNotSavedRecords).build();
+        }
+    }
+
+
+    private Integer getRoleId(String roleName) {
+        Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
+        if (optionalRoleEntity.isPresent()) {
+            return optionalRoleEntity.get().getRoleId();
+        }
+        log.error("Inside EmployeeServiceImpl >> getRoleId");
+        throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
+    }
+
+    private Integer getDeptId(String deptName) {
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
+        if (optionalDepartmentEntity.isPresent()) {
+            return optionalDepartmentEntity.get().getDeptId();
+        }
+        log.error("Inside EmployeeServiceImpl >> getRoleId");
+        throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist");
+    }
+
+    private Integer getDesigId(String desigName) {
+        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCase(desigName);
+        if (optionalDesignationEntity.isPresent()) {
+            return optionalDesignationEntity.get().getDesigId();
+        }
+        log.error("Inside EmployeeServiceImpl >> getRoleId");
+        throw new KPIException("EmployeeServiceImpl", false, "Designation Name is not exist");
+    }
+
 
 }

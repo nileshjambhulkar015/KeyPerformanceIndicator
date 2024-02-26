@@ -15,6 +15,10 @@ public class EmployeeExcelReadData {
     @Schema(example = "HOD", description = "This field is used for designation id")
     private String desigName;
 
+
+    @Schema(example = "e33", description = "This field is used for reporting employee id")
+    private String reportingEmpEid;
+
     @Schema(example = "Nilesh", description = "This field is used for reporting employee id")
     private String reportingEmpName;
 
