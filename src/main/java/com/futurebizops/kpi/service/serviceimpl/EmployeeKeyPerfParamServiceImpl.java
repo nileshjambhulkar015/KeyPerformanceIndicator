@@ -108,7 +108,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 kppMasterEntity.setEmpTotalOverallTaskComp("0");
                 kppMasterEntity.setEmpKppStatus("Pending");
                 kppMasterEntity.setEmpKppAppliedDate(null);
-                kppMasterEntity.setEmpRemark("Employee Ratings added");
+                kppMasterEntity.setEmpRemark("Ratings added");
                 kppMasterEntity.setEmpEvidence(null);
                 kppMasterEntity.setHodEmpId(keyPerfParamCreateRequest.getReportingEmpId());
                 kppMasterEntity.setHodTotalAchivedWeight("0");

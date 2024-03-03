@@ -1,6 +1,8 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
+import com.futurebizops.kpi.entity.EmployeeKppMasterEntity;
 import com.futurebizops.kpi.exception.KPIException;
+import com.futurebizops.kpi.repository.EmployeeKppMasterRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginRepo;
 import com.futurebizops.kpi.repository.EmployeeRepo;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,19 +29,25 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
     private EmployeeLoginAuditRepo employeeLoginAuditRepo;
 
     @Autowired
-    private EmployeeRepo employeeRepo;
+    EmployeeKppMasterRepo employeeKppMasterRepo;
 
     @Override
     public KPIResponse employeeLogin(String userName, String userPassword) {
         List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(userName, userPassword);
         List<LoginResponse> loginResponses = employeeLogin.stream().map(LoginResponse::new).collect(Collectors.toList());
         if (!loginResponses.isEmpty()) {
-            log.info("Login successfully");
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(loginResponses.get(0))
-                    .responseMessage("Login successfully")
-                    .build();
+            Optional<EmployeeKppMasterEntity> entityOptional = employeeKppMasterRepo.findById(loginResponses.get(0).getEmpId());
+            if(entityOptional.isPresent()) {
+                log.info("Login successfully");
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseData(loginResponses.get(0))
+                        .responseMessage("Login successfully")
+                        .build();
+            } else {
+                log.info("Please contact GM. Kpp is not set for you");
+                throw new KPIException("EmployeeLoginServiceImpl", false, "Please contact GM. Kpp is not set for you");
+            }
         } else {
             log.error("Inside EmployeeLoginServiceImpl >> employeeLogin()");
             throw new KPIException("EmployeeLoginServiceImpl", false, "Login failed");
