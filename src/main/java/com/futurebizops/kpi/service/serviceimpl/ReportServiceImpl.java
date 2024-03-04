@@ -41,6 +41,12 @@ public class ReportServiceImpl implements ReportService {
         getEmployeeKppStatusExport(empKppStatusResponse,httpServletResponse);
     }
 
+    @Override
+    public void getHodKppStatusReport(HttpServletResponse httpServletResponse, Integer empId) {
+        EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getEmployeeKppStatus(empId);
+        getEmployeeKppStatusExport(empKppStatusResponse,httpServletResponse);
+    }
+
 
     public void getEmployeeKppStatusExport(EmpKppStatusResponse response, HttpServletResponse httpServletResponse) {
 

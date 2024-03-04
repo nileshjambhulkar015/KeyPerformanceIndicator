@@ -20,9 +20,12 @@ public class ReportController {
 ReportService reportService;
 
     @GetMapping("/employee-kpp-status")
-    public void exportToExcel(HttpServletResponse httpServletResponse, @RequestParam(required = false) Integer empId)  {
-
+    public void exportToExcelEmployee(HttpServletResponse httpServletResponse, @RequestParam(required = false) Integer empId)  {
         reportService.getEmployeeKppStatusReport(httpServletResponse, empId);
+    }
 
+    @GetMapping("/hod-kpp-status")
+    public void exportToExcelHod(HttpServletResponse httpServletResponse, @RequestParam(required = false) Integer empId)  {
+        reportService.getHodKppStatusReport(httpServletResponse, empId);
     }
 }
