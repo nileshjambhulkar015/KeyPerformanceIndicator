@@ -6,6 +6,9 @@ import lombok.Data;
 @Data
 public class EmployeeExcelReadData {
 
+    @Schema(example = "e144", description = "This field is used for employee e id")
+    private String empEid;
+
     @Schema(example = "HOD", description = "This field is used for employee role id")
     private String roleName;
 

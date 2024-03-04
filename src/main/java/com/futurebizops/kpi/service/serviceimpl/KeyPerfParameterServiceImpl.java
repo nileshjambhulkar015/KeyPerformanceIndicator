@@ -197,12 +197,11 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                     currentRow = rowIndex;
                     KeyPerfParamExcelReadData model = new KeyPerfParamExcelReadData();
                     model.setEmployeeId("1");
-                    model.setRoleId(getRoleId(row.getCell(1).getStringCellValue().trim()));
-                    model.setDeptId(getDeptId(row.getCell(2).getStringCellValue().trim(),model.getRoleId()));
-                    model.setDesigId(getDesigId(row.getCell(3).getStringCellValue().trim(),model.getDeptId(),model.getRoleId()));
+                    model.setRoleName(row.getCell(1).getStringCellValue().trim());
+                    model.setDeptName(row.getCell(2).getStringCellValue().trim());
+                    model.setDesigName(row.getCell(3).getStringCellValue().trim());
                     model.setKppObjective(row.getCell(4).getStringCellValue().trim());
                     model.setKppPerformanceIndi(row.getCell(5).getStringCellValue().trim());
-
                     model.setKppOverallTarget(String.valueOf(row.getCell(6).getNumericCellValue()));
                     model.setKppTargetPeriod(row.getCell(7).getStringCellValue().trim());
                     model.setKppUoM(row.getCell(8).getStringCellValue().trim());
@@ -229,9 +228,12 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 currentExcelRow++;
                 KeyPerfParamCreateRequest keyPerfParamCreateRequest = new KeyPerfParamCreateRequest();
                 keyPerfParamCreateRequest.setEmployeeId("1");
-                keyPerfParamCreateRequest.setRoleId(request.getRoleId());
-                keyPerfParamCreateRequest.setDeptId(request.getDeptId());
-                keyPerfParamCreateRequest.setDesigId(request.getDesigId());
+                Integer roleId=getRoleId(request.getRoleName());
+                keyPerfParamCreateRequest.setRoleId(roleId);
+                Integer deptId= getDeptId(request.getDeptName(), keyPerfParamCreateRequest.getRoleId());
+                keyPerfParamCreateRequest.setDeptId(deptId);
+                Integer desigId = getDesigId(request.getDesigName(), keyPerfParamCreateRequest.getDeptId(), keyPerfParamCreateRequest.getRoleId());
+                keyPerfParamCreateRequest.setDesigId(desigId);
                 keyPerfParamCreateRequest.setKppObjective(request.getKppObjective());
                 keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
                 keyPerfParamCreateRequest.setKppPerformanceIndi(request.getKppPerformanceIndi());
@@ -253,46 +255,59 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 throw new KPIException("DesignationServiceImpl", false, "Issue in row no: " + currentExcelRow);
 
             } finally {
-                System.out.println("employeeCreateRequests::" + KeyPerfParamCreateRequests);
             }
         }
         for (KeyPerfParamCreateRequest request : KeyPerfParamCreateRequests) {
             try {
-                saveKeyPerfomanceParameter(request);
+                if(request.getRoleId()>0&& request.getDeptId()>0&&request.getDesigId()>0) {
+                    saveKeyPerfomanceParameter(request);
+                }else{
+                    KeyPerfParamNotSavedRecords.add(request);
+                }
 
-                log.info("KeyPerfParamCreateRequest::" + request);
             } catch (Exception ex) {
                 KeyPerfParamNotSavedRecords.add(request);
-                log.info("KeyPerfParamNotSavedRecords" + request);
+
             }
         }
+        log.info("KeyPerfParamNotSavedRecords" + KeyPerfParamNotSavedRecords);
     }
-
     private Integer getRoleId(String roleName) {
         Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
+        Integer roleId = -1;
         if (optionalRoleEntity.isPresent()) {
-            return optionalRoleEntity.get().getRoleId();
+            roleId = optionalRoleEntity.get().getRoleId();
+        } else {
+            roleId=-1;
+            throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist" + roleName);
+
         }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
+        return roleId;
     }
-    private Integer getDeptId(String deptName,Integer roleId) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(deptName,roleId);
+
+    private Integer getDeptId(String deptName, Integer roleId) {
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(deptName, roleId);
+        Integer deptId = -1;
         if (optionalDepartmentEntity.isPresent()) {
-            return optionalDepartmentEntity.get().getDeptId();
+            deptId = optionalDepartmentEntity.get().getDeptId();
+        } else {
+            deptId=-1;
+            throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist" + deptName);
         }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist");
+        return deptId;
     }
 
 
-    private Integer getDesigId(String desigName,Integer deptId,Integer roleId) {
-        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptIdAndRoleId( desigName,deptId,roleId);
+    private Integer getDesigId(String desigName, Integer deptId, Integer roleId) {
+        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptIdAndRoleId(desigName, deptId, roleId);
+        Integer desigId=-1;
         if (optionalDesignationEntity.isPresent()) {
-            return optionalDesignationEntity.get().getDesigId();
+            desigId=  optionalDesignationEntity.get().getDesigId();
+        }else {
+            desigId=-1;
+            throw new KPIException("EmployeeServiceImpl", false, "Designation Name is not exist" + desigName);
         }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Designation Name is not exist");
+        return desigId;
     }
 
     private KeyPerfParamEntity convertKeyPerfParamCreateRequestToEntity(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {

@@ -132,7 +132,7 @@ public class EmployeeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping (value = "/import-employee")
+    @PostMapping (value = "/upload-employee")
     public ResponseEntity<KPIResponse> getEmpFromExcel(@RequestPart("file") MultipartFile file) {
 
         KPIResponse response = employeeService.processExcelFile(file);

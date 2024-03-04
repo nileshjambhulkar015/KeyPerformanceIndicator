@@ -439,7 +439,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-    @Override
     public KPIResponse processExcelFile(MultipartFile file) {
         {
             Integer currentRow = 0;
@@ -463,16 +462,16 @@ public class EmployeeServiceImpl implements EmployeeService {
                 Sheet sheet = workbook.getSheetAt(0);
                 int startRow = 1;
 
-                for (int rowIndex = startRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                for (int rowIndex = startRow; rowIndex <=sheet.getLastRowNum(); rowIndex++) {
                     Row row = sheet.getRow(rowIndex);
                     log.info("____>" + rowIndex);
                     if (row != null) {
                         currentRow = rowIndex;
                         EmployeeExcelReadData model = new EmployeeExcelReadData();
                         model.setRoleName(row.getCell(0).getStringCellValue().trim());
-                        model.setDeptName(row.getCell(1).getStringCellValue());
-                        model.setDesigName(row.getCell(2).getStringCellValue());
-                        model.setReportingEmpEid(row.getCell(3).getStringCellValue());
+                        model.setDeptName(row.getCell(1).getStringCellValue().trim());
+                        model.setDesigName(row.getCell(2).getStringCellValue().trim());
+                        model.setReportingEmpEid(row.getCell(3).getStringCellValue().trim());
                         String fullName = row.getCell(4).getStringCellValue();
                         String[] nameParts = fullName.split("\\s+");
 
@@ -484,12 +483,13 @@ public class EmployeeServiceImpl implements EmployeeService {
                         int mobile2 = (int) row.getCell(6).getNumericCellValue();
                         model.setEmpMobileNo(String.valueOf(mobile1));
                         model.setEmpEmerMobileNo(String.valueOf(mobile2));
-                        model.setEmailId(row.getCell(7).getStringCellValue());
-                        model.setTempAddress(row.getCell(8).getStringCellValue());
-                        model.setPermAddress(row.getCell(9).getStringCellValue());
-                        model.setEmpGender(row.getCell(10).getStringCellValue());
-                        model.setEmpBloodgroup(row.getCell(11).getStringCellValue());
-                        model.setRemark(row.getCell(12).getStringCellValue());
+                        model.setEmailId(row.getCell(7).getStringCellValue().trim());
+                        model.setTempAddress(row.getCell(8).getStringCellValue().trim());
+                        model.setPermAddress(row.getCell(9).getStringCellValue().trim());
+                        model.setEmpGender(row.getCell(10).getStringCellValue().trim());
+                        model.setEmpBloodgroup(row.getCell(11).getStringCellValue().trim());
+                        model.setRemark(row.getCell(12).getStringCellValue().trim());
+                        model.setEmpEid(row.getCell(13).getStringCellValue().trim());
                         model.setStatusCd("A");
                         model.setRegionName("PUNE");
                         model.setSiteName("KONDHAPURI");
@@ -508,9 +508,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 try {
                     currentExcelRow++;
                     EmployeeCreateRequest employeeCreateRequest = new EmployeeCreateRequest();
-                    employeeCreateRequest.setRoleId(getRoleId(request.getRoleName().trim()));
-                    employeeCreateRequest.setDeptId(getDeptId(request.getDeptName().trim()));
-                    employeeCreateRequest.setDesigId(getDesigId(request.getDesigName().trim()));
+                    Integer roleId=getRoleId(request.getRoleName().trim());
+                    employeeCreateRequest.setRoleId(roleId);
+                    Integer deptId=getDeptId(request.getDeptName().trim(),roleId);
+                    employeeCreateRequest.setDeptId(deptId);
+                    Integer desigId=getDesigId(request.getDesigName().trim(),deptId,roleId);
+                    employeeCreateRequest.setDesigId(desigId);
                     employeeCreateRequest.setEmailId(request.getEmailId());
                     employeeCreateRequest.setEmpFirstName(request.getEmpFirstName());
                     employeeCreateRequest.setEmpMiddleName(request.getEmpMiddleName());
@@ -523,7 +526,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                     employeeCreateRequest.setEmpBloodgroup(request.getEmpBloodgroup());
                     employeeCreateRequest.setRemark(request.getRemark());
                     employeeCreateRequest.setEmpDob(request.getEmpDob());
-                    employeeCreateRequest.setReportingEmpId(2);
+                    Integer empEid=getRportingEmpId(request.getReportingEmpEid());
+                    employeeCreateRequest.setReportingEmpId(empEid);
+                    employeeCreateRequest.setEmpEId(request.getEmpEid());
                     employeeCreateRequest.setStatusCd("A");
                     employeeCreateRequest.setRegionId(1);
                     employeeCreateRequest.setSiteId(1);
@@ -538,7 +543,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
             for (EmployeeCreateRequest request : employeeCreateRequests) {
                 try {
-                    //saveEmployee(request);
+                    if(request.getRoleId()>0&&request.getDeptId()>0&&request.getDesigId()>0&&request.getReportingEmpId()>0) {
+                        saveEmployee(request);
+                    }else{
+                        employeeNotSavedRecords.add(request);
+                    }
                 } catch (Exception ex) {
                     employeeNotSavedRecords.add(request);
                 }
@@ -549,32 +558,55 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
+
+
     private Integer getRoleId(String roleName) {
         Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
+        Integer roleId=-1;
         if (optionalRoleEntity.isPresent()) {
-            return optionalRoleEntity.get().getRoleId();
+            roleId= optionalRoleEntity.get().getRoleId();
+        }else {
+            roleId=-1;
+            throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
         }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
+        return roleId;
     }
 
-    private Integer getDeptId(String deptName) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
+    private Integer getDeptId(String deptName, Integer roleId) {
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(deptName, roleId);
+        Integer deptId = -1;
         if (optionalDepartmentEntity.isPresent()) {
-            return optionalDepartmentEntity.get().getDeptId();
+            deptId = optionalDepartmentEntity.get().getDeptId();
+        } else {
+            deptId=-1;
+            throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist" + deptName);
         }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist");
+        return deptId;
     }
 
-    private Integer getDesigId(String desigName) {
-        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCase(desigName);
+    private Integer getDesigId(String desigName, Integer deptId, Integer roleId) {
+        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptIdAndRoleId(desigName, deptId, roleId);
+        Integer desigId=-1;
         if (optionalDesignationEntity.isPresent()) {
-            return optionalDesignationEntity.get().getDesigId();
+            desigId=  optionalDesignationEntity.get().getDesigId();
+        }else {
+            desigId=-1;
+            throw new KPIException("EmployeeServiceImpl", false, "Designation Name is not exist" + desigName);
         }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Designation Name is not exist");
+        return desigId;
     }
 
+    private Integer getRportingEmpId(String empEid) {
+        Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findByEmpEIdEqualsIgnoreCase(empEid);
+        Integer desigId=-1;
+        if (optionalEmployeeEntity.isPresent()) {
+            desigId= optionalEmployeeEntity.get().getEmpId();
+        }else {
+            desigId=-1;
+            log.error("Inside EmployeeServiceImpl >> getRoleId");
+            throw new KPIException("EmployeeServiceImpl", false, "Designation Name is not exist");
+        }
+        return desigId;
+    }
 
 }

@@ -41,4 +41,39 @@ public class EmployeeKppMasterDto {
     private String gmKppStatus;
     private String gmRemark;
     private String remark;
+
+   public EmployeeKppMasterDto(Object[] objects){
+        this.eKppMId=Integer.parseInt(String.valueOf(objects[0]));
+        this.ekppMonth=String.valueOf(objects[1]);
+        this.empId=Integer.parseInt(String.valueOf(objects[2]));
+        this.empName=String.valueOf(objects[3]);
+        this.empEId=String.valueOf(objects[4]);
+        this.roleId=Integer.parseInt(String.valueOf(objects[5]));
+        this.roleName=String.valueOf(objects[6]);
+        this.deptId=Integer.parseInt(String.valueOf(objects[7]));
+        this.deptName=String.valueOf(objects[8]);
+        this.desigId=Integer.parseInt(String.valueOf(objects[9]));
+        this.desigName=String.valueOf(objects[10]);
+        this.totalEmpAchivedWeight=String.valueOf(objects[11]);
+        this.totalEmpOverallAchieve=String.valueOf(objects[12]);
+        this.totalEmpOverallTaskComp=String.valueOf(objects[13]);
+        this.empKppAppliedDate=String.valueOf(objects[14]);
+        this.empKppStatus=String.valueOf(objects[15]);
+        this.empRemark=String.valueOf(objects[16]);
+        this.hodEmpId=Integer.parseInt(String.valueOf(objects[17]));
+        this.totalHodAchivedWeight=String.valueOf(objects[18]);
+        this.totalHodOverallAchieve=String.valueOf(objects[19]);
+        this.totalHodOverallTaskComp=String.valueOf(objects[20]);
+        this.hodKppAppliedDate=String.valueOf(objects[21]);
+        this.hodKppStatus=String.valueOf(objects[22]);
+        this.hodRemark=String.valueOf(objects[23]);
+        this.gmEmpId=Integer.parseInt(String.valueOf(objects[24]));
+        this.totalGmAchivedWeight=String.valueOf(objects[25]);
+        this.totalGmOverallAchieve=String.valueOf(objects[26]);
+        this.totalGmOverallTaskComp=String.valueOf(objects[27]);
+        this.gmKppAppliedDate=String.valueOf(objects[28]);
+        this.gmKppStatus=String.valueOf(objects[29]);
+        this.gmRemark=String.valueOf(objects[30]);
+        this.remark=String.valueOf(objects[31]);
+    }
 }
