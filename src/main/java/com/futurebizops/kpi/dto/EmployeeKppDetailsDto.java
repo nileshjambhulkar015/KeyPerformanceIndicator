@@ -27,7 +27,8 @@ public class EmployeeKppDetailsDto {
     private String kppPerformanceIndi;
     private String kppOverallTarget;
     private String kppTargetPeriod;
-    private String kppUoM;
+    private Integer uomId;
+    private String uomName;
     private String kppOverallWeightage;
     private String kppRating1;
     private String kppRating2;

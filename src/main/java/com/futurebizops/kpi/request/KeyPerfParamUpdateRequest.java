@@ -30,8 +30,8 @@ public class KeyPerfParamUpdateRequest {
     @Schema(example = "monthly", description = "This field is used for rating ratio 1")
     private String kppTargetPeriod;
 
-    @Schema(example = "perentage", description = "This field is used for rating ratio 1")
-    private String kppUoM;
+    @Schema(example = "1", description = "This field is used for rating ratio 1")
+    private Integer uomId;
 
     @Schema(example = "25", description = "This field is used for rating ratio 1")
     private String kppOverallWeightage;

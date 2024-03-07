@@ -67,13 +67,14 @@ public class EmployeeKppStatusDto {
         employeeKppDetailsDto.setKppPerformanceIndi(String.valueOf(objects[48]));
         employeeKppDetailsDto.setKppOverallTarget(String.valueOf(objects[49]));
         employeeKppDetailsDto.setKppTargetPeriod(String.valueOf(objects[50]));
-        employeeKppDetailsDto.setKppUoM(String.valueOf(objects[51]));
-        employeeKppDetailsDto.setKppOverallWeightage(String.valueOf(objects[52]));
+        employeeKppDetailsDto.setUomId(Integer.parseInt(String.valueOf(objects[51])));
+        employeeKppDetailsDto.setUomName(String.valueOf(objects[52]));
+        employeeKppDetailsDto.setKppOverallWeightage(String.valueOf(objects[53]));
 
-        employeeKppDetailsDto.setKppRating1(String.valueOf(objects[53]));
-        employeeKppDetailsDto.setKppRating2(String.valueOf(objects[54]));
-        employeeKppDetailsDto.setKppRating3(String.valueOf(objects[55]));
-        employeeKppDetailsDto.setKppRating4(String.valueOf(objects[56]));
-        employeeKppDetailsDto.setKppRating5(String.valueOf(objects[57]));
+        employeeKppDetailsDto.setKppRating1(String.valueOf(objects[54]));
+        employeeKppDetailsDto.setKppRating2(String.valueOf(objects[55]));
+        employeeKppDetailsDto.setKppRating3(String.valueOf(objects[56]));
+        employeeKppDetailsDto.setKppRating4(String.valueOf(objects[57]));
+        employeeKppDetailsDto.setKppRating5(String.valueOf(objects[58]));
     }
 }

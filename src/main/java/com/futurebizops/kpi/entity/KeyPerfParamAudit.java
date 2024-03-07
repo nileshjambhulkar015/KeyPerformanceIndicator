@@ -47,8 +47,8 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
     @Column(name = "kpp_target_period")
     private String kppTargetPeriod;
 
-    @Column(name = "kpp_unit_of_measu")
-    private String kppUoM;
+    @Column(name = "uom_id")
+    private Integer uomId;
 
     @Column(name = "kpp_overall_weightage")
     private String kppOverallWeightage;
@@ -83,7 +83,7 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
         this.kppPerformanceIndi = keyPerfParamEntity.getKppPerformanceIndi();
         this.kppOverallTarget = keyPerfParamEntity.getKppOverallTarget();
         this.kppTargetPeriod = keyPerfParamEntity.getKppTargetPeriod();
-        this.kppUoM = keyPerfParamEntity.getKppUoM();
+        this.uomId = keyPerfParamEntity.getUomId();
         this.kppOverallWeightage = keyPerfParamEntity.getKppOverallWeightage();
         this.kppRating1 = keyPerfParamEntity.getKppRating1();
         this.kppRating2 = keyPerfParamEntity.getKppRating2();

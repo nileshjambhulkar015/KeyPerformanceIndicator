@@ -223,7 +223,7 @@ public class ReportServiceImpl implements ReportService {
             cell8.setCellValue(employeeKppDetailsDto.getKppTargetPeriod()); // Replace this with your logic to get the cell value
             cell8.setCellStyle(wrapTextStyle);
             Cell cell9 = kppRow.createCell(9);
-            cell9.setCellValue(employeeKppDetailsDto.getKppUoM()); // Replace this with your logic to get the cell value
+           // cell9.setCellValue(employeeKppDetailsDto.getKppUoM()); // Replace this with your logic to get the cell value
             cell9.setCellStyle(wrapTextStyle);
             Cell cell10 = kppRow.createCell(10);
             cell10.setCellValue(employeeKppDetailsDto.getKppOverallWeightage()); // Replace this with your logic to get the cell value

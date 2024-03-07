@@ -238,7 +238,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
                 keyPerfParamCreateRequest.setKppPerformanceIndi(request.getKppPerformanceIndi());
                 keyPerfParamCreateRequest.setKppOverallTarget(request.getKppOverallTarget());
-                keyPerfParamCreateRequest.setKppUoM(request.getKppUoM());
+              //  keyPerfParamCreateRequest.setUomId(request.getKppUoM());
                 keyPerfParamCreateRequest.setKppOverallWeightage(request.getKppOverallWeightage());
                 keyPerfParamCreateRequest.setKppRating1(request.getKppRating1());
                 keyPerfParamCreateRequest.setKppRating2(request.getKppRating2());
@@ -319,7 +319,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamCreateRequest.getKppPerformanceIndi());
         keyPerfParamEntity.setKppOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget());
         keyPerfParamEntity.setKppTargetPeriod(keyPerfParamCreateRequest.getKppTargetPeriod());
-        keyPerfParamEntity.setKppUoM(keyPerfParamCreateRequest.getKppUoM());
+        keyPerfParamEntity.setUomId(keyPerfParamCreateRequest.getUomId());
         keyPerfParamEntity.setKppOverallWeightage(keyPerfParamCreateRequest.getKppOverallWeightage());
         keyPerfParamEntity.setKppRating1(keyPerfParamCreateRequest.getKppRating1());
         keyPerfParamEntity.setKppRating2(keyPerfParamCreateRequest.getKppRating2());
@@ -343,7 +343,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamUpdateRequest.getKppPerformanceIndi());
         keyPerfParamEntity.setKppOverallTarget(keyPerfParamUpdateRequest.getKppOverallTarget());
         keyPerfParamEntity.setKppTargetPeriod(keyPerfParamUpdateRequest.getKppTargetPeriod());
-        keyPerfParamEntity.setKppUoM(keyPerfParamUpdateRequest.getKppUoM());
+        keyPerfParamEntity.setUomId(keyPerfParamUpdateRequest.getUomId());
         keyPerfParamEntity.setKppOverallWeightage(keyPerfParamUpdateRequest.getKppOverallWeightage());
         keyPerfParamEntity.setKppRating1(keyPerfParamUpdateRequest.getKppRating1());
         keyPerfParamEntity.setKppRating2(keyPerfParamUpdateRequest.getKppRating2());

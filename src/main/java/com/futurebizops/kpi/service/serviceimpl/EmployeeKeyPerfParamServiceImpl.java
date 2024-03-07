@@ -217,13 +217,20 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Override
     public List<KPPResponse> getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd) {
-        try {
+       /* try {
             List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigIdAndStatusCd(roleId, deptId, desigId, statusCd);
-            return convertEntityListToResponse(keyPerfParamEntities);
+            if(keyPerfParamEntities.size()>0) {
+                return convertEntityListToResponse(keyPerfParamEntities);
+            }
+            else{
+                log.error("Inside EmployeeKeyPerfParamServiceImpl >> getKeyPerfomanceParameter()");
+                throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, "No data available");
+            }
         } catch (Exception ex) {
             log.error("Inside EmployeeKeyPerfParamServiceImpl >> updateGMApprovalRequest()");
             throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
-        }
+        }*/
+        return null;
     }
 
     @Override
@@ -329,7 +336,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                                 .kppPerformanceIndi(keyPerfParamEntity.getKppPerformanceIndi())
                                 .kppOverallTarget(keyPerfParamEntity.getKppOverallTarget())
                                 .kppTargetPeriod(keyPerfParamEntity.getKppTargetPeriod())
-                                .kppUoM(keyPerfParamEntity.getKppUoM())
+                                .uomId(keyPerfParamEntity.getUomId())
                                 .kppOverallWeightage(keyPerfParamEntity.getKppOverallWeightage())
                                 .kppRating1(keyPerfParamEntity.getKppRating1())
                                 .kppRating2(keyPerfParamEntity.getKppRating2())

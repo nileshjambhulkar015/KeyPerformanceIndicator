@@ -28,7 +28,7 @@ public class KeyPerfParamCreateRequest {
     private String kppTargetPeriod;
 
     @Schema(example = "perentage", description = "This field is used for rating ratio 1")
-    private String kppUoM;
+    private Integer uomId;
 
     @Schema(example = "25", description = "This field is used for rating ratio 1")
     private String kppOverallWeightage;

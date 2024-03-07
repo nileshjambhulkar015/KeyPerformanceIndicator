@@ -134,6 +134,21 @@ public class UoMServiceImpl implements UoMService {
     }
 
     @Override
+    public List<UoMEntity> findAllUoMDetails() {
+        try {
+            List<UoMEntity> uoMEntities = uoMRepo.findAll();
+            if (uoMEntities.size() > 0) {
+                return uoMEntities;
+            }
+        } catch(Exception ex){
+        log.error("Inside UoMServiceImpl >> updateUoM():{}", ex.getMessage());
+        throw new KPIException("UoMServiceImpl", false, "UOM is not set");
+        }
+        log.error("Inside UoMServiceImpl >> updateUoM()");
+        throw new KPIException("UoMServiceImpl", false, "UOM is not set");
+    }
+
+    @Override
     public RoleResponse findUoMById(Integer roleId) {
         return null;
     }
