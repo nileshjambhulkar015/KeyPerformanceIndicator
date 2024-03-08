@@ -82,6 +82,41 @@
         lst_updt_user_id VARCHAR(20) null
     );
 
+create table company_master(
+        comp_id serial  PRIMARY key,
+        region_id INTEGER,
+        site_id INTEGER,
+        comp_name VARCHAR(30),
+        comp_address VARCHAR(300),
+        comp_mbno VARCHAR(30),
+        comp_finance_year VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+
+    create table company_master_audit(
+        comp_aud_id serial PRIMARY key,
+        comp_id INTEGER,
+        region_id INTEGER,
+        site_id INTEGER,
+        comp_name VARCHAR(30),
+        comp_address VARCHAR(300),
+        comp_mbno VARCHAR(30),
+        comp_finance_year VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
  create table uom(
         UOM_ID serial  PRIMARY key,
         UOM_NAME VARCHAR(20),

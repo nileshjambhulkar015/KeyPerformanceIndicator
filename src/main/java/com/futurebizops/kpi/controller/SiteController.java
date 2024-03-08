@@ -5,6 +5,10 @@ import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.request.SiteCreateRequest;
 import com.futurebizops.kpi.request.SiteUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.RegionResponse;
+import com.futurebizops.kpi.response.SiteResponse;
+import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.service.SiteService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -52,6 +58,33 @@ public class SiteController {
         KPIResponse response = siteService.findSiteDetails(siteId, regionId, siteName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+
+
+
+    @GetMapping(value = "/by-site-id")
+    public ResponseEntity<SiteResponse> getSiteDetails(Integer siteId) {
+        SiteResponse   response = siteService.getSitesById(siteId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    //for region save
+    @GetMapping(value = "/dd-sites-sites")
+    public ResponseEntity<List<SiteDDResponse>> ddRegionDetails(@RequestParam(required = false) Integer regionId,
+                                                                @RequestParam(required = false) Integer siteId
+    ) {
+        List<SiteDDResponse>   response = siteService.ddSearchSites(regionId, siteId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //for region save
+    @GetMapping(value = "/dd-regions-sites")
+    public ResponseEntity<List<RegionDDResponse>> getDDRegionFromSite(@RequestParam(required = false) Integer regionId,
+                                                                  @RequestParam(required = false) Integer siteId
+    ) {
+        List<RegionDDResponse>   response = siteService.getDDRegionFromSite();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

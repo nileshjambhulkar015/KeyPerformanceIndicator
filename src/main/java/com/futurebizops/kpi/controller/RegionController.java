@@ -3,6 +3,8 @@ package com.futurebizops.kpi.controller;
 import com.futurebizops.kpi.request.RegionCreateRequest;
 import com.futurebizops.kpi.request.RegionUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.RegionResponse;
+import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
 import com.futurebizops.kpi.service.RegionService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -53,6 +57,12 @@ public class RegionController {
     @GetMapping
     public ResponseEntity<KPIResponse> getRegionDetails(Integer regionId) {
         KPIResponse response = regionService.findRegionDetails(regionId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/dd-regions-regions")
+    public ResponseEntity<List<RegionDDResponse>> ddRegionDetails(Integer regionId) {
+        List<RegionDDResponse>   response = regionService.ddRegionDetails(regionId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

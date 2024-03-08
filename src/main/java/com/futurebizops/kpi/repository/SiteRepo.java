@@ -22,4 +22,13 @@ public interface SiteRepo extends JpaRepository<SiteEntity, Integer> {
     @Query(value = SQLQueryConstants.SITE_COUNT_UERY, nativeQuery = true)
     Integer getSiteCount(@Param("siteId") Integer siteId, @Param("regionId") Integer regionId, @Param("siteName") String siteName, @Param("statusCd") String statusCd);
 
+    @Query(value = SQLQueryConstants.DD_SITE_QUERY, nativeQuery = true)
+    List<Object[]> ddSiteDetails(@Param("regionId")Integer regionId, @Param("siteId")Integer siteId);
+
+    @Query(value = SQLQueryConstants.SITE_BY_ID_QUERY, nativeQuery = true)
+    List<Object[]> SiteByIdDetails(@Param("siteId")Integer siteId);
+
+
+    @Query(value = SQLQueryConstants.DD_REGION_FROM_SITE_QUERY, nativeQuery = true)
+    List<Object[]> getDDRegionFromSite();
 }

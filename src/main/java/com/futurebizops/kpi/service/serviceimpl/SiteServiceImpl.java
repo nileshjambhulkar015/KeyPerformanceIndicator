@@ -11,7 +11,10 @@ import com.futurebizops.kpi.request.SiteCreateRequest;
 import com.futurebizops.kpi.request.SiteUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.RegionResponse;
 import com.futurebizops.kpi.response.SiteResponse;
+import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 import com.futurebizops.kpi.service.SiteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +107,25 @@ public class SiteServiceImpl implements SiteService {
                 .build();
     }
 
+    @Override
+    public List<SiteDDResponse> ddSearchSites(Integer regionId, Integer siteId) {
+        List<Object[]> regionData = siteRepo.ddSiteDetails(regionId, siteId);
+        return regionData.stream().map(SiteDDResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public SiteResponse getSitesById(Integer siteId) {
+        List<Object[]> regionData = siteRepo.SiteByIdDetails(siteId);
+        List<SiteResponse> siteResponses = regionData.stream().map(SiteResponse::new).collect(Collectors.toList());
+        return siteResponses.get(0);
+    }
+
+    @Override
+    public List<RegionDDResponse> getDDRegionFromSite() {
+        List<Object[]> regionData = siteRepo.getDDRegionFromSite();
+        return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
+    }
+
     private SiteEntity convertSiteCreateRequestToEntity(SiteCreateRequest siteCreateRequest) {
         SiteEntity siteEntity = new SiteEntity();
         siteEntity.setRegionId(siteCreateRequest.getRegionId());
@@ -116,7 +138,7 @@ public class SiteServiceImpl implements SiteService {
 
     private SiteEntity convertSiteUpdateRequestToEntity(SiteUpdateRequest siteUpdateRequest) {
         SiteEntity siteEntity = new SiteEntity();
-        siteEntity.setSiteId(siteEntity.getSiteId());
+        siteEntity.setSiteId(siteUpdateRequest.getSiteId());
         siteEntity.setRegionId(siteUpdateRequest.getRegionId());
         siteEntity.setSiteName(siteUpdateRequest.getSiteName());
         siteEntity.setRemark(siteUpdateRequest.getRemark());

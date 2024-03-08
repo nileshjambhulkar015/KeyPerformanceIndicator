@@ -8,8 +8,10 @@ import com.futurebizops.kpi.repository.RegionAuditRepo;
 import com.futurebizops.kpi.repository.RegionRepo;
 import com.futurebizops.kpi.request.RegionCreateRequest;
 import com.futurebizops.kpi.request.RegionUpdateRequest;
+import com.futurebizops.kpi.response.CompanyMasterResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RegionResponse;
+import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
 import com.futurebizops.kpi.service.RegionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +123,13 @@ public class RegionServiceImpl implements RegionService {
                     .build();
         }
         return kpiResponse;
+    }
+
+    //for dropdown list
+    @Override
+    public List<RegionDDResponse> ddRegionDetails(Integer regionId) {
+        List<Object[]> regionData = regionRepo.ddRegionDetails(regionId);
+        return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
     }
 
 

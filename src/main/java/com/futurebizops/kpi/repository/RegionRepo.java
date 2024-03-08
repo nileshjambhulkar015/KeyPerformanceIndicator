@@ -21,4 +21,8 @@ public interface RegionRepo extends JpaRepository<RegionEntity, Integer> {
     @Query(value = SQLQueryConstants.REGION_COUNT_QUERY, nativeQuery = true)
     Integer getRegionCount(@Param("regionId")Integer regionId, @Param("regionName") String regionName, @Param("statusCd") String statusCd);
 
+
+    @Query(value = SQLQueryConstants.DD_REGION_QUERY, nativeQuery = true)
+    List<Object[]> ddRegionDetails(@Param("regionId")Integer regionId);
+
 }
