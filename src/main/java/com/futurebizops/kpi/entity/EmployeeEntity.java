@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,6 +49,9 @@ public class EmployeeEntity extends AuditEnabledEntity{
 
 	@Column(name = "site_id")
 	private Integer siteId;
+
+	@Column(name = "comp_id")
+	private Integer companyId;
 
 	@Column(name = "emp_fname")
 	private String empFirstName;

@@ -30,6 +30,9 @@ public class EmployeeUpdateRequest {
     @Schema(example = "1", description = "This field is used for site id")
     private Integer siteId;
 
+    @Schema(example = "1", description = "This field is used for site id")
+    private Integer companyId;
+
     @Schema(example = "Nilesh", description = "This field is used for employee first name")
     private String empFirstName;
 

@@ -3,10 +3,13 @@
     /*
     drop table region  ;
     drop table region_audit  ;
+        drop table site  ;
+        drop table site_audit  ;
+            drop table company_master  ;
+            drop table company_master_audit  ;
     drop table uom  ;
     drop table uom_audit  ;
-    drop table site  ;
-    drop table site_audit  ;
+
     drop TABLE roles;
     drop TABLE roles_audit;
     drop TABLE department;
@@ -282,6 +285,7 @@ create table company_master(
         gm_emp_id INTEGER,
         region_id INTEGER,
         site_id INTEGER,
+        comp_id INTEGER,
         emp_fname VARCHAR(20) ,
         emp_mname VARCHAR(20),
         emp_lname VARCHAR(20),
@@ -314,6 +318,7 @@ create table company_master(
         gm_emp_id INTEGER,
         region_id INTEGER,
         site_id INTEGER,
+        comp_id INTEGER,
         emp_fname VARCHAR(20) ,
         emp_mname VARCHAR(20),
         emp_lname VARCHAR(20),

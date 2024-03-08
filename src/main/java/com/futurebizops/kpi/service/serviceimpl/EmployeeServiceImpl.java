@@ -381,6 +381,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setReportingEmpId(employeeCreateRequest.getReportingEmpId());
         employeeEntity.setRegionId(employeeCreateRequest.getRegionId());
         employeeEntity.setSiteId(employeeCreateRequest.getSiteId());
+        employeeEntity.setCompanyId(employeeCreateRequest.getCompanyId());
         employeeEntity.setEmpFirstName(employeeCreateRequest.getEmpFirstName());
         employeeEntity.setEmpMiddleName(employeeCreateRequest.getEmpMiddleName());
         employeeEntity.setEmpLastName(employeeCreateRequest.getEmpLastName());
@@ -410,6 +411,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setReportingEmpId(employeeUpdateRequest.getReportingEmpId());
         employeeEntity.setRegionId(employeeUpdateRequest.getRegionId());
         employeeEntity.setSiteId(employeeUpdateRequest.getSiteId());
+        employeeEntity.setCompanyId(employeeUpdateRequest.getCompanyId());
         employeeEntity.setEmpFirstName(employeeUpdateRequest.getEmpFirstName());
         employeeEntity.setEmpMiddleName(employeeUpdateRequest.getEmpMiddleName());
         employeeEntity.setEmpLastName(employeeUpdateRequest.getEmpLastName());
