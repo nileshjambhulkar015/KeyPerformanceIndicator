@@ -5,6 +5,9 @@ import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
+import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
+import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,5 +56,24 @@ public class EmployeeKppController {
 
     }
 
+    //for region save
+    @GetMapping(value = "/dd-regions-employee")
+    public ResponseEntity<List<RegionDDResponse>> getDDRegionFromCompany() {
+        List<RegionDDResponse>   response = employeeKeyPerfParamService.getDDRegionFromCompany();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/dd-sites-employee")
+    public ResponseEntity<List<SiteDDResponse>> getDDSitesFromComany(@RequestParam(required = false) Integer regionId) {
+        List<SiteDDResponse>   response = employeeKeyPerfParamService.getDDSitesFromComany(regionId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/dd-company-employee")
+    public ResponseEntity<List<CompanyDDResponse>> getDDCompanyFromComany(@RequestParam(required = false) Integer regionId,
+                                                                          @RequestParam(required = false) Integer siteId) {
+        List<CompanyDDResponse>  response = employeeKeyPerfParamService.getDDCompanyFromComany(regionId, siteId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }

@@ -8,6 +8,9 @@ import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
+import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
+import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 
 import java.util.List;
 
@@ -29,7 +32,9 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse generateEmployeeKppReport(Integer empId, String statusCd);
 
-    // public KPIResponse findRoleDetails(RoleSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection);
+    public List<RegionDDResponse> getDDRegionFromCompany();
 
-    //public List<RoleResponse> findAllRolesDetails();
+    public List<SiteDDResponse> getDDSitesFromComany(Integer regionId);
+
+    public List<CompanyDDResponse> getDDCompanyFromComany(Integer regionId, Integer siteId);
 }

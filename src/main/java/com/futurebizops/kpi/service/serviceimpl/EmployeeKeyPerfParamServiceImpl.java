@@ -28,6 +28,9 @@ import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
+import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
+import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -322,6 +325,23 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         return null;
     }
 
+    @Override
+    public List<RegionDDResponse> getDDRegionFromCompany() {
+        List<Object[]> regionData = employeeRepo.getDDRegionFromCompany();
+        return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SiteDDResponse> getDDSitesFromComany(Integer regionId) {
+        List<Object[]> siteData = employeeRepo.getDDSiteFromCompany(regionId);
+        return siteData.stream().map(SiteDDResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CompanyDDResponse> getDDCompanyFromComany(Integer regionId, Integer siteId) {
+        List<Object[]> siteData = employeeRepo.getDDCompanyFromCompany(regionId, siteId);
+        return siteData.stream().map(CompanyDDResponse::new).collect(Collectors.toList());
+    }
 
     private List<KPPResponse> convertEntityListToResponse(List<KeyPerfParamEntity> keyPerfParamEntities) {
         return keyPerfParamEntities

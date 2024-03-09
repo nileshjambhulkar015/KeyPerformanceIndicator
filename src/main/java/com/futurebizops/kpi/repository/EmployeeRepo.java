@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.repository;
 
+import com.futurebizops.kpi.constants.DropDownQueryConstants;
 import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.EmployeeEntity;
 import org.springframework.data.domain.Page;
@@ -35,4 +36,15 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
    // public List<EmployeeEntity> findByRoleIdAndDeptIdAndDesigId(Integer roleId, Integer deptId, Integer desigId);
 
     public List<EmployeeEntity> findByRoleIdOrDeptIdOrDesigId(Integer roleId,Integer deptId,Integer desigId);
+
+    //to assign kpp to employee
+
+    @Query(value = DropDownQueryConstants.DD_REGION_FROM_EMPLOYEE_QUERY, nativeQuery = true)
+    List<Object[]> getDDRegionFromCompany();
+
+    @Query(value = DropDownQueryConstants.DD_SITE_FROM_EMPLOYEE_QUERY, nativeQuery = true)
+    List<Object[]> getDDSiteFromCompany(@Param("regionId") Integer regionId );
+
+    @Query(value = DropDownQueryConstants.DD_COMPANY_FROM_EMPLOYEE_QUERY, nativeQuery = true)
+    List<Object[]> getDDCompanyFromCompany(@Param("regionId") Integer regionId ,@Param("siteId") Integer siteId );
 }
