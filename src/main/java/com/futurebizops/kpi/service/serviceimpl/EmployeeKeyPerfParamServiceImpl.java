@@ -29,7 +29,10 @@ import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
+import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
@@ -326,21 +329,39 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
-    public List<RegionDDResponse> getDDRegionFromCompany() {
+    public List<RegionDDResponse> getDDRegionFromEmployee() {
         List<Object[]> regionData = employeeRepo.getDDRegionFromCompany();
         return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<SiteDDResponse> getDDSitesFromComany(Integer regionId) {
+    public List<SiteDDResponse> getDDSitesFromEmployee(Integer regionId) {
         List<Object[]> siteData = employeeRepo.getDDSiteFromCompany(regionId);
         return siteData.stream().map(SiteDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<CompanyDDResponse> getDDCompanyFromComany(Integer regionId, Integer siteId) {
+    public List<CompanyDDResponse> getDDCompanyFromEmployee(Integer regionId, Integer siteId) {
         List<Object[]> siteData = employeeRepo.getDDCompanyFromCompany(regionId, siteId);
         return siteData.stream().map(CompanyDDResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RoleDDResponse> getDDRolesFromEmployee(Integer regionId, Integer siteId, Integer companyId) {
+        List<Object[]> siteData = employeeRepo.getDDRolesFromCompany(regionId, siteId,companyId);
+        return siteData.stream().map(RoleDDResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DepartmentDDResponse> getDDDeptFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId) {
+        List<Object[]> siteData = employeeRepo.getDDDeptFromCompany(regionId, siteId,companyId, roleId);
+        return siteData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DesignationDDResponse> getDDDesigFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId, Integer deptId) {
+        List<Object[]> siteData = employeeRepo.getDDDesigFromCompany(regionId, siteId,companyId, roleId, deptId);
+        return siteData.stream().map(DesignationDDResponse::new).collect(Collectors.toList());
     }
 
     private List<KPPResponse> convertEntityListToResponse(List<KeyPerfParamEntity> keyPerfParamEntities) {

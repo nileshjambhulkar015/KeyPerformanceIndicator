@@ -11,13 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DesignationDDResponse {
 
-    private String desigName;
     private Integer desigId;
+    private String desigName;
     private String statusCd;
 
     public DesignationDDResponse(Object[] objects){
-        this.desigName=String.valueOf(objects[0]);
-        this.desigId=Integer.parseInt(String.valueOf(objects[1]));
+
+        this.desigId=Integer.parseInt(String.valueOf(objects[0]));
+        this.desigName=String.valueOf(objects[1]);
         this.statusCd=String.valueOf(objects[2]);
     }
 }

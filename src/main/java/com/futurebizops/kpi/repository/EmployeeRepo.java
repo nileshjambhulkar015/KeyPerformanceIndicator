@@ -47,4 +47,13 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
     @Query(value = DropDownQueryConstants.DD_COMPANY_FROM_EMPLOYEE_QUERY, nativeQuery = true)
     List<Object[]> getDDCompanyFromCompany(@Param("regionId") Integer regionId ,@Param("siteId") Integer siteId );
+
+    @Query(value = DropDownQueryConstants.DD_ROLES_FROM_EMPLOYEE_QUERY, nativeQuery = true)
+    List<Object[]> getDDRolesFromCompany(@Param("regionId") Integer regionId ,@Param("siteId") Integer siteId, @Param("companyId") Integer companyId );
+
+    @Query(value = DropDownQueryConstants.DD_DEPT_FROM_EMPLOYEE_QUERY, nativeQuery = true)
+    List<Object[]> getDDDeptFromCompany(@Param("regionId") Integer regionId ,@Param("siteId") Integer siteId, @Param("companyId") Integer companyId, @Param("roleId") Integer roleId );
+
+    @Query(value = DropDownQueryConstants.DD_DESIG_FROM_EMPLOYEE_QUERY, nativeQuery = true)
+    List<Object[]> getDDDesigFromCompany(@Param("regionId") Integer regionId ,@Param("siteId") Integer siteId, @Param("companyId") Integer companyId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId );
 }

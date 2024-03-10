@@ -6,7 +6,10 @@ import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
+import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,22 +61,51 @@ public class EmployeeKppController {
 
     //for region save
     @GetMapping(value = "/dd-regions-employee")
-    public ResponseEntity<List<RegionDDResponse>> getDDRegionFromCompany() {
-        List<RegionDDResponse>   response = employeeKeyPerfParamService.getDDRegionFromCompany();
+    public ResponseEntity<List<RegionDDResponse>> getDDRegionFromEmployee() {
+        List<RegionDDResponse>   response = employeeKeyPerfParamService.getDDRegionFromEmployee();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/dd-sites-employee")
-    public ResponseEntity<List<SiteDDResponse>> getDDSitesFromComany(@RequestParam(required = false) Integer regionId) {
-        List<SiteDDResponse>   response = employeeKeyPerfParamService.getDDSitesFromComany(regionId);
+    public ResponseEntity<List<SiteDDResponse>> getDDSitesFromEmployee(@RequestParam(required = false) Integer regionId) {
+        List<SiteDDResponse>   response = employeeKeyPerfParamService.getDDSitesFromEmployee(regionId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/dd-company-employee")
-    public ResponseEntity<List<CompanyDDResponse>> getDDCompanyFromComany(@RequestParam(required = false) Integer regionId,
+    public ResponseEntity<List<CompanyDDResponse>> getDDCompanyFromEmployee(@RequestParam(required = false) Integer regionId,
                                                                           @RequestParam(required = false) Integer siteId) {
-        List<CompanyDDResponse>  response = employeeKeyPerfParamService.getDDCompanyFromComany(regionId, siteId);
+        List<CompanyDDResponse>  response = employeeKeyPerfParamService.getDDCompanyFromEmployee(regionId, siteId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/dd-roles-employee")
+    public ResponseEntity<List<RoleDDResponse>> getDDRolesFromEmployee(@RequestParam(required = false) Integer regionId,
+                                                                       @RequestParam(required = false) Integer siteId,
+                                                                     @RequestParam(required = false) Integer companyId) {
+        List<RoleDDResponse>  response = employeeKeyPerfParamService.getDDRolesFromEmployee(regionId, siteId, companyId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/dd-dept-employee")
+    public ResponseEntity<List<DepartmentDDResponse>> getDDDeptFromEmployee(@RequestParam(required = false) Integer regionId,
+                                                                     @RequestParam(required = false) Integer siteId,
+                                                                     @RequestParam(required = false) Integer companyId,
+                                                                      @RequestParam(required = false) Integer roleId) {
+        List<DepartmentDDResponse>  response = employeeKeyPerfParamService.getDDDeptFromEmployee(regionId, siteId, companyId, roleId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/dd-desig-employee")
+    public ResponseEntity<List<DesignationDDResponse>> getDDDeptFromEmployee(@RequestParam(required = false) Integer regionId,
+                                                                             @RequestParam(required = false) Integer siteId,
+                                                                             @RequestParam(required = false) Integer companyId,
+                                                                             @RequestParam(required = false) Integer roleId,
+                                                                             @RequestParam(required = false) Integer deptId) {
+        List<DesignationDDResponse>  response = employeeKeyPerfParamService.getDDDesigFromEmployee(regionId, siteId, companyId, roleId, deptId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 }

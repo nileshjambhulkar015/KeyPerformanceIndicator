@@ -641,10 +641,6 @@ create table company_master(
     );
 
     /*
-        insert into region(region_id,region_name, status_cd) values(1,'India','A');
-
-               insert into site (site_id, region_id, site_name,status_cd) values(1,1,'Pune','A');
-
                insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(1,'General Manager','Added GM role','A','admin');
                insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(2,'Head Of Department','Added HOD role','A','admin');
                insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(3,'Employee','Added employee role','A','admin');

@@ -4,12 +4,14 @@ import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.GMUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
-import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
+import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 
 import java.util.List;
@@ -32,9 +34,16 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse generateEmployeeKppReport(Integer empId, String statusCd);
 
-    public List<RegionDDResponse> getDDRegionFromCompany();
+    public List<RegionDDResponse> getDDRegionFromEmployee();
 
-    public List<SiteDDResponse> getDDSitesFromComany(Integer regionId);
+    public List<SiteDDResponse> getDDSitesFromEmployee(Integer regionId);
 
-    public List<CompanyDDResponse> getDDCompanyFromComany(Integer regionId, Integer siteId);
+    public List<CompanyDDResponse> getDDCompanyFromEmployee(Integer regionId, Integer siteId);
+
+    public List<RoleDDResponse> getDDRolesFromEmployee(Integer regionId, Integer siteId, Integer companyId);
+
+    public List<DepartmentDDResponse> getDDDeptFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId);
+
+    public List<DesignationDDResponse> getDDDesigFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId, Integer deptId);
+
 }
