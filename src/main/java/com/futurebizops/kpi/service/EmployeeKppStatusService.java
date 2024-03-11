@@ -2,8 +2,8 @@ package com.futurebizops.kpi.service;
 
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
 
-import java.util.List;
-
 public interface EmployeeKppStatusService {
-    public EmpKppStatusResponse getEmployeeKppStatus(Integer empId);
+    public EmpKppStatusResponse getInPrgressEmployeeKppStatus(Integer empId);
+
+    public EmpKppStatusResponse getCompletedEmployeeKppStatus(Integer empId, String ekppMonth);
 }

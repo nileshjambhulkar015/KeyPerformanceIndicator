@@ -26,7 +26,7 @@ public interface EmployeeService {
 
     public KPIResponse getAllEmployeeKPPStatus(Integer reportingEmployee,Integer gmEmpId,Integer empId,String empEId,Integer roleId, Integer deptId,Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable);
 
-    public KPIResponse getAllEmployeeKPPStatusReport(String fromDate, String toDate, Integer reportingEmployee,Integer gmEmpId,Integer empId,String empEId,Integer roleId, Integer deptId,Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable);
+
 
 
     public KPIResponse processExcelFile(MultipartFile file);

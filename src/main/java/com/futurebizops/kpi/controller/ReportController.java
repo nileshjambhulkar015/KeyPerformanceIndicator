@@ -19,9 +19,14 @@ public class ReportController {
 @Autowired
 ReportService reportService;
 
-    @GetMapping("/employee-kpp-status")
+    @GetMapping("/in-progress-employee-kpp-status")
     public void exportToExcelEmployee(HttpServletResponse httpServletResponse, @RequestParam(required = false) Integer empId)  {
-        reportService.getEmployeeKppStatusReport(httpServletResponse, empId);
+        reportService.getInProgressEmployeeKppStatusReport(httpServletResponse, empId);
+    }
+
+    @GetMapping("/completed-employee-kpp-status")
+    public void exportCompletedToExcelEmployee(HttpServletResponse httpServletResponse, @RequestParam(required = false) Integer empId, @RequestParam(required = false) String ekppMonth)  {
+        reportService.getCompletedEmployeeKppStatusReport(httpServletResponse, empId,ekppMonth);
     }
 
     @GetMapping("/hod-kpp-status")
