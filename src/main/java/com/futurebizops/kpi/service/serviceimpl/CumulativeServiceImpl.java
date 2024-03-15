@@ -169,16 +169,14 @@ List<HoDCumulativeResponse> hoDCumulativeResponses = new ArrayList<>();
             for(TotalCumulativeHoD totalCumulativeHoD : cumulativeHoDResponse.getTotalCumulativeHoDS()){
                 totalKppTotal += totalCumulativeHoD.getTotalWeight();
             }
-
             avgHoDKppRating = totalKppTotal / cumulativeHoDResponse.getTotalCumulativeHoDS().size();
+
+
+            cumulativeHoDResponse.setTotalHodKppRatings(totalKppTotal);
+            cumulativeHoDResponse.setTotalMonths(cumulativeHoDResponse.getTotalCumulativeHoDS().size());
+            cumulativeHoDResponse.setAvgTotalHodKppRatings(avgHoDKppRating);
+            cumulativeHoDResponse.setTotalCumulativeHoDS(null);
         }
-
-            for(HoDCumulativeResponse cumulativeHoDResponse : hoDCumulativeResponses){
-                cumulativeHoDResponse.setTotalCumulativeHoDS(null);
-                cumulativeHoDResponse.setTotalHodKppRatings(totalKppTotal);
-                cumulativeHoDResponse.setAvgTotalHodKppRatings(avgHoDKppRating);
-            }
-
             kpiResponse.setResponseMessage("Total Kpp fetched");
             kpiResponse.setResponseData(hoDCumulativeResponses);
         }

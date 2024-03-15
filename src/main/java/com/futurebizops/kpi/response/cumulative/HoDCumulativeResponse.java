@@ -19,5 +19,6 @@ public class HoDCumulativeResponse {
     List<TotalCumulativeHoD> totalCumulativeHoDS;
 
     private Double totalHodKppRatings;
+    private Integer totalMonths;
     private Double avgTotalHodKppRatings;
 }

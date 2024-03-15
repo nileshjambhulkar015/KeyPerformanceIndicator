@@ -11,7 +11,7 @@ public class CumulativeHoDResponse {
     public CumulativeHoDResponse(Object[] objects){
 
         hodCumulativeData.setEmpId(Integer.parseInt(String.valueOf(objects[1])));
-        hodCumulativeData.setEmpName(String.valueOf(objects[2]) + String.valueOf(objects[3]) + String.valueOf(objects[4]));
+        hodCumulativeData.setEmpName(String.valueOf(objects[2]) +" "+ String.valueOf(objects[3]) + " "+String.valueOf(objects[4]));
         hodCumulativeData.setEmpEId(String.valueOf(objects[5]));
         hodCumulativeData.setRoleId(Integer.parseInt(String.valueOf(objects[6])));
         hodCumulativeData.setRoleName(String.valueOf(objects[7]));
