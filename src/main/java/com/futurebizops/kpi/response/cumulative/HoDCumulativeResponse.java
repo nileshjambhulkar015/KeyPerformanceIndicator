@@ -20,5 +20,5 @@ public class HoDCumulativeResponse {
 
     private Double totalHodKppRatings;
     private Integer totalMonths;
-    private Double avgTotalHodKppRatings;
+    private String avgTotalHodKppRatings;
 }

@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,6 +44,8 @@ public class CumulativeServiceImpl implements CumulativeService {
     @Autowired
     private KeyPerfParameterRepo keyPerfParameterRepo;
 
+    //shpw only 2 decimal value
+    private static final DecimalFormat decfor = new DecimalFormat("0.00");
 
     @Override
     public KPIResponse getAllEmployeeKPPStatusReport(String fromDate, String toDate, Integer reportingEmployee, Integer gmEmpId, Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable) {
@@ -138,47 +141,54 @@ public class CumulativeServiceImpl implements CumulativeService {
             List<Object[]> employeeDetail = employeeKppMasterRepo.cumulativeEmpForHoDAndGM(empId, startDate, endDate);
             List<CumulativeHoDResponse> employeeKppStatusDtos = employeeDetail.stream().map(CumulativeHoDResponse::new).collect(Collectors.toList());
 
+           if(employeeKppStatusDtos.size()>0) {
+               Map<HODCumulativeData, List<TotalCumulativeHoD>> hodCumulativeDataListMap =
+                       employeeKppStatusDtos.stream().collect(Collectors.groupingBy(CumulativeHoDResponse::getHodCumulativeData, Collectors.mapping(CumulativeHoDResponse::getTotalCumulativeHoD, Collectors.toList())));
+               List<HoDCumulativeResponse> hoDCumulativeResponses = new ArrayList<>();
 
-            Map<HODCumulativeData, List<TotalCumulativeHoD>> hodCumulativeDataListMap =
-                    employeeKppStatusDtos.stream().collect(Collectors.groupingBy(CumulativeHoDResponse::getHodCumulativeData, Collectors.mapping(CumulativeHoDResponse::getTotalCumulativeHoD, Collectors.toList())));
-List<HoDCumulativeResponse> hoDCumulativeResponses = new ArrayList<>();
+               HoDCumulativeResponse hoDCumulativeResponse;
+               for (Map.Entry<HODCumulativeData, List<TotalCumulativeHoD>> statusResponse : hodCumulativeDataListMap.entrySet()) {
+                   hoDCumulativeResponse = new HoDCumulativeResponse();
+                   hoDCumulativeResponse.setEmpId(statusResponse.getKey().getEmpId());
+                   hoDCumulativeResponse.setEmpName(statusResponse.getKey().getEmpName());
+                   hoDCumulativeResponse.setEmpEId(statusResponse.getKey().getEmpEId());
+                   hoDCumulativeResponse.setRoleId(statusResponse.getKey().getRoleId());
+                   hoDCumulativeResponse.setRoleName(statusResponse.getKey().getRoleName());
+                   hoDCumulativeResponse.setDeptId(statusResponse.getKey().getDeptId());
+                   hoDCumulativeResponse.setDeptName(statusResponse.getKey().getDeptName());
+                   hoDCumulativeResponse.setDesigId(statusResponse.getKey().getDesigId());
+                   hoDCumulativeResponse.setDesigName(statusResponse.getKey().getDesigName());
 
-            HoDCumulativeResponse hoDCumulativeResponse;
-        for(Map.Entry<HODCumulativeData, List<TotalCumulativeHoD>> statusResponse : hodCumulativeDataListMap.entrySet()){
-            hoDCumulativeResponse = new HoDCumulativeResponse();
-            hoDCumulativeResponse.setEmpId(statusResponse.getKey().getEmpId());
-            hoDCumulativeResponse.setEmpName(statusResponse.getKey().getEmpName());
-            hoDCumulativeResponse.setEmpEId(statusResponse.getKey().getEmpEId());
-            hoDCumulativeResponse.setRoleId(statusResponse.getKey().getRoleId());
-            hoDCumulativeResponse.setRoleName(statusResponse.getKey().getRoleName());
-            hoDCumulativeResponse.setDeptId(statusResponse.getKey().getDeptId());
-            hoDCumulativeResponse.setDeptName(statusResponse.getKey().getDeptName());
-            hoDCumulativeResponse.setDesigId(statusResponse.getKey().getDesigId());
-            hoDCumulativeResponse.setDesigName(statusResponse.getKey().getDesigName());
+                   hoDCumulativeResponse.setTotalCumulativeHoDS(statusResponse.getValue());
+                   hoDCumulativeResponses.add(hoDCumulativeResponse);
 
-            hoDCumulativeResponse.setTotalCumulativeHoDS(statusResponse.getValue());
-            hoDCumulativeResponses.add(hoDCumulativeResponse);
+               }
+               System.out.println(hoDCumulativeResponses);
 
-        }
-            System.out.println(hoDCumulativeResponses);
+               Double totalKppTotal = 0.0;
+               Double avgHoDKppRating = 0.0;
+               for (HoDCumulativeResponse cumulativeHoDResponse : hoDCumulativeResponses) {
 
-        Double totalKppTotal=0.0;
-        Double avgHoDKppRating = 0.0;
-        for(HoDCumulativeResponse cumulativeHoDResponse : hoDCumulativeResponses){
-
-            for(TotalCumulativeHoD totalCumulativeHoD : cumulativeHoDResponse.getTotalCumulativeHoDS()){
-                totalKppTotal += totalCumulativeHoD.getTotalWeight();
-            }
-            avgHoDKppRating = totalKppTotal / cumulativeHoDResponse.getTotalCumulativeHoDS().size();
+                   for (TotalCumulativeHoD totalCumulativeHoD : cumulativeHoDResponse.getTotalCumulativeHoDS()) {
+                       totalKppTotal += totalCumulativeHoD.getTotalWeight();
+                   }
+                   avgHoDKppRating = totalKppTotal / cumulativeHoDResponse.getTotalCumulativeHoDS().size();
 
 
-            cumulativeHoDResponse.setTotalHodKppRatings(totalKppTotal);
-            cumulativeHoDResponse.setTotalMonths(cumulativeHoDResponse.getTotalCumulativeHoDS().size());
-            cumulativeHoDResponse.setAvgTotalHodKppRatings(avgHoDKppRating);
-            cumulativeHoDResponse.setTotalCumulativeHoDS(null);
-        }
-            kpiResponse.setResponseMessage("Total Kpp fetched");
-            kpiResponse.setResponseData(hoDCumulativeResponses);
+                   cumulativeHoDResponse.setTotalHodKppRatings(totalKppTotal);
+                   cumulativeHoDResponse.setTotalMonths(cumulativeHoDResponse.getTotalCumulativeHoDS().size());
+                   cumulativeHoDResponse.setAvgTotalHodKppRatings(decfor.format(avgHoDKppRating));
+                   cumulativeHoDResponse.setTotalCumulativeHoDS(null);
+               }
+               kpiResponse.setResponseMessage("Total Kpp fetched");
+               kpiResponse.setResponseData(hoDCumulativeResponses);
+               kpiResponse.setSuccess(true);
+           }
+           else {
+               kpiResponse.setResponseMessage("Kpp is not approved yet");
+               kpiResponse.setResponseData(null);
+               kpiResponse.setSuccess(true);
+           }
         }
         catch (Exception ex){
 
