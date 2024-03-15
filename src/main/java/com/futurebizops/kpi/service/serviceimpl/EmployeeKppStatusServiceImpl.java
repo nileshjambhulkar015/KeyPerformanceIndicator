@@ -89,7 +89,7 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
     @Override
     public EmpKppStatusResponse getCompletedEmployeeKppStatus(Integer empId, String ekppMonth) {
 
-        String ekkStatusMonth = StringUtils.isNotEmpty(ekppMonth) ? DateTimeUtils.convertStringToInstant(ekppMonth).toString() : Instant.now().toString();
+        String ekkStatusMonth = StringUtils.isNotEmpty(ekppMonth) ? DateTimeUtils.addOneDayToInstant(ekppMonth).toString() : Instant.now().toString();
         List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
         EmpKppStatusResponse statusResponse=null;
         List<Object[]> employeeKppData = keyPerfParameterRepo.getCompletedEmployeeKPPStatus(empId, ekkStatusMonth);

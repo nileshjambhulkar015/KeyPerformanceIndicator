@@ -55,50 +55,18 @@ public class CumulativeController {
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> getEmployeeKppStatus(  @RequestParam(required = false) String fromDate,
                                                                        @RequestParam(required = false) String toDate,
-                                                                       @RequestParam(required = false) Integer reportingEmpId,
-                                                                       @RequestParam(required = false) Integer gmEmployeedId,
-                                                                       @RequestParam(required = false) Integer empId,
-                                                                       @RequestParam(required = false) String empEId,
-                                                                       @RequestParam(required = false) Integer roleId,
-                                                                       @RequestParam(required = false) Integer deptId,
-                                                                       @RequestParam(required = false) Integer desigId,
-                                                                       @RequestParam(required = false) String empFirstName,
-                                                                       @RequestParam(required = false) String empMiddleName,
-                                                                       @RequestParam(required = false) String empLastName,
-                                                                       @RequestParam(required = false) String empMobileNo,
-                                                                       @RequestParam(required = false) String emailId,
-                                                                       @RequestParam(required = false) String statusCd,
-                                                                       @RequestParam(required = false) String empKppStatus,
-                                                                       @RequestParam(required = false) String hodKppStatus,
-                                                                       @RequestParam(required = false) String gmKppStatus,
-                                                                       @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate, reportingEmpId, gmEmployeedId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, pageable);
+                                                                       @RequestParam(required = false) Integer empId) {
+        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate, empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
     @GetMapping("/hod-cummulatve")
-    @PageableAsQueryParam
+   // @PageableAsQueryParam
     public ResponseEntity<KPIResponse> getHODKppStatusCummulative(  @RequestParam(required = false) String fromDate,
                                                               @RequestParam(required = false) String toDate,
-                                                              @RequestParam(required = false) Integer reportingEmpId,
-                                                              @RequestParam(required = false) Integer gmEmployeedId,
-                                                              @RequestParam(required = false) Integer empId,
-                                                              @RequestParam(required = false) String empEId,
-                                                              @RequestParam(required = false) Integer roleId,
-                                                              @RequestParam(required = false) Integer deptId,
-                                                              @RequestParam(required = false) Integer desigId,
-                                                              @RequestParam(required = false) String empFirstName,
-                                                              @RequestParam(required = false) String empMiddleName,
-                                                              @RequestParam(required = false) String empLastName,
-                                                              @RequestParam(required = false) String empMobileNo,
-                                                              @RequestParam(required = false) String emailId,
-                                                              @RequestParam(required = false) String statusCd,
-                                                              @RequestParam(required = false) String empKppStatus,
-                                                              @RequestParam(required = false) String hodKppStatus,
-                                                              @RequestParam(required = false) String gmKppStatus,
-                                                              @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate, reportingEmpId, gmEmployeedId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, pageable);
+                                                              @RequestParam(required = false) Integer empId) {
+        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate,  empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
