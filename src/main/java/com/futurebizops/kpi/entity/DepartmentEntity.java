@@ -26,8 +26,6 @@ public class DepartmentEntity extends AuditEnabledEntity {
     @Column(name = "dept_id")
     private Integer deptId;
 
-    @Column(name = "role_id")
-    private Integer roleId;
     @Column(name = "dept_name")
     private String deptName;
 

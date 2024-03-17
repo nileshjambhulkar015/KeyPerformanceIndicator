@@ -6,24 +6,24 @@ public final class SQLQueryConstants {
     }
 
     //for department
-    public static final String DEPARTMENT_QUERY = "select dept.dept_id, dept.dept_name, role.role_id, role.role_name,  dept.remark, dept.status_cd from department dept, roles role where role.role_id = dept.role_id and dept.status_cd = 'A' and dept.role_id = coalesce(:roleId, dept.role_id) and dept.dept_id = coalesce(:deptId, dept.dept_id) and dept.dept_name LIKE CONCAT('%',:deptName,'%') and dept.status_cd =coalesce (:statusCd, dept.status_cd) order by  :sortName asc limit :pageSize offset :pageOffset";
-    public static final String DEPARTMENT_COUNT_UERY = "select count(*) from department dept, roles role where role.role_id = dept.role_id and dept.status_cd = 'A' and dept.role_id = coalesce(:roleId, dept.role_id) and dept.dept_id = coalesce(:deptId, dept.dept_id) and dept.dept_name = coalesce(:deptName, dept.dept_name) and dept.status_cd =coalesce (:statusCd, dept.status_cd)";
+    public static final String DEPARTMENT_QUERY = "select dept.dept_id, dept.dept_name,  dept.remark, dept.status_cd from department dept where dept.status_cd = 'A'  and dept.dept_id = coalesce(:deptId, dept.dept_id) and dept.dept_name LIKE CONCAT('%',:deptName,'%') and dept.status_cd =coalesce (:statusCd, dept.status_cd) order by  :sortName asc limit :pageSize offset :pageOffset";
+    public static final String DEPARTMENT_COUNT_UERY = "select count(*) from department dept, roles role where role.role_id = dept.role_id and dept.status_cd = 'A' and dept.dept_id = coalesce(:deptId, dept.dept_id) and dept.dept_name = coalesce(:deptName, dept.dept_name) and dept.status_cd =coalesce (:statusCd, dept.status_cd)";
 
-    public static final String DEPARTMENT_BY_ID_QUERY = "select role.role_id, role.role_name, dept.dept_id, dept.dept_name, dept.remark, dept.status_cd from department dept, roles role where role.role_id = dept.role_id and dept.status_cd = 'A' and dept.dept_id = coalesce(:deptId, dept.dept_id)";
+    public static final String DEPARTMENT_BY_ID_QUERY = "select dept.dept_id, dept.dept_name, dept.remark, dept.status_cd from department dept, roles role where dept.status_cd = 'A' and dept.dept_id = coalesce(:deptId, dept.dept_id)";
 
     public static final String DEPT_IN_DESIGNATION_QUERY = "select distinct(dept.dept_id) ,dept.dept_name, dept.remark, dept.status_cd from designation desig, department dept where dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.dept_id = coalesce(:deptId, desig.dept_id) and desig.status_cd ='A'";
 
     //get departnment by role id for designation
-    public static final String DEPT_BY_ROLE_ID = "select dept.dept_id, dept.dept_name,role.role_id, role.role_name,  dept.remark, dept.status_cd from department dept, roles role where role.role_id = dept.role_id and dept.status_cd = 'A' and dept.role_id = coalesce(:roleId, dept.role_id) order by dept.dept_name";
+    public static final String DEPT_BY_ROLE_ID = "select dept.dept_id, dept.dept_name,dept.remark, dept.status_cd from department dept, roles role where dept.status_cd = 'A' order by dept.dept_name";
 
-    public static final String DEPT_SUGGEST = "select role.role_id, role.role_name, dept.dept_id, dept.dept_name, dept.remark, dept.status_cd from department dept, roles role where role.role_id = dept.role_id and dept.status_cd = 'A' and dept.dept_name like :deptName % order by dept.dept_name";
+    public static final String DEPT_SUGGEST = "select dept.dept_id, dept.dept_name, dept.remark, dept.status_cd from department dept, roles role where role.role_id = dept.role_id and dept.status_cd = 'A' and dept.dept_name like :deptName % order by dept.dept_name";
 
     // get department by role id from designation for kpp
     public static final String DEPT_BY_ROLE_ID_FROM_DESIG = "select	distinct(dept.dept_id),	dept.dept_name,role.role_id,	role.role_name,		dept.remark,	dept.status_cd from	department dept,	roles role,	designation desig where	role.role_id = desig.role_id	and desig.dept_id =dept.dept_id 	and dept.status_cd = 'A'	and desig.role_id = coalesce(:roleId,	desig.role_id) order by	dept.dept_name";
 
     //for designation
 
-    public static final String DESIGNATION_QUERY = "select desig.desig_id , role.role_id , role.role_name, dept.dept_id ,dept.dept_name,  desig.desig_name, desig.remark,desig.status_cd  from designation desig, department dept, roles role where role.role_id=desig.role_id and  dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.role_id = coalesce(:roleId, desig.role_id) and desig.dept_id = coalesce(:deptId, desig.dept_id) and desig.desig_name LIKE CONCAT('%',:desigName,'%') and desig.status_cd =coalesce (:statusCd, desig.status_cd) order by :sortName asc limit :pageSize offset :pageOffset";
+    public static final String DESIGNATION_QUERY = "select desig.desig_id ,  dept.dept_id ,dept.dept_name,  desig.desig_name, desig.remark,desig.status_cd  from designation desig, department dept, roles role where role.role_id=desig.role_id and  dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.role_id = coalesce(:roleId, desig.role_id) and desig.dept_id = coalesce(:deptId, desig.dept_id) and desig.desig_name LIKE CONCAT('%',:desigName,'%') and desig.status_cd =coalesce (:statusCd, desig.status_cd) order by :sortName asc limit :pageSize offset :pageOffset";
 
     public static final String ROLE_IN_DEPARTMENT_QUERY = "select distinct(dept.role_id),role.role_name,role.remark,role.status_cd from	roles role,	department dept where dept.role_id = role.role_id and dept.status_cd = 'A' and role.status_cd = 'A'";
     public static final String ROLE_IN_DESIGNATION_QUERY = "select	distinct(desig.role_id) ,role.role_name,	role.remark,role.status_cd from	roles role,	designation desig where	desig.role_id = role.role_id	and desig.status_cd = 'A' and role.status_cd = 'A'";

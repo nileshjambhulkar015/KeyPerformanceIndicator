@@ -436,7 +436,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     EmployeeCreateRequest employeeCreateRequest = new EmployeeCreateRequest();
                     Integer roleId=getRoleId(request.getRoleName().trim());
                     employeeCreateRequest.setRoleId(roleId);
-                    Integer deptId=getDeptId(request.getDeptName().trim(),roleId);
+                    Integer deptId=getDeptId(request.getDeptName().trim());
                     employeeCreateRequest.setDeptId(deptId);
                     Integer desigId=getDesigId(request.getDesigName().trim(),deptId,roleId);
                     employeeCreateRequest.setDesigId(desigId);
@@ -498,8 +498,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         return roleId;
     }
 
-    private Integer getDeptId(String deptName, Integer roleId) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(deptName, roleId);
+    private Integer getDeptId(String deptName) {
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
         Integer deptId = -1;
         if (optionalDepartmentEntity.isPresent()) {
             deptId = optionalDepartmentEntity.get().getDeptId();
@@ -511,7 +511,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private Integer getDesigId(String desigName, Integer deptId, Integer roleId) {
-        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptIdAndRoleId(desigName, deptId, roleId);
+        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptId(desigName, deptId);
         Integer desigId=-1;
         if (optionalDesignationEntity.isPresent()) {
             desigId=  optionalDesignationEntity.get().getDesigId();

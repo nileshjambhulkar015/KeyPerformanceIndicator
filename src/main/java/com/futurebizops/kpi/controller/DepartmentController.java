@@ -49,12 +49,12 @@ public class DepartmentController {
 
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> findDepartmentDetails(@RequestParam(required = false) Integer roleId,
+    public ResponseEntity<KPIResponse> findDepartmentDetails(
                                                              @RequestParam(required = false) Integer deptId,
                                                              @RequestParam(required = false) String deptName,
                                                              @RequestParam(required = false) String statusCd,
                                                              @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = departmentService.findDepartmentDetails(roleId, deptId, deptName, statusCd, pageable);
+        KPIResponse response = departmentService.findDepartmentDetails(deptId, deptName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -69,23 +69,6 @@ public class DepartmentController {
     @GetMapping(value = "/by-dept-id")
     public ResponseEntity<Object> findAllDepartmentById(@RequestParam(required = false) Integer deptId) {
         return new ResponseEntity<>(departmentService.findAllDepartmentById(deptId), HttpStatus.OK);
-    }
-
-    //get All department base on role Id which is present in department table for designation
-    @GetMapping(value = "/dept/{roleId}")
-    public ResponseEntity<Object> findAllDepartmentByRoleId(@PathVariable Integer roleId) {
-        return new ResponseEntity<>(departmentService.getAllDepartmentByRoleId(roleId), HttpStatus.OK);
-    }
-
-    //get All department base on role Id which is present in department table for designation
-    @GetMapping(value = "/desig/{roleId}")
-    public ResponseEntity<Object> findAllDepartmentFromDesigByRoleId(@PathVariable Integer roleId) {
-        return new ResponseEntity<>(departmentService.findAllDepartmentFromDesigByRoleId(roleId), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/suggest")
-    public ResponseEntity<Object> findAllDepartmentById(@RequestParam(required = false) String deptName) {
-        return new ResponseEntity<>(departmentService.getAllDepartments(deptName), HttpStatus.OK);
     }
 
     //upload excel

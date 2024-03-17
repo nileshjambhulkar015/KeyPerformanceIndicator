@@ -29,10 +29,10 @@ public interface DesignationRepo extends JpaRepository<DesignationEntity, Intege
     public Optional<DesignationEntity> findByDeptIdAndDesigNameEqualsIgnoreCase(Integer deptId, String desigName);
 
     @Query(value = SQLQueryConstants.DESIGNATION_QUERY, nativeQuery = true)
-    List<Object[]> getDesignationDetail(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigName") String desigName, @Param("statusCd") String statusCd, @Param("sortName") String sortName,  @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getDesignationDetail( @Param("deptId") Integer deptId, @Param("desigName") String desigName, @Param("statusCd") String statusCd, @Param("sortName") String sortName,  @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.DESIGNATION_COUNT_QUERY, nativeQuery = true)
-    Integer getDesignationCount(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigName") String desigName, @Param("statusCd") String statusCd);
+    Integer getDesignationCount(@Param("deptId") Integer deptId, @Param("desigName") String desigName, @Param("statusCd") String statusCd);
 
     @Query(value = SQLQueryConstants.DESIGNATION_BY_DESIG_ID_QUERY, nativeQuery = true)
     List<Object[]> getDesignationByDesigId(@Param("desigId") Integer desigId);
@@ -45,11 +45,11 @@ public interface DesignationRepo extends JpaRepository<DesignationEntity, Intege
 
     //only for desig id and desig name from desig table
     @Query(value = SQLQueryConstants.DESIGNATION_BY_DEPT_ID_QUERY, nativeQuery = true)
-    List<Object[]> getAllDesigByDeptId(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId);
+    List<Object[]> getAllDesigByDeptId(@Param("deptId") Integer deptId);
 
     //for designation upload excel
     public Optional<DesignationEntity> findByDesigNameEqualsIgnoreCase(String desigName);
 
-    public Optional<DesignationEntity> findByDesigNameEqualsIgnoreCaseAndDeptIdAndRoleId(String desigName,Integer deptId,Integer roleId);
+    public Optional<DesignationEntity> findByDesigNameEqualsIgnoreCaseAndDeptId(String desigName,Integer deptId);
 }
 

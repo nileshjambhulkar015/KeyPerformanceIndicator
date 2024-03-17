@@ -24,9 +24,6 @@ public class DepartmentAudit extends AuditEnabledEntity {
     @Column(name = "dept_aud_id")
     private Integer deptAuditId;
 
-    @Column(name = "role_id")
-    private Integer roleId;
-
     @Column(name = "dept_id")
     private Integer deptId;
 
@@ -41,7 +38,6 @@ public class DepartmentAudit extends AuditEnabledEntity {
 
     public DepartmentAudit(DepartmentEntity departmentEntity) {
         super(departmentEntity.getCreatedDate(), departmentEntity.getCreatedUserId(), departmentEntity.getUpdatedDate(), departmentEntity.getUpdatedUserId());
-        this.roleId = departmentEntity.getRoleId();
         this.deptId = departmentEntity.getDeptId();
         this.deptName = departmentEntity.getDeptName();
         this.remark = departmentEntity.getRemark();

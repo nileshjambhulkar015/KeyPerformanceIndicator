@@ -25,8 +25,6 @@ public class DesignationEntity extends AuditEnabledEntity {
     @Column(name = "desig_id")
     private Integer desigId;
 
-    @Column(name = "role_id")
-    private Integer roleId;
 
     @Column(name = "dept_id")
     private Integer deptId;

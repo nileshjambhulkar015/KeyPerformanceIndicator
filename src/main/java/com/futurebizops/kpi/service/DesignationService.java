@@ -18,13 +18,13 @@ public interface DesignationService {
     public KPIResponse updateDesignation(DesignationUpdateRequest departmentUpdateRequest);
 
 
-    public KPIResponse findDesignationDetails( Integer roleId, Integer deptId, String desigName, String statusCd, Pageable pageable);
+    public KPIResponse findDesignationDetails(Integer deptId, String desigName, String statusCd, Pageable pageable);
 
     public DesignationReponse findDesignationById(Integer desigId);
 
 
 
-    public List<DesignationReponse> findAllDesignationByDeptId(Integer roleId, Integer deptId);
+    public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId);
 
 
     public List<DepartmentReponse> getAllDepartmentFromDesig(Integer deptId);

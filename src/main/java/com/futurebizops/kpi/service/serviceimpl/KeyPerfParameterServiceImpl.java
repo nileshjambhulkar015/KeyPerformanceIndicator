@@ -232,7 +232,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 keyPerfParamCreateRequest.setRoleId(roleId);
                 Integer deptId= getDeptId(request.getDeptName(), keyPerfParamCreateRequest.getRoleId());
                 keyPerfParamCreateRequest.setDeptId(deptId);
-                Integer desigId = getDesigId(request.getDesigName(), keyPerfParamCreateRequest.getDeptId(), keyPerfParamCreateRequest.getRoleId());
+                Integer desigId = getDesigId(request.getDesigName(), keyPerfParamCreateRequest.getDeptId());
                 keyPerfParamCreateRequest.setDesigId(desigId);
                 keyPerfParamCreateRequest.setKppObjective(request.getKppObjective());
                 keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
@@ -286,7 +286,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
     private Integer getDeptId(String deptName, Integer roleId) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(deptName, roleId);
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
         Integer deptId = -1;
         if (optionalDepartmentEntity.isPresent()) {
             deptId = optionalDepartmentEntity.get().getDeptId();
@@ -298,8 +298,8 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
 
-    private Integer getDesigId(String desigName, Integer deptId, Integer roleId) {
-        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptIdAndRoleId(desigName, deptId, roleId);
+    private Integer getDesigId(String desigName, Integer deptId) {
+        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptId(desigName, deptId);
         Integer desigId=-1;
         if (optionalDesignationEntity.isPresent()) {
             desigId=  optionalDesignationEntity.get().getDesigId();

@@ -99,7 +99,7 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
-    public KPIResponse findDesignationDetails(Integer roleId, Integer deptId, String desigName, String statusCd, Pageable requestPageable) {
+    public KPIResponse findDesignationDetails(Integer deptId, String desigName, String statusCd, Pageable requestPageable) {
 
         String sortName = null;
         //String sortDirection = null;
@@ -112,8 +112,8 @@ public class DesignationServiceImp implements DesignationService {
             // sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = designationRepo.getDesignationCount(roleId, deptId, desigName, statusCd);
-        List<Object[]> designationData = designationRepo.getDesignationDetail(roleId, deptId, desigName, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = designationRepo.getDesignationCount(deptId, desigName, statusCd);
+        List<Object[]> designationData = designationRepo.getDesignationDetail(deptId, desigName, statusCd, sortName, pageSize, pageOffset);
 
         List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
 
@@ -136,9 +136,9 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
-    public List<DesignationReponse> findAllDesignationByDeptId(Integer roleId, Integer deptId) {
+    public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId) {
 
-        List<Object[]> designationData = designationRepo.getAllDesigByDeptId(roleId,deptId);
+        List<Object[]> designationData = designationRepo.getAllDesigByDeptId(deptId);
         return designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
     }
 
@@ -201,7 +201,7 @@ public class DesignationServiceImp implements DesignationService {
                 currentExcelRow++;
                 DesignationCreateRequest designationCreateRequest = new DesignationCreateRequest();
 
-                designationCreateRequest.setRoleId(request.getRoleId());
+
                 designationCreateRequest.setDeptId(request.getDeptId());
                 designationCreateRequest.setDesigName(request.getDesigName());
                 designationCreateRequest.setRemark(request.getRemark());
@@ -239,7 +239,7 @@ public class DesignationServiceImp implements DesignationService {
         throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
     }
     private Integer getDeptId(Integer roleId,String deptName) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByRoleIdAndDeptNameEqualsIgnoreCase(roleId,deptName);
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
         if (optionalDepartmentEntity.isPresent()) {
             return optionalDepartmentEntity.get().getDeptId();
         }
@@ -249,7 +249,7 @@ public class DesignationServiceImp implements DesignationService {
 
     private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {
         DesignationEntity designationEntity = new DesignationEntity();
-        designationEntity.setRoleId(designationCreateRequest.getRoleId());
+
         designationEntity.setDeptId(designationCreateRequest.getDeptId());
         designationEntity.setDesigName(designationCreateRequest.getDesigName());
         designationEntity.setRemark(designationCreateRequest.getRemark());
@@ -261,7 +261,7 @@ public class DesignationServiceImp implements DesignationService {
     private DesignationEntity convertDesignationUpdateRequestToEntity(DesignationUpdateRequest designationUpdateRequest) {
         DesignationEntity designationEntity = new DesignationEntity();
         designationEntity.setDesigId(designationUpdateRequest.getDesigId());
-        designationEntity.setRoleId(designationUpdateRequest.getRoleId());
+
         designationEntity.setDeptId(designationUpdateRequest.getDeptId());
         designationEntity.setDesigName(designationUpdateRequest.getDesigName());
         designationEntity.setRemark(designationUpdateRequest.getRemark());

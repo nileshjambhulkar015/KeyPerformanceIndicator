@@ -28,13 +28,13 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity, Integer>
     @Query(value = "select * from department dept where dept.status_cd ='A'", nativeQuery = true)
     public List<DepartmentEntity> findAllDepartmentDetailsForEmployee();
 
-    public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCaseAndRoleId(String deptName, Integer roleId);
+    //public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCase(String deptName);
 
     @Query(value = SQLQueryConstants.DEPARTMENT_QUERY, nativeQuery = true)
-    List<Object[]> getDepartmentDetail(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("deptName") String deptName, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getDepartmentDetail( @Param("deptId") Integer deptId, @Param("deptName") String deptName, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.DEPARTMENT_COUNT_UERY, nativeQuery = true)
-    Integer getDepartmentCount(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("deptName") String deptName, @Param("statusCd") String statusCd);
+    Integer getDepartmentCount(@Param("deptId") Integer deptId, @Param("deptName") String deptName, @Param("statusCd") String statusCd);
 
     @Query(value = SQLQueryConstants.DEPARTMENT_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getDepartmentByIdDetail(@Param("deptId") Integer deptId);
@@ -51,9 +51,9 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity, Integer>
     @Query(value = SQLQueryConstants.DEPT_SUGGEST, nativeQuery = true)
     List<Object[]> getAllDepartmentByDeptName(@Param("deptName") String deptName);
 
-    public Optional<DepartmentEntity> findByRoleIdAndDeptNameEqualsIgnoreCase(Integer roleId,String deptName);
-
     public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCase(String deptName);
+
+   // public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCase(String deptName);
 
 
 }

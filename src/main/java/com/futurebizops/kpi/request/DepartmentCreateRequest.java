@@ -6,9 +6,6 @@ import lombok.Data;
 @Data
 public class DepartmentCreateRequest {
 
-    @Schema(example = "1", description = "This field is used for role id")
-    private Integer roleId;
-
     @Schema(example = "HR and Admin", description = "This field is used for department name")
     private String deptName;
 

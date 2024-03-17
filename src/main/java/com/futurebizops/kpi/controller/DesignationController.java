@@ -46,12 +46,11 @@ public class DesignationController {
 
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> findDesignationDetails(@RequestParam(required = false) Integer roleId,
-                                                              @RequestParam(required = false) Integer deptId,
+    public ResponseEntity<KPIResponse> findDesignationDetails(@RequestParam(required = false) Integer deptId,
                                                               @RequestParam(required = false) String desigName,
                                                               @RequestParam(required = false) String statusCd,
                                                               @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = designationService.findDesignationDetails(roleId, deptId, desigName, statusCd, pageable);
+        KPIResponse response = designationService.findDesignationDetails(deptId, desigName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -65,8 +64,8 @@ public class DesignationController {
 
     // for dropdown list
     @GetMapping(value = "/by-role-dept")
-    public ResponseEntity<Object> findAllDesignationDetails(@RequestParam(required = false) Integer roleId,@RequestParam(required = false) Integer deptId) {
-        return new ResponseEntity<>(designationService.findAllDesignationByDeptId(roleId, deptId), HttpStatus.OK);
+    public ResponseEntity<Object> findAllDesignationDetails(@RequestParam(required = false) Integer deptId) {
+        return new ResponseEntity<>(designationService.findAllDesignationByDeptId(deptId), HttpStatus.OK);
     }
 
     @GetMapping(value = "/department")

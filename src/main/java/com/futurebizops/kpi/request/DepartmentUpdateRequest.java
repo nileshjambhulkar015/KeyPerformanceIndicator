@@ -6,9 +6,6 @@ import lombok.Data;
 @Data
 public class DepartmentUpdateRequest {
 
-    @Schema(example = "1", description = "This field is used for role id")
-    private Integer roleId;
-
     @Schema(example = "1", description = "This field is used for department id")
     private Integer deptId;
 

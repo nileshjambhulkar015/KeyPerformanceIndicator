@@ -51,7 +51,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public KPIResponse saveDepartment(DepartmentCreateRequest departmentCreateRequest) {
 
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCaseAndRoleId(departmentCreateRequest.getDeptName(),departmentCreateRequest.getRoleId() );
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDeptName() );
         if(optionalDepartmentEntity.isPresent()){
             log.error("Inside DepartmentServiceImpl >> saveDepartment()");
             throw new KPIException("DepartmentServiceImpl Class", false, "Department name already exist");
@@ -90,7 +90,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public KPIResponse findDepartmentDetails(Integer roleId, Integer deptId, String deptName, String statusCd, Pageable requestPageable) {
+    public KPIResponse findDepartmentDetails(Integer deptId, String deptName, String statusCd, Pageable requestPageable) {
         String sortName = null;
       //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -102,8 +102,8 @@ public class DepartmentServiceImpl implements DepartmentService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = departmentRepo.getDepartmentCount(roleId, deptId, deptName, statusCd);
-        List<Object[]> departmentData = departmentRepo.getDepartmentDetail(roleId, deptId, deptName, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = departmentRepo.getDepartmentCount(deptId, deptName, statusCd);
+        List<Object[]> departmentData = departmentRepo.getDepartmentDetail(deptId, deptName, statusCd, sortName, pageSize, pageOffset);
 
         List<DepartmentReponse> departmentReponses = departmentData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
 
@@ -141,28 +141,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<Object[]> designationData = departmentRepo.getDepartmentByIdDetail(deptId);
         List<DepartmentReponse> designationReponses = designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
         return  designationReponses.get(0);
-    }
-
-
-
-    @Override
-    public List<DepartmentReponse> getAllDepartmentByRoleId(Integer roleId) {
-        List<Object[]> deptData = departmentRepo.getAllDepartByRoleId(roleId);
-        return deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
-    }
-
-    //for KPP load department from role id. role id taking from designation table
-    @Override
-    public List<DepartmentReponse> findAllDepartmentFromDesigByRoleId(Integer roleId) {
-        List<Object[]> deptData = departmentRepo.getAllDepartmentFromDesigByRoleId(roleId);
-        return deptData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DepartmentReponse> getAllDepartments(String deptName) {
-
-       // List<DepartmentReponse> departmentReponses =
-        return  null;
     }
 
     @Override
@@ -214,7 +192,6 @@ public class DepartmentServiceImpl implements DepartmentService {
                 try {
                     currentExcelRow++;
                     DepartmentCreateRequest departmentCreateRequest = new DepartmentCreateRequest();
-                    departmentCreateRequest.setRoleId(request.getRoleId());
                     departmentCreateRequest.setDeptName(request.getDeptName());
                     departmentCreateRequest.setRemark(request.getRemark());
                     departmentCreateRequest.setStatusCd(request.getStatusCd());
@@ -252,7 +229,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest departmentCreateRequest) {
         DepartmentEntity departmentEntity = new DepartmentEntity();
-        departmentEntity.setRoleId(departmentCreateRequest.getRoleId());
+
         departmentEntity.setDeptName(departmentCreateRequest.getDeptName());
         departmentEntity.setRemark(departmentCreateRequest.getRemark());
         departmentEntity.setStatusCd(departmentCreateRequest.getStatusCd());
@@ -263,7 +240,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     private DepartmentEntity convertDepartmentUpdateRequestToEntity(DepartmentUpdateRequest departmentUpdateRequest) {
         DepartmentEntity departmentEntity = new DepartmentEntity();
         departmentEntity.setDeptId(departmentUpdateRequest.getDeptId());
-        departmentEntity.setRoleId(departmentUpdateRequest.getRoleId());
         departmentEntity.setDeptName(departmentUpdateRequest.getDeptName());
         departmentEntity.setRemark(departmentUpdateRequest.getRemark());
         departmentEntity.setStatusCd(departmentUpdateRequest.getStatusCd());
