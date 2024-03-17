@@ -127,7 +127,7 @@ public class CumulativeServiceImpl implements CumulativeService {
 
 
     @Override
-    public KPIResponse allEmployeeKppDetails(String fromDate, String toDate, Integer empId) {
+    public KPIResponse allEmployeeKppDetails(String fromDate, String toDate, Integer roleId,Integer deptId,Integer desigId,Integer reportingEmpId,Integer gmEmpId) {
         String sortName = null;
 
         KPIResponse kpiResponse = new KPIResponse();
@@ -138,7 +138,7 @@ public class CumulativeServiceImpl implements CumulativeService {
 
         try{
             //Integer totalCount = employeeKppMasterRepo.getEmployeeKppStatusDetailCount(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus);
-            List<Object[]> employeeDetail = employeeKppMasterRepo.cumulativeEmpForHoDAndGM(empId, startDate, endDate);
+            List<Object[]> employeeDetail = employeeKppMasterRepo.cumulativeEmpForHoDAndGM(startDate, endDate,roleId,deptId,desigId, reportingEmpId,gmEmpId);
             List<CumulativeHoDResponse> employeeKppStatusDtos = employeeDetail.stream().map(CumulativeHoDResponse::new).collect(Collectors.toList());
 
            if(employeeKppStatusDtos.size()>0) {
@@ -175,7 +175,7 @@ public class CumulativeServiceImpl implements CumulativeService {
                    avgHoDKppRating = totalKppTotal / cumulativeHoDResponse.getTotalCumulativeHoDS().size();
 
 
-                   cumulativeHoDResponse.setTotalHodKppRatings(totalKppTotal);
+                   cumulativeHoDResponse.setTotalHodKppRatings(decfor.format(totalKppTotal));
                    cumulativeHoDResponse.setTotalMonths(cumulativeHoDResponse.getTotalCumulativeHoDS().size());
                    cumulativeHoDResponse.setAvgTotalHodKppRatings(decfor.format(avgHoDKppRating));
                    cumulativeHoDResponse.setTotalCumulativeHoDS(null);

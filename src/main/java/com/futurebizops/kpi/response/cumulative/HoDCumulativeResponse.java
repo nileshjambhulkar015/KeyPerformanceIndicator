@@ -18,7 +18,7 @@ public class HoDCumulativeResponse {
     private String desigName;
     List<TotalCumulativeHoD> totalCumulativeHoDS;
 
-    private Double totalHodKppRatings;
+    private String totalHodKppRatings;
     private Integer totalMonths;
     private String avgTotalHodKppRatings;
 }

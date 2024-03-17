@@ -1,6 +1,5 @@
 package com.futurebizops.kpi.controller;
 
-import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.CumulativeService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,22 +50,26 @@ public class CumulativeController {
     }
 
     //load kpp details as per employee id for hod ratings
-    @GetMapping("/hod-employee-all")
+   /* @GetMapping("/hod-employee-all")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> getEmployeeKppStatus(  @RequestParam(required = false) String fromDate,
-                                                                       @RequestParam(required = false) String toDate,
-                                                                       @RequestParam(required = false) Integer empId) {
+    public ResponseEntity<KPIResponse> getEmployeeKppStatus(@RequestParam(required = false) String fromDate,
+                                                            @RequestParam(required = false) String toDate,
+                                                            @RequestParam(required = false) Integer empId) {
         KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate, empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
-    }
+    }*/
 
     @GetMapping("/hod-cummulatve")
-   // @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> getHODKppStatusCummulative(  @RequestParam(required = false) String fromDate,
-                                                              @RequestParam(required = false) String toDate,
-                                                              @RequestParam(required = false) Integer empId) {
-        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate,  empId);
+    // @PageableAsQueryParam
+    public ResponseEntity<KPIResponse> getHODKppStatusCummulative(@RequestParam(required = false) String fromDate,
+                                                                  @RequestParam(required = false) String toDate,
+                                                                  @RequestParam(required = false) Integer roleId,
+                                                                  @RequestParam(required = false) Integer deptId,
+                                                                  @RequestParam(required = false) Integer desigId,
+                                                                  @RequestParam(required = false) Integer reportingEmpId,
+                                                                  @RequestParam(required = false) Integer gmEmpId) {
+        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate,roleId,deptId,desigId, reportingEmpId,gmEmpId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
