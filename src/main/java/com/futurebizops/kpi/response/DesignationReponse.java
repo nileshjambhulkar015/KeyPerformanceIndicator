@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DesignationReponse {
     private Integer desigId;
-    private Integer roleId;
-    private String roleName;
     private Integer deptId;
     private String deptName;
     private String desigName;
@@ -21,12 +19,10 @@ public class DesignationReponse {
 
     public DesignationReponse(Object[] objects){
         this.desigId=Integer.parseInt(String.valueOf(objects[0]));
-        this.roleId=Integer.parseInt(String.valueOf(objects[1]));
-        this.roleName=String.valueOf(objects[2]);
-        this.deptId=Integer.parseInt(String.valueOf(objects[3]));
-        this.deptName=String.valueOf(objects[4]);
-        this.desigName=String.valueOf(objects[5]);
-        this.remark=String.valueOf(objects[6]);
-        this.statusCd=String.valueOf(objects[7]);
+        this.deptId=Integer.parseInt(String.valueOf(objects[1]));
+        this.deptName=String.valueOf(objects[2]);
+        this.desigName=String.valueOf(objects[3]);
+        this.remark=String.valueOf(objects[4]);
+        this.statusCd=String.valueOf(objects[5]);
     }
 }

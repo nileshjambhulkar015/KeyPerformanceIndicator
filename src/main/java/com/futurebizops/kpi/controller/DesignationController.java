@@ -63,7 +63,7 @@ public class DesignationController {
     }
 
     // for dropdown list
-    @GetMapping(value = "/by-role-dept")
+    @GetMapping(value = "/by-desig-dept")
     public ResponseEntity<Object> findAllDesignationDetails(@RequestParam(required = false) Integer deptId) {
         return new ResponseEntity<>(designationService.findAllDesignationByDeptId(deptId), HttpStatus.OK);
     }

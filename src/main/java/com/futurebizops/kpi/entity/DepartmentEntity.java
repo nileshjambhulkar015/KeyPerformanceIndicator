@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import java.time.Instant;
 @Entity
 @Data
 @AllArgsConstructor
+@DynamicUpdate
 @NoArgsConstructor
 public class DepartmentEntity extends AuditEnabledEntity {
 
