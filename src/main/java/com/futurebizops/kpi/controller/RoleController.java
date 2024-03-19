@@ -6,6 +6,7 @@ import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.RoleService;
 import com.futurebizops.kpi.utils.KPIUtils;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -67,15 +70,11 @@ public class RoleController {
         return new ResponseEntity<>(roleService.findAllRoleById(roleId), HttpStatus.OK);
     }
 
-    //for Role which is present in department table
-    @GetMapping(value = "department/role")
-    public ResponseEntity<Object> findAllRole() {
-        return new ResponseEntity<>(roleService.getAllRoleFromDeptId(), HttpStatus.OK);
-    }
 
-    //for Key perform indicator
-    @GetMapping(value = "/designation/roles")
-    public ResponseEntity<Object> findAllRoleForKpp() {
-        return new ResponseEntity<>(roleService.findAllRoleForKpp(), HttpStatus.OK);
+    //for roles except GM
+    @GetMapping(value = "/dd-role-except-gm-role")
+    public ResponseEntity<List<RoleDDResponse>> getRolesExceptGM() {
+        List<RoleDDResponse>   response = roleService.ddEmployeeRoleExceptGM();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

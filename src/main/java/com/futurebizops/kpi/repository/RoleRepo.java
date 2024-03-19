@@ -33,4 +33,7 @@ public interface RoleRepo extends JpaRepository<RoleEntity, Integer> {
     List<Object[]> getAllRoleFromDesignation();
 
 
+    //only for role id and name which is inside department table
+    @Query(value = SQLQueryConstants.DD_ROLES_QUERY, nativeQuery = true)
+    List<Object[]> ddEmployeeRoleExceptGM();
 }

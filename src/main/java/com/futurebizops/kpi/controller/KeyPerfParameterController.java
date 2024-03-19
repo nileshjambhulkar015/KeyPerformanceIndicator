@@ -6,6 +6,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import java.io.IOException;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/key-perform-parameter")
+@Slf4j
 public class KeyPerfParameterController {
 
     @Autowired
@@ -53,6 +55,7 @@ public class KeyPerfParameterController {
                                                               @RequestParam(required = false) String kppObjective,
                                                               @RequestParam(required = false) String statusCd,
                                                               @Parameter(hidden = true) Pageable pageable) {
+        log.info("reqiuest for Employee KPP search");
         KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, roleId, deptId, desigId, kppObjective, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 

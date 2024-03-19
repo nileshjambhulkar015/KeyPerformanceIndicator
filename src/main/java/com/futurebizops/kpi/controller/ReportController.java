@@ -29,7 +29,7 @@ ReportService reportService;
         reportService.getCompletedEmployeeKppStatusReport(httpServletResponse, empId,ekppMonth);
     }
 
-    @GetMapping("/hod-kpp-status")
+    @GetMapping("/in-progress-hod-kpp-status")
     public void exportToExcelHod(HttpServletResponse httpServletResponse, @RequestParam(required = false) Integer empId)  {
         reportService.getHodKppStatusReport(httpServletResponse, empId);
     }

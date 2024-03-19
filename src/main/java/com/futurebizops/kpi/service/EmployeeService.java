@@ -5,6 +5,8 @@ import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,4 +32,6 @@ public interface EmployeeService {
 
 
     public KPIResponse processExcelFile(MultipartFile file);
+
+
 }

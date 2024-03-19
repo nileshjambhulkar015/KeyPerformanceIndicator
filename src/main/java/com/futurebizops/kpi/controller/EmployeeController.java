@@ -5,8 +5,11 @@ import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +31,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/employee")
+@Slf4j
 public class EmployeeController {
 
     @Autowired
@@ -57,6 +61,7 @@ public class EmployeeController {
                                                       @RequestParam(required = false) String emailId,
                                                       @RequestParam(required = false) String statusCd,
                                                       @Parameter(hidden = true) Pageable pageable) {
+        log.info("reqiuest for Employee search");
         KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -113,4 +118,6 @@ public class EmployeeController {
         KPIResponse response = employeeService.processExcelFile(file);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
 }

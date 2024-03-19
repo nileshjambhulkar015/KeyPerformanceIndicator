@@ -13,6 +13,7 @@ import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RoleResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.RoleService;
 import com.futurebizops.kpi.utils.KPIUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -131,17 +132,8 @@ public class RoleServiceImpl implements RoleService {
         return null;
     }
 
-    //for roles from department table
-    @Override
-    public List<RoleResponse> getAllRoleFromDeptId() {
-        List<Object[]> roleData = roleRepo.getAllRoleFromDept();
-        return roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
-    }
-    @Override
-    public List<RoleResponse> findAllRoleForKpp() {
-        List<Object[]> roleData = roleRepo.getAllRoleFromDesignation();
-        return roleData.stream().map(RoleResponse::new).collect(Collectors.toList());
-    }
+
+
 
     private RoleEntity convertRoleCreateRequestToEntity(RoleCreateRequest roleCreateRequest) {
         RoleEntity roleEntity = new RoleEntity();
@@ -160,6 +152,12 @@ public class RoleServiceImpl implements RoleService {
         roleEntity.setStatusCd(roleUpdateRequest.getStatusCd());
         roleEntity.setUpdatedUserId(roleUpdateRequest.getEmployeeId());
         return roleEntity;
+    }
+
+    @Override
+    public List<RoleDDResponse> ddEmployeeRoleExceptGM() {
+        List<Object[]> roleData = roleRepo.ddEmployeeRoleExceptGM();
+        return roleData.stream().map(RoleDDResponse::new).collect(Collectors.toList());
     }
 
 

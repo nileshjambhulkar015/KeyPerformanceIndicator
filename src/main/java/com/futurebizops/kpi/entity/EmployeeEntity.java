@@ -38,6 +38,9 @@ public class EmployeeEntity extends AuditEnabledEntity{
 	@Column(name = "desig_id")
 	private Integer desigId;
 
+	@Column(name = "emp_type_id")
+	private Integer empTypeId;
+
 	@Column(name = "reporting_emp_id")
 	private Integer reportingEmpId;
 

@@ -7,6 +7,7 @@ import com.futurebizops.kpi.request.RoleUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RoleResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -23,7 +24,6 @@ public interface RoleService {
 
     public RoleResponse findAllRoleById(Integer roleId);
 
-    public List<RoleResponse> getAllRoleFromDeptId();
 
-    public List<RoleResponse> findAllRoleForKpp();
+    public List<RoleDDResponse> ddEmployeeRoleExceptGM();
 }

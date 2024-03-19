@@ -35,6 +35,8 @@ import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.RoleResponse;
+import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -302,6 +304,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setRoleId(employeeCreateRequest.getRoleId());
         employeeEntity.setDeptId(employeeCreateRequest.getDeptId());
         employeeEntity.setDesigId(employeeCreateRequest.getDesigId());
+        employeeEntity.setEmpTypeId(employeeCreateRequest.getEmpTypeId());
         employeeEntity.setReportingEmpId(employeeCreateRequest.getReportingEmpId());
         employeeEntity.setRegionId(employeeCreateRequest.getRegionId());
         employeeEntity.setSiteId(employeeCreateRequest.getSiteId());
@@ -332,6 +335,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setRoleId(employeeUpdateRequest.getRoleId());
         employeeEntity.setDeptId(employeeUpdateRequest.getDeptId());
         employeeEntity.setDesigId(employeeUpdateRequest.getDesigId());
+        employeeEntity.setEmpTypeId(employeeUpdateRequest.getEmpTypeId());
         employeeEntity.setReportingEmpId(employeeUpdateRequest.getReportingEmpId());
         employeeEntity.setRegionId(employeeUpdateRequest.getRegionId());
         employeeEntity.setSiteId(employeeUpdateRequest.getSiteId());
@@ -482,7 +486,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             return KPIResponse.builder().responseData(employeeNotSavedRecords).build();
         }
     }
-
 
 
 
