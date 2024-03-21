@@ -321,6 +321,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 detailsEntity.setStatusCd(employeeKppDetailsEntity.getStatusCd());
 
                 kppDetailsEntities.add(detailsEntity);
+                //reportEmployeeKppDetailsRepo.save(detailsEntity);
             }
             reportEmployeeKppDetailsRepo.saveAll(kppDetailsEntities);
             employeeKppDetailsRepo.resetEmployeeKpp(empId, statusCd);

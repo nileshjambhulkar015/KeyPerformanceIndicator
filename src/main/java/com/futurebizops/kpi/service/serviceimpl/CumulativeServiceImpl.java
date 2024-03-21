@@ -48,16 +48,13 @@ public class CumulativeServiceImpl implements CumulativeService {
     private static final DecimalFormat decfor = new DecimalFormat("0.00");
 
     @Override
-    public KPIResponse getAllEmployeeKPPStatusReport(String fromDate, String toDate, Integer reportingEmployee, Integer gmEmpId, Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable) {
+    public KPIResponse getAllEmployeeKPPStatusReport(String fromDate, String toDate,  Integer empId, Integer roleId, String statusCd, Pageable pageable) {
         String sortName = null;
         String startDate = StringUtils.isNotEmpty(fromDate) ? DateTimeUtils.convertStringToInstant(fromDate).toString() : DateTimeUtils.getFirstDateOfYear();
         String endDate = StringUtils.isNotEmpty(toDate) ? DateTimeUtils.convertStringToInstant(toDate).toString() : Instant.now().toString();
 
         CummalitiveEmployeeResponse cummalitiveEmployeeResponse = new CummalitiveEmployeeResponse();
-        //for all records
-        if ("All".equalsIgnoreCase(empKppStatus)) {
-            empKppStatus = null;
-        }
+
         // String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
         Integer pageOffset = (int) pageable.getOffset();
@@ -68,9 +65,9 @@ public class CumulativeServiceImpl implements CumulativeService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
         try {
-            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus);
-            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusReportDetail(startDate, endDate, reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, sortName, pageSize, pageOffset);
 
+            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusReportCount(startDate, endDate, empId, roleId,  statusCd);
+            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusReportDetail(startDate, endDate, empId, roleId,  statusCd,  sortName, pageSize, pageOffset);
             if(employeeDetail.size()>0) {
                 List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
 
@@ -106,6 +103,7 @@ public class CumulativeServiceImpl implements CumulativeService {
 
                 cummalitiveEmployeeResponse.setCummulativeRatings(cummulativeRatings);
                 cummalitiveEmployeeResponse.setAvgCummulativeRatings(avgCummulativeRatings);
+                cummalitiveEmployeeResponse.setTotalMonths(employeeKppStatusResponses.size());
             }
             else{
                 return KPIResponse.builder()

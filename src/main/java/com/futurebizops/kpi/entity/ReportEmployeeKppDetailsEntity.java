@@ -22,7 +22,7 @@ public class ReportEmployeeKppDetailsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_ekpp_details_id")
-    private Integer reportEkppDId;
+    private Integer reportEkppDIdF;
 
     @Column(name = "ekpp_month")
     private Instant ekppMonth;

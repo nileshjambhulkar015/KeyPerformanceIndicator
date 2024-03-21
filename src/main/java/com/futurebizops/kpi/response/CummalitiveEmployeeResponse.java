@@ -12,6 +12,7 @@ public class CummalitiveEmployeeResponse {
     private Integer sumOfGMRatings;
 
     private Integer cummulativeRatings;
+    private Integer totalMonths;
     private Float avgCummulativeRatings;
 
     PageImpl<EmployeeKppStatusResponse> employeeKppStatusResponses;
