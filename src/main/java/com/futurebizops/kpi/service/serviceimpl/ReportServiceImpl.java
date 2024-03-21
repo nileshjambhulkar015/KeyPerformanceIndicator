@@ -58,7 +58,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
     Workbook workbook = new XSSFWorkbook();
     Sheet sheet = workbook.createSheet(response.getEmpEId() + " " + response.getEmpName());
     Row row0 = sheet.createRow(0);
-    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 16));
+    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 21));
 
 
     CellStyle font16Style = workbook.createCellStyle();
@@ -115,7 +115,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
 
 
     Row row1 = sheet.createRow(1);
-    sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 16));
+    sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 21));
 
     Cell cell0001 = row1.createCell(0);
     cell0001.setCellValue("EMPLOYEE-WISE KEY PERFORMANCE INDICATORS (KPIs) FY 2023-2024");
@@ -135,7 +135,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
         sheet.setColumnWidth(i, 140 / 8 * 256);
 
     }
-    for (int i = 7; i <= 16; i++) {
+    for (int i = 7; i <= 21; i++) {
         sheet.setColumnWidth(i, 100 / 8 * 256);
 
     }
@@ -159,7 +159,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
     //Header Style End
     int kppHeaderRow = 2;
     Row row = sheet.createRow(kppHeaderRow);
-    for (int i = 0; i <= 16; i++) {
+    for (int i = 0; i <= 21; i++) {
         Cell headerCell = row.createCell(i);
         headerCell.setCellValue(getHodHeaderCellValue(i)); // Replace with your logic to get header cell value
         headerCell.setCellStyle(headerStyle);
@@ -253,7 +253,28 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
         Cell cell19 = kppRow.createCell(16);
         cell19.setCellValue(employeeKppDetailsDto.getGmOverallTaskComp()); // Replace this with your logic to get the cell value
         cell19.setCellStyle(wrapTextStyle);
+        Cell cell20 = kppRow.createCell(17);
+        cell20.setCellValue(employeeKppDetailsDto.getKppRating5()); // Replace this with your logic to get the cell value
+        cell20.setCellStyle(wrapTextStyle);
 
+        Cell cell21 = kppRow.createCell(18);
+        cell21.setCellValue(employeeKppDetailsDto.getKppRating4()); // Replace this with your logic to get the cell value
+        cell21.setCellStyle(wrapTextStyle);
+
+
+        Cell cell22 = kppRow.createCell(19);
+        cell22.setCellValue(employeeKppDetailsDto.getKppRating3()); // Replace this with your logic to get the cell value
+        cell22.setCellStyle(wrapTextStyle);
+
+
+        Cell cell23 = kppRow.createCell(20);
+        cell23.setCellValue(employeeKppDetailsDto.getKppRating2()); // Replace this with your logic to get the cell value
+        cell23.setCellStyle(wrapTextStyle);
+
+
+        Cell cell24 = kppRow.createCell(21);
+        cell24.setCellValue(employeeKppDetailsDto.getKppRating1()); // Replace this with your logic to get the cell value
+        cell24.setCellStyle(wrapTextStyle);
         kppDataRow++;
         srno++;
     }
@@ -274,7 +295,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
     kppTotalRowHeaderStyle.setBorderBottom(BorderStyle.THIN);
     kppTotalRowHeaderStyle.setBorderLeft(BorderStyle.THIN);
     kppTotalRowHeaderStyle.setBorderRight(BorderStyle.THIN);
-    for (int i=0; i <= 16; i++)
+    for (int i=0; i <= 21; i++)
     {
         Cell cell = kppTotalRow.createCell(i);
         cell.setCellValue("");
@@ -309,6 +330,9 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
     Cell cell009 = kppTotalRow.createCell(16);
     cell009.setCellValue(response.getTotalGmOverallTaskComp());
     cell009.setCellStyle(kppTotalRowHeaderStyle);
+
+
+
 
     System.out.println("====================>"+kppDataRow);
     if((kppDataRow>=5)) {
@@ -391,6 +415,23 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
             case 16:
                 Header = "GM % of total Task completed";
                 break;
+            case 17:
+                Header = "Rating 5";
+                break;
+
+            case 18:
+                Header = "Rating 4";
+                break;
+
+            case 19:
+                Header = "Rating 3";
+                break;
+            case 20:
+                Header = "Rating 2";
+                break;
+            case 21:
+                Header = "Rating 1";
+                break;
         }
         return Header;
     }
@@ -402,7 +443,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet(response.getEmpEId() + " " + response.getEmpName());
         Row row0 = sheet.createRow(0);
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 19));
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 24));
 
 
         CellStyle font16Style = workbook.createCellStyle();
@@ -459,7 +500,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
 
 
         Row row1 = sheet.createRow(1);
-        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 19));
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 24));
 
         Cell cell0001 = row1.createCell(0);
         cell0001.setCellValue("EMPLOYEE-WISE KEY PERFORMANCE INDICATORS (KPIs) FY 2023-2024");
@@ -479,7 +520,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
             sheet.setColumnWidth(i, 140 / 8 * 256);
 
         }
-        for (int i = 7; i <= 19; i++) {
+        for (int i = 7; i <= 24; i++) {
             sheet.setColumnWidth(i, 100 / 8 * 256);
 
         }
@@ -503,7 +544,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
         //Header Style End
         int kppHeaderRow = 2;
         Row row = sheet.createRow(kppHeaderRow);
-        for (int i = 0; i <= 19; i++) {
+        for (int i = 0; i <= 24; i++) {
             Cell headerCell = row.createCell(i);
             headerCell.setCellValue(getHeaderCellValue(i)); // Replace with your logic to get header cell value
             headerCell.setCellStyle(headerStyle);
@@ -609,6 +650,27 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
             cell19.setCellValue(employeeKppDetailsDto.getGmOverallTaskComp()); // Replace this with your logic to get the cell value
             cell19.setCellStyle(wrapTextStyle);
 
+            Cell cell20 = kppRow.createCell(20);
+            cell20.setCellValue(employeeKppDetailsDto.getKppRating5()); // Replace this with your logic to get the cell value
+            cell20.setCellStyle(wrapTextStyle);
+
+            Cell cell21 = kppRow.createCell(21);
+            cell21.setCellValue(employeeKppDetailsDto.getKppRating4()); // Replace this with your logic to get the cell value
+            cell21.setCellStyle(wrapTextStyle);
+
+            Cell cell22 = kppRow.createCell(22);
+            cell22.setCellValue(employeeKppDetailsDto.getKppRating3()); // Replace this with your logic to get the cell value
+            cell22.setCellStyle(wrapTextStyle);
+
+            Cell cell23 = kppRow.createCell(23);
+            cell23.setCellValue(employeeKppDetailsDto.getKppRating2()); // Replace this with your logic to get the cell value
+            cell23.setCellStyle(wrapTextStyle);
+
+
+            Cell cell24 = kppRow.createCell(24);
+            cell24.setCellValue(employeeKppDetailsDto.getKppRating1()); // Replace this with your logic to get the cell value
+            cell24.setCellStyle(wrapTextStyle);
+
             kppDataRow++;
             srno++;
         }
@@ -629,7 +691,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
         kppTotalRowHeaderStyle.setBorderBottom(BorderStyle.THIN);
         kppTotalRowHeaderStyle.setBorderLeft(BorderStyle.THIN);
         kppTotalRowHeaderStyle.setBorderRight(BorderStyle.THIN);
-        for (int i=0; i <= 19; i++)
+        for (int i=0; i <= 24; i++)
         {
             Cell cell = kppTotalRow.createCell(i);
             cell.setCellValue("");
@@ -808,6 +870,22 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
                 break;
             case 19:
                 Header = "GM % of total Task completed";
+                break;
+            case 20:
+                Header = "Rating 5";
+                break;
+            case 21:
+                Header = "Rating 4";
+                break;
+            case 22:
+                Header = "Rating 3";
+                break;
+            case 23:
+                Header = "Rating 2";
+                break;
+
+            case 24:
+                Header = "Rating 1";
                 break;
         }
         return Header;
