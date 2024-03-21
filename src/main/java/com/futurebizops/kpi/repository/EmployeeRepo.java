@@ -22,10 +22,10 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
 
     @Query(value = SQLQueryConstants.EMPLOYEE_QUERY, nativeQuery = true)
-    List<Object[]> getEmployeeDetail(@Param("empId") Integer empId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,  @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getEmployeeDetail(@Param("empId") Integer empId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,  @Param("statusCd") String statusCd,@Param("empTypeId") Integer empTypeId, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_COUNT_QUERY, nativeQuery = true)
-    Integer getEmployeeCount(@Param("empId") Integer empId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd);
+    Integer getEmployeeCount(@Param("empId") Integer empId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("firstName") String firstName,@Param("middleName") String middleName,@Param("lastName") String lastName, @Param("empMobNo") String empMobNo, @Param("emailId") String emailId,@Param("statusCd") String statusCd,@Param("empTypeId") Integer empTypeId);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeById(@Param("empId") Integer empId);
@@ -56,4 +56,12 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
     @Query(value = DropDownQueryConstants.DD_DESIG_FROM_EMPLOYEE_QUERY, nativeQuery = true)
     List<Object[]> getDDDesigFromCompany(@Param("regionId") Integer regionId ,@Param("siteId") Integer siteId, @Param("companyId") Integer companyId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId );
+
+    //Advance seach
+    @Query(value = SQLQueryConstants.EMPLOYEE_ADVANCE_SEARCH_COUNT_QUERY, nativeQuery = true)
+    Integer getEmployeeAdvanceSearchCount(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("regionId") Integer regionId,@Param("siteId") Integer siteId,@Param("companyId") Integer companyId, @Param("empTypeId") Integer empTypeId);
+
+    @Query(value = SQLQueryConstants.EMPLOYEE_ADVANCE_SEARCH_QUERY, nativeQuery = true)
+    List<Object[]> getEmployeeAdvanceSearchDetails(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("regionId") Integer regionId,@Param("siteId") Integer siteId,@Param("companyId") Integer companyId, @Param("empTypeId") Integer empTypeId,@Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+
 }

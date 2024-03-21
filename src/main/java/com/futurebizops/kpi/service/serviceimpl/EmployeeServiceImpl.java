@@ -182,7 +182,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public KPIResponse getAllEmployeeDetails(Integer empId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Pageable pageable) {
+    public KPIResponse getAllEmployeeDetails(Integer empId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,Integer empTypeId, Pageable pageable) {
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -194,8 +194,36 @@ public class EmployeeServiceImpl implements EmployeeService {
             //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = employeeRepo.getEmployeeCount(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd);
-        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = employeeRepo.getEmployeeCount(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId);
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId, sortName, pageSize, pageOffset);
+
+        List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
+        employeeResponses = employeeResponses.stream()
+                .sorted(Comparator.comparing(EmployeeResponse::getDeptName))
+                .collect(Collectors.toList());
+
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseData(new PageImpl<>(employeeResponses, pageable, totalCount))
+                .responseMessage(KPIConstants.RECORD_FETCH)
+                .build();
+    }
+
+    @Override
+    public KPIResponse getAllEmployeeAdvanceSearch(Integer roleId, Integer deptId, Integer desigId, Integer regionId, Integer siteId, Integer companyId,Integer empTypeId, Pageable pageable) {
+        String sortName = null;
+        //  String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = employeeRepo.getEmployeeAdvanceSearchCount(roleId, deptId, desigId, regionId, siteId,companyId,empTypeId);
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeAdvanceSearchDetails(roleId, deptId, desigId, regionId, siteId,companyId,empTypeId, sortName, pageSize, pageOffset);
 
         List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
         employeeResponses = employeeResponses.stream()

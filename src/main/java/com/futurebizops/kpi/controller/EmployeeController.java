@@ -1,7 +1,9 @@
 package com.futurebizops.kpi.controller;
 
+import com.futurebizops.kpi.model.EmployeeAdvSearchModel;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
+import com.futurebizops.kpi.request.advsearch.EmployeeAdvSearchRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
@@ -60,10 +62,34 @@ public class EmployeeController {
                                                       @RequestParam(required = false) String empMobileNo,
                                                       @RequestParam(required = false) String emailId,
                                                       @RequestParam(required = false) String statusCd,
+                                                      @RequestParam(required = false) Integer empTypeId,
                                                       @Parameter(hidden = true) Pageable pageable) {
         log.info("reqiuest for Employee search");
-        KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
+        KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/adv-search")
+    @PageableAsQueryParam
+    public ResponseEntity<KPIResponse>  empAdvanceSearch(@RequestBody EmployeeAdvSearchRequest employeeAdvSearchRequest, @Parameter(hidden = true) Pageable pageable) {
+        log.info("reqiuest for Employee search");
+        EmployeeAdvSearchModel employeeAdvSearchModel = EmployeeAdvSearchModel.builder()
+                .roleId(employeeAdvSearchRequest.getRoleId())
+                .deptId(employeeAdvSearchRequest.getDeptId())
+                .desigId(employeeAdvSearchRequest.getDesigId())
+                .regionId(employeeAdvSearchRequest.getRegionId())
+                .siteId(employeeAdvSearchRequest.getSiteId())
+                .companyId(employeeAdvSearchRequest.getCompanyId())
+                .empTypeId(employeeAdvSearchRequest.getEmpTypeId())
+                .pageable(pageable)
+                .build();
+
+        log.info("reqiuest for Employee search");
+        KPIResponse response = employeeService.getAllEmployeeAdvanceSearch(employeeAdvSearchModel.getRoleId(), employeeAdvSearchModel.getDeptId(),employeeAdvSearchModel.getDesigId(),employeeAdvSearchModel.getRegionId(),employeeAdvSearchModel.getSiteId(),employeeAdvSearchModel.getCompanyId(),employeeAdvSearchModel.getEmpTypeId(), employeeAdvSearchModel.getPageable());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+        //KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
+        //return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/byEmpId")
