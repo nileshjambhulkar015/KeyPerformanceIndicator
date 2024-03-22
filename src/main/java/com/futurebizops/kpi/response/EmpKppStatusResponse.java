@@ -46,5 +46,11 @@ public class EmpKppStatusResponse {
     private String gmRemark;
     private String remark;
 
+    private String companyId;
+    private String companyName;
+    private String companyAddress;
+    private String companyMbNo;
+    private String companyFinYear;
+
     List<EmployeeKppDetailsDto> kppStatusDetails;
 }

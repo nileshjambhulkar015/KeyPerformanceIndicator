@@ -41,6 +41,12 @@ public class EmployeeKppMasterDto {
     private String gmKppStatus;
     private String gmRemark;
     private String remark;
+    private String companyId;
+    private String companyName;
+    private String companyAddress;
+    private String companyMbNo;
+    private String companyFinYear;
+
 
    public EmployeeKppMasterDto(Object[] objects){
         this.eKppMId=Integer.parseInt(String.valueOf(objects[0]));

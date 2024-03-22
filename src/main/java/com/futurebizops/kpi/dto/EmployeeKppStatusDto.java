@@ -76,5 +76,13 @@ public class EmployeeKppStatusDto {
         employeeKppDetailsDto.setKppRating3(String.valueOf(objects[56]));
         employeeKppDetailsDto.setKppRating4(String.valueOf(objects[57]));
         employeeKppDetailsDto.setKppRating5(String.valueOf(objects[58]));
+
+        //for company details
+        employeeKppMasterDto.setCompanyId(String.valueOf(objects[59]));
+        employeeKppMasterDto.setCompanyName(String.valueOf(objects[60]));
+        employeeKppMasterDto.setCompanyAddress(String.valueOf(objects[61]));
+        employeeKppMasterDto.setCompanyMbNo(String.valueOf(objects[62]));
+        employeeKppMasterDto.setCompanyFinYear(String.valueOf(objects[63]));
+
     }
 }
