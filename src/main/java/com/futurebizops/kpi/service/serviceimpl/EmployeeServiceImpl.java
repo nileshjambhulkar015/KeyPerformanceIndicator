@@ -182,7 +182,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public KPIResponse getAllEmployeeDetails(Integer empId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,Integer empTypeId, Pageable pageable) {
+    public KPIResponse getAllEmployeeDetails(Integer empId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,Integer empTypeId,Integer companyId, Pageable pageable) {
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -194,8 +194,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = employeeRepo.getEmployeeCount(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId);
-        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId, sortName, pageSize, pageOffset);
+        Integer totalCount = employeeRepo.getEmployeeCount(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId);
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, sortName, pageSize, pageOffset);
 
         List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
         employeeResponses = employeeResponses.stream()

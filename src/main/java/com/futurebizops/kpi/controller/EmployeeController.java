@@ -63,9 +63,10 @@ public class EmployeeController {
                                                       @RequestParam(required = false) String emailId,
                                                       @RequestParam(required = false) String statusCd,
                                                       @RequestParam(required = false) Integer empTypeId,
+                                                      @RequestParam(required = false) Integer companyId,
                                                       @Parameter(hidden = true) Pageable pageable) {
         log.info("reqiuest for Employee search");
-        KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId, pageable);
+        KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
