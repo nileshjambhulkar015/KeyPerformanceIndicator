@@ -5,6 +5,7 @@ import com.futurebizops.kpi.entity.CompanyMasterAudit;
 import com.futurebizops.kpi.entity.CompanyMasterEntity;
 import com.futurebizops.kpi.entity.DesignationAudit;
 import com.futurebizops.kpi.entity.DesignationEntity;
+import com.futurebizops.kpi.entity.SiteEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.CompanyMasterAuditRepo;
 import com.futurebizops.kpi.repository.CompanyMasterRepo;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -184,5 +186,21 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
     @Override
     public List<CompanyMasterResponse> getAllCompanyByCompanyId(Integer companyId) {
         return null;
+    }
+
+    @Override
+    public  List<CompanyDDResponse> getDDAllCompany(){
+        List<CompanyMasterEntity> companyMasterEntities = companyMasterRepo.findAll();
+        List<CompanyDDResponse> companyDDResponses = new ArrayList<>();
+
+        for(CompanyMasterEntity companyMasterEntity : companyMasterEntities){
+            CompanyDDResponse companyDDResponse = new CompanyDDResponse();
+            companyDDResponse.setCompanyId(companyMasterEntity.getCompanyId());
+            companyDDResponse.setCompanyName(companyMasterEntity.getCompanyName());
+            companyDDResponse.setStatusCd(companyMasterEntity.getStatusCd());
+
+            companyDDResponses.add(companyDDResponse);
+        }
+        return companyDDResponses;
     }
 }

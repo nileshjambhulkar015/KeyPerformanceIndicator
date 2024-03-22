@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -145,5 +146,21 @@ public class SiteServiceImpl implements SiteService {
         siteEntity.setStatusCd(siteUpdateRequest.getStatusCd());
         siteEntity.setUpdatedUserId(siteUpdateRequest.getEmployeeId());
         return siteEntity;
+    }
+
+    @Override
+    public  List<SiteDDResponse> getDDAllSite(){
+        List<SiteEntity> siteEntities = siteRepo.findAll();
+        List<SiteDDResponse> siteDDResponses = new ArrayList<>();
+
+        for(SiteEntity siteEntity : siteEntities){
+            SiteDDResponse siteDDResponse = new SiteDDResponse();
+            siteDDResponse.setSiteId(siteEntity.getSiteId());
+            siteDDResponse.setSiteName(siteEntity.getSiteName());
+            siteDDResponse.setStatusCd(siteEntity.getStatusCd());
+
+            siteDDResponses.add(siteDDResponse);
+        }
+        return siteDDResponses;
     }
 }

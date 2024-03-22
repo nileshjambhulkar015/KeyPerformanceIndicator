@@ -34,7 +34,7 @@ public interface CompanyMasterService {
     public List<CompanyDDResponse> getDDCompanyFromComany(Integer regionId, Integer siteId);
     public List<CompanyMasterResponse> getAllCompanyByCompanyId(Integer companyId);
 
-
+   public  List<CompanyDDResponse> getDDAllCompany();
 
    // public void uploadDesigExcelFile(MultipartFile file) throws IOException;
 

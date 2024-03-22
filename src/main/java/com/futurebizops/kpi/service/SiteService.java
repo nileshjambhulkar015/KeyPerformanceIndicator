@@ -23,4 +23,6 @@ public interface SiteService {
     public SiteResponse getSitesById(Integer siteId);
 
     public List<RegionDDResponse> getDDRegionFromSite();
+
+    public List<SiteDDResponse> getDDAllSite();
 }

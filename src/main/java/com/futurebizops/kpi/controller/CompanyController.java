@@ -92,5 +92,13 @@ public class CompanyController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    //for all company save
+    @GetMapping(value = "/dd-all-company")
+    public ResponseEntity<List<CompanyDDResponse>> getDDAllSite() {
+        List<CompanyDDResponse>   response = companyMasterService.getDDAllCompany();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 }
 

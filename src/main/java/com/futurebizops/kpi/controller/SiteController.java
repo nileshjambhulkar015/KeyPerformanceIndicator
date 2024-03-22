@@ -87,5 +87,12 @@ public class SiteController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    //for all sites save
+    @GetMapping(value = "/dd-all-sites")
+    public ResponseEntity<List<SiteDDResponse>> getDDAllSite() {
+        List<SiteDDResponse>   response = siteService.getDDAllSite();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 }
