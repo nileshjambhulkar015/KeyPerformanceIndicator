@@ -50,8 +50,8 @@ public class CumulativeServiceImpl implements CumulativeService {
     @Override
     public KPIResponse getAllEmployeeKPPStatusReport(String fromDate, String toDate,  Integer empId, Integer roleId, String statusCd, Pageable pageable) {
         String sortName = null;
-        String startDate = StringUtils.isNotEmpty(fromDate) ? DateTimeUtils.convertStringToInstant(fromDate).toString() : DateTimeUtils.getFirstDateOfYear();
-        String endDate = StringUtils.isNotEmpty(toDate) ? DateTimeUtils.convertStringToInstant(toDate).toString() : Instant.now().toString();
+        String startDate = StringUtils.isNotEmpty(fromDate) ? DateTimeUtils.addOneDayToInstant(fromDate).toString() : DateTimeUtils.getFirstDateOfYear();
+        String endDate = StringUtils.isNotEmpty(toDate) ? DateTimeUtils.addOneDayToInstant(toDate).toString() : Instant.now().toString();
 
         CummalitiveEmployeeResponse cummalitiveEmployeeResponse = new CummalitiveEmployeeResponse();
 
@@ -163,10 +163,11 @@ public class CumulativeServiceImpl implements CumulativeService {
                }
                System.out.println(hoDCumulativeResponses);
 
-               Double totalKppTotal = 0.0;
-               Double avgHoDKppRating = 0.0;
-               for (HoDCumulativeResponse cumulativeHoDResponse : hoDCumulativeResponses) {
 
+
+               for (HoDCumulativeResponse cumulativeHoDResponse : hoDCumulativeResponses) {
+                   Double totalKppTotal = 0.0;
+                   Double avgHoDKppRating = 0.0;
                    for (TotalCumulativeHoD totalCumulativeHoD : cumulativeHoDResponse.getTotalCumulativeHoDS()) {
                        totalKppTotal += totalCumulativeHoD.getTotalWeight();
                    }

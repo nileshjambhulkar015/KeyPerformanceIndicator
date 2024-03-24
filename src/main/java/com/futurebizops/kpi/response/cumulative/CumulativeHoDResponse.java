@@ -21,9 +21,9 @@ public class CumulativeHoDResponse {
         hodCumulativeData.setDesigName(String.valueOf(objects[11]));
 
         totalCumulativeHoD.setEkppMonth(String.valueOf(objects[0]));
-        totalCumulativeHoD.setTotalEmpAchivedWeight(String.valueOf(objects[12]));
-        totalCumulativeHoD.setTotalHoDAchivedWeight(String.valueOf(objects[13]));
-        totalCumulativeHoD.setTotalGMAchivedWeight(String.valueOf(objects[14]));
+        totalCumulativeHoD.setTotalEmpOverallAchieve(String.valueOf(objects[12]));
+        totalCumulativeHoD.setTotalHodOverallAchieve(String.valueOf(objects[13]));
+        totalCumulativeHoD.setTotalGmOverallAchieve(String.valueOf(objects[14]));
 
         totalCumulativeHoD.setTotalWeight(Double.valueOf(String.valueOf(objects[12])) + Double.valueOf(String.valueOf(objects[13])) + Double.valueOf(String.valueOf(objects[14])));
     }

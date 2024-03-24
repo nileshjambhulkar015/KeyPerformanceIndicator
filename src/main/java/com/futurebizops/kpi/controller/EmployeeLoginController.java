@@ -2,6 +2,7 @@ package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeLoginService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/login")
+@Slf4j
 public class EmployeeLoginController {
 
     @Autowired
@@ -23,6 +25,7 @@ public class EmployeeLoginController {
     @GetMapping
     public ResponseEntity<KPIResponse> findPartDetails(@RequestParam(required = false) String userName,
                                                        @RequestParam(required = false) String userPassword) {
+        log.info("User name : {}", userName);
         KPIResponse response = employeeLoginService.employeeLogin(userName, userPassword);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -141,6 +141,11 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
                 statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
                 statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
                 statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
+                statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
+                statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
+                statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
+                statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
+                statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
 
                 statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
                 empKppStatusResponses.add(statusResponse);
