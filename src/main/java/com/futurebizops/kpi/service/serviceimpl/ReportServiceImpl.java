@@ -91,11 +91,11 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
     Cell cell0000 = row0.createCell(0);
 
     // Add the first line with font size 16
-    RichTextString richTextString1 = new XSSFRichTextString("TAIKISHA ENGINEERING INDIA PVT. LTD.");
+    RichTextString richTextString1 = new XSSFRichTextString(""+ response.getCompanyName()+"  ");
     richTextString1.applyFont(font16); // Set font size 16 for the entire string
 
     // Add a new line with font size 12
-    RichTextString newLine = new XSSFRichTextString("\nGat # 321/323, Village Kondhapuri, Tq. Shirur, Dist. Pune - 412209");
+    RichTextString newLine = new XSSFRichTextString("\n"+response.getCompanyAddress());
     Font font19 = workbook.createFont();
     font19.setFontHeightInPoints((short) 12);
     font19.setBold(false);
@@ -118,7 +118,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
     sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 21));
 
     Cell cell0001 = row1.createCell(0);
-    cell0001.setCellValue("EMPLOYEE-WISE KEY PERFORMANCE INDICATORS (KPIs) FY 2023-2024");
+    cell0001.setCellValue("EMPLOYEE-WISE KEY PERFORMANCE INDICATORS (KPIs) FY "+response.getCompanyFinYear());
     cell0001.setCellStyle(font12Style);
 
 
@@ -476,11 +476,11 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
         Cell cell0000 = row0.createCell(0);
 
         // Add the first line with font size 16
-        RichTextString richTextString1 = new XSSFRichTextString("TAIKISHA ENGINEERING INDIA PVT. LTD.");
+        RichTextString richTextString1 = new XSSFRichTextString(" "+response.getCompanyName()+"  ");
         richTextString1.applyFont(font16); // Set font size 16 for the entire string
 
         // Add a new line with font size 12
-        RichTextString newLine = new XSSFRichTextString("\nGat # 321/323, Village Kondhapuri, Tq. Shirur, Dist. Pune - 412209");
+        RichTextString newLine = new XSSFRichTextString("\n  "+ response.getCompanyAddress());
         Font font19 = workbook.createFont();
         font19.setFontHeightInPoints((short) 12);
         font19.setBold(false);
@@ -503,7 +503,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
         sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 24));
 
         Cell cell0001 = row1.createCell(0);
-        cell0001.setCellValue("EMPLOYEE-WISE KEY PERFORMANCE INDICATORS (KPIs) FY 2023-2024");
+        cell0001.setCellValue("EMPLOYEE-WISE KEY PERFORMANCE INDICATORS (KPIs) FY "+response.getCompanyFinYear());
         cell0001.setCellStyle(font12Style);
 
 
