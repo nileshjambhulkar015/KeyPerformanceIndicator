@@ -186,7 +186,7 @@ public class CumulativeServiceImpl implements CumulativeService {
            else {
                kpiResponse.setResponseMessage("Kpp is not approved yet");
                kpiResponse.setResponseData(null);
-               kpiResponse.setSuccess(true);
+               kpiResponse.setSuccess(false);
            }
         }
         catch (Exception ex){
