@@ -56,7 +56,7 @@ public class ReportServiceImpl implements ReportService {
 public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResponse httpServletResponse) {
 
     Workbook workbook = new XSSFWorkbook();
-    Sheet sheet = workbook.createSheet(response.getEmpEId() + " " + response.getEmpName());
+    Sheet sheet = workbook.createSheet(response.getEmpEId() + "_"+response.getEkppMonth()+"_" + response.getEmpName());
     Row row0 = sheet.createRow(0);
     sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 21));
 
@@ -441,7 +441,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
     public void getEmployeeKppStatusExport(EmpKppStatusResponse response, HttpServletResponse httpServletResponse) {
 
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet(response.getEmpEId() + " " + response.getEmpName());
+        Sheet sheet = workbook.createSheet(response.getEmpEId() + "_"+response.getEkppMonth()+"_" + response.getEmpName());
         Row row0 = sheet.createRow(0);
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 24));
 
