@@ -31,7 +31,8 @@ public class EvidenceController {
     @Autowired
     EvidenceService evidenceService;
 
-
+    @Autowired
+    EvidenceRepo evidenceRepo;
 
     @PostMapping
     public ResponseEntity<KPIResponse> uploadNewFile(@NotNull @RequestParam("multipartFile") MultipartFile multipartFile,
@@ -46,15 +47,15 @@ public class EvidenceController {
     @GetMapping
     public ResponseEntity<byte[]> getRandomFile( @RequestParam(required = false) Integer empId) {
 
-      /*  EvidenceEntity fileEntity = evidenceRepo.findById(empId).get();
+        EvidenceEntity fileEntity = evidenceRepo.findById(empId).get();
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.valueOf(fileEntity.getEvContentType()));
         header.setContentLength(fileEntity.getEvFile().length);
         header.set("Content-Disposition", "attachment; filename=" + fileEntity.getEvFileName());
 
-        return new ResponseEntity<>(fileEntity.getEvFile(), header, HttpStatus.OK);*/
-        return null;
+        return new ResponseEntity<>(fileEntity.getEvFile(), header, HttpStatus.OK);
+
     }
 
 }

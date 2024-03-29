@@ -6,12 +6,14 @@ import com.futurebizops.kpi.entity.DesignationEntity;
 import com.futurebizops.kpi.entity.KeyPerfParamAudit;
 import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import com.futurebizops.kpi.entity.RoleEntity;
+import com.futurebizops.kpi.entity.UoMEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.DepartmentRepo;
 import com.futurebizops.kpi.repository.DesignationRepo;
 import com.futurebizops.kpi.repository.KeyPerfParameterAuditRepo;
 import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.repository.RoleRepo;
+import com.futurebizops.kpi.repository.UoMRepo;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.request.uploadexcel.KeyPerfParamExcelReadData;
@@ -59,6 +61,9 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
     @Autowired
     RoleRepo roleRepo;
+
+    @Autowired
+    UoMRepo uoMRepo;
 
     @Override
     public KPIResponse saveKeyPerfomanceParameter(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
@@ -238,7 +243,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
                 keyPerfParamCreateRequest.setKppPerformanceIndi(request.getKppPerformanceIndi());
                 keyPerfParamCreateRequest.setKppOverallTarget(request.getKppOverallTarget());
-              //  keyPerfParamCreateRequest.setUomId(request.getKppUoM());
+                keyPerfParamCreateRequest.setUomId(getUoMId(request.getKppUoM()));
                 keyPerfParamCreateRequest.setKppOverallWeightage(request.getKppOverallWeightage());
                 keyPerfParamCreateRequest.setKppRating1(request.getKppRating1());
                 keyPerfParamCreateRequest.setKppRating2(request.getKppRating2());
@@ -259,7 +264,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         }
         for (KeyPerfParamCreateRequest request : KeyPerfParamCreateRequests) {
             try {
-                if(request.getRoleId()>0&& request.getDeptId()>0&&request.getDesigId()>0) {
+                if(request.getRoleId()>0&& request.getDeptId()>0&&request.getDesigId()>0 && request.getUomId()>0) {
                     saveKeyPerfomanceParameter(request);
                 }else{
                     KeyPerfParamNotSavedRecords.add(request);
@@ -297,6 +302,17 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         return deptId;
     }
 
+    private Integer getUoMId(String uomName) {
+        Optional<UoMEntity> uoMEntity = uoMRepo.findByUomNameEqualsIgnoreCase(uomName);
+        Integer uomId=-1;
+        if (uoMEntity.isPresent()) {
+            uomId=  uoMEntity.get().getUomId();
+        }else {
+            uomId=-1;
+            throw new KPIException("EmployeeServiceImpl", false, "UoM Name is not exist" + uomName);
+        }
+        return uomId;
+    }
 
     private Integer getDesigId(String desigName, Integer deptId) {
         Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptId(desigName, deptId);
