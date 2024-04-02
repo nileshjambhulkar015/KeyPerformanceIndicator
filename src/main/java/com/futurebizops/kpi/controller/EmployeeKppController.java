@@ -12,10 +12,14 @@ import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,6 +41,13 @@ public class EmployeeKppController {
     @PostMapping(value = "/assign-kpp")
     public ResponseEntity<KPIResponse> saveEmployeeKeyPerfomanceParamDetails(@RequestBody EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         KPIResponse response = employeeKeyPerfParamService.saveEmployeeKeyPerfParamDetails(keyPerfParamCreateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/assign-kpp")
+    public ResponseEntity<KPIResponse> deleteEmployeeKeyPerfomanceParamDetails(@RequestParam(required = false) Integer empId,
+                                                                               @RequestParam(required = false) Integer kppId) {
+        KPIResponse response = employeeKeyPerfParamService.deleteEmployeeKeyPerfParamDetails(empId,kppId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -105,6 +116,33 @@ public class EmployeeKppController {
                                                                              @RequestParam(required = false) Integer deptId) {
         List<DesignationDDResponse>  response = employeeKeyPerfParamService.getDDDesigFromEmployee(regionId, siteId, companyId, roleId, deptId);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //view employee assign kpp on AssignEmployeeKppComponent
+    @GetMapping(value = "/assign-employee-kpp-search")
+    @PageableAsQueryParam
+    public ResponseEntity<KPIResponse> assignEmployeeKppSearch(@RequestParam(required = false) Integer empId,
+                                                               @RequestParam(required = false) Integer roleId,
+                                                               @RequestParam(required = false) Integer deptId,
+                                                               @RequestParam(required = false) Integer desigId,
+                                                               @Parameter(hidden = true) Pageable pageable) {
+        KPIResponse response = employeeKeyPerfParamService.assignEmployeeKppSearch(empId,roleId, deptId, desigId,pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+
+    //view employee assign kpp on AssignEmployeeKppComponent
+    @GetMapping(value = "/assign-employee-kpp-view")
+    @PageableAsQueryParam
+    public ResponseEntity<KPIResponse> viewEmployeeKpp(@RequestParam(required = false) Integer empId,
+                                                       @RequestParam(required = false) Integer roleId,
+                                                       @RequestParam(required = false) Integer deptId,
+                                                       @RequestParam(required = false) Integer desigId,
+                                                       @Parameter(hidden = true) Pageable pageable) {
+        KPIResponse response = employeeKeyPerfParamService.viewEmployeeKpp(empId,roleId, deptId, desigId,pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 

@@ -25,6 +25,7 @@ import com.futurebizops.kpi.request.GMUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.GMUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.HODUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
+import com.futurebizops.kpi.response.AssignKPPResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
@@ -39,6 +40,9 @@ import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -145,6 +149,22 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         } catch (Exception ex) {
             log.error("Inside DepartmentServiceImpl >> saveDepartment()");
             throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public KPIResponse deleteEmployeeKeyPerfParamDetails(Integer empId, Integer kppId) {
+        try {
+            log.debug("empId={}, kppId={}", empId, kppId);
+            employeeKppDetailsRepo.deleteByEmpIdAndKppId(empId, kppId);
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage(KPIConstants.RECORD_SUCCESS)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKppServiceImpl >> deleteEmployeeKeyPerfParamDetails()");
+            throw new KPIException("EmployeeKppServiceImpl", false, ex.getMessage());
         }
     }
 
@@ -330,6 +350,63 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
+    public KPIResponse assignEmployeeKppSearch(Integer empId,Integer roleId,Integer deptId,Integer desigId,Pageable pageable
+    ) {
+        String sortName = null;
+        //String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = employeeKppDetailsRepo.assignEmployeeKppCount(empId);
+        List<Object[]> designationData = employeeKppDetailsRepo.assignEmployeeKpp(empId, roleId, deptId, desigId);
+
+        List<AssignKPPResponse> kppResponses = designationData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
+        kppResponses = kppResponses.stream()
+                .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
+                .collect(Collectors.toList());
+
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
+                .responseMessage(KPIConstants.RECORD_FETCH)
+                .build();
+    }
+
+
+    @Override
+    public KPIResponse viewEmployeeKpp(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable) {
+        String sortName = null;
+        //String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = employeeKppDetailsRepo.viewEmployeeKppCount(empId, roleId, deptId, desigId);
+        List<Object[]> empKppData = employeeKppDetailsRepo.viewEmployeeKpp(empId, roleId, deptId, desigId);
+
+        List<AssignKPPResponse> kppResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
+        kppResponses = kppResponses.stream()
+                .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
+                .collect(Collectors.toList());
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
+                .responseMessage(KPIConstants.RECORD_FETCH)
+                .build();
+    }
+
+    @Override
     public List<RegionDDResponse> getDDRegionFromEmployee() {
         List<Object[]> regionData = employeeRepo.getDDRegionFromCompany();
         return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
@@ -349,19 +426,19 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Override
     public List<RoleDDResponse> getDDRolesFromEmployee(Integer regionId, Integer siteId, Integer companyId) {
-        List<Object[]> siteData = employeeRepo.getDDRolesFromCompany(regionId, siteId,companyId);
+        List<Object[]> siteData = employeeRepo.getDDRolesFromCompany(regionId, siteId, companyId);
         return siteData.stream().map(RoleDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
     public List<DepartmentDDResponse> getDDDeptFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId) {
-        List<Object[]> siteData = employeeRepo.getDDDeptFromCompany(regionId, siteId,companyId, roleId);
+        List<Object[]> siteData = employeeRepo.getDDDeptFromCompany(regionId, siteId, companyId, roleId);
         return siteData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
     public List<DesignationDDResponse> getDDDesigFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId, Integer deptId) {
-        List<Object[]> siteData = employeeRepo.getDDDesigFromCompany(regionId, siteId,companyId, roleId, deptId);
+        List<Object[]> siteData = employeeRepo.getDDDesigFromCompany(regionId, siteId, companyId, roleId, deptId);
         return siteData.stream().map(DesignationDDResponse::new).collect(Collectors.toList());
     }
 

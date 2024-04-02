@@ -13,12 +13,15 @@ import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface EmployeeKeyPerfParamService {
 
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest);
+
+    public KPIResponse deleteEmployeeKeyPerfParamDetails(Integer empId,Integer kppId);
 
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest);
 
@@ -46,4 +49,7 @@ public interface EmployeeKeyPerfParamService {
 
     public List<DesignationDDResponse> getDDDesigFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId, Integer deptId);
 
+    public KPIResponse viewEmployeeKpp(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable);
+
+    public KPIResponse assignEmployeeKppSearch(Integer empId,Integer roleId,Integer deptId,Integer desigId,Pageable pageable);
 }
