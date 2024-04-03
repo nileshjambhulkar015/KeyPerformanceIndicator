@@ -352,6 +352,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Override
     public KPIResponse assignEmployeeKppSearch(Integer empId,Integer roleId,Integer deptId,Integer desigId,Pageable pageable
     ) {
+        List<AssignKPPResponse> kppResponses = null;
+        KPIResponse response =new KPIResponse();
         String sortName = null;
         //String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -364,23 +366,33 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         }
 
         Integer totalCount = employeeKppDetailsRepo.assignEmployeeKppCount(empId);
-        List<Object[]> designationData = employeeKppDetailsRepo.assignEmployeeKpp(empId, roleId, deptId, desigId);
+        List<Object[]> kppData = employeeKppDetailsRepo.assignEmployeeKpp(empId, roleId, deptId, desigId);
 
-        List<AssignKPPResponse> kppResponses = designationData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
-        kppResponses = kppResponses.stream()
-                .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
-                .collect(Collectors.toList());
-
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+        if(kppData.size()>0) {
+            kppResponses = kppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
+            kppResponses = kppResponses.stream()
+                    .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
+                    .collect(Collectors.toList());
+            response =   KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } else {
+            response =   KPIResponse.builder()
+                    .isSuccess(false)
+                    .responseData(null)
+                    .responseMessage("All Kpp set to Employee")
+                    .build();
+        }
+        return response;
     }
 
 
     @Override
     public KPIResponse viewEmployeeKpp(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable) {
+        List<AssignKPPResponse> assignKPPResponses = null;
+        KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
         //String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -395,15 +407,25 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         Integer totalCount = employeeKppDetailsRepo.viewEmployeeKppCount(empId, roleId, deptId, desigId);
         List<Object[]> empKppData = employeeKppDetailsRepo.viewEmployeeKpp(empId, roleId, deptId, desigId);
 
-        List<AssignKPPResponse> kppResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
-        kppResponses = kppResponses.stream()
+        if(empKppData.size()>0){
+      assignKPPResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
+        assignKPPResponses = assignKPPResponses.stream()
                 .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
                 .collect(Collectors.toList());
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+           kpiResponse= KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(assignKPPResponses, pageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } else {
+          kpiResponse=  KPIResponse.builder()
+                    .isSuccess(false)
+                    .responseData(null)
+                    .responseMessage("record not found")
+                    .build();
+        }
+
+        return kpiResponse;
     }
 
     @Override
