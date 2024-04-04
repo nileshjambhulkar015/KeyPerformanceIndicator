@@ -26,6 +26,7 @@ import com.futurebizops.kpi.request.GMUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.HODUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.response.AssignKPPResponse;
+import com.futurebizops.kpi.response.EmployeeAssignKppResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
@@ -392,6 +393,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Override
     public KPIResponse viewEmployeeKpp(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable) {
         List<AssignKPPResponse> assignKPPResponses = null;
+        EmployeeAssignKppResponse assignKppResponse = new EmployeeAssignKppResponse();
         KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
         //String sortDirection = null;
@@ -409,12 +411,20 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
         if(empKppData.size()>0){
       assignKPPResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
+      Integer empKppOverallTargetCount=0;
+      for(AssignKPPResponse assignKPPResponse : assignKPPResponses){
+          empKppOverallTargetCount +=Integer.parseInt(assignKPPResponse.getKppOverallTarget());
+      }
         assignKPPResponses = assignKPPResponses.stream()
                 .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
                 .collect(Collectors.toList());
+
+            assignKppResponse.setEmpKppOverallTargetCount(empKppOverallTargetCount);
+            assignKppResponse.setKppResponses(new PageImpl<>(assignKPPResponses, pageable, totalCount));
            kpiResponse= KPIResponse.builder()
                     .isSuccess(true)
-                    .responseData(new PageImpl<>(assignKPPResponses, pageable, totalCount))
+                    //.responseData(new PageImpl<>(assignKPPResponses, pageable, totalCount))
+                   .responseData(assignKppResponse)
                     .responseMessage(KPIConstants.RECORD_FETCH)
                     .build();
         } else {
