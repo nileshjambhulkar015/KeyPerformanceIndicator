@@ -351,10 +351,10 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
-    public KPIResponse assignEmployeeKppSearch(Integer empId,Integer roleId,Integer deptId,Integer desigId,Pageable pageable
+    public KPIResponse assignEmployeeKppSearch(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable
     ) {
         List<AssignKPPResponse> kppResponses = null;
-        KPIResponse response =new KPIResponse();
+        KPIResponse response = new KPIResponse();
         String sortName = null;
         //String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -369,18 +369,18 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         Integer totalCount = employeeKppDetailsRepo.assignEmployeeKppCount(empId);
         List<Object[]> kppData = employeeKppDetailsRepo.assignEmployeeKpp(empId, roleId, deptId, desigId);
 
-        if(kppData.size()>0) {
+        if (kppData.size() > 0) {
             kppResponses = kppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
             kppResponses = kppResponses.stream()
                     .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
                     .collect(Collectors.toList());
-            response =   KPIResponse.builder()
+            response = KPIResponse.builder()
                     .isSuccess(true)
                     .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
                     .responseMessage(KPIConstants.RECORD_FETCH)
                     .build();
         } else {
-            response =   KPIResponse.builder()
+            response = KPIResponse.builder()
                     .isSuccess(false)
                     .responseData(null)
                     .responseMessage("All Kpp set to Employee")
@@ -409,26 +409,26 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         Integer totalCount = employeeKppDetailsRepo.viewEmployeeKppCount(empId, roleId, deptId, desigId);
         List<Object[]> empKppData = employeeKppDetailsRepo.viewEmployeeKpp(empId, roleId, deptId, desigId);
 
-        if(empKppData.size()>0){
-      assignKPPResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
-      Integer empKppOverallTargetCount=0;
-      for(AssignKPPResponse assignKPPResponse : assignKPPResponses){
-          empKppOverallTargetCount +=Integer.parseInt(assignKPPResponse.getKppOverallTarget());
-      }
-        assignKPPResponses = assignKPPResponses.stream()
-                .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
-                .collect(Collectors.toList());
+        if (empKppData.size() > 0) {
+            assignKPPResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
+            Integer empKppOverallTargetCount = 0;
+            for (AssignKPPResponse assignKPPResponse : assignKPPResponses) {
+                empKppOverallTargetCount += Integer.parseInt(assignKPPResponse.getKppOverallTarget());
+            }
+            assignKPPResponses = assignKPPResponses.stream()
+                    .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
+                    .collect(Collectors.toList());
 
             assignKppResponse.setEmpKppOverallTargetCount(empKppOverallTargetCount);
             assignKppResponse.setKppResponses(new PageImpl<>(assignKPPResponses, pageable, totalCount));
-           kpiResponse= KPIResponse.builder()
+            kpiResponse = KPIResponse.builder()
                     .isSuccess(true)
                     //.responseData(new PageImpl<>(assignKPPResponses, pageable, totalCount))
-                   .responseData(assignKppResponse)
+                    .responseData(assignKppResponse)
                     .responseMessage(KPIConstants.RECORD_FETCH)
                     .build();
         } else {
-          kpiResponse=  KPIResponse.builder()
+            kpiResponse = KPIResponse.builder()
                     .isSuccess(false)
                     .responseData(null)
                     .responseMessage("record not found")

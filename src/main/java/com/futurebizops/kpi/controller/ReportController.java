@@ -33,4 +33,10 @@ ReportService reportService;
     public void exportToExcelHod(HttpServletResponse httpServletResponse, @RequestParam(required = false) Integer empId)  {
         reportService.getHodKppStatusReport(httpServletResponse, empId);
     }
+
+    @GetMapping("/completed-hod-kpp-status")
+    public void exportCompletedToExcelHOD(HttpServletResponse httpServletResponse, @RequestParam(required = false) Integer empId, @RequestParam(required = false) String ekppMonth)  {
+        reportService.getCompletedHODKppStatusReport(httpServletResponse, empId,ekppMonth);
+    }
+
 }

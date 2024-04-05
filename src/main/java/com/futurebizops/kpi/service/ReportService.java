@@ -10,4 +10,6 @@ public interface ReportService {
 
     public void getCompletedEmployeeKppStatusReport(HttpServletResponse httpServletResponse, Integer empId,String ekppMonth);
     public void getHodKppStatusReport(HttpServletResponse httpServletResponse, Integer empId);
+
+    public void getCompletedHODKppStatusReport(HttpServletResponse httpServletResponse, Integer empId,String ekppMonth);
 }

@@ -52,7 +52,14 @@ public class ReportServiceImpl implements ReportService {
         EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getInPrgressEmployeeKppStatus(empId);
         getHodKppStatusExport(empKppStatusResponse,httpServletResponse);
     }
-//for HOD kpp report
+
+    @Override
+    public void getCompletedHODKppStatusReport(HttpServletResponse httpServletResponse, Integer empId, String ekppMonth) {
+        EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getCompletedEmployeeKppStatus(empId,ekppMonth);
+        getHodKppStatusExport(empKppStatusResponse,httpServletResponse);
+    }
+
+    //for HOD kpp report
 public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResponse httpServletResponse) {
 
     Workbook workbook = new XSSFWorkbook();
