@@ -34,6 +34,9 @@ public class KeyPerfParamEntity extends AuditEnabledEntity {
     @Column(name = "desig_id")
     private Integer desigId;
 
+    @Column(name = "kpp_objective_no")
+    private String kppObjectiveNo;
+
     @Column(name = "kpp_objective")
     private String kppObjective;
 

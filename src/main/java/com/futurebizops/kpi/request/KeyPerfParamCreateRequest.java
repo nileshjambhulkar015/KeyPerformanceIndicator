@@ -3,6 +3,8 @@ package com.futurebizops.kpi.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import javax.persistence.Column;
+
 @Data
 public class KeyPerfParamCreateRequest {
 
@@ -14,6 +16,9 @@ public class KeyPerfParamCreateRequest {
 
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private Integer desigId;
+
+    @Schema(example = "Kpp001", description = "This field is used for kpp objective number")
+    private String kppObjectiveNo;
 
     @Schema(example = "Objective of KPP", description = "This field is used for rating ratio 1")
     private String kppObjective;

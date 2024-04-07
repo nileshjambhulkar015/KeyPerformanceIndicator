@@ -4,8 +4,10 @@ import com.futurebizops.kpi.enums.KeyPerfParamSearchEnum;
 import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +20,7 @@ public interface KeyPerfParameterService {
 
     public KPIResponse updateKeyPerfomanceParameter(KeyPerfParamUpdateRequest keyPerfParamUpdateRequest);
 
-    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId,Integer desigId,String kppObjective,String statusCd,Pageable pageable);
+    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId,Integer desigId,String kppObjectiveNo,String kppObjective,String statusCd,Pageable pageable);
 
     //show kpp when assign kpp for employee
 
@@ -27,4 +29,6 @@ public interface KeyPerfParameterService {
     public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId);
 
     public void uploadKppExcelFile(MultipartFile file) throws IOException;
+
+
 }

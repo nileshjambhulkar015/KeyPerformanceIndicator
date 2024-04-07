@@ -5,6 +5,7 @@ import com.futurebizops.kpi.request.DepartmentCreateRequest;
 import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -77,5 +78,9 @@ public class DepartmentController {
         departmentService.uploadDeptExcelFile(file);
     }
 
-
+    @GetMapping (value = "/all-dd-dept-except-gm")
+    public ResponseEntity<List<DepartmentDDResponse>> findAllDepartmentExceptGM() {
+        List<DepartmentDDResponse> response = departmentService.findAllDepartmentExceptGM();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

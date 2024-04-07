@@ -18,8 +18,10 @@ import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
 import com.futurebizops.kpi.request.uploadexcel.KeyPerfParamExcelReadData;
 import com.futurebizops.kpi.response.AssignKPPResponse;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -67,16 +69,21 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
     @Override
     public KPIResponse saveKeyPerfomanceParameter(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
-
+        KPIResponse response = new KPIResponse();
+       Optional<KeyPerfParamEntity> optionalKeyPerfParamEntity = keyPerfParameterRepo.findByKppObjectiveNoEqualsIgnoreCaseAndStatusCd(keyPerfParamCreateRequest.getKppObjectiveNo(), "A");
+       if(optionalKeyPerfParamEntity.isPresent()){
+           response.setResponseMessage(KPIConstants.RECORD_ALREDY_EXIST);
+           response.setSuccess(false);
+           return response;
+       }
         KeyPerfParamEntity keyPerfParamEntity = convertKeyPerfParamCreateRequestToEntity(keyPerfParamCreateRequest);
         try {
             keyPerfParameterRepo.save(keyPerfParamEntity);
             KeyPerfParamAudit keyPerfParamAudit = new KeyPerfParamAudit(keyPerfParamEntity);
             keyPerfParameterAuditRepo.save(keyPerfParamAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_SUCCESS)
-                    .build();
+            response.setResponseMessage(KPIConstants.RECORD_SUCCESS);
+            response.setSuccess(true);
+            return  response;
         } catch (Exception ex) {
             log.error("Inside KeyPerfParameterServiceImpl >> saveKeyPerfomanceParameter()");
             throw new KPIException("KeyPerfParameterServiceImpl", false, ex.getMessage());
@@ -101,8 +108,9 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
     @Override
-    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId, Integer desigId, String kppObjective, String statusCd, Pageable pageable) {
+    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId, Integer desigId,String kppObjectiveNo, String kppObjective, String statusCd, Pageable pageable) {
         String sortName = null;
+        KPIResponse kpiResponse = new KPIResponse();
         //String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
         Integer pageOffset = (int) pageable.getOffset();
@@ -113,19 +121,28 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
           //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = keyPerfParameterRepo.getKeyPerfParameterCount(kppId, roleId, deptId, desigId, kppObjective, statusCd);
-        List<Object[]> designationData = keyPerfParameterRepo.getKeyPerfParameterDetail(kppId, roleId, deptId, desigId, kppObjective, statusCd, sortName, pageSize, pageOffset);
+        try{
+        Integer totalCount = keyPerfParameterRepo.getKeyPerfParameterCount(kppId, roleId, deptId, desigId, kppObjectiveNo, kppObjective, statusCd);
+        List<Object[]> kppData = keyPerfParameterRepo.getKeyPerfParameterDetail(kppId, roleId, deptId, desigId, kppObjectiveNo,kppObjective, statusCd, sortName, pageSize, pageOffset);
 
-        List<KPPResponse> kppResponses = designationData.stream().map(KPPResponse::new).collect(Collectors.toList());
-        kppResponses = kppResponses.stream()
-                .sorted(Comparator.comparing(KPPResponse::getDeptName))
-                .collect(Collectors.toList());
+        if(kppData.size()>0) {
+            List<KPPResponse> kppResponses = kppData.stream().map(KPPResponse::new).collect(Collectors.toList());
+            kppResponses = kppResponses.stream()
+                    .sorted(Comparator.comparing(KPPResponse::getDeptName))
+                    .collect(Collectors.toList());
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseData(new PageImpl<>(kppResponses, pageable, totalCount));
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_FETCH);
+        } else {
+            kpiResponse.setSuccess(false);
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_NOT_FOUND);
+        }}
+        catch (Exception ex){
+            log.error("Inside KeyPerfParameterServiceImpl >> findKeyPerfomanceParameterDetails()");
+            throw new KPIException("KeyPerfParameterServiceImpl class", false, ex.getMessage());
+        }
 
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+       return kpiResponse;
     }
 
 
@@ -250,6 +267,9 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         }
         log.info("KeyPerfParamNotSavedRecords" + KeyPerfParamNotSavedRecords);
     }
+
+
+
     private Integer getRoleId(String roleName) {
         Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
         Integer roleId = -1;
@@ -304,6 +324,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         keyPerfParamEntity.setRoleId(keyPerfParamCreateRequest.getRoleId());
         keyPerfParamEntity.setDeptId(keyPerfParamCreateRequest.getDeptId());
         keyPerfParamEntity.setDesigId(keyPerfParamCreateRequest.getDesigId());
+        keyPerfParamEntity.setKppObjectiveNo(keyPerfParamCreateRequest.getKppObjectiveNo());
         keyPerfParamEntity.setKppObjective(keyPerfParamCreateRequest.getKppObjective());
         keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamCreateRequest.getKppPerformanceIndi());
         keyPerfParamEntity.setKppOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget());
@@ -328,6 +349,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         keyPerfParamEntity.setRoleId(keyPerfParamUpdateRequest.getRoleId());
         keyPerfParamEntity.setDeptId(keyPerfParamUpdateRequest.getDeptId());
         keyPerfParamEntity.setDesigId(keyPerfParamUpdateRequest.getDesigId());
+        keyPerfParamEntity.setKppObjectiveNo(keyPerfParamUpdateRequest.getKppObjectiveNo());
         keyPerfParamEntity.setKppObjective(keyPerfParamUpdateRequest.getKppObjective());
         keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamUpdateRequest.getKppPerformanceIndi());
         keyPerfParamEntity.setKppOverallTarget(keyPerfParamUpdateRequest.getKppOverallTarget());

@@ -7,6 +7,7 @@ import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RoleResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,5 +27,7 @@ public interface DepartmentService {
 
     public DepartmentReponse findAllDepartmentById(Integer deptId);
     public void uploadDeptExcelFile(MultipartFile file) throws IOException;
+
+    public List<DepartmentDDResponse> findAllDepartmentExceptGM();
 
 }

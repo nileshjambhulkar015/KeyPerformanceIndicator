@@ -2,8 +2,10 @@ package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -52,11 +55,12 @@ public class KeyPerfParameterController {
                                                               @RequestParam(required = false) Integer roleId,
                                                               @RequestParam(required = false) Integer deptId,
                                                               @RequestParam(required = false) Integer desigId,
+                                                              @RequestParam(required = false) String kppObjectiveNo,
                                                               @RequestParam(required = false) String kppObjective,
                                                               @RequestParam(required = false) String statusCd,
                                                               @Parameter(hidden = true) Pageable pageable) {
         log.info("reqiuest for Employee KPP search");
-        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, roleId, deptId, desigId, kppObjective, statusCd, pageable);
+        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, roleId, deptId, desigId, kppObjectiveNo,kppObjective, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -75,4 +79,6 @@ public class KeyPerfParameterController {
     public void uploadKppExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
         keyPerfParameterService.uploadKppExcelFile(file);
     }
+
+
 }

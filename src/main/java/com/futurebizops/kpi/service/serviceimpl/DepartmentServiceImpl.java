@@ -13,6 +13,7 @@ import com.futurebizops.kpi.request.uploadexcel.DepartmentExcelReadData;
 import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -118,6 +119,24 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .build();
     }
 
+    @Override
+    public List<DepartmentDDResponse> findAllDepartmentExceptGM() {
+        List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
+        DepartmentDDResponse departmentDDResponse = null;
+        List<DepartmentDDResponse> departmentDDResponses =new ArrayList<>();
+
+        for(DepartmentEntity departmentEntity : departmentEntities){
+            if(departmentEntity.getDeptId()!=1){
+                departmentDDResponse = new DepartmentDDResponse();
+                departmentDDResponse.setDeptId(departmentEntity.getDeptId());
+                departmentDDResponse.setDeptName(departmentEntity.getDeptName());
+                departmentDDResponse.setStatusCd(departmentEntity.getStatusCd());
+                departmentDDResponses.add(departmentDDResponse);
+            }
+
+        }
+        return departmentDDResponses;
+    }
 
 
     @Override

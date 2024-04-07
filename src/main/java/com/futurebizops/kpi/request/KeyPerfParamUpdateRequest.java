@@ -18,6 +18,9 @@ public class KeyPerfParamUpdateRequest {
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private Integer desigId;
 
+    @Schema(example = "Kpp001", description = "This field is used for kpp objective number")
+    private String kppObjectiveNo;
+
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private String kppObjective;
 

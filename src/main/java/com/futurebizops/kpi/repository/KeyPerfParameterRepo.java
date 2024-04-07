@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, Integer> {
@@ -20,10 +21,10 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     public List<KeyPerfParamEntity> findByRoleIdAndDeptIdAndDesigIdAndStatusCd(Integer roleId, Integer deptId, Integer degidId, String status);
 
     @Query(value = SQLQueryConstants.KPP_QUERY, nativeQuery = true)
-    List<Object[]> getKeyPerfParameterDetail(@Param("kppId") Integer kppId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId, @Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getKeyPerfParameterDetail(@Param("kppId") Integer kppId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId, @Param("kppObjectiveNo") String kppObjectiveNo,@Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.KPP_COUNT_QUERY, nativeQuery = true)
-    Integer getKeyPerfParameterCount(@Param("kppId") Integer kppId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId, @Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd);
+    Integer getKeyPerfParameterCount(@Param("kppId") Integer kppId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("kppObjectiveNo") String kppObjectiveNo, @Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd);
 
 
 
@@ -50,5 +51,6 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     @Query(value = SQLQueryConstants.EMPLOYEE_CUMULATIVE_KPP_STATUS_REPORT_COUNT_QUERY, nativeQuery = true)
     Integer getEmployeeKppStatusReportCount(@Param("startDate") String startDate,@Param("endDate") String endDate, @Param("empId") Integer empId,  @Param("roleId") Integer roleId,  @Param("statusCd") String statusCd);
 
+    Optional<KeyPerfParamEntity> findByKppObjectiveNoEqualsIgnoreCaseAndStatusCd(String kppObjectiveNo,String statusCd);
 
 }
