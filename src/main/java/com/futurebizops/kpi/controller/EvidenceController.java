@@ -4,13 +4,17 @@ import com.futurebizops.kpi.entity.EvidenceEntity;
 import com.futurebizops.kpi.repository.EvidenceRepo;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EvidenceService;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,16 +40,17 @@ public class EvidenceController {
 
     @PostMapping
     public ResponseEntity<KPIResponse> uploadNewFile(@NotNull @RequestParam("multipartFile") MultipartFile multipartFile,
-                                                     @RequestParam(required = false) Integer empId
+                                                     @RequestParam(required = false) Integer empId,
+                                                     @RequestParam(required = false)String evMonth
                                                      ) throws IOException {
-        log.info("Request");
-        return ResponseEntity.ok(evidenceService.uploadFile(multipartFile, empId));
 
-        //return new ResponseEntity<>(kpiResponse, HttpStatus.OK);
+        return ResponseEntity.ok(evidenceService.uploadFile(multipartFile, empId, evMonth));
+
+
     }
 
     @GetMapping
-    public ResponseEntity<byte[]> getRandomFile( @RequestParam(required = false) Integer empId) {
+    public ResponseEntity<byte[]> getEvidenceFile( @RequestParam(required = false) Integer empId) {
 
         EvidenceEntity fileEntity = evidenceRepo.findById(empId).get();
 
@@ -55,6 +60,25 @@ public class EvidenceController {
         header.set("Content-Disposition", "attachment; filename=" + fileEntity.getEvFileName());
 
         return new ResponseEntity<>(fileEntity.getEvFile(), header, HttpStatus.OK);
+
+    }
+
+
+
+    @DeleteMapping
+    public ResponseEntity<KPIResponse> deleteEvidence(@RequestParam(required = false) Integer empId,
+                                                     @RequestParam(required = false)String evMonth
+    ) throws IOException {
+        log.info("Request");
+        return ResponseEntity.ok(evidenceService.deleteEvidenceFile(empId, evMonth));
+    }
+
+    @GetMapping(value="/by-empid-evmonth")
+    public ResponseEntity<KPIResponse> getEmpoyeeEvidenceDetails(
+            @RequestParam(required = false) Integer empId
+            ) {
+        KPIResponse response = evidenceService.getEmpoyeeEvidenceDetails(empId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
