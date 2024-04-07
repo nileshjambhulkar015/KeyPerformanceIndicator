@@ -53,6 +53,7 @@ public class EmployeeController {
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> getAllEmployee(@RequestParam(required = false) Integer empId,
+                                                      @RequestParam(required = false) String empEId,
                                                       @RequestParam(required = false) Integer roleId,
                                                       @RequestParam(required = false) Integer deptId,
                                                       @RequestParam(required = false) Integer desigId,
@@ -66,7 +67,7 @@ public class EmployeeController {
                                                       @RequestParam(required = false) Integer companyId,
                                                       @Parameter(hidden = true) Pageable pageable) {
         log.info("reqiuest for Employee search");
-        KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, pageable);
+        KPIResponse response = employeeService.getAllEmployeeDetails(empId, empEId,roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

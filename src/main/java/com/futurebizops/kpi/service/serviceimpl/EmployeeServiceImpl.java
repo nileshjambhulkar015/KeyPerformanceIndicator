@@ -107,6 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
 
+        KPIResponse kpiResponse = new KPIResponse();
         //When hod is inserted then gm set to reporing employee id only
         Integer gmEmpId = null;
         //2 is for HOD role
@@ -119,12 +120,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if (null == employeeCreateRequest.getReportingEmpId()) {
             log.error("Inside EmployeeServiceImpl >> saveEmployee()");
-            throw new KPIException("EmployeeServiceImpl Class", false, "Reporting Employee must be present");
+            kpiResponse.setSuccess(false);
+            kpiResponse.setResponseMessage("Reporting Employee must be present");
+            return kpiResponse;
         }
         Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findByEmpEIdEqualsIgnoreCase(employeeCreateRequest.getEmpEId());
         if (optionalEmployeeEntity.isPresent()) {
             log.error("Inside EmployeeServiceImpl >> saveEmployee()");
-            throw new KPIException("EmployeeServiceImpl Class", false, "Employee Id is already exist");
+            kpiResponse.setSuccess(false);
+            kpiResponse.setResponseMessage("Employee Id is already available");
+           return kpiResponse;
         }
         EmployeeEntity employeeEntity = convertEmployeeCreateRequestToEntity(employeeCreateRequest);
         employeeEntity.setGmEmpId(gmEmpId);
@@ -134,7 +139,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
             if (CollectionUtils.isEmpty(empKpp)) {
                 log.error("Inside EmployeeServiceImpl >> saveEmployee()");
-                throw new KPIException("EmployeeServiceImpl Class", false, "Please set the KPP for Designation first");
+                kpiResponse.setSuccess(false);
+                kpiResponse.setResponseMessage("Please set the KPP for Designation first");
+                return kpiResponse;
             }
 
             employeeRepo.save(employeeEntity);
@@ -145,10 +152,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeLoginRepo.save(employeeLoginEntity);
             EmployeeLoginAudit employeeLoginAudit = new EmployeeLoginAudit(employeeLoginEntity);
             employeeLoginAuditRepo.save(employeeLoginAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_SUCCESS)
-                    .build();
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_SUCCESS);
+            return kpiResponse;
         } catch (Exception ex) {
             log.error("Inside EmployeeServiceImpl >> saveEmployee()");
             throw new KPIException("EmployeeServiceImpl", false, ex.getMessage());
@@ -182,7 +188,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public KPIResponse getAllEmployeeDetails(Integer empId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,Integer empTypeId,Integer companyId, Pageable pageable) {
+    public KPIResponse getAllEmployeeDetails(Integer empId,String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,Integer empTypeId,Integer companyId, Pageable pageable) {
+        KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -194,19 +201,22 @@ public class EmployeeServiceImpl implements EmployeeService {
             //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = employeeRepo.getEmployeeCount(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId);
-        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, sortName, pageSize, pageOffset);
+        Integer totalCount = employeeRepo.getEmployeeCount(empId,empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId);
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId,empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, sortName, pageSize, pageOffset);
+        if(employeeDetail.size()>0) {
+            List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
+            employeeResponses = employeeResponses.stream()
+                    .sorted(Comparator.comparing(EmployeeResponse::getDeptName))
+                    .collect(Collectors.toList());
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseData(new PageImpl<>(employeeResponses, pageable, totalCount));
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_FETCH);
 
-        List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
-        employeeResponses = employeeResponses.stream()
-                .sorted(Comparator.comparing(EmployeeResponse::getDeptName))
-                .collect(Collectors.toList());
-
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(employeeResponses, pageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+        } else{
+            kpiResponse.setSuccess(false);
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_NOT_FOUND);
+        }
+        return kpiResponse;
     }
 
     @Override

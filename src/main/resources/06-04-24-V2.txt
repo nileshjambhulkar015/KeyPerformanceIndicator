@@ -258,10 +258,10 @@ create table company_master(
 
     create table key_perf_parameter(
         kpp_id serial PRIMARY key,
-        kpp_obj_id VARCHAR(10),
         ROLE_ID INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
+        kpp_objective_no VARCHAR(10),
         kpp_objective VARCHAR(500),
         kpp_performance_indi VARCHAR(500),
         kpp_overall_tar VARCHAR(50),
@@ -285,10 +285,10 @@ create table company_master(
     create table key_perf_parameter_audit(
         kpp_aud_id serial PRIMARY key,
         kpp_id INTEGER,
-        kpp_obj_id VARCHAR(10),
         ROLE_ID INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
+        kpp_objective_no VARCHAR(10),
         kpp_objective VARCHAR(500),
         kpp_performance_indi VARCHAR(500),
         kpp_overall_tar VARCHAR(50),

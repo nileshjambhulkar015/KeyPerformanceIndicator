@@ -43,14 +43,14 @@ public class AssignKPPResponse {
         kppPerformanceIndi=String.valueOf(objects[6]);
         kppOverallTarget=String.valueOf(objects[7]);
         kppTargetPeriod=String.valueOf(objects[8]);
-        kppUoM=String.valueOf(objects[9]);
-        kppOverallWeightage=String.valueOf(objects[10]);
-        kppRating1=String.valueOf(objects[11]);
-        kppRating2=String.valueOf(objects[12]);
-        kppRating3=String.valueOf(objects[13]);
-        kppRating4=String.valueOf(objects[14]);
-        kppRating5=String.valueOf(objects[15]);
-        remark=String.valueOf(objects[16]);
+        kppUoM=String.valueOf(objects[10]);
+        kppOverallWeightage=String.valueOf(objects[11]);
+        kppRating1=String.valueOf(objects[12]);
+        kppRating2=String.valueOf(objects[13]);
+        kppRating3=String.valueOf(objects[14]);
+        kppRating4=String.valueOf(objects[15]);
+        kppRating5=String.valueOf(objects[16]);
+        remark=String.valueOf(objects[17]);
     }
 
 }
