@@ -66,17 +66,24 @@ public class EvidenceController {
 
 
     @DeleteMapping
-    public ResponseEntity<KPIResponse> deleteEvidence(@RequestParam(required = false) Integer empId,
-                                                     @RequestParam(required = false)String evMonth
-    ) throws IOException {
+    public ResponseEntity<KPIResponse> deleteEvidence(@RequestParam(required = false) Integer empId) throws IOException {
         log.info("Request");
-        return ResponseEntity.ok(evidenceService.deleteEvidenceFile(empId, evMonth));
+        return ResponseEntity.ok(evidenceService.deleteEvidenceFile(empId));
+    }
+
+    @GetMapping(value="/by-empid")
+    public ResponseEntity<KPIResponse> getEmpoyeeEvidenceByEmpIdDetails(
+            @RequestParam(required = false) Integer empId
+            ) {
+        KPIResponse response = evidenceService.getEmpoyeeEvidenceDetailsByEmpId(empId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     @GetMapping(value="/by-empid-evmonth")
-    public ResponseEntity<KPIResponse> getEmpoyeeEvidenceDetails(
+    public ResponseEntity<KPIResponse> getEmpoyeeEvidenceByDetails(
             @RequestParam(required = false) Integer empId
-            ) {
+    ) {
         KPIResponse response = evidenceService.getEmpoyeeEvidenceDetails(empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 

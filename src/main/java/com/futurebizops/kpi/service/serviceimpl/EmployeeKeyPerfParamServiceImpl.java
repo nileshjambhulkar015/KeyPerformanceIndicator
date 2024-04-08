@@ -6,6 +6,7 @@ import com.futurebizops.kpi.entity.EmployeeKppDetailsAudit;
 import com.futurebizops.kpi.entity.EmployeeKppDetailsEntity;
 import com.futurebizops.kpi.entity.EmployeeKppMasterAudit;
 import com.futurebizops.kpi.entity.EmployeeKppMasterEntity;
+import com.futurebizops.kpi.entity.EvidenceEntity;
 import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppDetailsEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppMasterEntity;
@@ -15,9 +16,11 @@ import com.futurebizops.kpi.repository.EmployeeKppDetailsRepo;
 import com.futurebizops.kpi.repository.EmployeeKppMasterAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeKppMasterRepo;
 import com.futurebizops.kpi.repository.EmployeeRepo;
+import com.futurebizops.kpi.repository.EvidenceRepo;
 import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppDetailsRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
+import com.futurebizops.kpi.repository.ReportEvidenceRepo;
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmpKPPUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
@@ -25,6 +28,7 @@ import com.futurebizops.kpi.request.GMUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.GMUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.HODUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
+import com.futurebizops.kpi.request.ReportEvidenceCreateRequest;
 import com.futurebizops.kpi.response.AssignKPPResponse;
 import com.futurebizops.kpi.response.EmployeeAssignKppResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
@@ -37,6 +41,7 @@ import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.response.dropdown.SiteDDResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
+import com.futurebizops.kpi.service.ReportEvidenceService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -85,6 +90,14 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Autowired
     private EmployeeKppMasterRepo employeeKeyPerfParamMasterRepo;
+
+    @Autowired
+    private EvidenceRepo evidenceRepo;
+
+    @Autowired
+    private ReportEvidenceRepo reportEvidenceRepo;
+
+
 
     @Override
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
@@ -173,7 +186,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Override
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
         KPIResponse kpiResponse = new KPIResponse();
-        if(StringUtils.isEmpty(empKPPMasterUpdateRequest.getEkppMonth())){
+        if (StringUtils.isEmpty(empKPPMasterUpdateRequest.getEkppMonth())) {
             kpiResponse.setResponseMessage("Please select date once again");
             kpiResponse.setSuccess(false);
             return kpiResponse;
@@ -274,13 +287,14 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         return hodEmployeeResponses;
     }
 
+@Autowired
+    ReportEvidenceService evidenceService;
 
     @Transactional
     @Override
     public KPIResponse generateEmployeeKppReport(Integer empId, String statusCd) {
         Optional<EmployeeKppMasterEntity> employeeKppMasterEntity = employeeKppMasterRepo.findByEmpIdAndStatusCd(empId, statusCd);
         ReportEmployeeKppMasterEntity kppMaster = new ReportEmployeeKppMasterEntity();
-
         if (employeeKppMasterEntity.isPresent()) {
             EmployeeKppMasterEntity kppMasterEntity = employeeKppMasterEntity.get();
             kppMaster.setEkppMonth(kppMasterEntity.getEkppMonth());
@@ -350,6 +364,23 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             }
             reportEmployeeKppDetailsRepo.saveAll(kppDetailsEntities);
             employeeKppDetailsRepo.resetEmployeeKpp(empId, statusCd);
+
+            Optional<EvidenceEntity> optionalEvidenceEntity = evidenceRepo.findById(empId);
+
+            ReportEvidenceCreateRequest reportEvidenceCreateRequest = new ReportEvidenceCreateRequest();
+            if (optionalEvidenceEntity.isPresent()) {
+                EvidenceEntity evidenceEntity = optionalEvidenceEntity.get();
+                reportEvidenceCreateRequest.setEmpId(evidenceEntity.getEmpId());
+                reportEvidenceCreateRequest.setEvMonth(evidenceEntity.getEvMonth());
+                reportEvidenceCreateRequest.setEvContentType(evidenceEntity.getEvContentType());
+                reportEvidenceCreateRequest.setEvFile(evidenceEntity.getEvFile());
+                reportEvidenceCreateRequest.setRemark(evidenceEntity.getRemark());
+                reportEvidenceCreateRequest.setStatusCd(evidenceEntity.getStatusCd());
+                reportEvidenceCreateRequest.setEvFileName(evidenceEntity.getEvFileName());
+            }
+            evidenceService.saveReportEvidence(reportEvidenceCreateRequest);
+
+            evidenceRepo.deleteByEmpId(empId);
         }
         return null;
     }

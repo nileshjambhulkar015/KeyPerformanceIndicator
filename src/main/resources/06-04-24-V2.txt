@@ -35,6 +35,9 @@
 
     drop table evidence;
     drop table evidence_audit;
+
+       drop table report_evidence;
+       drop table report_evidence_audit;
     **/
 
 
@@ -55,6 +58,39 @@
 
     create table evidence_audit(
           ev_aud_ID serial  PRIMARY key,
+            emp_ID Integer,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+              ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+    );
+
+
+        create table report_evidence(
+            re_ev_id serial  PRIMARY key,
+            emp_ID Integer,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+            ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table report_evidence_audit(
+          re_ev_aud_ID serial  PRIMARY key,
+             re_ev_id Integer,
             emp_ID Integer,
             ev_file_NAME VARCHAR(50),
             ev_file bytea,

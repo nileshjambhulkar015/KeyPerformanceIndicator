@@ -7,8 +7,11 @@ public interface EvidenceService {
 
     public KPIResponse uploadFile(MultipartFile multipartFile, Integer empId, String evMonth);
 
-    public KPIResponse deleteEvidenceFile(Integer empId, String evMonth);
+    public KPIResponse deleteEvidenceFile(Integer empId);
 
     public KPIResponse getEmpoyeeEvidenceDetails(Integer empId);
+    public KPIResponse getEmpoyeeEvidenceDetailsByEmpId(Integer empId);
+
+
 
 }

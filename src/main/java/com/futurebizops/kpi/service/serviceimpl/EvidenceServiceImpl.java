@@ -10,6 +10,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EvidenceService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -62,15 +63,11 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Transactional
     @Override
-    public KPIResponse deleteEvidenceFile(Integer empId, String evMonth) {
+    public KPIResponse deleteEvidenceFile(Integer empId) {
         KPIResponse kpiResponse = new KPIResponse();
-        if(evMonth==null){
-            kpiResponse.setResponseMessage("Please select date once again");
-            kpiResponse.setSuccess(false);
-            return kpiResponse;
-        }
+
         try {
-            evidenceRepo.deleteByEmpIdAndEvMonth(empId,DateTimeUtils.convertStringToInstant(evMonth));
+            evidenceRepo.deleteByEmpId(empId);
             kpiResponse = KPIResponse.builder()
                     .responseMessage("Delete Uploaded file successfully")
                     .isSuccess(true)
@@ -116,4 +113,36 @@ public class EvidenceServiceImpl implements EvidenceService {
         }
         return  kpiResponse;
     }
+
+    @Override
+    public KPIResponse getEmpoyeeEvidenceDetailsByEmpId(Integer empId) {
+        KPIResponse kpiResponse = new KPIResponse();
+        try {
+
+            List<Object[]> evidenceData =  evidenceRepo.getEvidenceDetailsByEmpId(empId,"A");
+
+
+            if(evidenceData.size()>0) {
+
+               List<EvidenceResponse> evidenceResponses = evidenceData.stream().map(EvidenceResponse::new).collect(Collectors.toList());
+                kpiResponse = KPIResponse.builder()
+                        .responseMessage("Data fetch successfully")
+                        .responseData(evidenceResponses.get(0))
+                        .isSuccess(true)
+                        .build();
+            } else {
+                kpiResponse = KPIResponse.builder()
+                        .responseMessage(KPIConstants.RECORD_NOT_FOUND)
+                        .responseData(new EvidenceResponse())
+                        .isSuccess(false)
+                        .build();
+            }
+        }
+        catch (Exception ex){
+            log.error("Inside EvidenceServiceImpl >> uploadFile()");
+            throw new KPIException("EvidenceServiceImpl", false, ex.getMessage());
+        }
+        return  kpiResponse;
+    }
+
 }
