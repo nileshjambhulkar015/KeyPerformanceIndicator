@@ -191,7 +191,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             kpiResponse.setSuccess(false);
             return kpiResponse;
         }
-        Instant ekppMonth = DateTimeUtils.addOneDayToInstant(empKPPMasterUpdateRequest.getEkppMonth());
+        Instant ekppMonth = DateTimeUtils.convertStringToInstant(empKPPMasterUpdateRequest.getEkppMonth());
         try {
             for (EmpKPPUpdateRequest paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
                 employeeKppDetailsRepo.updateEmployeeKppDetails(paramUpdateRequest.getEmpId(), ekppMonth, paramUpdateRequest.getEmpAchivedWeight(), paramUpdateRequest.getEmpOverallAchieve(), paramUpdateRequest.getEmpOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpEId(), paramUpdateRequest.getRoleId(), paramUpdateRequest.getDeptId(), paramUpdateRequest.getDesigId());
