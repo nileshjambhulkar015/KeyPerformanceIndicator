@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.time.temporal.ChronoUnit;
@@ -54,6 +54,36 @@ public class DateTimeUtils {
         Date date = calendar.getTime();
         return date.toInstant().toString();
 
+    }
+
+    public static String extractMonthName(String dateString) {
+        try {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = dateFormatter.parse(dateString);
+
+        LocalDate localDate =  date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            return localDate.getMonth().toString();
+        } catch (Exception ex) {
+            log.error("Inside DateTimeUtils >> convertStringToInstant() : {}", ex);
+            throw new KPIException("DateTimeUtils", false, ex.getMessage());
+        }
+    }
+
+    public static Integer extractYear(String dateString) {
+        try {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = dateFormatter.parse(dateString);
+
+            LocalDate localDate =  date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            return localDate.getYear();
+        } catch (Exception ex) {
+            log.error("Inside DateTimeUtils >> convertStringToInstant() : {}", ex);
+            throw new KPIException("DateTimeUtils", false, ex.getMessage());
+        }
     }
 
 }

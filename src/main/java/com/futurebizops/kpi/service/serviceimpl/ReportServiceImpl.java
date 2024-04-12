@@ -4,6 +4,7 @@ import com.futurebizops.kpi.dto.EmployeeKppDetailsDto;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.service.EmployeeKppStatusService;
 import com.futurebizops.kpi.service.ReportService;
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -62,6 +63,7 @@ public class ReportServiceImpl implements ReportService {
     //for HOD kpp report
 public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResponse httpServletResponse) {
 
+    String monthName= DateTimeUtils.extractMonthName(response.getEkppMonth());
     Workbook workbook = new XSSFWorkbook();
     Sheet sheet = workbook.createSheet(response.getEmpEId()+"" + response.getEmpName());
     Row row0 = sheet.createRow(0);
@@ -352,7 +354,7 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
 
     // Set content type and headers
     httpServletResponse.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + " " + response.getEmpName() + ".xlsx");
+    httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + "-" + DateTimeUtils.extractMonthName(response.getEkppMonth()) + "-"+ DateTimeUtils.extractYear(response.getEkppMonth())+".xlsx");
 
     // Write the workbook to the response output stream
     try {
@@ -756,8 +758,8 @@ public void getHodKppStatusExport(EmpKppStatusResponse response, HttpServletResp
 
         // Set content type and headers
         httpServletResponse.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + " " + response.getEmpName() + ".xlsx");
-
+      //  httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + " " + response.getEmpName() + ".xlsx");
+        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + "-" + DateTimeUtils.extractMonthName(response.getEkppMonth()) + "-"+ DateTimeUtils.extractYear(response.getEkppMonth())+".xlsx");
         // Write the workbook to the response output stream
         try {
             workbook.write(httpServletResponse.getOutputStream());
