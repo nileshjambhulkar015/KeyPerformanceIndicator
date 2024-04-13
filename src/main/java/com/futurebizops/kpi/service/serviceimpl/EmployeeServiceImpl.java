@@ -190,7 +190,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public KPIResponse getAllEmployeeDetails(Integer empId,String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,Integer empTypeId,Integer companyId, Pageable pageable) {
+    public KPIResponse getAllEmployeeDetails(Integer empId,String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,Integer empTypeId,Integer companyId, Integer reportingEmpId, Pageable pageable) {
         KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
         //  String sortDirection = null;
@@ -203,8 +203,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = employeeRepo.getEmployeeCount(empId,empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId);
-        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId,empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, sortName, pageSize, pageOffset);
+        Integer totalCount = employeeRepo.getEmployeeCount(empId,empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId,reportingEmpId);
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId,empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, reportingEmpId,sortName, pageSize, pageOffset);
         if(employeeDetail.size()>0) {
             List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
             employeeResponses = employeeResponses.stream()
@@ -255,6 +255,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
         return employeeResponses.get(0);
     }
+
+
 
     @Override
     public EmployeeSearchResponse getEmployeeSearchById(Integer empId) {
