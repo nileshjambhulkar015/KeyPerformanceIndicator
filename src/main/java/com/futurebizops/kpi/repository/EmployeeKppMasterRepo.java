@@ -31,7 +31,7 @@ public interface EmployeeKppMasterRepo extends JpaRepository<EmployeeKppMasterEn
     Optional<EmployeeKppMasterEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd);
 
     @Modifying
-    @Query(value = "update employee_kpp_master set ekpp_month=null,total_emp_achived_weight='0',total_emp_overall_achieve='0',total_emp_overall_task_comp='0',emp_ekpp_applied_date=null, emp_ekpp_status='Pending',emp_remark=null, emp_ekpp_evidence=null,total_hod_achived_weight='0', total_hod_overall_achieve ='0', total_hod_overall_task_comp ='0',hod_ekpp_status='Pending',hod_approved_date=null,hod_remark=null,total_gm_achived_weight ='0',total_gm_overall_achieve='0',total_gm_overall_task_comp='0',gm_ekpp_status='Pending', gm_approved_date=null,gm_remark=null,remark=null where emp_id =:empId and status_cd=:statusCd", nativeQuery = true)
+    @Query(value = "update employee_kpp_master set ekpp_month=null,total_emp_achived_weight='0',total_emp_overall_achieve='0',total_emp_overall_task_comp='0',emp_ekpp_applied_date=null, emp_ekpp_status='Pending', emp_ekpp_evidence=null,total_hod_achived_weight='0', total_hod_overall_achieve ='0', total_hod_overall_task_comp ='0',hod_ekpp_status='Pending',hod_approved_date=null,total_gm_achived_weight ='0',total_gm_overall_achieve='0',total_gm_overall_task_comp='0',gm_ekpp_status='Pending', gm_approved_date=null,remark=null,gm_remark='Ratings added', hod_remark='Ratings added', emp_remark='Ratings added' where emp_id =:empId and status_cd=:statusCd", nativeQuery = true)
     public int resetEmployeeKppByGM(@Param("empId") Integer empId, @Param("statusCd") String statusCd);
 
     //Employee KPP status by employee, hod and gm level
