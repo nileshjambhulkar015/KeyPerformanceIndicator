@@ -6,6 +6,8 @@ import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
+import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,5 +38,9 @@ public interface EmployeeService {
 
     public KPIResponse processExcelFile(MultipartFile file);
 
+    public List<RoleDDResponse> getRolesExceptEmployee(Integer roleId,String roleName);
 
+    public List<DepartmentDDResponse> getDepartmentFromEmployee(Integer roleId, Integer deptId);
+
+    public List<DesignationDDResponse> getDesignationFromEmployee(Integer roleId, Integer deptId, Integer desigId);
 }

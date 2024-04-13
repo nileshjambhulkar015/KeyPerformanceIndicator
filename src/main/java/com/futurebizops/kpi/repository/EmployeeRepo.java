@@ -64,4 +64,13 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
     @Query(value = SQLQueryConstants.EMPLOYEE_ADVANCE_SEARCH_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeAdvanceSearchDetails(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("regionId") Integer regionId,@Param("siteId") Integer siteId,@Param("companyId") Integer companyId, @Param("empTypeId") Integer empTypeId,@Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
+    @Query(value = DropDownQueryConstants.DD_ROLES_FROM_EXCEMPT_EMPLOYEE, nativeQuery = true)
+    List<Object[]> getRolesExceptEmployee(@Param("roleId") Integer roleId ,@Param("roleName") String roleName);
+
+    @Query(value = DropDownQueryConstants.DD_DEPARTMENT_FROM_EMPLOYEE, nativeQuery = true)
+    List<Object[]> getDepartmentFromEmployee(@Param("roleId") Integer roleId ,@Param("deptId") Integer deptId);
+
+    @Query(value = DropDownQueryConstants.DD_DESIGNATION_FROM_EMPLOYEE, nativeQuery = true)
+    List<Object[]> getDesignationFromEmployee(@Param("roleId") Integer roleId ,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
+
 }

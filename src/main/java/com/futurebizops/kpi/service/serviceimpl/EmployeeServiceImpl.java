@@ -36,6 +36,8 @@ import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RoleResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
+import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
@@ -525,6 +527,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+    @Override
+    public List<RoleDDResponse> getRolesExceptEmployee(Integer roleId,String roleName) {
+        List<Object[]> roleData = employeeRepo.getRolesExceptEmployee(roleId, roleName);
+        return roleData.stream().map(RoleDDResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DepartmentDDResponse> getDepartmentFromEmployee(Integer roleId, Integer deptId) {
+        List<Object[]> roleData = employeeRepo.getDepartmentFromEmployee(roleId, deptId);
+        return roleData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DesignationDDResponse> getDesignationFromEmployee(Integer roleId, Integer deptId, Integer desigId) {
+        List<Object[]> roleData = employeeRepo.getDesignationFromEmployee(roleId, deptId, desigId);
+        return roleData.stream().map(DesignationDDResponse::new).collect(Collectors.toList());
+    }
 
 
     private Integer getRoleId(String roleName) {

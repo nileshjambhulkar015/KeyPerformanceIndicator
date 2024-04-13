@@ -7,6 +7,8 @@ import com.futurebizops.kpi.request.advsearch.EmployeeAdvSearchRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
+import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.EmployeeService;
@@ -144,6 +146,31 @@ public class EmployeeController {
     public ResponseEntity<KPIResponse> getEmpFromExcel(@RequestPart("file") MultipartFile file) {
 
         KPIResponse response = employeeService.processExcelFile(file);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //for roles except Employee
+    @GetMapping(value = "/dd-role-except-emp-role")
+    public ResponseEntity<List<RoleDDResponse>> getRolesExceptEmployee( @RequestParam(required = false) Integer roleId,
+                                                                        @RequestParam(required = false) String roleName) {
+        List<RoleDDResponse>   response = employeeService.getRolesExceptEmployee(roleId,roleName);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //for roles except Employee
+    @GetMapping(value = "/dd-dept-emp")
+    public ResponseEntity<List<DepartmentDDResponse>> getDepartmentFromEmployee(@RequestParam(required = false) Integer roleId,
+                                                                          @RequestParam(required = false) Integer deptId) {
+        List<DepartmentDDResponse>   response = employeeService.getDepartmentFromEmployee(roleId,deptId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //for roles except Employee
+    @GetMapping(value = "/dd-desig-emp")
+    public ResponseEntity<List<DesignationDDResponse>> getDesignationFromEmployee(@RequestParam(required = false) Integer roleId,
+                                                                                 @RequestParam(required = false) Integer deptId,
+                                                                                  @RequestParam(required = false) Integer desigId) {
+        List<DesignationDDResponse>   response = employeeService.getDesignationFromEmployee(roleId,deptId,desigId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -29,5 +29,11 @@ public static final String DD_REGION_FROM_EMPLOYEE_QUERY = "select distinct emp.
 
     public static final String DD_DESIG_FROM_EMPLOYEE_QUERY = "select distinct emp.desig_id,desig.desig_name,emp.status_cd from employee emp, designation desig  where emp.desig_id = desig.desig_id and emp.status_cd = 'A' and emp.region_id  = coalesce(:regionId,emp.region_id) and emp.site_id  = coalesce(:siteId,emp.site_id) and emp.comp_id  = coalesce(:companyId,emp.comp_id) and emp.role_id  = coalesce(:roleId,emp.role_id) and emp.dept_id  = coalesce(:deptId,emp.dept_id)";
 
+    public static final String DD_ROLES_FROM_EXCEMPT_EMPLOYEE = "select distinct emp.role_id, ro.role_name, emp.status_cd from employee emp, roles ro where emp.role_id = ro.role_id and emp.status_cd = 'A' and emp.role_id != 3 and emp.role_id = coalesce(:roleId, emp.role_id) and ro.role_name = coalesce(:roleName, ro.role_name)";
+
+    public static final String DD_DEPARTMENT_FROM_EMPLOYEE = "select distinct emp.dept_id, dept.dept_name, emp.status_cd from employee emp, department dept where emp.dept_id = dept.dept_id and emp.status_cd = 'A' and emp.role_id = coalesce(:roleId, emp.role_id) and emp.dept_id = coalesce(:deptId, emp.dept_id)";
+
+    public static final String DD_DESIGNATION_FROM_EMPLOYEE = "select distinct emp.desig_id, desig.desig_name, emp.status_cd from employee emp, designation desig where emp.desig_id = desig.desig_id and emp.status_cd = 'A' and emp.role_id = coalesce(:roleId, emp.role_id) and emp.dept_id = coalesce(:deptId, emp.dept_id) and emp.desig_id = coalesce(:desigId, emp.desig_id)";
+
 
 }
