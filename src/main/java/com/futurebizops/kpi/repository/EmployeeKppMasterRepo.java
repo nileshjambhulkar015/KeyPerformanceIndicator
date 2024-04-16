@@ -48,5 +48,10 @@ public interface EmployeeKppMasterRepo extends JpaRepository<EmployeeKppMasterEn
   @Query(value = "select rekm.ekpp_month, rekm.emp_id , emp.emp_fname , emp.emp_mname, emp.emp_lname, emp.emp_eid, rekm.role_id, rol.role_name, rekm.dept_id, dept.dept_name, rekm.desig_id , desig.desig_name, rekm.total_emp_overall_achieve, rekm.total_hod_overall_achieve, rekm.total_gm_overall_achieve from report_employee_kpp_master rekm, employee emp, department dept, designation desig, roles rol where emp.emp_id = rekm.emp_id and emp.dept_id = dept.dept_id and emp.desig_id = desig.desig_id and emp.role_id = rol.role_id and date(rekm.ekpp_month) >= coalesce(date(:startDate), date(rekm.ekpp_month)) and date(rekm.ekpp_month) <= coalesce(date(:endDate), date(rekm.ekpp_month)) and emp.role_id = coalesce(:roleId, emp.role_id) and emp.dept_id = coalesce(:deptId, emp.dept_id) and emp.desig_id = coalesce(:desigId, emp.desig_id) and emp.reporting_emp_id = coalesce(:reportingEmpId, emp.reporting_emp_id) and emp.gm_emp_id = coalesce(:gmEmpId, emp.gm_emp_id)", nativeQuery = true)
     public List<Object[]> cumulativeEmpForHoDAndGM(@Param("startDate") String startDate,@Param("endDate") String endDate,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId);
 
+
+    @Query(value = "select rekm.emp_id, rekm.ekpp_month   from report_employee_kpp_master rekm where  rekm.emp_id = coalesce(:empId, rekm.emp_id)", nativeQuery = true)
+    public List<Object[]> getEmpIdAndDates(@Param("empId") Integer empId);
+
+
 }
 

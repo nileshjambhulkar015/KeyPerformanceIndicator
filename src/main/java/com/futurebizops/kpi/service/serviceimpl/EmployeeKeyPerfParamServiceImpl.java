@@ -1,6 +1,7 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
+import com.futurebizops.kpi.dto.EmployeeMasterReportDTO;
 import com.futurebizops.kpi.entity.EmployeeEntity;
 import com.futurebizops.kpi.entity.EmployeeKppDetailsAudit;
 import com.futurebizops.kpi.entity.EmployeeKppDetailsEntity;
@@ -30,6 +31,7 @@ import com.futurebizops.kpi.request.HODUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.ReportEvidenceCreateRequest;
 import com.futurebizops.kpi.response.AssignKPPResponse;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.EmployeeAssignKppResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
@@ -101,6 +103,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Override
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
+
 
         //When hod is inserted then gm set to reporing employee id only
         Integer gmEmpId = null;
@@ -185,6 +188,26 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Transactional
     @Override
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
+
+        List<Object[]> reportData = employeeKeyPerfParamMasterRepo.getEmpIdAndDates(empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
+        //if kpp is already filled for month
+        if(!reportData.isEmpty()){
+            List<EmployeeMasterReportDTO> reportDataReponses = reportData.stream().map(EmployeeMasterReportDTO::new).collect(Collectors.toList());
+            int  requestMonthValue =DateTimeUtils.extractMonthValue(empKPPMasterUpdateRequest.getEkppMonth());
+            int  requestYearValue =DateTimeUtils.extractYear(empKPPMasterUpdateRequest.getEkppMonth());
+
+            for(EmployeeMasterReportDTO employeeMasterReportDTO :reportDataReponses){
+                int  reportMonthValue =DateTimeUtils.extractMonthValue(employeeMasterReportDTO.getEkppMonth());
+                int  reportYearValue =DateTimeUtils.extractYear(employeeMasterReportDTO.getEkppMonth());
+                if(requestMonthValue==reportMonthValue && requestYearValue==reportYearValue){
+                    return KPIResponse.builder()
+                            .isSuccess(false)
+                            .responseMessage("For this month report is already approved")
+                            .build();
+                }
+            }
+        }
+
         KPIResponse kpiResponse = new KPIResponse();
         if (StringUtils.isEmpty(empKPPMasterUpdateRequest.getEkppMonth())) {
             kpiResponse.setResponseMessage("Please select date once again");

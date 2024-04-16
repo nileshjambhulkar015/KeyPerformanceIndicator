@@ -71,6 +71,23 @@ public class DateTimeUtils {
         }
     }
 
+
+    public static Integer extractMonthValue(String dateString) {
+        try {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = dateFormatter.parse(dateString);
+
+            LocalDate localDate =  date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            return localDate.getMonthValue();
+        } catch (Exception ex) {
+            log.error("Inside DateTimeUtils >> convertStringToInstant() : {}", ex);
+            throw new KPIException("DateTimeUtils", false, ex.getMessage());
+        }
+    }
+
+
     public static Integer extractYear(String dateString) {
         try {
             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
