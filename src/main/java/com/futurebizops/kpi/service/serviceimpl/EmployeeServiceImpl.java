@@ -173,6 +173,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public KPIResponse updateEmployee(EmployeeUpdateRequest employeeUpdateRequest) {
+        if(employeeUpdateRequest.getRoleId()==2 && employeeUpdateRequest.getStatusCd().equalsIgnoreCase("I")){
+           List<EmployeeEntity> employeeEntity = employeeRepo.findByReportingEmpId(employeeUpdateRequest.getEmpId());
+           if(employeeEntity.size()>0){
+               return KPIResponse.builder()
+                       .isSuccess(false)
+                       .responseMessage("First assign employee to Other HOD")
+                       .build();
+           }
+        }
         EmployeeEntity employeeEntity = convertEmployeeUpdateRequestToEntity(employeeUpdateRequest);
         try {
             employeeRepo.save(employeeEntity);

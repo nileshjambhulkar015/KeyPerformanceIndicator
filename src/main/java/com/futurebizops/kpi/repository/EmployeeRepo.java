@@ -75,4 +75,5 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
     @Query(value = DropDownQueryConstants.DD_DESIGNATION_FROM_EMPLOYEE, nativeQuery = true)
     List<Object[]> getDesignationFromEmployee(@Param("roleId") Integer roleId ,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
 
+    List<EmployeeEntity> findByReportingEmpId(Integer empId);
 }
