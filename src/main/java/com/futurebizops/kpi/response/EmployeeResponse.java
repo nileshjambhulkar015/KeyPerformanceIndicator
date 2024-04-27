@@ -37,6 +37,7 @@ public class EmployeeResponse {
     private String empTypeName;
     private Integer companyId;
     private String companyName;
+    private String reportingHODName;
 
     public  EmployeeResponse(Object[] objects){
         empId=Integer.parseInt(String.valueOf(objects[0]));

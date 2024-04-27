@@ -7,6 +7,9 @@ import lombok.Data;
 public class KeyPerfParamExcelReadData {
 
     @Schema(example = "1", description = "This field is used for role id")
+    private String kppObjectiveNo;
+
+    @Schema(example = "1", description = "This field is used for role id")
     private Integer roleId;
 
     @Schema(example = "Objective of KPP", description = "This field is used for rating ratio 1")

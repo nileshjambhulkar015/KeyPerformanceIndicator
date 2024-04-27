@@ -192,22 +192,23 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                     currentRow = rowIndex;
                     KeyPerfParamExcelReadData model = new KeyPerfParamExcelReadData();
                     model.setEmployeeId("1");
-                    model.setRoleName(row.getCell(1).getStringCellValue().trim());
-                    model.setDeptName(row.getCell(2).getStringCellValue().trim());
-                    model.setDesigName(row.getCell(3).getStringCellValue().trim());
-                    model.setKppObjective(row.getCell(4).getStringCellValue().trim());
-                    model.setKppPerformanceIndi(row.getCell(5).getStringCellValue().trim());
-                    model.setKppOverallTarget(String.valueOf(row.getCell(6).getNumericCellValue()));
-                    model.setKppTargetPeriod(row.getCell(7).getStringCellValue().trim());
-                    model.setKppUoM(row.getCell(8).getStringCellValue().trim());
-                    model.setKppOverallWeightage(String.valueOf(row.getCell(9).getNumericCellValue()));
-                    model.setKppRating1(String.valueOf(row.getCell(10).getNumericCellValue()));
-                    model.setKppRating2(String.valueOf(row.getCell(11).getNumericCellValue()));
-                    model.setKppRating3(String.valueOf(row.getCell(12).getNumericCellValue()));
-                    model.setKppRating4(String.valueOf(row.getCell(13).getNumericCellValue()));
-                    model.setKppRating5(row.getCell(14).getStringCellValue().trim());
+                    model.setKppObjectiveNo(row.getCell(1).getStringCellValue().trim());
+                    model.setRoleName(row.getCell(2).getStringCellValue().trim());
+                    model.setDeptName(row.getCell(3).getStringCellValue().trim());
+                    model.setDesigName(row.getCell(4).getStringCellValue().trim());
+                    model.setKppObjective(row.getCell(5).getStringCellValue().trim());
+                    model.setKppPerformanceIndi(row.getCell(6).getStringCellValue().trim());
+                    model.setKppOverallTarget(String.valueOf(row.getCell(7).getNumericCellValue()));
+                    model.setKppTargetPeriod(row.getCell(8).getStringCellValue().trim());
+                    model.setKppUoM(row.getCell(9).getStringCellValue().trim());
+                    model.setKppOverallWeightage(String.valueOf(row.getCell(10).getNumericCellValue()));
+                    model.setKppRating1(String.valueOf(row.getCell(11).getNumericCellValue()));
+                    model.setKppRating2(String.valueOf(row.getCell(12).getNumericCellValue()));
+                    model.setKppRating3(String.valueOf(row.getCell(13).getNumericCellValue()));
+                    model.setKppRating4(String.valueOf(row.getCell(14).getNumericCellValue()));
+                    model.setKppRating5(row.getCell(15).getStringCellValue().trim());
                     model.setStatusCd("A");
-                    model.setRemark(row.getCell(15).getStringCellValue().trim());
+                    model.setRemark(row.getCell(16).getStringCellValue().trim());
                     KeyPerfParamData.add(model);
                 }
             }
@@ -223,6 +224,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 currentExcelRow++;
                 KeyPerfParamCreateRequest keyPerfParamCreateRequest = new KeyPerfParamCreateRequest();
                 keyPerfParamCreateRequest.setEmployeeId("1");
+                keyPerfParamCreateRequest.setKppObjectiveNo(request.getKppObjectiveNo());
                 Integer roleId=getRoleId(request.getRoleName());
                 keyPerfParamCreateRequest.setRoleId(roleId);
                 Integer deptId= getDeptId(request.getDeptName(), keyPerfParamCreateRequest.getRoleId());

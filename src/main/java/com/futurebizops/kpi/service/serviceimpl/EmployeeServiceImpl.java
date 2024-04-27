@@ -216,6 +216,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId,empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId, reportingEmpId,sortName, pageSize, pageOffset);
         if(employeeDetail.size()>0) {
             List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
+            for(EmployeeResponse response : employeeResponses){
+                Optional<EmployeeEntity> employeeEntity = employeeRepo.findById(response.getReportingEmpId());
+                if(employeeEntity.isPresent()){
+                    EmployeeEntity entity = employeeEntity.get();
+                    response.setReportingHODName(entity.getEmpFirstName() +" "+entity.getEmpMiddleName()+" "+entity.getEmpLastName());
+                }
+            }
+
             employeeResponses = employeeResponses.stream()
                     .sorted(Comparator.comparing(EmployeeResponse::getDeptName))
                     .collect(Collectors.toList());
