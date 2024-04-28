@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class EmployeeAssignKppResponse {
-    Integer empKppOverallTargetCount;
+    Double empKppOverallTargetCount;
     PageImpl<AssignKPPResponse> kppResponses;
 }

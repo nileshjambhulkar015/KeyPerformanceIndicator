@@ -469,15 +469,15 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
         if (empKppData.size() > 0) {
             assignKPPResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
-            Integer empKppOverallTargetCount = 0;
+            Double empKppOverallTargetCount = 0.0;
             for (AssignKPPResponse assignKPPResponse : assignKPPResponses) {
-                empKppOverallTargetCount += Integer.parseInt(assignKPPResponse.getKppOverallTarget());
+                empKppOverallTargetCount += Double.parseDouble(assignKPPResponse.getKppOverallTarget());
             }
             assignKPPResponses = assignKPPResponses.stream()
                     .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
                     .collect(Collectors.toList());
 
-            assignKppResponse.setEmpKppOverallTargetCount(empKppOverallTargetCount);
+            assignKppResponse.setEmpKppOverallTargetCount( empKppOverallTargetCount);
             assignKppResponse.setKppResponses(new PageImpl<>(assignKPPResponses, pageable, totalCount));
             kpiResponse = KPIResponse.builder()
                     .isSuccess(true)
