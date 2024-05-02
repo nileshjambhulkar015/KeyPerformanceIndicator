@@ -191,7 +191,6 @@ public class DepartmentServiceImpl implements DepartmentService {
                     if (row != null) {
                         currentRow = rowIndex;
                         DepartmentExcelReadData model = new DepartmentExcelReadData();
-                        model.setRoleId(getRoleId(row.getCell(0).getStringCellValue()));
                         model.setDeptName(row.getCell(1).getStringCellValue());
                         model.setRemark(row.getCell(2).getStringCellValue());
                         model.setEmployeeId(row.getCell(3).getStringCellValue().trim());
