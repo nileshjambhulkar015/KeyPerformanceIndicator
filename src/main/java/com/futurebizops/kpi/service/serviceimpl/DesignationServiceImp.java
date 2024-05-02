@@ -178,10 +178,10 @@ public class DesignationServiceImp implements DesignationService {
                 if (row != null) {
                     currentRow = rowIndex;
                     DesignationExcelReadData model = new DesignationExcelReadData();
-                    model.setDeptId(getDeptId(roleId, row.getCell(1).getStringCellValue().trim()));
-                    model.setDesigName(row.getCell(2).getStringCellValue().trim());
-                    model.setRemark(row.getCell(3).getStringCellValue().trim());
-                    model.setEmployeeId(row.getCell(4).getStringCellValue().trim());
+                    model.setDeptId(getDeptId(roleId, row.getCell(0).getStringCellValue().trim()));
+                    model.setDesigName(row.getCell(1).getStringCellValue().trim());
+                    model.setRemark(row.getCell(2).getStringCellValue().trim());
+                    model.setEmployeeId(row.getCell(3).getStringCellValue().trim());
                     model.setStatusCd("A");
 
                     designationData.add(model);
