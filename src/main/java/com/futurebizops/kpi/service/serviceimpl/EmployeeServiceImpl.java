@@ -137,8 +137,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setGmEmpId(gmEmpId);
 
         try {
-
-            List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigId(employeeEntity.getRoleId(), employeeEntity.getDeptId(), employeeEntity.getDesigId());
+//need to be check in flow..after remove method
+            List<KeyPerfParamEntity> empKpp = keyPerfParameterRepo.findAll();
             if (CollectionUtils.isEmpty(empKpp)) {
                 log.error("Inside EmployeeServiceImpl >> saveEmployee()");
                 kpiResponse.setSuccess(false);

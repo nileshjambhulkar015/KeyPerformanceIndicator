@@ -9,24 +9,6 @@ public class KeyPerfParamExcelReadData {
     @Schema(example = "1", description = "This field is used for role id")
     private String kppObjectiveNo;
 
-    @Schema(example = "1", description = "This field is used for role id")
-    private Integer roleId;
-
-    @Schema(example = "Objective of KPP", description = "This field is used for rating ratio 1")
-    private String roleName;
-
-    @Schema(example = "1", description = "This field is used for rating ratio 1")
-    private Integer deptId;
-
-    @Schema(example = "Objective of KPP", description = "This field is used for rating ratio 1")
-    private String deptName;
-
-    @Schema(example = "1", description = "This field is used for rating ratio 1")
-    private Integer desigId;
-
-    @Schema(example = "Objective of KPP", description = "This field is used for rating ratio 1")
-    private String desigName;
-
     @Schema(example = "Objective of KPP", description = "This field is used for rating ratio 1")
     private String kppObjective;
 
@@ -42,8 +24,8 @@ public class KeyPerfParamExcelReadData {
     @Schema(example = "perentage", description = "This field is used for rating ratio 1")
     private String kppUoM;
 
-    @Schema(example = "25", description = "This field is used for rating ratio 1")
-    private String kppOverallWeightage;
+    //@Schema(example = "25", description = "This field is used for rating ratio 1")
+    //private String kppOverallWeightage;
 
     @Schema(example = "95%", description = "This field is used for rating ratio 1")
     private String kppRating1;

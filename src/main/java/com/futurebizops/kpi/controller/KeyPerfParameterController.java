@@ -52,15 +52,12 @@ public class KeyPerfParameterController {
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> findKeyPerfomanceParam(@RequestParam(required = false) Integer kppId,
-                                                              @RequestParam(required = false) Integer roleId,
-                                                              @RequestParam(required = false) Integer deptId,
-                                                              @RequestParam(required = false) Integer desigId,
                                                               @RequestParam(required = false) String kppObjectiveNo,
                                                               @RequestParam(required = false) String kppObjective,
                                                               @RequestParam(required = false) String statusCd,
                                                               @Parameter(hidden = true) Pageable pageable) {
         log.info("reqiuest for Employee KPP search");
-        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, roleId, deptId, desigId, kppObjectiveNo,kppObjective, statusCd, pageable);
+        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, kppObjectiveNo,kppObjective, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -68,8 +65,8 @@ public class KeyPerfParameterController {
 
 
 
-    @GetMapping(value = "/{kppId}")
-    public ResponseEntity<KPPResponse> findKeyPerfomanceParamById(@PathVariable Integer kppId) {
+    @GetMapping(value = "/kppId")
+    public ResponseEntity<KPPResponse> findKeyPerfomanceParamById(@RequestParam(required = false) Integer kppId) {
         KPPResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetailById(kppId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

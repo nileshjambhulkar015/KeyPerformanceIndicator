@@ -26,15 +26,6 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
     @Column(name = "kpp_id")
     private Integer kppId;
 
-    @Column(name = "role_id")
-    private Integer roleId;
-
-    @Column(name = "dept_id")
-    private Integer deptId;
-
-    @Column(name = "desig_id")
-    private Integer desigId;
-
     @Column(name = "kpp_objective_no")
     private String kppObjectiveNo;
 
@@ -53,8 +44,9 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
     @Column(name = "uom_id")
     private Integer uomId;
 
-    @Column(name = "kpp_overall_weightage")
-    private String kppOverallWeightage;
+    //@Column(name = "kpp_overall_weightage")
+    //private String kppOverallWeightage;
+
     @Column(name = "kpp_rating1")
     private String kppRating1;
 
@@ -79,16 +71,13 @@ public class KeyPerfParamAudit extends AuditEnabledEntity {
     public KeyPerfParamAudit(KeyPerfParamEntity keyPerfParamEntity) {
         super(keyPerfParamEntity.getCreatedDate(), keyPerfParamEntity.getCreatedUserId(), keyPerfParamEntity.getUpdatedDate(), keyPerfParamEntity.getUpdatedUserId());
         this.kppId = keyPerfParamEntity.getKppId();
-        this.roleId = keyPerfParamEntity.getRoleId();
-        this.deptId = keyPerfParamEntity.getDeptId();
-        this.desigId = keyPerfParamEntity.getDesigId();
         this.kppObjectiveNo = keyPerfParamEntity.getKppObjectiveNo();
         this.kppObjective = keyPerfParamEntity.getKppObjective();
         this.kppPerformanceIndi = keyPerfParamEntity.getKppPerformanceIndi();
         this.kppOverallTarget = keyPerfParamEntity.getKppOverallTarget();
         this.kppTargetPeriod = keyPerfParamEntity.getKppTargetPeriod();
         this.uomId = keyPerfParamEntity.getUomId();
-        this.kppOverallWeightage = keyPerfParamEntity.getKppOverallWeightage();
+        //this.kppOverallWeightage = keyPerfParamEntity.getKppOverallWeightage();
         this.kppRating1 = keyPerfParamEntity.getKppRating1();
         this.kppRating2 = keyPerfParamEntity.getKppRating2();
         this.kppRating3 = keyPerfParamEntity.getKppRating2();

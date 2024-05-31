@@ -1,0 +1,771 @@
+    --create database keyperformance;
+
+    /*
+    drop table region  ;
+    drop table region_audit  ;
+        drop table site  ;
+        drop table site_audit  ;
+            drop table company_master  ;
+            drop table company_master_audit  ;
+    drop table uom  ;
+    drop table uom_audit  ;
+
+   drop table employee_type;
+  drop table employee_type_audit;
+    drop TABLE roles;
+    drop TABLE roles_audit;
+    drop TABLE department;
+    drop TABLE department_audit;
+    drop TABLE designation;
+    drop TABLE designation_audit;
+    drop table key_perf_parameter ;
+    drop table key_perf_parameter_audit  ;
+    drop table employee;
+    drop table employee_audit;
+    drop table employee_login;
+    drop table employee_login_audit;
+    drop table employee_kpp_master;
+    drop table employee_kpp_master_audit;
+    drop table employee_kpp_details;
+    drop table employee_kpp_details_audit;
+    drop table report_employee_kpp_master  ;
+    drop table report_employee_kpp_master_audit  ;
+    drop table report_employee_kpp_details  ;
+    drop table report_employee_kpp_details_audit  ;
+
+    drop table evidence;
+    drop table evidence_audit;
+
+       drop table report_evidence;
+       drop table report_evidence_audit;
+    **/
+
+
+        create table evidence(
+            emp_ID Integer  PRIMARY key,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+            ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table evidence_audit(
+          ev_aud_ID serial  PRIMARY key,
+            emp_ID Integer,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+              ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+    );
+
+
+        create table report_evidence(
+            re_ev_id serial  PRIMARY key,
+            emp_ID Integer,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+            ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table report_evidence_audit(
+          re_ev_aud_ID serial  PRIMARY key,
+             re_ev_id Integer,
+            emp_ID Integer,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+              ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+    );
+
+        create table region(
+            REGION_ID serial  PRIMARY key,
+            REGION_NAME VARCHAR(20),
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table region_audit(
+        REGION_AUD_ID serial PRIMARY key,
+        REGION_ID INTEGER,
+        REGION_NAME VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table site(
+        SITE_ID serial  PRIMARY key,
+        REGION_ID INTEGER,
+        SITE_NAME VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+
+    create table site_audit(
+        SITE_AUD_ID serial PRIMARY key,
+        SITE_ID INTEGER,
+        REGION_ID INTEGER,
+        SITE_NAME VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+create table company_master(
+        comp_id serial  PRIMARY key,
+        region_id INTEGER,
+        site_id INTEGER,
+        comp_name VARCHAR(300),
+        comp_address VARCHAR(500),
+        comp_mbno VARCHAR(30),
+        comp_finance_year VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+
+    create table company_master_audit(
+        comp_aud_id serial PRIMARY key,
+        comp_id INTEGER,
+        region_id INTEGER,
+        site_id INTEGER,
+        comp_name VARCHAR(300),
+        comp_address VARCHAR(500),
+        comp_mbno VARCHAR(30),
+        comp_finance_year VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+ create table uom(
+        UOM_ID serial  PRIMARY key,
+        UOM_NAME VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table uom_audit(
+        UOM_AUD_ID serial PRIMARY key,
+        UOM_ID INTEGER,
+        UOM_NAME VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    create table roles(
+        ROLE_ID serial  PRIMARY key,
+        ROLE_NAME VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table roles_audit(
+        ROLE_AUD_ID serial PRIMARY key,
+        ROLE_ID INTEGER,
+        ROLE_NAME VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    create table department(
+        DEPT_ID serial  PRIMARY key,
+        DEPT_NAME VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table department_audit(
+        DEPT_AUD_ID serial PRIMARY key,
+        DEPT_ID INTEGER,
+       DEPT_NAME VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table designation(
+        DESIG_ID serial  PRIMARY key,
+        DEPT_ID INTEGER,
+        DESIG_NAME VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+
+    create table designation_audit(
+        DESIG_AUD_ID serial PRIMARY key,
+        DESIG_ID INTEGER,
+        DEPT_ID INTEGER,
+        DESIG_NAME VARCHAR(30),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table key_perf_parameter(
+        kpp_id serial PRIMARY key,
+        kpp_objective_no VARCHAR(10),
+        kpp_objective VARCHAR(500),
+        kpp_performance_indi VARCHAR(500),
+        kpp_overall_tar VARCHAR(50),
+        kpp_target_period VARCHAR(50),
+        uom_id INTEGER,
+        kpp_overall_weightage VARCHAR(50),
+        kpp_rating1 VARCHAR(10),
+        kpp_rating2 VARCHAR(10),
+        kpp_rating3 VARCHAR(10),
+        kpp_rating4 VARCHAR(10),
+        kpp_rating5 VARCHAR(10),
+        remark VARCHAR(100),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table key_perf_parameter_audit(
+        kpp_aud_id serial PRIMARY key,
+        kpp_id INTEGER,
+        kpp_objective_no VARCHAR(10),
+        kpp_objective VARCHAR(500),
+        kpp_performance_indi VARCHAR(500),
+        kpp_overall_tar VARCHAR(50),
+        kpp_target_period VARCHAR(50),
+       uom_id INTEGER,
+        kpp_overall_weightage VARCHAR(50),
+        kpp_rating1 VARCHAR(10),
+        kpp_rating2 VARCHAR(10),
+        kpp_rating3 VARCHAR(10),
+        kpp_rating4 VARCHAR(10),
+        kpp_rating5 VARCHAR(10),
+        remark VARCHAR(100),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null);
+
+ create table employee_type(
+            emp_type_id serial  PRIMARY key,
+            emp_type_NAME VARCHAR(20),
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+ create table employee_type_audit(
+        emp_type_AUD_ID serial PRIMARY key,
+        emp_type_ID INTEGER,
+        emp_type_NAME VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    create table employee(
+        emp_id serial  PRIMARY key,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+         emp_type_id INTEGER,
+        reporting_emp_id INTEGER,
+        gm_emp_id INTEGER,
+        region_id INTEGER,
+        site_id INTEGER,
+        comp_id INTEGER,
+        emp_fname VARCHAR(20) ,
+        emp_mname VARCHAR(20),
+        emp_lname VARCHAR(20),
+        emp_dob VARCHAR(40),
+        emp_mbno VARCHAR(20),
+        emp_emer_mbno  VARCHAR(20),
+        emp_photo VARCHAR(20),
+        emp_email_id VARCHAR(50),
+        emp_temp_address VARCHAR(100),
+        emp_perm_address VARCHAR(100),
+        emp_gender VARCHAR(10),
+        emp_blood_group VARCHAR(10),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table employee_audit(
+        emp_aud_id serial  PRIMARY key,
+        emp_id INTEGER,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+         emp_type_id INTEGER,
+        reporting_emp_id INTEGER,
+        gm_emp_id INTEGER,
+        region_id INTEGER,
+        site_id INTEGER,
+        comp_id INTEGER,
+        emp_fname VARCHAR(20) ,
+        emp_mname VARCHAR(20),
+        emp_lname VARCHAR(20),
+        emp_dob VARCHAR(40),
+        emp_mbno VARCHAR(20),
+        emp_emer_mbno  VARCHAR(20),
+        emp_photo VARCHAR(20),
+        emp_email_id VARCHAR(50),
+        emp_temp_address VARCHAR(100),
+        emp_perm_address VARCHAR(100),
+        emp_gender VARCHAR(10),
+        emp_blood_group VARCHAR(10),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    create table employee_login(
+        emp_mbno VARCHAR(20)  PRIMARY key,
+        emp_email_id VARCHAR(50),
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        EMP_PASSWORD VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    create table employee_login_audit(
+        emp_audit_login_id serial  PRIMARY key,
+         emp_mbno VARCHAR(20) ,
+        emp_email_id VARCHAR(50),
+         emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        EMP_PASSWORD VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    create table employee_kpp_master(
+        ekpp_mid serial PRIMARY key,
+        ekpp_month timestamp,
+        emp_id INTEGER,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        total_emp_achived_weight VARCHAR(50),
+        total_emp_overall_achieve VARCHAR(50),
+        total_emp_overall_task_comp VARCHAR(50),
+        emp_ekpp_applied_date timestamp,
+        emp_ekpp_status varchar(50),
+        emp_remark  VARCHAR(200),
+        emp_ekpp_evidence varchar(100),
+        hod_emp_id INTEGER,
+        total_hod_achived_weight VARCHAR(50),
+        total_hod_overall_achieve VARCHAR(50),
+        total_hod_overall_task_comp VARCHAR(50),
+        hod_ekpp_status varchar(20),
+        hod_approved_date timestamp,
+        hod_remark varchar(200),
+        gm_emp_id INTEGER,
+        total_gm_achived_weight VARCHAR(50),
+        total_gm_overall_achieve VARCHAR(50),
+        total_gm_overall_task_comp VARCHAR(50),
+        gm_ekpp_status varchar(20),
+        gm_approved_date timestamp,
+        gm_remark varchar(200),
+        remark VARCHAR(100),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    create table employee_kpp_master_audit(
+        ekpp_aud_mid serial PRIMARY key,
+         ekpp_mid INTEGER,
+        ekpp_month timestamp,
+        emp_id INTEGER,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        total_emp_achived_weight VARCHAR(50),
+        total_emp_overall_achieve VARCHAR(50),
+        total_emp_overall_task_comp VARCHAR(50),
+        emp_ekpp_applied_date timestamp,
+        emp_ekpp_status varchar(50),
+        emp_remark  VARCHAR(200),
+        emp_ekpp_evidence varchar(100),
+        hod_emp_id INTEGER,
+        total_hod_achived_weight VARCHAR(50),
+        total_hod_overall_achieve VARCHAR(50),
+        total_hod_overall_task_comp VARCHAR(50),
+        hod_ekpp_status varchar(20),
+        hod_approved_date timestamp,
+        hod_remark varchar(200),
+        gm_emp_id INTEGER,
+        total_gm_achived_weight VARCHAR(50),
+        total_gm_overall_achieve VARCHAR(50),
+        total_gm_overall_task_comp VARCHAR(50),
+        gm_ekpp_status varchar(20),
+        gm_approved_date timestamp,
+        gm_remark varchar(200),
+        remark VARCHAR(100),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+
+    create table employee_kpp_details(
+        ekpp_did serial PRIMARY key,
+        ekpp_month timestamp,
+        emp_id INTEGER,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        kpp_id INTEGER,
+        ekpp_emp_achived_weight VARCHAR(50),
+        ekpp_emp_overall_achieve VARCHAR(50),
+        ekpp_emp_overall_task_comp VARCHAR(50),
+        hod_emp_id INTEGER,
+        ekpp_hod_achived_weight VARCHAR(50),
+        ekpp_hod_overall_achieve VARCHAR(50),
+        ekpp_hod_overall_task_comp VARCHAR(50),
+        gm_emp_id INTEGER,
+        ekpp_gm_achived_weight VARCHAR(50),
+        ekpp_gm_overall_achieve VARCHAR(50),
+        ekpp_gm_overall_task_comp VARCHAR(50),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table employee_kpp_details_audit(
+        ekpp_aud_did serial PRIMARY key,
+        ekpp_did INTEGER,
+        ekpp_month timestamp,
+        emp_id INTEGER,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        kpp_id INTEGER,
+        ekpp_emp_achived_weight VARCHAR(50),
+        ekpp_emp_overall_achieve VARCHAR(50),
+        ekpp_emp_overall_task_comp VARCHAR(50),
+        hod_emp_id INTEGER,
+        ekpp_hod_achived_weight VARCHAR(50),
+        ekpp_hod_overall_achieve VARCHAR(50),
+        ekpp_hod_overall_task_comp VARCHAR(50),
+        gm_emp_id INTEGER,
+        ekpp_gm_achived_weight VARCHAR(50),
+        ekpp_gm_overall_achieve VARCHAR(50),
+        ekpp_gm_overall_task_comp VARCHAR(50),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table report_employee_kpp_master(
+        report_ekpp_id serial PRIMARY key,
+        ekpp_month timestamp,
+            emp_id INTEGER,
+            emp_eid VARCHAR(20) ,
+            role_id INTEGER,
+            dept_id INTEGER,
+            desig_id INTEGER,
+            total_emp_achived_weight VARCHAR(50),
+            total_emp_overall_achieve VARCHAR(50),
+            total_emp_overall_task_comp VARCHAR(50),
+            emp_ekpp_applied_date timestamp,
+            emp_ekpp_status varchar(50),
+            emp_remark  VARCHAR(200),
+            emp_ekpp_evidence varchar(100),
+            hod_emp_id INTEGER,
+            total_hod_achived_weight VARCHAR(50),
+            total_hod_overall_achieve VARCHAR(50),
+            total_hod_overall_task_comp VARCHAR(50),
+            hod_ekpp_status varchar(20),
+            hod_approved_date timestamp,
+            hod_remark varchar(200),
+            gm_emp_id INTEGER,
+            total_gm_achived_weight VARCHAR(50),
+            total_gm_overall_achieve VARCHAR(50),
+            total_gm_overall_task_comp VARCHAR(50),
+            gm_ekpp_status varchar(20),
+            gm_approved_date timestamp,
+            gm_remark varchar(200),
+            remark VARCHAR(100),
+            status_cd VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table report_employee_kpp_master_audit(
+    report_ekpp_aud_id serial PRIMARY key,
+        report_ekpp_id INTEGER,
+            ekpp_month timestamp,
+                emp_id INTEGER,
+                emp_eid VARCHAR(20) ,
+                role_id INTEGER,
+                dept_id INTEGER,
+                desig_id INTEGER,
+                total_emp_achived_weight VARCHAR(50),
+                total_emp_overall_achieve VARCHAR(50),
+                total_emp_overall_task_comp VARCHAR(50),
+                emp_ekpp_applied_date timestamp,
+                emp_ekpp_status varchar(50),
+                emp_remark  VARCHAR(200),
+                emp_ekpp_evidence varchar(100),
+                hod_emp_id INTEGER,
+                total_hod_achived_weight VARCHAR(50),
+                total_hod_overall_achieve VARCHAR(50),
+                total_hod_overall_task_comp VARCHAR(50),
+                hod_ekpp_status varchar(20),
+                hod_approved_date timestamp,
+                hod_remark varchar(200),
+                gm_emp_id INTEGER,
+                total_gm_achived_weight VARCHAR(50),
+                total_gm_overall_achieve VARCHAR(50),
+                total_gm_overall_task_comp VARCHAR(50),
+                gm_ekpp_status varchar(20),
+                gm_approved_date timestamp,
+                gm_remark varchar(200),
+                remark VARCHAR(100),
+                status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table report_employee_kpp_details(
+    report_ekpp_details_id serial PRIMARY key,
+
+        ekpp_month timestamp,
+        emp_id INTEGER,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        kpp_id INTEGER,
+        ekpp_emp_achived_weight VARCHAR(50),
+        ekpp_emp_overall_achieve VARCHAR(50),
+        ekpp_emp_overall_task_comp VARCHAR(50),
+        hod_emp_id INTEGER,
+        ekpp_hod_achived_weight VARCHAR(50),
+        ekpp_hod_overall_achieve VARCHAR(50),
+        ekpp_hod_overall_task_comp VARCHAR(50),
+        gm_emp_id INTEGER,
+        ekpp_gm_achived_weight VARCHAR(50),
+        ekpp_gm_overall_achieve VARCHAR(50),
+        ekpp_gm_overall_task_comp VARCHAR(50),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table report_employee_kpp_details_audit(
+        report_ekpp_details_aud_id serial PRIMARY key,
+        ekpp_aud_did INTEGER,
+        ekpp_month timestamp,
+        emp_id INTEGER,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        kpp_id INTEGER,
+        ekpp_emp_achived_weight VARCHAR(50),
+        ekpp_emp_overall_achieve VARCHAR(50),
+        ekpp_emp_overall_task_comp VARCHAR(50),
+        hod_emp_id INTEGER,
+        ekpp_hod_achived_weight VARCHAR(50),
+        ekpp_hod_overall_achieve VARCHAR(50),
+        ekpp_hod_overall_task_comp VARCHAR(50),
+        gm_emp_id INTEGER,
+        ekpp_gm_achived_weight VARCHAR(50),
+        ekpp_gm_overall_achieve VARCHAR(50),
+        ekpp_gm_overall_task_comp VARCHAR(50),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    /*
+               insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(1,'General Manager','Added GM role','A','admin');
+               insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(2,'Head Of Department','Added HOD role','A','admin');
+               insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(3,'Employee','Added employee role','A','admin');
+
+
+
+       insert into roles_audit(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(1,'General Manager','Added GM role','A','admin');
+       insert into roles_audit(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(2,'Head Of Department','Added HOD role','A','admin');
+               insert into roles_audit (ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(3,'Employee','Added employee role','A','admin');
+
+
+
+
+               insert into department(DEPT_NAME,STATUS_CD,crte_user_id) values('General Manager','A','admin');
+               insert into department_audit (DEPT_NAME,STATUS_CD,crte_user_id) values('General Manager','A','admin');
+
+
+               insert into designation(dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(1,'General Manager','A','admin');
+               insert into designation_audit(dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(1,'General Manager','A','admin');
+
+
+
+               insert into employee(emp_id,emp_eid,role_id,dept_id,desig_id ,reporting_emp_id,region_id,site_id,emp_fname,emp_mname,emp_lname,emp_gender,emp_mbno,emp_email_id, STATUS_CD,crte_user_id)
+               values(1,'GM0001',1,1,1,1,1,1,'Nilesh', 'Sambhaji','Jambhulkar','Male','9503232728','nilesh@gmail.com','A','admin');
+
+               insert into employee_audit(emp_id,emp_eid,role_id,dept_id,desig_id ,reporting_emp_id,region_id,site_id,emp_fname,emp_mname,emp_lname,emp_gender,emp_mbno,emp_email_id, STATUS_CD,crte_user_id)
+               values(1,'GM0001',1,1,1,1,1,1,'Nilesh', 'Sambhaji','Jambhulkar','Male','9503232728','nilesh@gmail.com','A','admin');
+
+
+               insert into employee_login(emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password ,STATUS_CD,crte_user_id) values('GM0001',1,1,1,'GM0001','GM0001','GM0001','A','admin');
+               insert into employee_login_audit (emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password,STATUS_CD,crte_user_id) values('GM0001',1,1,1,'GM0001','GM0001','GM0001','A','admin');
+
+        insert into key_perf_parameter(kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values('Kpp Not requires','Kpp Not requires','A','admin');
+               insert into key_perf_parameter_audit(kpp_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,'Kpp Not requires','Kpp Not requires','A','admin');
+
+
+         insert into employee_kpp_master (emp_id ,role_id,dept_id,desig_id,STATUS_CD,crte_user_id) values(1,1,1,1,'A','admin');
+       insert into employee_kpp_master_audit (emp_id ,role_id,dept_id,desig_id,STATUS_CD,crte_user_id) values(1,1,1,1,'A','admin');
+
+    */

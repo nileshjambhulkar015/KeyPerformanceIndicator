@@ -25,15 +25,6 @@ public class KeyPerfParamEntity extends AuditEnabledEntity {
     @Column(name = "kpp_id")
     private Integer kppId;
 
-    @Column(name = "role_id")
-    private Integer roleId;
-
-    @Column(name = "dept_id")
-    private Integer deptId;
-
-    @Column(name = "desig_id")
-    private Integer desigId;
-
     @Column(name = "kpp_objective_no")
     private String kppObjectiveNo;
 
@@ -52,8 +43,8 @@ public class KeyPerfParamEntity extends AuditEnabledEntity {
     @Column(name = "uom_id")
     private Integer uomId;
 
-    @Column(name = "kpp_overall_weightage")
-    private String kppOverallWeightage;
+   // @Column(name = "kpp_overall_weightage")
+   // private String kppOverallWeightage;
 
     @Column(name = "kpp_rating1")
     private String kppRating1;

@@ -20,7 +20,7 @@ public interface KeyPerfParameterService {
 
     public KPIResponse updateKeyPerfomanceParameter(KeyPerfParamUpdateRequest keyPerfParamUpdateRequest);
 
-    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId,Integer desigId,String kppObjectiveNo,String kppObjective,String statusCd,Pageable pageable);
+    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, String kppObjectiveNo,String kppObjective,String statusCd,Pageable pageable);
 
     //show kpp when assign kpp for employee
 

@@ -9,15 +9,6 @@ public class KeyPerfParamUpdateRequest {
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private Integer kppId;
 
-    @Schema(example = "1", description = "This field is used for role id")
-    private Integer roleId;
-
-    @Schema(example = "1", description = "This field is used for rating ratio 1")
-    private Integer deptId;
-
-    @Schema(example = "1", description = "This field is used for rating ratio 1")
-    private Integer desigId;
-
     @Schema(example = "Kpp001", description = "This field is used for kpp objective number")
     private String kppObjectiveNo;
 
@@ -36,8 +27,8 @@ public class KeyPerfParamUpdateRequest {
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private Integer uomId;
 
-    @Schema(example = "25", description = "This field is used for rating ratio 1")
-    private String kppOverallWeightage;
+  //  @Schema(example = "25", description = "This field is used for rating ratio 1")
+   // private String kppOverallWeightage;
 
     @Schema(example = "95%", description = "This field is used for rating ratio 1")
     private String kppRating1;

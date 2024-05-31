@@ -87,6 +87,11 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         } catch (Exception ex) {
             log.error("Inside KeyPerfParameterServiceImpl >> saveKeyPerfomanceParameter()");
             throw new KPIException("KeyPerfParameterServiceImpl", false, ex.getMessage());
+
+
+
+
+
         }
     }
 
@@ -95,8 +100,8 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         KeyPerfParamEntity keyPerfParamEntity = convertKeyPerfParamUpdateRequestToEntity(ratingRatioUpdateRequest);
         try {
             keyPerfParameterRepo.save(keyPerfParamEntity);
-            KeyPerfParamAudit departmentAudit = new KeyPerfParamAudit(keyPerfParamEntity);
-            keyPerfParameterAuditRepo.save(departmentAudit);
+            KeyPerfParamAudit keyPerfParamAudit = new KeyPerfParamAudit(keyPerfParamEntity);
+            keyPerfParameterAuditRepo.save(keyPerfParamAudit);
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
@@ -108,7 +113,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
     @Override
-    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, Integer roleId, Integer deptId, Integer desigId,String kppObjectiveNo, String kppObjective, String statusCd, Pageable pageable) {
+    public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, String kppObjectiveNo, String kppObjective, String statusCd, Pageable pageable) {
         String sortName = null;
         KPIResponse kpiResponse = new KPIResponse();
         //String sortDirection = null;
@@ -122,13 +127,13 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         }
 
         try{
-        Integer totalCount = keyPerfParameterRepo.getKeyPerfParameterCount(kppId, roleId, deptId, desigId, kppObjectiveNo, kppObjective, statusCd);
-        List<Object[]> kppData = keyPerfParameterRepo.getKeyPerfParameterDetail(kppId, roleId, deptId, desigId, kppObjectiveNo,kppObjective, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = keyPerfParameterRepo.getKeyPerfParameterCount(kppId, kppObjectiveNo, kppObjective, statusCd);
+        List<Object[]> kppData = keyPerfParameterRepo.getKeyPerfParameterDetail(kppId, kppObjectiveNo,kppObjective, statusCd, sortName, pageSize, pageOffset);
 
         if(kppData.size()>0) {
             List<KPPResponse> kppResponses = kppData.stream().map(KPPResponse::new).collect(Collectors.toList());
             kppResponses = kppResponses.stream()
-                    .sorted(Comparator.comparing(KPPResponse::getDeptName))
+                    .sorted(Comparator.comparing(KPPResponse::getKppObjectiveNo))
                     .collect(Collectors.toList());
             kpiResponse.setSuccess(true);
             kpiResponse.setResponseData(new PageImpl<>(kppResponses, pageable, totalCount));
@@ -193,28 +198,26 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                     KeyPerfParamExcelReadData model = new KeyPerfParamExcelReadData();
                     model.setEmployeeId("1");
                     model.setKppObjectiveNo(row.getCell(1).getStringCellValue().trim());
-                    model.setRoleName(row.getCell(2).getStringCellValue().trim());
-                    model.setDeptName(row.getCell(3).getStringCellValue().trim());
-                    model.setDesigName(row.getCell(4).getStringCellValue().trim());
-                    model.setKppObjective(row.getCell(5).getStringCellValue().trim());
-                    model.setKppPerformanceIndi(row.getCell(6).getStringCellValue().trim());
-                    model.setKppOverallTarget(String.valueOf(row.getCell(7).getNumericCellValue()));
-                    model.setKppTargetPeriod(row.getCell(8).getStringCellValue().trim());
-                    model.setKppUoM(row.getCell(9).getStringCellValue().trim());
-                    model.setKppOverallWeightage(String.valueOf(row.getCell(10).getNumericCellValue()));
-                    model.setKppRating1(String.valueOf(row.getCell(11).getNumericCellValue()));
-                    model.setKppRating2(String.valueOf(row.getCell(12).getNumericCellValue()));
-                    model.setKppRating3(String.valueOf(row.getCell(13).getNumericCellValue()));
-                    model.setKppRating4(String.valueOf(row.getCell(14).getNumericCellValue()));
-                    model.setKppRating5(row.getCell(15).getStringCellValue().trim());
+
+                    model.setKppObjective(row.getCell(2).getStringCellValue().trim());
+                    model.setKppPerformanceIndi(row.getCell(3).getStringCellValue().trim());
+                    model.setKppOverallTarget(String.valueOf(row.getCell(4).getNumericCellValue()));
+                    model.setKppTargetPeriod(row.getCell(5).getStringCellValue().trim());
+                    model.setKppUoM(row.getCell(6).getStringCellValue().trim());
+                   // model.setKppOverallWeightage(String.valueOf(row.getCell(10).getNumericCellValue()));
+                    model.setKppRating1(String.valueOf(row.getCell(7).getNumericCellValue()));
+                    model.setKppRating2(String.valueOf(row.getCell(8).getNumericCellValue()));
+                    model.setKppRating3(String.valueOf(row.getCell(9).getNumericCellValue()));
+                    model.setKppRating4(String.valueOf(row.getCell(10).getNumericCellValue()));
+                    model.setKppRating5(row.getCell(11).getStringCellValue().trim());
                     model.setStatusCd("A");
-                    model.setRemark(row.getCell(16).getStringCellValue().trim());
+                    model.setRemark(row.getCell(12).getStringCellValue().trim());
                     KeyPerfParamData.add(model);
                 }
             }
             workbook.close();
         } catch (Exception ex) {
-            log.error("Inside KeyPerfParamServiceImpl >> KeyPerfParamprocessExcelFile()");
+            log.error("Inside KeyPerfParamServiceImpl >> KeyPerfParamprocessExcelFile() Issue in row no: {}", currentRow);
             throw new KPIException("KeyPerfParamServiceImpl", false, "Issue in row no: " + currentRow);
         }
 
@@ -225,18 +228,12 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 KeyPerfParamCreateRequest keyPerfParamCreateRequest = new KeyPerfParamCreateRequest();
                 keyPerfParamCreateRequest.setEmployeeId("1");
                 keyPerfParamCreateRequest.setKppObjectiveNo(request.getKppObjectiveNo());
-                Integer roleId=getRoleId(request.getRoleName());
-                keyPerfParamCreateRequest.setRoleId(roleId);
-                Integer deptId= getDeptId(request.getDeptName(), keyPerfParamCreateRequest.getRoleId());
-                keyPerfParamCreateRequest.setDeptId(deptId);
-                Integer desigId = getDesigId(request.getDesigName(), keyPerfParamCreateRequest.getDeptId());
-                keyPerfParamCreateRequest.setDesigId(desigId);
                 keyPerfParamCreateRequest.setKppObjective(request.getKppObjective());
                 keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
                 keyPerfParamCreateRequest.setKppPerformanceIndi(request.getKppPerformanceIndi());
                 keyPerfParamCreateRequest.setKppOverallTarget(request.getKppOverallTarget());
                 keyPerfParamCreateRequest.setUomId(getUoMId(request.getKppUoM()));
-                keyPerfParamCreateRequest.setKppOverallWeightage(request.getKppOverallWeightage());
+                //keyPerfParamCreateRequest.setKppOverallWeightage(request.getKppOverallWeightage());
                 keyPerfParamCreateRequest.setKppRating1(request.getKppRating1());
                 keyPerfParamCreateRequest.setKppRating2(request.getKppRating2());
                 keyPerfParamCreateRequest.setKppRating3(request.getKppRating3());
@@ -256,7 +253,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         }
         for (KeyPerfParamCreateRequest request : KeyPerfParamCreateRequests) {
             try {
-                if(request.getRoleId()>0&& request.getDeptId()>0&&request.getDesigId()>0 && request.getUomId()>0) {
+                if(request.getUomId()>0) {
                     saveKeyPerfomanceParameter(request);
                 }else{
                     KeyPerfParamNotSavedRecords.add(request);
@@ -323,16 +320,13 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
     private KeyPerfParamEntity convertKeyPerfParamCreateRequestToEntity(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         KeyPerfParamEntity keyPerfParamEntity = new KeyPerfParamEntity();
-        keyPerfParamEntity.setRoleId(keyPerfParamCreateRequest.getRoleId());
-        keyPerfParamEntity.setDeptId(keyPerfParamCreateRequest.getDeptId());
-        keyPerfParamEntity.setDesigId(keyPerfParamCreateRequest.getDesigId());
         keyPerfParamEntity.setKppObjectiveNo(keyPerfParamCreateRequest.getKppObjectiveNo());
         keyPerfParamEntity.setKppObjective(keyPerfParamCreateRequest.getKppObjective());
         keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamCreateRequest.getKppPerformanceIndi());
         keyPerfParamEntity.setKppOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget());
         keyPerfParamEntity.setKppTargetPeriod(keyPerfParamCreateRequest.getKppTargetPeriod());
         keyPerfParamEntity.setUomId(keyPerfParamCreateRequest.getUomId());
-        keyPerfParamEntity.setKppOverallWeightage(keyPerfParamCreateRequest.getKppOverallWeightage());
+       // keyPerfParamEntity.setKppOverallWeightage(keyPerfParamCreateRequest.getKppOverallWeightage());
         keyPerfParamEntity.setKppRating1(keyPerfParamCreateRequest.getKppRating1());
         keyPerfParamEntity.setKppRating2(keyPerfParamCreateRequest.getKppRating2());
         keyPerfParamEntity.setKppRating3(keyPerfParamCreateRequest.getKppRating3());
@@ -348,16 +342,13 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     private KeyPerfParamEntity convertKeyPerfParamUpdateRequestToEntity(KeyPerfParamUpdateRequest keyPerfParamUpdateRequest) {
         KeyPerfParamEntity keyPerfParamEntity = new KeyPerfParamEntity();
         keyPerfParamEntity.setKppId(keyPerfParamUpdateRequest.getKppId());
-        keyPerfParamEntity.setRoleId(keyPerfParamUpdateRequest.getRoleId());
-        keyPerfParamEntity.setDeptId(keyPerfParamUpdateRequest.getDeptId());
-        keyPerfParamEntity.setDesigId(keyPerfParamUpdateRequest.getDesigId());
         keyPerfParamEntity.setKppObjectiveNo(keyPerfParamUpdateRequest.getKppObjectiveNo());
         keyPerfParamEntity.setKppObjective(keyPerfParamUpdateRequest.getKppObjective());
         keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamUpdateRequest.getKppPerformanceIndi());
         keyPerfParamEntity.setKppOverallTarget(keyPerfParamUpdateRequest.getKppOverallTarget());
         keyPerfParamEntity.setKppTargetPeriod(keyPerfParamUpdateRequest.getKppTargetPeriod());
         keyPerfParamEntity.setUomId(keyPerfParamUpdateRequest.getUomId());
-        keyPerfParamEntity.setKppOverallWeightage(keyPerfParamUpdateRequest.getKppOverallWeightage());
+        //keyPerfParamEntity.setKppOverallWeightage(keyPerfParamUpdateRequest.getKppOverallWeightage());
         keyPerfParamEntity.setKppRating1(keyPerfParamUpdateRequest.getKppRating1());
         keyPerfParamEntity.setKppRating2(keyPerfParamUpdateRequest.getKppRating2());
         keyPerfParamEntity.setKppRating3(keyPerfParamUpdateRequest.getKppRating3());
