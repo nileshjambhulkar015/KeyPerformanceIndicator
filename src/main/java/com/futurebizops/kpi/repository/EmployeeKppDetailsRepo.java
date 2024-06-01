@@ -46,7 +46,7 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     Integer assignEmployeeKppCount(@Param("empId") Integer empId);
 
     @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP, nativeQuery = true)
-    List<Object[]> assignEmployeeKpp(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
+    List<Object[]> assignEmployeeKpp(@Param("empId") Integer empId,@Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
 }
 

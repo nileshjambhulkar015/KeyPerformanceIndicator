@@ -23,8 +23,6 @@ public class EmployeeCreateRequest {
     @Schema(example = "1", description = "This field is used for Employee Type id")
     private Integer empTypeId;
 
-    @Schema(example = "1", description = "This field is used for reporting employee id")
-    private Integer reportingEmpId;
 
     @Schema(example = "1", description = "This field is used for region id")
     private Integer regionId;
@@ -71,6 +69,14 @@ public class EmployeeCreateRequest {
 
     @Schema(example = "A+", description = "This field is used for employee blood group")
     private String empBloodgroup;
+
+
+    @Schema(example = "1", description = "This field is used for reporting employee id")
+    private Integer reportingEmpId;
+
+
+    @Schema(example = "1", description = "This field is used for gm employee id")
+    private Integer gmEmpId;
 
     @Schema(example = "Adding new employee", description = "This field is used for employee remark")
     private String remark;

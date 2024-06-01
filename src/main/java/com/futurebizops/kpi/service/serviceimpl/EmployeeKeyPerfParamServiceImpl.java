@@ -409,7 +409,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
-    public KPIResponse assignEmployeeKppSearch(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable
+    public KPIResponse assignEmployeeKppSearch(Integer empId, Pageable pageable
     ) {
         List<AssignKPPResponse> kppResponses = null;
         KPIResponse response = new KPIResponse();
@@ -425,7 +425,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         }
 
         Integer totalCount = employeeKppDetailsRepo.assignEmployeeKppCount(empId);
-        List<Object[]> kppData = employeeKppDetailsRepo.assignEmployeeKpp(empId, roleId, deptId, desigId);
+        List<Object[]> kppData = employeeKppDetailsRepo.assignEmployeeKpp(empId, sortName, pageSize, pageOffset);
 
         if (kppData.size() > 0) {
             kppResponses = kppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());

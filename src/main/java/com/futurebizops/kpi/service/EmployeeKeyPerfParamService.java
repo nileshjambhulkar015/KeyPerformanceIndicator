@@ -53,5 +53,5 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse viewEmployeeKpp(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable);
 
-    public KPIResponse assignEmployeeKppSearch(Integer empId,Integer roleId,Integer deptId,Integer desigId,Pageable pageable);
+    public KPIResponse assignEmployeeKppSearch(Integer empId,Pageable pageable);
 }
