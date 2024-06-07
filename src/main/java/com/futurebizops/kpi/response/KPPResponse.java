@@ -14,7 +14,7 @@ public class KPPResponse {
     private String kppObjectiveNo;
     private String kppObjective;
     private String kppPerformanceIndi;
-    private String kppOverallTarget;
+    //private String kppOverallTarget;
     private String kppTargetPeriod;
     private Integer uomId;
     private String uomName;
@@ -31,17 +31,17 @@ public class KPPResponse {
         kppObjectiveNo=String.valueOf(objects[1]);
         kppObjective=String.valueOf(objects[2]);
         kppPerformanceIndi=String.valueOf(objects[3]);
-        kppOverallTarget=String.valueOf(objects[4]);
-        kppTargetPeriod=String.valueOf(objects[5]);
-        uomId=Integer.parseInt(String.valueOf(objects[6]));
-        uomName=String.valueOf(objects[7]);
+      //  kppOverallTarget=String.valueOf(objects[4]);
+        kppTargetPeriod=String.valueOf(objects[4]);
+        uomId=Integer.parseInt(String.valueOf(objects[5]));
+        uomName=String.valueOf(objects[6]);
        // kppOverallWeightage=String.valueOf(objects[8]);
-        kppRating1=String.valueOf(objects[8]);
-        kppRating2=String.valueOf(objects[9]);
-        kppRating3=String.valueOf(objects[10]);
-        kppRating4=String.valueOf(objects[11]);
-        kppRating5=String.valueOf(objects[12]);
-        remark=String.valueOf(objects[13]);
+        kppRating1=String.valueOf(objects[7]);
+        kppRating2=String.valueOf(objects[8]);
+        kppRating3=String.valueOf(objects[9]);
+        kppRating4=String.valueOf(objects[10]);
+        kppRating5=String.valueOf(objects[11]);
+        remark=String.valueOf(objects[12]);
     }
 
 

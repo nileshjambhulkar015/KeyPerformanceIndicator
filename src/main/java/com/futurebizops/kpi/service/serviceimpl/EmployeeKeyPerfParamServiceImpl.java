@@ -471,7 +471,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             assignKPPResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
             Double empKppOverallTargetCount = 0.0;
             for (AssignKPPResponse assignKPPResponse : assignKPPResponses) {
-                empKppOverallTargetCount += Double.parseDouble(assignKPPResponse.getKppOverallTarget());
+     //           empKppOverallTargetCount += Double.parseDouble(assignKPPResponse.getKppOverallTarget());
             }
             assignKPPResponses = assignKPPResponses.stream()
                     .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
@@ -540,7 +540,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                                 .kppId(keyPerfParamEntity.getKppId())
                                 .kppObjective(keyPerfParamEntity.getKppObjective())
                                 .kppPerformanceIndi(keyPerfParamEntity.getKppPerformanceIndi())
-                                .kppOverallTarget(keyPerfParamEntity.getKppOverallTarget())
+                                //.kppOverallTarget(keyPerfParamEntity.getKppOverallTarget())
                                 .kppTargetPeriod(keyPerfParamEntity.getKppTargetPeriod())
                                 .uomId(keyPerfParamEntity.getUomId())
                                // .kppOverallWeightage(keyPerfParamEntity.getKppOverallWeightage())

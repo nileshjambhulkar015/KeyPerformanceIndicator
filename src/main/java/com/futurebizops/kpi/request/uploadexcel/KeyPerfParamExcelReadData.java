@@ -15,8 +15,8 @@ public class KeyPerfParamExcelReadData {
     @Schema(example = "1", description = "This field is used for rating ratio 1")
     private String kppPerformanceIndi;
 
-    @Schema(example = "100", description = "This field is used for rating ratio 1")
-    private String kppOverallTarget;
+    //@Schema(example = "100", description = "This field is used for rating ratio 1")
+    //private String kppOverallTarget;
 
     @Schema(example = "monthly", description = "This field is used for rating ratio 1")
     private String kppTargetPeriod;

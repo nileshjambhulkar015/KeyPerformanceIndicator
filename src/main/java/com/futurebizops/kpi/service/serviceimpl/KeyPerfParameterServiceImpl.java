@@ -201,17 +201,17 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
                     model.setKppObjective(row.getCell(2).getStringCellValue().trim());
                     model.setKppPerformanceIndi(row.getCell(3).getStringCellValue().trim());
-                    model.setKppOverallTarget(String.valueOf(row.getCell(4).getNumericCellValue()));
-                    model.setKppTargetPeriod(row.getCell(5).getStringCellValue().trim());
-                    model.setKppUoM(row.getCell(6).getStringCellValue().trim());
+                    //model.setKppOverallTarget(String.valueOf(row.getCell(4).getNumericCellValue()));
+                    model.setKppTargetPeriod(row.getCell(4).getStringCellValue().trim());
+                    model.setKppUoM(row.getCell(5).getStringCellValue().trim());
                    // model.setKppOverallWeightage(String.valueOf(row.getCell(10).getNumericCellValue()));
-                    model.setKppRating1(String.valueOf(row.getCell(7).getNumericCellValue()));
-                    model.setKppRating2(String.valueOf(row.getCell(8).getNumericCellValue()));
-                    model.setKppRating3(String.valueOf(row.getCell(9).getNumericCellValue()));
-                    model.setKppRating4(String.valueOf(row.getCell(10).getNumericCellValue()));
-                    model.setKppRating5(row.getCell(11).getStringCellValue().trim());
+                    model.setKppRating1(String.valueOf(row.getCell(6).getNumericCellValue()));
+                    model.setKppRating2(String.valueOf(row.getCell(7).getNumericCellValue()));
+                    model.setKppRating3(String.valueOf(row.getCell(8).getNumericCellValue()));
+                    model.setKppRating4(String.valueOf(row.getCell(9).getNumericCellValue()));
+                    model.setKppRating5(row.getCell(10).getStringCellValue().trim());
                     model.setStatusCd("A");
-                    model.setRemark(row.getCell(12).getStringCellValue().trim());
+                    model.setRemark(row.getCell(11).getStringCellValue().trim());
                     KeyPerfParamData.add(model);
                 }
             }
@@ -231,7 +231,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 keyPerfParamCreateRequest.setKppObjective(request.getKppObjective());
                 keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
                 keyPerfParamCreateRequest.setKppPerformanceIndi(request.getKppPerformanceIndi());
-                keyPerfParamCreateRequest.setKppOverallTarget(request.getKppOverallTarget());
+                //keyPerfParamCreateRequest.setKppOverallTarget(request.getKppOverallTarget());
                 keyPerfParamCreateRequest.setUomId(getUoMId(request.getKppUoM()));
                 //keyPerfParamCreateRequest.setKppOverallWeightage(request.getKppOverallWeightage());
                 keyPerfParamCreateRequest.setKppRating1(request.getKppRating1());
@@ -323,7 +323,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         keyPerfParamEntity.setKppObjectiveNo(keyPerfParamCreateRequest.getKppObjectiveNo());
         keyPerfParamEntity.setKppObjective(keyPerfParamCreateRequest.getKppObjective());
         keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamCreateRequest.getKppPerformanceIndi());
-        keyPerfParamEntity.setKppOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget());
+       // keyPerfParamEntity.setKppOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget());
         keyPerfParamEntity.setKppTargetPeriod(keyPerfParamCreateRequest.getKppTargetPeriod());
         keyPerfParamEntity.setUomId(keyPerfParamCreateRequest.getUomId());
        // keyPerfParamEntity.setKppOverallWeightage(keyPerfParamCreateRequest.getKppOverallWeightage());
@@ -345,7 +345,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         keyPerfParamEntity.setKppObjectiveNo(keyPerfParamUpdateRequest.getKppObjectiveNo());
         keyPerfParamEntity.setKppObjective(keyPerfParamUpdateRequest.getKppObjective());
         keyPerfParamEntity.setKppPerformanceIndi(keyPerfParamUpdateRequest.getKppPerformanceIndi());
-        keyPerfParamEntity.setKppOverallTarget(keyPerfParamUpdateRequest.getKppOverallTarget());
+       // keyPerfParamEntity.setKppOverallTarget(keyPerfParamUpdateRequest.getKppOverallTarget());
         keyPerfParamEntity.setKppTargetPeriod(keyPerfParamUpdateRequest.getKppTargetPeriod());
         keyPerfParamEntity.setUomId(keyPerfParamUpdateRequest.getUomId());
         //keyPerfParamEntity.setKppOverallWeightage(keyPerfParamUpdateRequest.getKppOverallWeightage());

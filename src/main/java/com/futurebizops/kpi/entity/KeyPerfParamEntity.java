@@ -34,8 +34,8 @@ public class KeyPerfParamEntity extends AuditEnabledEntity {
     @Column(name = "kpp_performance_indi")
     private String kppPerformanceIndi;
 
-    @Column(name = "kpp_overall_tar")
-    private String kppOverallTarget;
+  //  @Column(name = "kpp_overall_tar")
+    //private String kppOverallTarget;
 
     @Column(name = "kpp_target_period")
     private String kppTargetPeriod;
