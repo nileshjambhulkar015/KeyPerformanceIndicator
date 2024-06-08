@@ -568,6 +568,9 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         EmployeeKppDetailsEntity employeeKppDetailsEntity = new EmployeeKppDetailsEntity();
         employeeKppDetailsEntity.setEkppMonth(keyPerfParamCreateRequest.getEkppMonth());
         employeeKppDetailsEntity.setKppId(keyPerfParamCreateRequest.getKppId());
+        employeeKppDetailsEntity.setKppOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget());
+        employeeKppDetailsEntity.setKppOverallWeightage(keyPerfParamCreateRequest.getKppOverallWeightage());
+
         employeeKppDetailsEntity.setEmpId(keyPerfParamCreateRequest.getEmpId());
 
         employeeKppDetailsEntity.setEmpEId(keyPerfParamCreateRequest.getEmpEId());

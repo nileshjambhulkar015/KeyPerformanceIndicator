@@ -31,6 +31,12 @@ public class EmployeeKppDetailsEntity extends AuditEnabledEntity {
     @Column(name = "kpp_id")
     private Integer kppId;
 
+    @Column(name = "kpp_overall_tar")
+    private String kppOverallTarget;
+
+    @Column(name = "kpp_overall_weightage")
+     private String kppOverallWeightage;
+
     @Column(name = "emp_id")
     private Integer empId;
 

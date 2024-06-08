@@ -33,6 +33,12 @@ public class EmployeeKppDetailsAudit extends AuditEnabledEntity{
     @Column(name = "kpp_id")
     private Integer kppId;
 
+    @Column(name = "kpp_overall_tar")
+    private String kppOverallTarget;
+
+    @Column(name = "kpp_overall_weightage")
+    private String kppOverallWeightage;
+
     @Column(name = "emp_id")
     private Integer empId;
 
@@ -88,6 +94,8 @@ public class EmployeeKppDetailsAudit extends AuditEnabledEntity{
         super(employeeKeyPerfParamEntity.getCreatedDate(), employeeKeyPerfParamEntity.getCreatedUserId(), employeeKeyPerfParamEntity.getUpdatedDate(), employeeKeyPerfParamEntity.getUpdatedUserId());
         this.ekppId = employeeKeyPerfParamEntity.getEkppId();
         this.kppId = employeeKeyPerfParamEntity.getKppId();
+        this.kppOverallTarget = employeeKeyPerfParamEntity.getKppOverallTarget();
+        this.kppOverallWeightage = employeeKeyPerfParamEntity.getKppOverallWeightage();
         this.empId=employeeKeyPerfParamEntity.getEmpId();
         this.empEId=employeeKeyPerfParamEntity.getEmpEId();
         this.roleId=employeeKeyPerfParamEntity.getRoleId();

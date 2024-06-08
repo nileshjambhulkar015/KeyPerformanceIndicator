@@ -19,7 +19,7 @@ public class AssignKPPResponse {
     private String kppTargetPeriod;
     private Integer uomId;
     private String uomName;
-    private String kppOverallWeightage;
+    //private String kppOverallWeightage;
     private String kppRating1;
     private String kppRating2;
     private String kppRating3;
@@ -36,13 +36,13 @@ public class AssignKPPResponse {
         kppTargetPeriod=String.valueOf(objects[4]);
         uomId=Integer.parseInt(String.valueOf(objects[5]));
         uomName=String.valueOf(objects[6]);
-        kppOverallWeightage=String.valueOf(objects[7]);
-        kppRating1=String.valueOf(objects[8]);
-        kppRating2=String.valueOf(objects[9]);
-        kppRating3=String.valueOf(objects[10]);
-        kppRating4=String.valueOf(objects[11]);
-        kppRating5=String.valueOf(objects[12]);
-        remark=String.valueOf(objects[13]);
+       // kppOverallWeightage=String.valueOf(objects[7]);
+        kppRating1=String.valueOf(objects[7]);
+        kppRating2=String.valueOf(objects[8]);
+        kppRating3=String.valueOf(objects[9]);
+        kppRating4=String.valueOf(objects[10]);
+        kppRating5=String.valueOf(objects[11]);
+        remark=String.valueOf(objects[12]);
     }
 
 }

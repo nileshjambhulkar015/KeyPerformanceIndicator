@@ -16,6 +16,12 @@ public class EmployeeKeyPerfParamCreateRequest {
     @Schema(example = "1", description = "This field is used for Employee Key Performance Id")
     private Integer kppId;
 
+    @Schema(example = "40", description = "This field is used for Employee Key Performance overall target")
+    private String kppOverallTarget;
+
+    @Schema(example = "50", description = "This field is used for Employee Key Performance Overall Weightage")
+    private String kppOverallWeightage;
+
     @Schema(example = "1", description = "This field is used for Employee Id")
     private Integer empId;
 

@@ -297,9 +297,9 @@ create table company_master(
         kpp_objective_no VARCHAR(10),
         kpp_objective VARCHAR(500),
         kpp_performance_indi VARCHAR(500),
-       -- kpp_overall_tar VARCHAR(50),
         kpp_target_period VARCHAR(50),
         uom_id INTEGER,
+       -- kpp_overall_tar VARCHAR(50),
        -- kpp_overall_weightage VARCHAR(50),
         kpp_rating1 VARCHAR(10),
         kpp_rating2 VARCHAR(10),
@@ -460,6 +460,7 @@ create table company_master(
         lst_updt_user_id VARCHAR(20) null
     );
 
+
     create table employee_kpp_master(
         ekpp_mid serial PRIMARY key,
         ekpp_month timestamp,
@@ -468,6 +469,8 @@ create table company_master(
         role_id INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         total_emp_achived_weight VARCHAR(50),
         total_emp_overall_achieve VARCHAR(50),
         total_emp_overall_task_comp VARCHAR(50),
@@ -506,6 +509,8 @@ create table company_master(
         role_id INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         total_emp_achived_weight VARCHAR(50),
         total_emp_overall_achieve VARCHAR(50),
         total_emp_overall_task_comp VARCHAR(50),
@@ -546,6 +551,8 @@ create table company_master(
         dept_id INTEGER,
         desig_id INTEGER,
         kpp_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         ekpp_emp_achived_weight VARCHAR(50),
         ekpp_emp_overall_achieve VARCHAR(50),
         ekpp_emp_overall_task_comp VARCHAR(50),
@@ -575,6 +582,8 @@ create table company_master(
         dept_id INTEGER,
         desig_id INTEGER,
         kpp_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         ekpp_emp_achived_weight VARCHAR(50),
         ekpp_emp_overall_achieve VARCHAR(50),
         ekpp_emp_overall_task_comp VARCHAR(50),
@@ -594,6 +603,7 @@ create table company_master(
     );
 
 
+   drop table report_employee_kpp_master_audit
     create table report_employee_kpp_master(
         report_ekpp_id serial PRIMARY key,
         ekpp_month timestamp,
@@ -602,6 +612,8 @@ create table company_master(
             role_id INTEGER,
             dept_id INTEGER,
             desig_id INTEGER,
+            kpp_overall_tar VARCHAR(50),
+            kpp_overall_weightage VARCHAR(50),
             total_emp_achived_weight VARCHAR(50),
             total_emp_overall_achieve VARCHAR(50),
             total_emp_overall_task_comp VARCHAR(50),
@@ -641,6 +653,8 @@ create table company_master(
                 role_id INTEGER,
                 dept_id INTEGER,
                 desig_id INTEGER,
+                kpp_overall_tar VARCHAR(50),
+                kpp_overall_weightage VARCHAR(50),
                 total_emp_achived_weight VARCHAR(50),
                 total_emp_overall_achieve VARCHAR(50),
                 total_emp_overall_task_comp VARCHAR(50),
@@ -671,6 +685,7 @@ create table company_master(
     );
 
 
+
     create table report_employee_kpp_details(
     report_ekpp_details_id serial PRIMARY key,
 
@@ -681,6 +696,8 @@ create table company_master(
         dept_id INTEGER,
         desig_id INTEGER,
         kpp_id INTEGER,
+                kpp_overall_tar VARCHAR(50),
+                kpp_overall_weightage VARCHAR(50),
         ekpp_emp_achived_weight VARCHAR(50),
         ekpp_emp_overall_achieve VARCHAR(50),
         ekpp_emp_overall_task_comp VARCHAR(50),
@@ -710,6 +727,8 @@ create table company_master(
         dept_id INTEGER,
         desig_id INTEGER,
         kpp_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         ekpp_emp_achived_weight VARCHAR(50),
         ekpp_emp_overall_achieve VARCHAR(50),
         ekpp_emp_overall_task_comp VARCHAR(50),
