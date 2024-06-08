@@ -477,21 +477,22 @@ public class EmployeeServiceImpl implements EmployeeService {
                         model.setRoleName(row.getCell(4).getStringCellValue().trim());
                         model.setDeptName(row.getCell(5).getStringCellValue().trim());
                         model.setDesigName(row.getCell(6).getStringCellValue().trim());
-                        model.setEmpFirstName(row.getCell(7).getStringCellValue().trim());
-                        model.setEmpMiddleName(row.getCell(8).getStringCellValue().trim());
-                        model.setEmpLastName(row.getCell(9).getStringCellValue().trim());
-                        model.setEmpEid(row.getCell(10).getStringCellValue().trim());
-                        Long mobile1 = (long) row.getCell(11).getNumericCellValue();
-                        Long mobile2 = (long) row.getCell(12).getNumericCellValue();
+                        model.setReportingEmpEid(row.getCell(7).getStringCellValue().trim());
+                        model.setGmEmpId(row.getCell(8).getStringCellValue().trim());
+
+                        model.setEmpFirstName(row.getCell(9).getStringCellValue().trim());
+                        model.setEmpMiddleName(row.getCell(10).getStringCellValue().trim());
+                        model.setEmpLastName(row.getCell(11).getStringCellValue().trim());
+                        model.setEmpEid(row.getCell(12).getStringCellValue().trim());
+                        Long mobile1 = (long) row.getCell(13).getNumericCellValue();
+                        Long mobile2 = (long) row.getCell(14).getNumericCellValue();
                         model.setEmpMobileNo(String.valueOf(mobile1));
                         model.setEmpEmerMobileNo(String.valueOf(mobile2));
-                        model.setTempAddress(row.getCell(13).getStringCellValue().trim());
-                        model.setPermAddress(row.getCell(14).getStringCellValue().trim());
-                        model.setEmailId(row.getCell(15).getStringCellValue().trim());
-                        model.setEmpGender(row.getCell(16).getStringCellValue().trim());
-                        model.setEmpBloodgroup(row.getCell(17).getStringCellValue().trim());
-                        model.setReportingEmpEid(row.getCell(18).getStringCellValue().trim());
-                        model.setGmEmpId(row.getCell(19).getStringCellValue().trim());
+                        model.setTempAddress(row.getCell(15).getStringCellValue().trim());
+                        model.setPermAddress(row.getCell(16).getStringCellValue().trim());
+                        model.setEmailId(row.getCell(17).getStringCellValue().trim());
+                        model.setEmpGender(row.getCell(18).getStringCellValue().trim());
+                        model.setEmpBloodgroup(row.getCell(19).getStringCellValue().trim());
                         model.setCreatedByEmployeeId(row.getCell(20).getStringCellValue().trim());
                         model.setStatusCd("A");
 
