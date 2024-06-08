@@ -36,8 +36,6 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     Integer viewEmployeeKppCount(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
 
    @Query(value = SQLQueryConstants.VIEW_EMPLOYEE_KPP, nativeQuery = true)
-    //@Query(value = SQLQueryConstants.VIEW_EMPLOYEE_KPP_DETAILS, nativeQuery = true)
-
     List<Object[]> viewEmployeeKpp(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
 
     public void deleteByEmpIdAndKppId(Integer empId, Integer kppId);
@@ -47,6 +45,10 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
 
     @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP, nativeQuery = true)
     List<Object[]> assignEmployeeKpp(@Param("empId") Integer empId,@Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+
+
+    @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP_SEARCH, nativeQuery = true)
+    List<Object[]> assignEmployeeKppSearch(@Param("empId") Integer empId,@Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
 }
 

@@ -31,6 +31,7 @@ import com.futurebizops.kpi.request.HODUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.ReportEvidenceCreateRequest;
 import com.futurebizops.kpi.response.AssignKPPResponse;
+import com.futurebizops.kpi.response.AssignKPPResponseSearch;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.EmployeeAssignKppResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
@@ -411,7 +412,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Override
     public KPIResponse assignEmployeeKppSearch(Integer empId, Pageable pageable
     ) {
-        List<AssignKPPResponse> kppResponses = null;
+        List<AssignKPPResponseSearch> kppResponses = null;
         KPIResponse response = new KPIResponse();
         String sortName = null;
         //String sortDirection = null;
@@ -425,12 +426,12 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         }
 
         Integer totalCount = employeeKppDetailsRepo.assignEmployeeKppCount(empId);
-        List<Object[]> kppData = employeeKppDetailsRepo.assignEmployeeKpp(empId, sortName, pageSize, pageOffset);
+        List<Object[]> kppData = employeeKppDetailsRepo.assignEmployeeKppSearch(empId, sortName, pageSize, pageOffset);
 
         if (kppData.size() > 0) {
-            kppResponses = kppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
+            kppResponses = kppData.stream().map(AssignKPPResponseSearch::new).collect(Collectors.toList());
             kppResponses = kppResponses.stream()
-                    .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
+                    .sorted(Comparator.comparing(AssignKPPResponseSearch::getKppObjective))
                     .collect(Collectors.toList());
             response = KPIResponse.builder()
                     .isSuccess(true)
@@ -471,7 +472,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             assignKPPResponses = empKppData.stream().map(AssignKPPResponse::new).collect(Collectors.toList());
             Double empKppOverallTargetCount = 0.0;
             for (AssignKPPResponse assignKPPResponse : assignKPPResponses) {
-     //           empKppOverallTargetCount += Double.parseDouble(assignKPPResponse.getKppOverallTarget());
+               empKppOverallTargetCount += Double.parseDouble(assignKPPResponse.getKppOverallTarget());
             }
             assignKPPResponses = assignKPPResponses.stream()
                     .sorted(Comparator.comparing(AssignKPPResponse::getKppObjective))
