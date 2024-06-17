@@ -554,6 +554,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                         Integer gmId = getReportingEmpId(request.getGmEmpId());
                         employeeCreateRequest.setGmEmpId(gmId);
 
+                        employeeCreateRequest.setEmpPhoto("");
+
                         employeeCreateRequest.setEmployeeId(request.getCreatedByEmployeeId());
                         employeeCreateRequest.setStatusCd("A");
 

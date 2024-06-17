@@ -603,7 +603,7 @@ create table company_master(
     );
 
 
-   drop table report_employee_kpp_master_audit
+
     create table report_employee_kpp_master(
         report_ekpp_id serial PRIMARY key,
         ekpp_month timestamp,

@@ -36,7 +36,7 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
         List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(userName, userPassword);
         List<LoginResponse> loginResponses = employeeLogin.stream().map(LoginResponse::new).collect(Collectors.toList());
         if (!loginResponses.isEmpty()) {
-            Optional<EmployeeKppMasterEntity> entityOptional = employeeKppMasterRepo.findById(loginResponses.get(0).getEmpId());
+            Optional<EmployeeKppMasterEntity> entityOptional = employeeKppMasterRepo.findByEmpId(loginResponses.get(0).getEmpId());
             if(entityOptional.isPresent()) {
                 log.info("Login successfully");
                 return KPIResponse.builder()
