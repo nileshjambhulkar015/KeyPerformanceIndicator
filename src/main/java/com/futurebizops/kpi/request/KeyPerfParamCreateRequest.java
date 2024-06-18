@@ -44,8 +44,6 @@ public class KeyPerfParamCreateRequest {
     @Schema(example = "88%", description = "This field is used for rating ratio 5")
     private String kppRating5;
 
-    @Schema(example = "description", description = "This field is used for department remark")
-    private String rrDescription;
 
     @Schema(example = "This is remark", description = "This field is used for department remark")
     private String remark;

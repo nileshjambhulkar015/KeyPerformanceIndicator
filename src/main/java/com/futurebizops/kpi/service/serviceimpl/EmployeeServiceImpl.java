@@ -466,7 +466,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
                 for (int rowIndex = startRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                     Row row = sheet.getRow(rowIndex);
-                    log.info("____>" + rowIndex);
+
                     if (row != null) {
                         currentRow = rowIndex;
                         EmployeeExcelReadData model = new EmployeeExcelReadData();

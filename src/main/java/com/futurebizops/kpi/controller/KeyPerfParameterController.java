@@ -1,7 +1,11 @@
 package com.futurebizops.kpi.controller;
 
+import com.futurebizops.kpi.model.EmployeeAdvSearchModel;
+import com.futurebizops.kpi.model.KppAdvanceSearchModel;
 import com.futurebizops.kpi.request.KeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.KeyPerfParamUpdateRequest;
+import com.futurebizops.kpi.request.advsearch.EmployeeAdvSearchRequest;
+import com.futurebizops.kpi.request.advsearch.KPPAdvanceSearchRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
@@ -62,6 +66,25 @@ public class KeyPerfParameterController {
 
     }
 
+    @PostMapping(value = "/adv-search")
+    @PageableAsQueryParam
+    public ResponseEntity<KPIResponse>  empAdvanceSearch(@RequestBody KPPAdvanceSearchRequest kppAdvanceSearchRequest, @Parameter(hidden = true) Pageable pageable) {
+        log.info("reqiuest for Employee search");
+        KppAdvanceSearchModel employeeAdvSearchModel = KppAdvanceSearchModel.builder()
+                .kppObjectiveNo(kppAdvanceSearchRequest.getKppObjectiveNo())
+                .kppObjective(kppAdvanceSearchRequest.getKppObjective())
+                .kppPerformanceIndi(kppAdvanceSearchRequest.getKppPerformanceIndi())
+                .kppTargetPeriod(kppAdvanceSearchRequest.getKppTargetPeriod())
+                .pageable(pageable)
+                .build();
+
+        log.info("reqiuest for Employee search");
+       // KPIResponse response = employeeService.getAllEmployeeAdvanceSearch(employeeAdvSearchModel.getRoleId(), employeeAdvSearchModel.getDeptId(),employeeAdvSearchModel.getDesigId(),employeeAdvSearchModel.getRegionId(),employeeAdvSearchModel.getSiteId(),employeeAdvSearchModel.getCompanyId(),employeeAdvSearchModel.getEmpTypeId(), employeeAdvSearchModel.getPageable());
+        //return new ResponseEntity<>(response, HttpStatus.OK);
+
+        //KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 
 
 
