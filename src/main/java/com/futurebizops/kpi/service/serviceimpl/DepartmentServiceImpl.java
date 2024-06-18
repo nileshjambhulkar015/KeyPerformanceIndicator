@@ -16,6 +16,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -163,7 +164,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public void uploadDeptExcelFile(MultipartFile file) throws IOException {        {
+    public void uploadDeptExcelFile(MultipartFile file) throws IOException {
 
             Integer currentRow = 0;
             List<DepartmentCreateRequest> createRequests = new ArrayList<>();
@@ -208,13 +209,15 @@ public class DepartmentServiceImpl implements DepartmentService {
             Integer currentExcelRow = 0;
             for (DepartmentExcelReadData request : departmentData) {
                 try {
-                    currentExcelRow++;
-                    DepartmentCreateRequest departmentCreateRequest = new DepartmentCreateRequest();
-                    departmentCreateRequest.setDeptName(request.getDeptName());
-                    departmentCreateRequest.setRemark(request.getRemark());
-                    departmentCreateRequest.setStatusCd(request.getStatusCd());
-                    departmentCreateRequest.setEmployeeId(request.getEmployeeId());
-                    createRequests.add(departmentCreateRequest);//final request
+                    if(StringUtils.isNotEmpty(request.getDeptName())) {
+                        currentExcelRow++;
+                        DepartmentCreateRequest departmentCreateRequest = new DepartmentCreateRequest();
+                        departmentCreateRequest.setDeptName(request.getDeptName());
+                        departmentCreateRequest.setRemark(request.getRemark());
+                        departmentCreateRequest.setStatusCd(request.getStatusCd());
+                        departmentCreateRequest.setEmployeeId(request.getEmployeeId());
+                        createRequests.add(departmentCreateRequest);//final request
+                    }
                 } catch (Exception ex) {
                     throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
 
@@ -224,7 +227,9 @@ public class DepartmentServiceImpl implements DepartmentService {
             }
             for (DepartmentCreateRequest request : createRequests) {
                 try {
-                    saveDepartment(request);
+                    if(request.getDeptName()!=null) {
+                        saveDepartment(request);
+                    }
 
                     log.info("DepartmentCreateRequest::" + request);
                 } catch (Exception ex) {
@@ -232,7 +237,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                     log.info("departmentNotSavedRecords"+request);
                 }
             }
-        }
+
     }
 
 

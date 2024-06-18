@@ -19,6 +19,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.service.DesignationService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -172,13 +173,13 @@ public class DesignationServiceImp implements DesignationService {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
             int startRow = 1;
-            Integer roleId = null;
+
             for (int rowIndex = startRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row != null) {
                     currentRow = rowIndex;
                     DesignationExcelReadData model = new DesignationExcelReadData();
-                    model.setDeptId(getDeptId(roleId, row.getCell(0).getStringCellValue().trim()));
+                    model.setDeptId(getDeptIdByDeptName(row.getCell(0).getStringCellValue().trim()));
                     model.setDesigName(row.getCell(1).getStringCellValue().trim());
                     model.setRemark(row.getCell(2).getStringCellValue().trim());
                     model.setEmployeeId(row.getCell(3).getStringCellValue().trim());
@@ -196,19 +197,16 @@ public class DesignationServiceImp implements DesignationService {
         Integer currentExcelRow = 0;
         for (DesignationExcelReadData request : designationData) {
             try {
-                currentExcelRow++;
-                DesignationCreateRequest designationCreateRequest = new DesignationCreateRequest();
-
-
-                designationCreateRequest.setDeptId(request.getDeptId());
-                designationCreateRequest.setDesigName(request.getDesigName());
-                designationCreateRequest.setRemark(request.getRemark());
-                designationCreateRequest.setStatusCd(request.getStatusCd());
-                designationCreateRequest.setEmployeeId(request.getEmployeeId());
-
-
-                designationCreateRequests.add(designationCreateRequest);//final request
-
+                if(StringUtils.isNotEmpty(request.getDesigName())) {
+                    currentExcelRow++;
+                    DesignationCreateRequest designationCreateRequest = new DesignationCreateRequest();
+                    designationCreateRequest.setDeptId(request.getDeptId());
+                    designationCreateRequest.setDesigName(request.getDesigName());
+                    designationCreateRequest.setRemark(request.getRemark());
+                    designationCreateRequest.setStatusCd(request.getStatusCd());
+                    designationCreateRequest.setEmployeeId(request.getEmployeeId());
+                    designationCreateRequests.add(designationCreateRequest);//final request
+                }
             } catch (Exception ex) {
                 throw new KPIException("DesignationServiceImpl", false, "Issue in row no: " + currentExcelRow);
 
@@ -218,7 +216,9 @@ public class DesignationServiceImp implements DesignationService {
         }
         for (DesignationCreateRequest request : designationCreateRequests) {
             try {
+                if(null!=request.getDeptId() || null != request.getDesigName()){
                 saveDesignation(request);
+                }
 
                 log.info("DesignationCreateRequest::" + request);
             } catch (Exception ex) {
@@ -266,5 +266,14 @@ public class DesignationServiceImp implements DesignationService {
         designationEntity.setStatusCd(designationUpdateRequest.getStatusCd());
         designationEntity.setUpdatedUserId(designationUpdateRequest.getEmployeeId());
         return designationEntity;
+    }
+
+    private Integer getDeptIdByDeptName(String deptName) {
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
+        if (optionalDepartmentEntity.isPresent()) {
+            return optionalDepartmentEntity.get().getDeptId();
+        }
+        log.error("Inside EmployeeServiceImpl >> getRoleId");
+      return null;
     }
 }
