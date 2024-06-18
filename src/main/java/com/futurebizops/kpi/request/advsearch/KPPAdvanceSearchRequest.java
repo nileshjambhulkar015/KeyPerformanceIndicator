@@ -14,7 +14,6 @@ public class KPPAdvanceSearchRequest {
 
     String kppObjectiveNo;
     String kppObjective;
-    String kppPerformanceIndi;
-    String kppTargetPeriod;
-    Pageable pageable;
+    String kppPerformanceIndica;
+
 }

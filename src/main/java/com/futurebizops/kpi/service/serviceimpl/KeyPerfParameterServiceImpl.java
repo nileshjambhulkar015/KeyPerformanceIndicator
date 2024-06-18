@@ -241,7 +241,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                 keyPerfParamCreateRequest.setKppRating5(request.getKppRating5());
                 keyPerfParamCreateRequest.setStatusCd(request.getStatusCd());
                 keyPerfParamCreateRequest.setRemark(request.getRemark());
-                keyPerfParamCreateRequest.setRrDescription(request.getRrDescription());
+
 
                 KeyPerfParamCreateRequests.add(keyPerfParamCreateRequest);//final request
 

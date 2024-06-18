@@ -12,6 +12,7 @@ import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppDetailsEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppMasterEntity;
 import com.futurebizops.kpi.exception.KPIException;
+import com.futurebizops.kpi.model.KppAdvanceSearchModel;
 import com.futurebizops.kpi.repository.EmployeeKppDetailsAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeKppDetailsRepo;
 import com.futurebizops.kpi.repository.EmployeeKppMasterAuditRepo;
@@ -446,6 +447,45 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                     .build();
         }
         return response;
+    }
+
+    @Override
+    public KPIResponse assignEmployeeKppAdvanceSearch(Integer empId, KppAdvanceSearchModel employeeAdvSearchModel, Pageable pageable) {
+        List<AssignKPPResponseSearch> kppResponses = null;
+        KPIResponse response = new KPIResponse();
+        String sortName = null;
+        //String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = employeeKppDetailsRepo.assignEmployeeKppAdvanceSearchCount(empId,employeeAdvSearchModel.getKppObjectiveNo(),employeeAdvSearchModel.getKppObjective(),employeeAdvSearchModel.getKppPerformanceIndica());
+        List<Object[]> kppData = employeeKppDetailsRepo.assignEmployeeKppAdvanceSearch(empId,employeeAdvSearchModel.getKppObjectiveNo(),employeeAdvSearchModel.getKppObjective(),employeeAdvSearchModel.getKppPerformanceIndica(), sortName, pageSize, pageOffset);
+
+        if (kppData.size() > 0) {
+            kppResponses = kppData.stream().map(AssignKPPResponseSearch::new).collect(Collectors.toList());
+            kppResponses = kppResponses.stream()
+                    .sorted(Comparator.comparing(AssignKPPResponseSearch::getKppObjective))
+                    .collect(Collectors.toList());
+            response = KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(kppResponses, pageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } else {
+            response = KPIResponse.builder()
+                    .isSuccess(false)
+                    .responseData(null)
+                    .responseMessage("All Kpp set to Employee")
+                    .build();
+        }
+        return response;
+
     }
 
 

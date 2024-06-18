@@ -1,9 +1,11 @@
 package com.futurebizops.kpi.service;
 
+import com.futurebizops.kpi.model.KppAdvanceSearchModel;
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.GMUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
+import com.futurebizops.kpi.request.advsearch.KPPAdvanceSearchRequest;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
@@ -54,4 +56,6 @@ public interface EmployeeKeyPerfParamService {
     public KPIResponse viewEmployeeKpp(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable);
 
     public KPIResponse assignEmployeeKppSearch(Integer empId,Pageable pageable);
+
+    public KPIResponse assignEmployeeKppAdvanceSearch(Integer empId, KppAdvanceSearchModel employeeAdvSearchModel, Pageable pageable);
 }

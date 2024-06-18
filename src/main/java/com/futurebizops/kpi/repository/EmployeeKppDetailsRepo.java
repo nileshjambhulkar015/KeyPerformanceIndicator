@@ -48,7 +48,13 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
 
 
     @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP_SEARCH, nativeQuery = true)
-    List<Object[]> assignEmployeeKppSearch(@Param("empId") Integer empId,@Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> assignEmployeeKppSearch(@Param("empId") Integer empId, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP_ADVANCE_SEARCH, nativeQuery = true)
+    List<Object[]> assignEmployeeKppAdvanceSearch(@Param("empId") Integer empId, @Param("kppObjectiveNo") String kppObjectiveNo, @Param("kppObjective") String kppObjective,@Param("kppPerformanceIndica") String kppPerformanceIndica,@Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP_ADVANCE_SEARCH_COUNT, nativeQuery = true)
+    Integer assignEmployeeKppAdvanceSearchCount(@Param("empId") Integer empId, @Param("kppObjectiveNo") String kppObjectiveNo, @Param("kppObjective") String kppObjective,@Param("kppPerformanceIndica") String kppPerformanceIndica);
 
 }
 

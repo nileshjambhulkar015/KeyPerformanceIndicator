@@ -14,7 +14,7 @@ public class KppAdvanceSearchModel {
 
     String kppObjectiveNo;
     String kppObjective;
-    String kppPerformanceIndi;
-    String kppTargetPeriod;
+    String kppPerformanceIndica;
+
     Pageable pageable;
 }

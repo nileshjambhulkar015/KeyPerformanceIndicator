@@ -1,8 +1,10 @@
 package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.enums.StatusCdEnum;
+import com.futurebizops.kpi.model.KppAdvanceSearchModel;
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
+import com.futurebizops.kpi.request.advsearch.KPPAdvanceSearchRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
@@ -124,6 +126,23 @@ public class EmployeeKppController {
     public ResponseEntity<KPIResponse> assignEmployeeKppSearch(@RequestParam(required = false) Integer empId,
                                                                @Parameter(hidden = true) Pageable pageable) {
         KPIResponse response = employeeKeyPerfParamService.assignEmployeeKppSearch(empId,pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    @PostMapping(value = "/assign-employee-kpp-advance-search")
+    @PageableAsQueryParam
+    public ResponseEntity<KPIResponse> assignEmployeeKppAdvanceSearch(@RequestParam(required = false) Integer empId,
+                                                                      @RequestBody KPPAdvanceSearchRequest kppAdvanceSearchRequest, @Parameter(hidden = true) Pageable pageable) {
+        KppAdvanceSearchModel employeeAdvSearchModel = KppAdvanceSearchModel.builder()
+                .kppObjectiveNo(kppAdvanceSearchRequest.getKppObjectiveNo())
+                .kppObjective(kppAdvanceSearchRequest.getKppObjective())
+                .kppPerformanceIndica(kppAdvanceSearchRequest.getKppPerformanceIndica())
+
+                .pageable(pageable)
+                .build();
+
+        KPIResponse response = employeeKeyPerfParamService.assignEmployeeKppAdvanceSearch(empId,employeeAdvSearchModel, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
