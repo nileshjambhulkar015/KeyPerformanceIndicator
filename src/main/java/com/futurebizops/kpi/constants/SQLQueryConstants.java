@@ -8,8 +8,14 @@ public final class SQLQueryConstants {
     public static final String DD_ROLES_QUERY = "select ro.role_id,ro.role_name,ro.status_cd from roles ro where ro.status_cd = 'A' and ro.role_id != 1";
 
     //for department
-    public static final String DEPARTMENT_QUERY = "select dept.dept_id, dept.dept_name,  dept.remark, dept.status_cd from department dept where dept.status_cd = 'A'  and dept.dept_id = coalesce(:deptId, dept.dept_id) and dept.dept_name LIKE CONCAT('%',:deptName,'%') and dept.status_cd =coalesce (:statusCd, dept.status_cd) order by  :sortName asc limit :pageSize offset :pageOffset";
+    public static final String DEPARTMENT_QUERY = "select dept.dept_id, dept.dept_name,  dept.remark, dept.status_cd from department dept where  dept.dept_id = coalesce(:deptId, dept.dept_id) and dept.dept_name LIKE CONCAT('%',:deptName,'%') and dept.status_cd =coalesce (:statusCd, dept.status_cd) order by  :sortName asc limit :pageSize offset :pageOffset";
     public static final String DEPARTMENT_COUNT_UERY = "select count(*) from department dept where  dept.status_cd = 'A' and dept.dept_id = coalesce(:deptId, dept.dept_id) and dept.dept_name = coalesce(:deptName, dept.dept_name) and dept.status_cd =coalesce (:statusCd, dept.status_cd)";
+
+  //for Complaint Type
+
+    public static final String COMPLAINT_TYPE_QUERY = "select comp.comp_type_id, comp.comp_type_NAME,  comp.remark, comp.status_cd from complaint_type comp where comp.comp_type_id = coalesce(:compTypeId, comp.comp_type_id) and comp.comp_type_NAME LIKE CONCAT('%',:compTypeName,'%') and comp.status_cd =coalesce (:statusCd, comp.status_cd) order by  :sortName asc limit :pageSize offset :pageOffset";
+    public static final String COMPLAINT_TYPE_COUNT_UERY = "select count(*) from complaint_type comp where comp.comp_type_id = coalesce(:compTypeId, comp.comp_type_id) and comp.comp_type_NAME LIKE CONCAT('%',:compTypeName,'%') and comp.status_cd =coalesce (:statusCd, comp.status_cd)";
+    public static final String COMPLAINT_TYPE_BY_ID_QUERY = "select comp.comp_type_id, comp.comp_type_NAME,  comp.remark, comp.status_cd  from complaint_type comp where comp.status_cd = 'A' and comp.comp_type_id = coalesce(:compTypeId, comp.comp_type_id)";
 
     public static final String EMPLOYEE_TYPE_QUERY = "select emp_type.emp_type_id, emp_type.emp_type_name,  emp_type.remark, emp_type.status_cd from employee_type emp_type where emp_type.status_cd = 'A'  and emp_type.emp_type_id = coalesce(:empTypeId, emp_type.emp_type_id) and emp_type.emp_type_name LIKE CONCAT('%',:empTypeName,'%') and emp_type.status_cd =coalesce (:statusCd, emp_type.status_cd) order by  emp_type.emp_type_name";
     public static final String DEPARTMENT_BY_ID_QUERY = "select dept.dept_id, dept.dept_name, dept.remark, dept.status_cd from department dept where dept.status_cd = 'A' and dept.dept_id = coalesce(:deptId, dept.dept_id)";

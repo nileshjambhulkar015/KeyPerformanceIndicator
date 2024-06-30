@@ -241,14 +241,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
 
-    private Integer getRoleId(String roleName) {
-        Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
-        if (optionalRoleEntity.isPresent()) {
-            return optionalRoleEntity.get().getRoleId();
-        }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
-    }
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest departmentCreateRequest) {
         DepartmentEntity departmentEntity = new DepartmentEntity();
