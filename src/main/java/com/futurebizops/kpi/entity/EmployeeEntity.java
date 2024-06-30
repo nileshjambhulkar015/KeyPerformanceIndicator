@@ -66,10 +66,11 @@ public class EmployeeEntity extends AuditEnabledEntity{
 	private String empLastName;
 
 	@Column(name = "emp_dob")
-	private String empDob;
+	private Instant empDob;
 
 	@Column(name = "emp_mbno")
 	private String empMobileNo;
+
 	@Column(name = "emp_emer_mbno")
 	private String empEmerMobileNo;
 

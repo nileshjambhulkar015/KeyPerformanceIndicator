@@ -42,6 +42,7 @@ import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.EmployeeService;
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
@@ -384,7 +385,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setEmpFirstName(employeeCreateRequest.getEmpFirstName());
         employeeEntity.setEmpMiddleName(employeeCreateRequest.getEmpMiddleName());
         employeeEntity.setEmpLastName(employeeCreateRequest.getEmpLastName());
-        employeeEntity.setEmpDob(employeeCreateRequest.getEmpDob());
+        employeeEntity.setEmpDob(StringUtils.isNotEmpty(employeeCreateRequest.getEmpDob())?DateTimeUtils.convertStringToInstant(employeeCreateRequest.getEmpDob()):null);
         employeeEntity.setEmpMobileNo(employeeCreateRequest.getEmpMobileNo());
         employeeEntity.setEmpEmerMobileNo(employeeCreateRequest.getEmpEmerMobileNo());
         employeeEntity.setEmpPhoto(employeeCreateRequest.getEmpPhoto());
@@ -415,7 +416,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setEmpFirstName(employeeUpdateRequest.getEmpFirstName());
         employeeEntity.setEmpMiddleName(employeeUpdateRequest.getEmpMiddleName());
         employeeEntity.setEmpLastName(employeeUpdateRequest.getEmpLastName());
-        employeeEntity.setEmpDob(employeeUpdateRequest.getEmpDob());
+        employeeEntity.setEmpDob(StringUtils.isNotEmpty(employeeUpdateRequest.getEmpDob())? DateTimeUtils.convertStringToInstant(employeeUpdateRequest.getEmpDob()):null);
         employeeEntity.setEmpMobileNo(employeeUpdateRequest.getEmpMobileNo());
         employeeEntity.setEmpEmerMobileNo(employeeUpdateRequest.getEmpEmerMobileNo());
         employeeEntity.setEmpPhoto(employeeUpdateRequest.getEmpPhoto());
@@ -494,6 +495,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         model.setEmpGender(row.getCell(18).getStringCellValue().trim());
                         model.setEmpBloodgroup(row.getCell(19).getStringCellValue().trim());
                         model.setCreatedByEmployeeId(row.getCell(20).getStringCellValue().trim());
+                        model.setEmpDOB(row.getCell(21).getLocalDateTimeCellValue().toString());
                         model.setStatusCd("A");
 
                         employeeData.add(model);
@@ -501,7 +503,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
                 workbook.close();
             } catch (Exception ex) {
-                log.error("Inside EmployeeServiceImpl >> processExcelFile()");
+                log.error("Inside EmployeeServiceImpl >> processExcelFile() :{} ",ex);
                 throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentRow);
             }
 
@@ -557,6 +559,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employeeCreateRequest.setEmpPhoto("");
 
                         employeeCreateRequest.setEmployeeId(request.getCreatedByEmployeeId());
+
+                        employeeCreateRequest.setEmpDob(request.getEmpDOB());
                         employeeCreateRequest.setStatusCd("A");
 
                         employeeCreateRequests.add(employeeCreateRequest);//final request

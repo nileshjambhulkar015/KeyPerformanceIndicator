@@ -10,6 +10,8 @@
     drop table uom  ;
     drop table uom_audit  ;
 
+   drop table employee_type;
+  drop table employee_type_audit;
     drop TABLE roles;
     drop TABLE roles_audit;
     drop TABLE department;
@@ -30,19 +32,88 @@
     drop table report_employee_kpp_master_audit  ;
     drop table report_employee_kpp_details  ;
     drop table report_employee_kpp_details_audit  ;
+
+    drop table evidence;
+    drop table evidence_audit;
+
+       drop table report_evidence;
+       drop table report_evidence_audit;
     **/
 
 
-    create table region(
-        REGION_ID serial  PRIMARY key,
-        REGION_NAME VARCHAR(20),
-        REMARK VARCHAR(100),
-        STATUS_CD VARCHAR(10),
-        crte_user_id VARCHAR(20) ,
-        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-        lst_updt_ts TIMESTAMP null,
-        lst_updt_user_id VARCHAR(20) null
+        create table evidence(
+            emp_ID Integer  PRIMARY key,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+            ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table evidence_audit(
+          ev_aud_ID serial  PRIMARY key,
+            emp_ID Integer,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+              ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
     );
+
+
+        create table report_evidence(
+            re_ev_id serial  PRIMARY key,
+            emp_ID Integer,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+            ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table report_evidence_audit(
+          re_ev_aud_ID serial  PRIMARY key,
+             re_ev_id Integer,
+            emp_ID Integer,
+            ev_file_NAME VARCHAR(50),
+            ev_file bytea,
+            ev_content_type varchar(100),
+              ev_month timestamp,
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+    );
+
+        create table region(
+            REGION_ID serial  PRIMARY key,
+            REGION_NAME VARCHAR(20),
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
 
 
     create table region_audit(
@@ -89,8 +160,8 @@ create table company_master(
         comp_id serial  PRIMARY key,
         region_id INTEGER,
         site_id INTEGER,
-        comp_name VARCHAR(30),
-        comp_address VARCHAR(300),
+        comp_name VARCHAR(300),
+        comp_address VARCHAR(500),
         comp_mbno VARCHAR(30),
         comp_finance_year VARCHAR(30),
         REMARK VARCHAR(100),
@@ -108,8 +179,8 @@ create table company_master(
         comp_id INTEGER,
         region_id INTEGER,
         site_id INTEGER,
-        comp_name VARCHAR(30),
-        comp_address VARCHAR(300),
+        comp_name VARCHAR(300),
+        comp_address VARCHAR(500),
         comp_mbno VARCHAR(30),
         comp_finance_year VARCHAR(30),
         REMARK VARCHAR(100),
@@ -170,7 +241,6 @@ create table company_master(
 
     create table department(
         DEPT_ID serial  PRIMARY key,
-        ROLE_ID INTEGER,
         DEPT_NAME VARCHAR(30),
         REMARK VARCHAR(100),
         STATUS_CD VARCHAR(10),
@@ -183,7 +253,6 @@ create table company_master(
 
     create table department_audit(
         DEPT_AUD_ID serial PRIMARY key,
-        ROLE_ID INTEGER,
         DEPT_ID INTEGER,
        DEPT_NAME VARCHAR(30),
         REMARK VARCHAR(100),
@@ -197,7 +266,6 @@ create table company_master(
 
     create table designation(
         DESIG_ID serial  PRIMARY key,
-        ROLE_ID INTEGER,
         DEPT_ID INTEGER,
         DESIG_NAME VARCHAR(30),
         REMARK VARCHAR(100),
@@ -213,7 +281,6 @@ create table company_master(
     create table designation_audit(
         DESIG_AUD_ID serial PRIMARY key,
         DESIG_ID INTEGER,
-        ROLE_ID INTEGER,
         DEPT_ID INTEGER,
         DESIG_NAME VARCHAR(30),
         REMARK VARCHAR(100),
@@ -227,15 +294,13 @@ create table company_master(
 
     create table key_perf_parameter(
         kpp_id serial PRIMARY key,
-        ROLE_ID INTEGER,
-        dept_id INTEGER,
-        desig_id INTEGER,
+        kpp_objective_no VARCHAR(10),
         kpp_objective VARCHAR(500),
         kpp_performance_indi VARCHAR(500),
-        kpp_overall_tar VARCHAR(50),
         kpp_target_period VARCHAR(50),
         uom_id INTEGER,
-        kpp_overall_weightage VARCHAR(50),
+       -- kpp_overall_tar VARCHAR(50),
+       -- kpp_overall_weightage VARCHAR(50),
         kpp_rating1 VARCHAR(10),
         kpp_rating2 VARCHAR(10),
         kpp_rating3 VARCHAR(10),
@@ -253,15 +318,13 @@ create table company_master(
     create table key_perf_parameter_audit(
         kpp_aud_id serial PRIMARY key,
         kpp_id INTEGER,
-        ROLE_ID INTEGER,
-        dept_id INTEGER,
-        desig_id INTEGER,
+        kpp_objective_no VARCHAR(10),
         kpp_objective VARCHAR(500),
         kpp_performance_indi VARCHAR(500),
-        kpp_overall_tar VARCHAR(50),
+       -- kpp_overall_tar VARCHAR(50),
         kpp_target_period VARCHAR(50),
        uom_id INTEGER,
-        kpp_overall_weightage VARCHAR(50),
+        --kpp_overall_weightage VARCHAR(50),
         kpp_rating1 VARCHAR(10),
         kpp_rating2 VARCHAR(10),
         kpp_rating3 VARCHAR(10),
@@ -274,6 +337,101 @@ create table company_master(
         lst_updt_ts TIMESTAMP null,
         lst_updt_user_id VARCHAR(20) null);
 
+ create table employee_type(
+            emp_type_id serial  PRIMARY key,
+            emp_type_NAME VARCHAR(20),
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+ create table employee_type_audit(
+        emp_type_AUD_ID serial PRIMARY key,
+        emp_type_ID INTEGER,
+        emp_type_NAME VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+    create table complaint_type(
+            comp_type_id serial  PRIMARY key,
+            comp_type_NAME VARCHAR(20),
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table complaint_type_audit(
+            comp_type_AUD_ID serial PRIMARY key,
+            comp_type_id INTEGER,
+            comp_type_NAME VARCHAR(20),
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+    create table employee_complaint(
+            emp_comp_id serial  PRIMARY key,
+            emp_id INTEGER,
+            emp_eid VARCHAR(20) ,
+            role_id INTEGER,
+            dept_id INTEGER,
+            desig_id INTEGER,
+            comp_type_id INTEGER,
+            comp_date TIMESTAMP,
+            comp_resolve_date TIMESTAMP,
+            emp_comp_desc VARCHAR(300),
+            comp_status VARCHAR(10),
+            REMARK VARCHAR(100),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+
+ create table employee_complaint_audit(
+            emp_comp_audit_id serial PRIMARY key,
+            emp_comp_id INTEGER,
+            emp_id INTEGER,
+            emp_eid VARCHAR(20) ,
+            role_id INTEGER,
+            dept_id INTEGER,
+            desig_id INTEGER,
+            comp_type_id INTEGER,
+                        comp_date TIMESTAMP,
+                        comp_resolve_date TIMESTAMP,
+                        emp_comp_desc VARCHAR(300),
+                        comp_status VARCHAR(10),
+                        REMARK VARCHAR(100),
+                        STATUS_CD VARCHAR(10),
+                        crte_user_id VARCHAR(20) ,
+                        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+                        lst_updt_ts TIMESTAMP null,
+                        lst_updt_user_id VARCHAR(20) null
+        );
+
+
+
+
+
 
     create table employee(
         emp_id serial  PRIMARY key,
@@ -281,6 +439,7 @@ create table company_master(
         role_id INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
+         emp_type_id INTEGER,
         reporting_emp_id INTEGER,
         gm_emp_id INTEGER,
         region_id INTEGER,
@@ -289,7 +448,7 @@ create table company_master(
         emp_fname VARCHAR(20) ,
         emp_mname VARCHAR(20),
         emp_lname VARCHAR(20),
-        emp_dob VARCHAR(40),
+        emp_dob TIMESTAMP,
         emp_mbno VARCHAR(20),
         emp_emer_mbno  VARCHAR(20),
         emp_photo VARCHAR(20),
@@ -314,6 +473,7 @@ create table company_master(
         role_id INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
+         emp_type_id INTEGER,
         reporting_emp_id INTEGER,
         gm_emp_id INTEGER,
         region_id INTEGER,
@@ -322,7 +482,7 @@ create table company_master(
         emp_fname VARCHAR(20) ,
         emp_mname VARCHAR(20),
         emp_lname VARCHAR(20),
-        emp_dob VARCHAR(40),
+        emp_dob TIMESTAMP,
         emp_mbno VARCHAR(20),
         emp_emer_mbno  VARCHAR(20),
         emp_photo VARCHAR(20),
@@ -372,6 +532,7 @@ create table company_master(
         lst_updt_user_id VARCHAR(20) null
     );
 
+
     create table employee_kpp_master(
         ekpp_mid serial PRIMARY key,
         ekpp_month timestamp,
@@ -380,6 +541,8 @@ create table company_master(
         role_id INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         total_emp_achived_weight VARCHAR(50),
         total_emp_overall_achieve VARCHAR(50),
         total_emp_overall_task_comp VARCHAR(50),
@@ -418,6 +581,8 @@ create table company_master(
         role_id INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         total_emp_achived_weight VARCHAR(50),
         total_emp_overall_achieve VARCHAR(50),
         total_emp_overall_task_comp VARCHAR(50),
@@ -449,6 +614,7 @@ create table company_master(
 
 
 
+
     create table employee_kpp_details(
         ekpp_did serial PRIMARY key,
         ekpp_month timestamp,
@@ -458,6 +624,8 @@ create table company_master(
         dept_id INTEGER,
         desig_id INTEGER,
         kpp_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         ekpp_emp_achived_weight VARCHAR(50),
         ekpp_emp_overall_achieve VARCHAR(50),
         ekpp_emp_overall_task_comp VARCHAR(50),
@@ -487,6 +655,8 @@ create table company_master(
         dept_id INTEGER,
         desig_id INTEGER,
         kpp_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         ekpp_emp_achived_weight VARCHAR(50),
         ekpp_emp_overall_achieve VARCHAR(50),
         ekpp_emp_overall_task_comp VARCHAR(50),
@@ -506,6 +676,7 @@ create table company_master(
     );
 
 
+
     create table report_employee_kpp_master(
         report_ekpp_id serial PRIMARY key,
         ekpp_month timestamp,
@@ -514,6 +685,8 @@ create table company_master(
             role_id INTEGER,
             dept_id INTEGER,
             desig_id INTEGER,
+            kpp_overall_tar VARCHAR(50),
+            kpp_overall_weightage VARCHAR(50),
             total_emp_achived_weight VARCHAR(50),
             total_emp_overall_achieve VARCHAR(50),
             total_emp_overall_task_comp VARCHAR(50),
@@ -553,6 +726,8 @@ create table company_master(
                 role_id INTEGER,
                 dept_id INTEGER,
                 desig_id INTEGER,
+                kpp_overall_tar VARCHAR(50),
+                kpp_overall_weightage VARCHAR(50),
                 total_emp_achived_weight VARCHAR(50),
                 total_emp_overall_achieve VARCHAR(50),
                 total_emp_overall_task_comp VARCHAR(50),
@@ -583,6 +758,7 @@ create table company_master(
     );
 
 
+
     create table report_employee_kpp_details(
     report_ekpp_details_id serial PRIMARY key,
 
@@ -593,6 +769,8 @@ create table company_master(
         dept_id INTEGER,
         desig_id INTEGER,
         kpp_id INTEGER,
+                kpp_overall_tar VARCHAR(50),
+                kpp_overall_weightage VARCHAR(50),
         ekpp_emp_achived_weight VARCHAR(50),
         ekpp_emp_overall_achieve VARCHAR(50),
         ekpp_emp_overall_task_comp VARCHAR(50),
@@ -622,6 +800,8 @@ create table company_master(
         dept_id INTEGER,
         desig_id INTEGER,
         kpp_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
         ekpp_emp_achived_weight VARCHAR(50),
         ekpp_emp_overall_achieve VARCHAR(50),
         ekpp_emp_overall_task_comp VARCHAR(50),
@@ -641,10 +821,6 @@ create table company_master(
     );
 
     /*
-        insert into region(region_id,region_name, status_cd) values(1,'India','A');
-
-               insert into site (site_id, region_id, site_name,status_cd) values(1,1,'Pune','A');
-
                insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(1,'General Manager','Added GM role','A','admin');
                insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(2,'Head Of Department','Added HOD role','A','admin');
                insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(3,'Employee','Added employee role','A','admin');
@@ -658,12 +834,12 @@ create table company_master(
 
 
 
-               insert into department(ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(1,'General Manager','A','admin');
-               insert into department_audit (ROLE_ID,DEPT_NAME,STATUS_CD,crte_user_id) values(1,'General Manager','A','admin');
+               insert into department(DEPT_NAME,STATUS_CD,crte_user_id) values('General Manager','A','admin');
+               insert into department_audit (DEPT_NAME,STATUS_CD,crte_user_id) values('General Manager','A','admin');
 
 
-               insert into designation(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(1,1,'General Manager','A','admin');
-               insert into designation_audit(ROLE_ID,dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(1,1,'General Manager','A','admin');
+               insert into designation(dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(1,'General Manager','A','admin');
+               insert into designation_audit(dept_id ,DESIG_NAME,STATUS_CD,crte_user_id) values(1,'General Manager','A','admin');
 
 
 
@@ -671,14 +847,15 @@ create table company_master(
                values(1,'GM0001',1,1,1,1,1,1,'Nilesh', 'Sambhaji','Jambhulkar','Male','9503232728','nilesh@gmail.com','A','admin');
 
                insert into employee_audit(emp_id,emp_eid,role_id,dept_id,desig_id ,reporting_emp_id,region_id,site_id,emp_fname,emp_mname,emp_lname,emp_gender,emp_mbno,emp_email_id, STATUS_CD,crte_user_id)
-               values(1,'GM0001',1,1,1,1,1,1,'Nilesh', 'Sambhaji','Jambhulkar','Male','9503232728','nilesh@gmail.com','A','admin');
+               values(1,'GM0001',1,+1,1,1,1,1,'Nilesh', 'Sambhaji','Jambhulkar','Male','9503232728','nilesh@gmail.com','A','admin');
 
 
                insert into employee_login(emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password ,STATUS_CD,crte_user_id) values('GM0001',1,1,1,'GM0001','GM0001','GM0001','A','admin');
                insert into employee_login_audit (emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password,STATUS_CD,crte_user_id) values('GM0001',1,1,1,'GM0001','GM0001','GM0001','A','admin');
 
-        insert into key_perf_parameter(role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,1,1,'Kpp Not requires','Kpp Not requires','A','admin');
-               insert into key_perf_parameter_audit(kpp_id,role_id,dept_id,desig_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,1,1,1,'Kpp Not requires','Kpp Not requires','A','admin');
+        insert into key_perf_parameter(kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values('Kpp Not requires','Kpp Not requires','A','admin');
+               insert into key_perf_parameter_audit(kpp_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,'Kpp Not requires','Kpp Not requires','A','admin');
+
 
          insert into employee_kpp_master (emp_id ,role_id,dept_id,desig_id,STATUS_CD,crte_user_id) values(1,1,1,1,'A','admin');
        insert into employee_kpp_master_audit (emp_id ,role_id,dept_id,desig_id,STATUS_CD,crte_user_id) values(1,1,1,1,'A','admin');

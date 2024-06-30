@@ -73,4 +73,7 @@ public class EmployeeExcelReadData {
 
     @Schema(example = "PM", description = "This field is used for Created User Id")
     private String createdByEmployeeId;
+
+    @Schema(example = "2024-06-01", description = "This field is used for date of birth of employee")
+    private String empDOB;
 }
