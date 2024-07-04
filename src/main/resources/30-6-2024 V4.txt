@@ -386,47 +386,51 @@ create table company_master(
         );
 
     create table employee_complaint(
-            emp_comp_id serial  PRIMARY key,
-            emp_id INTEGER,
-            emp_eid VARCHAR(20) ,
-            role_id INTEGER,
-            dept_id INTEGER,
-            desig_id INTEGER,
-            comp_type_id INTEGER,
-            comp_date TIMESTAMP,
-            comp_resolve_date TIMESTAMP,
-            emp_comp_desc VARCHAR(300),
-            comp_status VARCHAR(10),
-            REMARK VARCHAR(100),
-            STATUS_CD VARCHAR(10),
-            crte_user_id VARCHAR(20) ,
-            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-            lst_updt_ts TIMESTAMP null,
-            lst_updt_user_id VARCHAR(20) null
-        );
+                emp_comp_id serial  PRIMARY key,
+                comp_id VARCHAR(20) ,
+                emp_id INTEGER,
+                emp_eid VARCHAR(20) ,
+                role_id INTEGER,
+                dept_id INTEGER,
+                desig_id INTEGER,
+                comp_type_id INTEGER,
+                comp_date TIMESTAMP,
+                comp_resolve_date TIMESTAMP,
+                emp_comp_desc VARCHAR(300),
+                comp_status VARCHAR(10),
+                REMARK VARCHAR(100),
+                STATUS_CD VARCHAR(10),
+                crte_user_id VARCHAR(20) ,
+                crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+                lst_updt_ts TIMESTAMP null,
+                lst_updt_user_id VARCHAR(20) null
+            );
 
 
 
- create table employee_complaint_audit(
-            emp_comp_audit_id serial PRIMARY key,
-            emp_comp_id INTEGER,
-            emp_id INTEGER,
-            emp_eid VARCHAR(20) ,
-            role_id INTEGER,
-            dept_id INTEGER,
-            desig_id INTEGER,
-            comp_type_id INTEGER,
-                        comp_date TIMESTAMP,
-                        comp_resolve_date TIMESTAMP,
-                        emp_comp_desc VARCHAR(300),
-                        comp_status VARCHAR(10),
-                        REMARK VARCHAR(100),
-                        STATUS_CD VARCHAR(10),
-                        crte_user_id VARCHAR(20) ,
-                        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-                        lst_updt_ts TIMESTAMP null,
-                        lst_updt_user_id VARCHAR(20) null
-        );
+     create table employee_complaint_audit(
+                emp_comp_audit_id serial PRIMARY key,
+                comp_id VARCHAR(20) ,
+                emp_comp_id INTEGER,
+                emp_id INTEGER,
+                emp_eid VARCHAR(20) ,
+                role_id INTEGER,
+                dept_id INTEGER,
+                desig_id INTEGER,
+                comp_type_id INTEGER,
+                comp_date TIMESTAMP,
+                comp_resolve_date TIMESTAMP,
+                emp_comp_desc VARCHAR(300),
+                comp_status VARCHAR(10),
+                REMARK VARCHAR(100),
+                STATUS_CD VARCHAR(10),
+                crte_user_id VARCHAR(20) ,
+                crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+                lst_updt_ts TIMESTAMP null,
+                lst_updt_user_id VARCHAR(20) null
+            );
+
+
 
 
 

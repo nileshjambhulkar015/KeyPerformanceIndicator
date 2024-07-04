@@ -24,6 +24,9 @@ public class ComplaintAudit extends AuditEnabledEntity {
     @Column(name = "emp_comp_audit_id")
     private Integer empCompAuditId;
 
+    @Column(name = "comp_id")
+    private String compId;
+
     @Column(name = "emp_comp_id")
     private Integer empCompId;
 
@@ -66,6 +69,7 @@ public class ComplaintAudit extends AuditEnabledEntity {
     public ComplaintAudit(ComplaintEntity complaintEntity) {
         super(complaintEntity.getCreatedDate(), complaintEntity.getCreatedUserId(), complaintEntity.getUpdatedDate(), complaintEntity.getUpdatedUserId());
         this.empCompId=complaintEntity.getEmpCompId();
+        this.compId=complaintEntity.getCompId();
         this.empId = complaintEntity.getEmpId();
         this.empEId = complaintEntity.getEmpEId();
         this.roleId = complaintEntity.getRoleId();

@@ -4,13 +4,25 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class ComplaintUpdateRequest {
+public class EmployeeComplaintUpdateRequest {
 
     @Schema(example = "1", description = "This field is used for complaint date")
-    private String compId;
+    private Integer empCompId;
 
-    @Schema(example = "HR and Admin", description = "This field is used for complaint date")
-    private String compDate;
+    @Schema(example = "1", description = "This field is used for complaint date")
+    private Integer empId;
+
+    @Schema(example = "e111", description = "This field is used for complaint date")
+    private String empEId;
+
+    @Schema(example = "1", description = "This field is used for complaint date")
+    private Integer roleId;
+
+    @Schema(example = "1", description = "This field is used for complaint date")
+    private Integer deptId;
+
+    @Schema(example = "1", description = "This field is used for complaint date")
+    private Integer desigId;
 
     @Schema(example = "1", description = "This field is used for complaint type")
     private Integer compTypeId;
@@ -26,4 +38,5 @@ public class ComplaintUpdateRequest {
 
     @Schema(example = "e1422", description = "This field is used for Created User Id")
     private String employeeId;
+
 }

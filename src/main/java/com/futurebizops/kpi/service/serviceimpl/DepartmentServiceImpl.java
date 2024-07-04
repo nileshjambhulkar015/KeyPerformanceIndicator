@@ -158,9 +158,17 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentReponse findAllDepartmentById(Integer deptId) {
-        List<Object[]> designationData = departmentRepo.getDepartmentByIdDetail(deptId);
-        List<DepartmentReponse> designationReponses = designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
-        return  designationReponses.get(0);
+        try {
+            List<Object[]> designationData = departmentRepo.getDepartmentByIdDetail(deptId);
+            List<DepartmentReponse> departmentReponses = designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
+            if(departmentReponses.size()>0) {
+                return departmentReponses.get(0);
+            }
+            return null;
+        } catch (Exception ex) {
+            log.error("DepartmentServiceImpl >>findAllDepartmentById :{}", ex);
+            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+        }
     }
 
     @Override
