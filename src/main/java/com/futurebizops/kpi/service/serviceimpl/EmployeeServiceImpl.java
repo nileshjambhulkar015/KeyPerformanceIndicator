@@ -236,6 +236,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 if (employeeEntity.isPresent()) {
                     EmployeeEntity entity = employeeEntity.get();
                     response.setReportingHODName(entity.getEmpFirstName() + " " + entity.getEmpMiddleName() + " " + entity.getEmpLastName());
+                    response.setReportingHODEId(entity.getEmpEId());
                 }
             }
 
