@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
@@ -66,13 +67,28 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     }
 
+    @Transactional
     @Override
     public KPIResponse updateEmployeeComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
-        ComplaintEntity complaintEntity = convertEmployeeComplaintUpdateRequestToEntity(complaintUpdateRequest);
+        //ComplaintEntity complaintEntity = convertEmployeeComplaintUpdateRequestToEntity(complaintUpdateRequest);
         try {
-            complaintRepo.save(complaintEntity);
-            ComplaintAudit complaintAudit = new ComplaintAudit(complaintEntity);
-            complaintAuditRepo.save(complaintAudit);
+            complaintRepo.updateEmployeeComplaintDescription(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompDesc());
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage(KPIConstants.RECORD_UPDATE)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside ComplaintServiceImpl >> updateEmployeeComplaint() :{}", ex);
+            throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
+        }
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse updateAdminHandleComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
+        try {
+            Instant complaintResolveDate = Instant.now();
+            complaintRepo.updateAdminHandleComplaintDescription(complaintUpdateRequest.getEmpCompId(),complaintUpdateRequest.getCompStatus(),complaintResolveDate, complaintUpdateRequest.getRemark());
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
@@ -94,9 +110,10 @@ public class ComplaintServiceImpl implements ComplaintService {
         complaintEntity.setCompDate(Instant.now());
         complaintEntity.setCompDesc(complaintUpdateRequest.getCompDesc());
         complaintEntity.setCompTypeId(complaintUpdateRequest.getCompTypeId());
-        complaintEntity.setCompStatus("Pending");
+        complaintEntity.setCompStatus(complaintUpdateRequest.getCompStatus());
         complaintEntity.setRemark(complaintUpdateRequest.getRemark());
         complaintEntity.setStatusCd(complaintUpdateRequest.getStatusCd());
+        complaintEntity.setRemark(complaintUpdateRequest.getRemark());
         complaintEntity.setCreatedUserId(complaintUpdateRequest.getEmployeeId());
         return  complaintEntity;
     }
@@ -163,6 +180,24 @@ public class ComplaintServiceImpl implements ComplaintService {
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
     }
+
+
+    @Transactional
+    @Override
+    public KPIResponse deleteEmployeeComplaint(Integer empCompId) {
+        KPIResponse kpiResponse = new KPIResponse();
+        try {
+            complaintRepo.deleteEmployeeComplaint(empCompId);
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseMessage("Employee Complaint Deleted Successfully");
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("ComplaintServiceImpl >>findAllEmployeeCompById :{}", ex);
+            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+        }
+    }
+
+
 
     private Integer getRandomNumber(){
         return (int)(Math.random() * 10000);

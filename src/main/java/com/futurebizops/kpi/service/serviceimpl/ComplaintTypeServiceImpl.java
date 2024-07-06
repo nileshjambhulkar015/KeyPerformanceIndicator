@@ -3,20 +3,16 @@ package com.futurebizops.kpi.service.serviceimpl;
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.ComplaintTypeAudit;
 import com.futurebizops.kpi.entity.ComplaintTypeEntity;
-import com.futurebizops.kpi.entity.DepartmentAudit;
 import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.ComplaintTypeAuditRepo;
 import com.futurebizops.kpi.repository.ComplaintTypeRepo;
-import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.ComplaintTypeCreateRequest;
 import com.futurebizops.kpi.request.ComplaintTypeUpdateRequest;
-import com.futurebizops.kpi.request.DepartmentCreateRequest;
-import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.ComplaintTypeReponse;
-import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.service.ComplaintService;
+import com.futurebizops.kpi.response.dropdown.ComplaintTypeDDResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.ComplaintTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -115,6 +112,25 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
             log.error("Inside ComplaintTypeServiceImpl >> updateComplaintType()");
             throw new KPIException("ComplaintTypeServiceImpl", false, ex.getMessage());
         }
+    }
+
+    @Override
+    public List<ComplaintTypeDDResponse> findAllComlaintType() {
+        List<ComplaintTypeEntity> complaintTypeEntities = complaintTypeRepo.findAll();
+        ComplaintTypeDDResponse complaintTypeDDResponse = null;
+        List<ComplaintTypeDDResponse> complaintTypeDDResponses =new ArrayList<>();
+
+        for(ComplaintTypeEntity complaintTypeEntity : complaintTypeEntities){
+            if(complaintTypeEntity.getStatusCd().equalsIgnoreCase("A")){
+                complaintTypeDDResponse = new ComplaintTypeDDResponse();
+                complaintTypeDDResponse.setCompTypeId(complaintTypeEntity.getCompTypeId());
+                complaintTypeDDResponse.setCompTypeName(complaintTypeEntity.getCompTypeName());
+                complaintTypeDDResponse.setStatusCd(complaintTypeEntity.getStatusCd());
+                complaintTypeDDResponses.add(complaintTypeDDResponse);
+            }
+
+        }
+        return complaintTypeDDResponses;
     }
 
 

@@ -30,6 +30,10 @@ public class EmployeeComplaintUpdateRequest {
     @Schema(example = "HR and Admin", description = "This field is used for complaint description")
     private String compDesc;
 
+
+    @Schema(example = "HR and Admin", description = "This field is used for complaint description")
+    private String compStatus;
+
     @Schema(example = "This is remark", description = "This field is used for department remark")
     private String remark;
 

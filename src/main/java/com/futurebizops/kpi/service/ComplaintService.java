@@ -12,6 +12,13 @@ public interface ComplaintService {
 
     public KPIResponse updateEmployeeComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest);
 
+    public KPIResponse updateAdminHandleComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest);
+
     public EmployeeComplaintResponse findAllEmployeeCompById(Integer empCompId);
     public KPIResponse findComplaintDetails(Integer empId, String compId,String compDesc, String compStatus, String statusCd, Pageable pageable);
+
+    public KPIResponse deleteEmployeeComplaint(Integer empCompId);
+
+
+
 }

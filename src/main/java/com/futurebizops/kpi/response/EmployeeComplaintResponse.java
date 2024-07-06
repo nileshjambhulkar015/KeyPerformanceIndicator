@@ -15,6 +15,17 @@ public class EmployeeComplaintResponse {
 
     @Schema(example = "1", description = "This field is used for complaint date")
     private Integer empId;
+    private String empEId;
+    private String empName;
+    private String empMobileNo;
+
+    private Integer roleId;
+    private String roleName;
+    private Integer deptId;
+    private String deptName;
+    private Integer desigId;
+    private String desigName;
+
 
     @Schema(example = "1", description = "This field is used for complaint date")
     private String compId;
@@ -46,15 +57,24 @@ public class EmployeeComplaintResponse {
     public EmployeeComplaintResponse(Object[] objects){
         this.empCompId=Integer.parseInt(String.valueOf(objects[0]));
         this.empId=Integer.parseInt(String.valueOf(objects[1]));
-        this.compId=String.valueOf(objects[2]);
-        this.compDate=String.valueOf(objects[3]);
-        this.compResolveDate=String.valueOf(objects[4]);
-        this.compTypeId=Integer.parseInt(String.valueOf(objects[5]));
-        this.compTypeName=String.valueOf(objects[6]);
-        this.compDesc=String.valueOf(objects[7]);
-        this.compStatus=String.valueOf(objects[8]);
-        this.remark=String.valueOf(objects[9]);
-        this.statusCd=String.valueOf(objects[10]);
+        this.empEId=String.valueOf(objects[2]);
+        this.empName=String.valueOf(objects[3]) +" "+String.valueOf(objects[4])+" "+String.valueOf(objects[5]);
+        this.empMobileNo=String.valueOf(objects[6]);
+        this.roleId=Integer.parseInt(String.valueOf(objects[7]));
+        this.roleName=String.valueOf(objects[8]);
+        this.deptId=Integer.parseInt(String.valueOf(objects[9]));
+        this.deptName=String.valueOf(objects[10]);
+        this.desigId=Integer.parseInt(String.valueOf(objects[11]));
+        this.desigName=String.valueOf(objects[12]);
+        this.compId=String.valueOf(objects[13]);
+        this.compDate=String.valueOf(objects[14]);
+        this.compResolveDate=String.valueOf(objects[15]);
+        this.compTypeId=Integer.parseInt(String.valueOf(objects[16]));
+        this.compTypeName=String.valueOf(objects[17]);
+        this.compDesc=String.valueOf(objects[18]);
+        this.compStatus=String.valueOf(objects[19]);
+        this.remark=String.valueOf(objects[20]);
+        this.statusCd=String.valueOf(objects[21]);
     }
 
 }

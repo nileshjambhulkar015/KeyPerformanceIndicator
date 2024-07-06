@@ -3,11 +3,9 @@ package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.request.ComplaintTypeCreateRequest;
 import com.futurebizops.kpi.request.ComplaintTypeUpdateRequest;
-import com.futurebizops.kpi.request.DepartmentCreateRequest;
-import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.ComplaintTypeDDResponse;
 import com.futurebizops.kpi.service.ComplaintTypeService;
-import com.futurebizops.kpi.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -58,6 +58,12 @@ public class ComplaintTypeController {
     @PutMapping
     public ResponseEntity<KPIResponse> updateComplaintTypeDetails(@RequestBody ComplaintTypeUpdateRequest complaintTypeUpdateRequest) {
         KPIResponse response = complaintTypeService.updateComplaintType(complaintTypeUpdateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping (value = "/all-dd-comp-type")
+    public ResponseEntity<List<ComplaintTypeDDResponse>> findAllComlaintType() {
+        List<ComplaintTypeDDResponse> response = complaintTypeService.findAllComlaintType();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

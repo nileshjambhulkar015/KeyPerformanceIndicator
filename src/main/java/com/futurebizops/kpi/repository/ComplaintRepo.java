@@ -4,10 +4,12 @@ import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.ComplaintEntity;
 import com.futurebizops.kpi.entity.DepartmentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +28,17 @@ public interface ComplaintRepo extends JpaRepository<ComplaintEntity, Integer> {
 
     @Query(value = SQLQueryConstants.EMPLOYEE_COMPLAINT_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeComplaintByIdDetail(@Param("empCompId") Integer empCompId);
+
+    @Modifying
+    @Query(value = "update employee_complaint set status_cd='I' where emp_comp_id =:empCompId", nativeQuery = true)
+    public int deleteEmployeeComplaint(@Param("empCompId") Integer empCompId);
+
+    @Modifying
+    @Query(value = "update employee_complaint set emp_comp_desc=:compDesc where emp_comp_id =:empCompId", nativeQuery = true)
+    public int updateEmployeeComplaintDescription(@Param("empCompId") Integer empCompId,@Param("compDesc") String compDesc);
+
+    @Modifying
+    @Query(value = "update employee_complaint set comp_status=:compStatus,comp_resolve_date=:complaintResolveDate, remark=:remark where emp_comp_id =:empCompId", nativeQuery = true)
+    public int updateAdminHandleComplaintDescription(@Param("empCompId") Integer empCompId, @Param("compStatus") String compStatus, @Param("complaintResolveDate") Instant complaintResolveDate, @Param("remark") String remark);
+
 }
