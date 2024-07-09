@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ComplaintTypeRepo extends JpaRepository<ComplaintTypeEntity, Integer> {
 
-    public Optional<ComplaintTypeEntity> findByCompTypeNameEqualsIgnoreCase(String compTypeName);
+    public Optional<ComplaintTypeEntity> findByDeptIdAndCompTypeNameEqualsIgnoreCase(Integer deptId, String compTypeName);
 
     @Query(value = SQLQueryConstants.COMPLAINT_TYPE_QUERY, nativeQuery = true)
     List<Object[]> getComplaintTypeDetail(@Param("compTypeId") Integer compTypeId, @Param("compTypeName") String compTypeName, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);

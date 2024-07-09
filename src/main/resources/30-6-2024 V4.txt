@@ -363,6 +363,8 @@ create table company_master(
 
     create table complaint_type(
             comp_type_id serial  PRIMARY key,
+            dept_id INTEGER,
+            role_id INTEGER,
             comp_type_NAME VARCHAR(200),
             REMARK VARCHAR(100),
             STATUS_CD VARCHAR(10),
@@ -375,6 +377,8 @@ create table company_master(
 
     create table complaint_type_audit(
             comp_type_AUD_ID serial PRIMARY key,
+            dept_id INTEGER,
+            role_id INTEGER,
             comp_type_id INTEGER,
             comp_type_NAME VARCHAR(200),
             REMARK VARCHAR(100),

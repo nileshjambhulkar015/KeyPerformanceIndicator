@@ -39,7 +39,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
     @Override
     public KPIResponse saveComplaintType(ComplaintTypeCreateRequest complaintCreateRequest) {
-        Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findByCompTypeNameEqualsIgnoreCase(complaintCreateRequest.getCompTypeName() );
+        Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findByDeptIdAndCompTypeNameEqualsIgnoreCase(complaintCreateRequest.getDeptId(), complaintCreateRequest.getCompTypeName() );
         if(optionalComplaintType.isPresent()){
             log.error("Inside ComplaintTypeServiceImpl >> saveDepartment()");
             throw new KPIException("ComplaintTypeServiceImpl Class", false, "Complaint Type name already exist");
@@ -48,8 +48,8 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
         ComplaintTypeEntity complaintTypeEntity = convertComplaintTypeCreateRequestToEntity(complaintCreateRequest);
         try {
             complaintTypeRepo.save(complaintTypeEntity);
-            ComplaintTypeAudit partAudit = new ComplaintTypeAudit(complaintTypeEntity);
-            complaintTypeAuditRepo.save(partAudit);
+            ComplaintTypeAudit complaintTypeAudit = new ComplaintTypeAudit(complaintTypeEntity);
+            complaintTypeAuditRepo.save(complaintTypeAudit);
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
@@ -136,7 +136,8 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
     private ComplaintTypeEntity convertComplaintTypeCreateRequestToEntity(ComplaintTypeCreateRequest compTypeCreateRequest) {
         ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();
-
+        complaintTypeEntity.setDeptId(compTypeCreateRequest.getDeptId());
+        complaintTypeEntity.setRoleId(compTypeCreateRequest.getRoleId());
         complaintTypeEntity.setCompTypeName(compTypeCreateRequest.getCompTypeName());
         complaintTypeEntity.setRemark(compTypeCreateRequest.getRemark());
         complaintTypeEntity.setStatusCd(compTypeCreateRequest.getStatusCd());
@@ -147,6 +148,8 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     private ComplaintTypeEntity convertComplaintTypeUpdateRequestToEntity(ComplaintTypeUpdateRequest complaintTypeUpdateRequest) {
         ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();
         complaintTypeEntity.setCompTypeId(complaintTypeUpdateRequest.getCompTypeId());
+        complaintTypeEntity.setDeptId(complaintTypeEntity.getDeptId());
+        complaintTypeEntity.setRoleId(complaintTypeEntity.getRoleId());
         complaintTypeEntity.setCompTypeName(complaintTypeUpdateRequest.getCompTypeName());
         complaintTypeEntity.setRemark(complaintTypeUpdateRequest.getRemark());
         complaintTypeEntity.setStatusCd(complaintTypeUpdateRequest.getStatusCd());
