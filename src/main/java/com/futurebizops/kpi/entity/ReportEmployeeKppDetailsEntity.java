@@ -45,6 +45,12 @@ public class ReportEmployeeKppDetailsEntity {
     @Column(name = "desig_id")
     private Integer desigId;
 
+    @Column(name = "kpp_overall_tar")
+    private String kppOverallTarget;
+
+    @Column(name = "kpp_overall_weightage")
+    private String kppOverallWeightage;
+
     @Column(name = "ekpp_emp_achived_weight")
     private String empAchivedWeight;
 

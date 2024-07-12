@@ -188,8 +188,8 @@ public class DepartmentServiceImpl implements DepartmentService {
                 excelBytes = file.getBytes();
 
             } catch (Exception ex) {
-                log.error("DepartmentServiceImpl >>departmentProcessExcel ");
-                throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+                log.error("DepartmentServiceImpl >>departmentProcessExcel :{}", ex);
+             //   throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
             }
             try (InputStream inputStream = new ByteArrayInputStream(excelBytes)) {
                 Workbook workbook = WorkbookFactory.create(inputStream);
@@ -211,7 +211,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 workbook.close();
             } catch (Exception ex) {
                 log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile()");
-                throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
+               // throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
             }
 
             Integer currentExcelRow = 0;
@@ -227,22 +227,21 @@ public class DepartmentServiceImpl implements DepartmentService {
                         createRequests.add(departmentCreateRequest);//final request
                     }
                 } catch (Exception ex) {
-                    throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
+                 //   throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
 
-                } finally {
-                    System.out.println("employeeCreateRequests::" + createRequests);
                 }
             }
             for (DepartmentCreateRequest request : createRequests) {
                 try {
                     if(request.getDeptName()!=null) {
                         saveDepartment(request);
+                    }{
+                        log.info("Not saved department  : {}", request.getDeptName());
                     }
 
-                    log.info("DepartmentCreateRequest::" + request);
                 } catch (Exception ex) {
                     departmentNotSavedRecords.add(request);
-                    log.info("departmentNotSavedRecords"+request);
+                    log.error("Inside DepartmentServiceImpl >> {}", ex);
                 }
             }
 

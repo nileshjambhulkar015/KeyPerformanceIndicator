@@ -383,6 +383,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 detailsEntity.setGmOverallAchieve(employeeKppDetailsEntity.getGmOverallAchieve());
                 detailsEntity.setGmOverallTaskComp(employeeKppDetailsEntity.getGmOverallTaskComp());
                 detailsEntity.setStatusCd(employeeKppDetailsEntity.getStatusCd());
+                detailsEntity.setKppOverallTarget(employeeKppDetailsEntity.getKppOverallTarget());
+                detailsEntity.setKppOverallWeightage(employeeKppDetailsEntity.getKppOverallWeightage());
 
                 kppDetailsEntities.add(detailsEntity);
                 //reportEmployeeKppDetailsRepo.save(detailsEntity);

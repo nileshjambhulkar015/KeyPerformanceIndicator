@@ -1,6 +1,12 @@
     --create database keyperformance;
 
     /*
+       drop table employee_complaint ;
+       drop table employee_complaint_audit ;
+
+        drop table complaint_type;
+         drop table complaint_type_audit;
+
     drop table region  ;
     drop table region_audit  ;
         drop table site  ;
@@ -549,8 +555,8 @@ create table company_master(
         role_id INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
-        kpp_overall_tar VARCHAR(50),
-        kpp_overall_weightage VARCHAR(50),
+        --kpp_overall_tar VARCHAR(50),
+        --kpp_overall_weightage VARCHAR(50),
         total_emp_achived_weight VARCHAR(50),
         total_emp_overall_achieve VARCHAR(50),
         total_emp_overall_task_comp VARCHAR(50),
@@ -589,8 +595,8 @@ create table company_master(
         role_id INTEGER,
         dept_id INTEGER,
         desig_id INTEGER,
-        kpp_overall_tar VARCHAR(50),
-        kpp_overall_weightage VARCHAR(50),
+        --kpp_overall_tar VARCHAR(50),
+        --kpp_overall_weightage VARCHAR(50),
         total_emp_achived_weight VARCHAR(50),
         total_emp_overall_achieve VARCHAR(50),
         total_emp_overall_task_comp VARCHAR(50),
