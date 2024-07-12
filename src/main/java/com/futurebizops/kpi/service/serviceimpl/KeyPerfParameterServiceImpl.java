@@ -24,6 +24,7 @@ import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.KeyPerfParameterService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -87,11 +88,6 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
         } catch (Exception ex) {
             log.error("Inside KeyPerfParameterServiceImpl >> saveKeyPerfomanceParameter()");
             throw new KPIException("KeyPerfParameterServiceImpl", false, ex.getMessage());
-
-
-
-
-
         }
     }
 
@@ -170,8 +166,14 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     public void uploadKppExcelFile(MultipartFile file) throws IOException {
 
         Integer currentRow = 0;
-        List<KeyPerfParamCreateRequest> KeyPerfParamCreateRequests = new ArrayList<>();
-        List<KeyPerfParamCreateRequest> KeyPerfParamNotSavedRecords = new ArrayList<>();
+        String rating1 = null;
+        String rating2 = null;
+        String rating3 = null;
+        String rating4 = null;
+        String rating5 = null;
+
+        List<KeyPerfParamCreateRequest> keyPerfParamCreateRequests = new ArrayList<>();
+        List<KeyPerfParamCreateRequest> keyPerfParamNotSavedRecords = new ArrayList<>();
         List<KeyPerfParamExcelReadData> KeyPerfParamData = new ArrayList<>();
 
         byte[] excelBytes = null;
@@ -183,7 +185,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
             excelBytes = file.getBytes();
 
         } catch (Exception ex) {
-            log.error("KeyPerfParamServiceImpl >>KeyPerfParamProcessExcel ");
+            log.error("KeyPerfParamServiceImpl >> uploadKppExcelFile : {}",ex);
             throw new KPIException("KeyPerfParamServiceImpl", false, ex.getMessage());
         }
         try (InputStream inputStream = new ByteArrayInputStream(excelBytes)) {
@@ -201,15 +203,49 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
                     model.setKppObjective(row.getCell(2).getStringCellValue().trim());
                     model.setKppPerformanceIndi(row.getCell(3).getStringCellValue().trim());
-                    //model.setKppOverallTarget(String.valueOf(row.getCell(4).getNumericCellValue()));
+
                     model.setKppTargetPeriod(row.getCell(4).getStringCellValue().trim());
                     model.setKppUoM(row.getCell(5).getStringCellValue().trim());
-                   // model.setKppOverallWeightage(String.valueOf(row.getCell(10).getNumericCellValue()));
-                    model.setKppRating1(String.valueOf(row.getCell(6).getNumericCellValue()));
-                    model.setKppRating2(String.valueOf(row.getCell(7).getNumericCellValue()));
-                    model.setKppRating3(String.valueOf(row.getCell(8).getNumericCellValue()));
-                    model.setKppRating4(String.valueOf(row.getCell(9).getNumericCellValue()));
-                    model.setKppRating5(row.getCell(10).getStringCellValue().trim());
+
+
+                    if (row.getCell(6).getCellType().equals(CellType.NUMERIC)) {
+                        rating1=  String.valueOf(row.getCell(6).getNumericCellValue());
+                    } else{
+                        rating1 = row.getCell(6).getStringCellValue().trim();
+                    }
+
+                    model.setKppRating1(rating1);
+
+                    if (row.getCell(7).getCellType().equals(CellType.NUMERIC)) {
+                        rating2=  String.valueOf(row.getCell(7).getNumericCellValue());
+                    } else{
+                        rating2 = row.getCell(7).getStringCellValue().trim();
+                    }
+
+                    model.setKppRating2(rating2);
+
+                    if (row.getCell(8).getCellType().equals(CellType.NUMERIC)) {
+                        rating3=  String.valueOf(row.getCell(8).getNumericCellValue());
+                    } else{
+                        rating3 = row.getCell(8).getStringCellValue().trim();
+                    }
+
+                    model.setKppRating3(rating3);
+
+                    if (row.getCell(9).getCellType().equals(CellType.NUMERIC)) {
+                        rating4=  String.valueOf(row.getCell(9).getNumericCellValue());
+                    } else{
+                        rating4 = row.getCell(9).getStringCellValue().trim();
+                    }
+
+                    model.setKppRating4(rating4);
+
+                    if (row.getCell(10).getCellType().equals(CellType.NUMERIC)) {
+                        rating5=  String.valueOf(row.getCell(10).getNumericCellValue());
+                    } else{
+                        rating5 = row.getCell(10).getStringCellValue().trim();
+                    }
+                    model.setKppRating5(rating5);
                     model.setStatusCd("A");
                     model.setRemark(row.getCell(11).getStringCellValue().trim());
                     KeyPerfParamData.add(model);
@@ -217,105 +253,65 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
             }
             workbook.close();
         } catch (Exception ex) {
-            log.error("Inside KeyPerfParamServiceImpl >> KeyPerfParamprocessExcelFile() Issue in row no: {}", currentRow);
-            throw new KPIException("KeyPerfParamServiceImpl", false, "Issue in row no: " + currentRow);
+            log.error("Inside KeyPerfParamServiceImpl >> uploadKppExcelFile() : {}",ex);
+            log.error("Inside KeyPerfParamServiceImpl >> uploadKppExcelFile() Issue in row no: {}", currentRow);
         }
 
         Integer currentExcelRow = 0;
         for (KeyPerfParamExcelReadData request : KeyPerfParamData) {
             try {
                 currentExcelRow++;
-                KeyPerfParamCreateRequest keyPerfParamCreateRequest = new KeyPerfParamCreateRequest();
-                keyPerfParamCreateRequest.setEmployeeId("1");
-                keyPerfParamCreateRequest.setKppObjectiveNo(request.getKppObjectiveNo());
-                keyPerfParamCreateRequest.setKppObjective(request.getKppObjective());
-                keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
-                keyPerfParamCreateRequest.setKppPerformanceIndi(request.getKppPerformanceIndi());
-                //keyPerfParamCreateRequest.setKppOverallTarget(request.getKppOverallTarget());
-                keyPerfParamCreateRequest.setUomId(getUoMId(request.getKppUoM()));
-                //keyPerfParamCreateRequest.setKppOverallWeightage(request.getKppOverallWeightage());
-                keyPerfParamCreateRequest.setKppRating1(request.getKppRating1());
-                keyPerfParamCreateRequest.setKppRating2(request.getKppRating2());
-                keyPerfParamCreateRequest.setKppRating3(request.getKppRating3());
-                keyPerfParamCreateRequest.setKppRating4(request.getKppRating4());
-                keyPerfParamCreateRequest.setKppRating5(request.getKppRating5());
-                keyPerfParamCreateRequest.setStatusCd(request.getStatusCd());
-                keyPerfParamCreateRequest.setRemark(request.getRemark());
+                Integer uomId = getUoMId(request.getKppUoM());
+                log.info("Inside KeyPerfParamServiceImpl >> uploadKppExcelFile() UomId = {}", uomId);
+                if(null != uomId) {
+                    KeyPerfParamCreateRequest keyPerfParamCreateRequest = new KeyPerfParamCreateRequest();
+                    keyPerfParamCreateRequest.setEmployeeId("1");
+                    keyPerfParamCreateRequest.setKppObjectiveNo(request.getKppObjectiveNo());
+                    keyPerfParamCreateRequest.setKppObjective(request.getKppObjective());
+                    keyPerfParamCreateRequest.setKppTargetPeriod(request.getKppTargetPeriod());
+                    keyPerfParamCreateRequest.setKppPerformanceIndi(request.getKppPerformanceIndi());
+                    keyPerfParamCreateRequest.setUomId(uomId);
+                    keyPerfParamCreateRequest.setKppRating1(request.getKppRating1());
+                    keyPerfParamCreateRequest.setKppRating2(request.getKppRating2());
+                    keyPerfParamCreateRequest.setKppRating3(request.getKppRating3());
+                    keyPerfParamCreateRequest.setKppRating4(request.getKppRating4());
+                    keyPerfParamCreateRequest.setKppRating5(request.getKppRating5());
+                    keyPerfParamCreateRequest.setStatusCd(request.getStatusCd());
+                    keyPerfParamCreateRequest.setRemark(request.getRemark());
 
-
-                KeyPerfParamCreateRequests.add(keyPerfParamCreateRequest);//final request
-
+                    keyPerfParamCreateRequests.add(keyPerfParamCreateRequest);//final request
+                } else{
+                    log.info("Inside KeyPerfParameterServiceImpl >> uploadKppExcelFile() Row data is not added for: {}", request.getKppObjectiveNo());
+                }
+                log.info("Total record added : {}", keyPerfParamCreateRequests.size());
             } catch (Exception ex) {
-                throw new KPIException("DesignationServiceImpl", false, "Issue in row no: " + currentExcelRow);
-
-            } finally {
+                log.error("Inside KeyPerfParameterServiceImpl >> uploadKppExcelFile() : {} ",ex);
+               // throw new KPIException("KeyPerfParameterServiceImpl", false, "Issue in row no: " + currentExcelRow);
             }
         }
-        for (KeyPerfParamCreateRequest request : KeyPerfParamCreateRequests) {
+        for (KeyPerfParamCreateRequest request : keyPerfParamCreateRequests) {
             try {
-                if(request.getUomId()>0) {
+                if(null != request.getUomId()) {
                     saveKeyPerfomanceParameter(request);
                 }else{
-                    KeyPerfParamNotSavedRecords.add(request);
+                    keyPerfParamNotSavedRecords.add(request);
                 }
 
             } catch (Exception ex) {
-                KeyPerfParamNotSavedRecords.add(request);
-
+                log.error("Exception in KeyPerfParameterServiceImpl >> line 301 : {}", ex);
+                keyPerfParamNotSavedRecords.add(request);
             }
         }
-        log.info("KeyPerfParamNotSavedRecords" + KeyPerfParamNotSavedRecords);
+        log.info("KeyPerfParamNotSavedRecords" + keyPerfParamNotSavedRecords);
     }
 
-
-
-    private Integer getRoleId(String roleName) {
-        Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
-        Integer roleId = -1;
-        if (optionalRoleEntity.isPresent()) {
-            roleId = optionalRoleEntity.get().getRoleId();
-        } else {
-            roleId=-1;
-            throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist" + roleName);
-
-        }
-        return roleId;
-    }
-
-    private Integer getDeptId(String deptName, Integer roleId) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
-        Integer deptId = -1;
-        if (optionalDepartmentEntity.isPresent()) {
-            deptId = optionalDepartmentEntity.get().getDeptId();
-        } else {
-            deptId=-1;
-            throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist" + deptName);
-        }
-        return deptId;
-    }
 
     private Integer getUoMId(String uomName) {
         Optional<UoMEntity> uoMEntity = uoMRepo.findByUomNameEqualsIgnoreCase(uomName);
-        Integer uomId=-1;
         if (uoMEntity.isPresent()) {
-            uomId=  uoMEntity.get().getUomId();
-        }else {
-            uomId=-1;
-            throw new KPIException("EmployeeServiceImpl", false, "UoM Name is not exist" + uomName);
+            return uoMEntity.get().getUomId();
         }
-        return uomId;
-    }
-
-    private Integer getDesigId(String desigName, Integer deptId) {
-        Optional<DesignationEntity> optionalDesignationEntity = designationRepo.findByDesigNameEqualsIgnoreCaseAndDeptId(desigName, deptId);
-        Integer desigId=-1;
-        if (optionalDesignationEntity.isPresent()) {
-            desigId=  optionalDesignationEntity.get().getDesigId();
-        }else {
-            desigId=-1;
-            throw new KPIException("EmployeeServiceImpl", false, "Designation Name is not exist" + desigName);
-        }
-        return desigId;
+        return null;
     }
 
     private KeyPerfParamEntity convertKeyPerfParamCreateRequestToEntity(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {

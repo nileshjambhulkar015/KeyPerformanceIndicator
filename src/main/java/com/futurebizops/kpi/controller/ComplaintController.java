@@ -60,11 +60,13 @@ public class ComplaintController {
     public ResponseEntity<KPIResponse> findDepartmentDetails(
             @RequestParam(required = false) Integer empId,
             @RequestParam(required = false) String compId,
+            @RequestParam(required = false) Integer roleId,
+            @RequestParam(required = false) Integer deptId,
             @RequestParam(required = false) String compDesc,
             @RequestParam(required = false) String compStatus,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = complaintService.findComplaintDetails(empId, compId, compDesc,compStatus, statusCd, pageable);
+        KPIResponse response = complaintService.findComplaintDetails(empId, compId,roleId,deptId, compDesc,compStatus, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
