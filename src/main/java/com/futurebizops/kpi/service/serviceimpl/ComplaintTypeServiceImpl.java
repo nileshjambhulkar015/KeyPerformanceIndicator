@@ -125,6 +125,8 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
                 complaintTypeDDResponse = new ComplaintTypeDDResponse();
                 complaintTypeDDResponse.setCompTypeId(complaintTypeEntity.getCompTypeId());
                 complaintTypeDDResponse.setCompTypeName(complaintTypeEntity.getCompTypeName());
+                complaintTypeDDResponse.setCompTypeRoleId(complaintTypeEntity.getRoleId());
+                complaintTypeDDResponse.setCompTypeDeptId(complaintTypeEntity.getDeptId());
                 complaintTypeDDResponse.setStatusCd(complaintTypeEntity.getStatusCd());
                 complaintTypeDDResponses.add(complaintTypeDDResponse);
             }

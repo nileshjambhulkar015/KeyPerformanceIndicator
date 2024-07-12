@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.Column;
+
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/complaint")
@@ -64,9 +66,11 @@ public class ComplaintController {
             @RequestParam(required = false) Integer deptId,
             @RequestParam(required = false) String compDesc,
             @RequestParam(required = false) String compStatus,
+            @RequestParam(required = false)  Integer compTypeRoleId,
+            @RequestParam(required = false)  Integer compTypeDeptId,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = complaintService.findComplaintDetails(empId, compId,roleId,deptId, compDesc,compStatus, statusCd, pageable);
+        KPIResponse response = complaintService.findComplaintDetails(empId, compId,roleId,deptId, compDesc,compStatus,compTypeRoleId,compTypeDeptId, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

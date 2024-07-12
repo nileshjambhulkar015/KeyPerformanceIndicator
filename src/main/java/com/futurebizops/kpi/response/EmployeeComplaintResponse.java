@@ -27,6 +27,9 @@ public class EmployeeComplaintResponse {
     private String desigName;
 
 
+    private Integer compTypeRoleId;
+    private Integer compTypeDeptId;
+
     @Schema(example = "1", description = "This field is used for complaint date")
     private String compId;
 
@@ -70,11 +73,14 @@ public class EmployeeComplaintResponse {
         this.compDate=String.valueOf(objects[14]);
         this.compResolveDate=String.valueOf(objects[15]);
         this.compTypeId=Integer.parseInt(String.valueOf(objects[16]));
-        this.compTypeName=String.valueOf(objects[17]);
-        this.compDesc=String.valueOf(objects[18]);
-        this.compStatus=String.valueOf(objects[19]);
-        this.remark=String.valueOf(objects[20]);
-        this.statusCd=String.valueOf(objects[21]);
+        this.compTypeRoleId=Integer.parseInt(String.valueOf(objects[17]));
+        this.compTypeDeptId=Integer.parseInt(String.valueOf(objects[18]));
+        this.compTypeName=String.valueOf(objects[19]);
+        this.compDesc=String.valueOf(objects[20]);
+        this.compStatus=String.valueOf(objects[21]);
+
+        this.remark=String.valueOf(objects[22]);
+        this.statusCd=String.valueOf(objects[23]);
     }
 
 }
