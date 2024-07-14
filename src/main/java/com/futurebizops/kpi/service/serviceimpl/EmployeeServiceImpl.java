@@ -366,7 +366,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeLogin.setDesigId(employeeCreateRequest.getDesigId());
         employeeLogin.setEmpMobileNo(employeeCreateRequest.getEmpMobileNo());
         employeeLogin.setEmailId(employeeCreateRequest.getEmailId());
-        employeeLogin.setEmpPassword(employeeCreateRequest.getEmpMobileNo());
+        employeeLogin.setEmpPassword(employeeCreateRequest.getEmpEId());
         employeeLogin.setRemark(employeeCreateRequest.getRemark());
         employeeLogin.setStatusCd(employeeCreateRequest.getStatusCd());
         employeeLogin.setCreatedUserId(employeeCreateRequest.getEmployeeId());
