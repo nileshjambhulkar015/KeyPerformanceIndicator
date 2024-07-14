@@ -45,6 +45,7 @@ import com.futurebizops.kpi.service.EmployeeService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -486,10 +487,24 @@ public class EmployeeServiceImpl implements EmployeeService {
                         model.setEmpMiddleName(row.getCell(10).getStringCellValue().trim());
                         model.setEmpLastName(row.getCell(11).getStringCellValue().trim());
                         model.setEmpEid(row.getCell(12).getStringCellValue().trim());
-                        Long mobile1 = (long) row.getCell(13).getNumericCellValue();
-                        Long mobile2 = (long) row.getCell(14).getNumericCellValue();
-                        model.setEmpMobileNo(String.valueOf(mobile1));
-                        model.setEmpEmerMobileNo(String.valueOf(mobile2));
+                        String mobileNo1 = null;
+                        String mobileNo2 = null;
+
+                       if(row.getCell(13).getCellType().equals(CellType.STRING)){
+                           mobileNo1 = row.getCell(13).getStringCellValue().trim();
+                       } else{
+                           mobileNo1 = String.valueOf(row.getCell(13).getNumericCellValue());
+                       }
+
+                        if(row.getCell(14).getCellType().equals(CellType.STRING)){
+                            mobileNo2 = row.getCell(14).getStringCellValue().trim();
+                        } else{
+                            mobileNo2 = String.valueOf(row.getCell(14).getNumericCellValue());
+                        }
+
+
+                        model.setEmpMobileNo(mobileNo1);
+                        model.setEmpEmerMobileNo(mobileNo2);
                         model.setTempAddress(row.getCell(15).getStringCellValue().trim());
                         model.setPermAddress(row.getCell(16).getStringCellValue().trim());
                         model.setEmailId(row.getCell(17).getStringCellValue().trim());
