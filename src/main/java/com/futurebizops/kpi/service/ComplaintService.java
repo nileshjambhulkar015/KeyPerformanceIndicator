@@ -22,7 +22,7 @@ public interface ComplaintService {
 
     public KPIResponse deleteEmployeeComplaint(Integer empCompId);
 
-
+    public KPIResponse updateEmpAssignComplaintHimself(EmployeeComplaintUpdateRequest complaintUpdateRequest);
 
 
 

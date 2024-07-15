@@ -2,8 +2,12 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
+
+import javax.persistence.Column;
 
 @Data
+@ToString
 public class EmployeeComplaintUpdateRequest {
 
     @Schema(example = "1", description = "This field is used for complaint date")
@@ -36,6 +40,14 @@ public class EmployeeComplaintUpdateRequest {
 
     @Schema(example = "HR and Admin", description = "This field is used for complaint description")
     private String compStatus;
+
+    @Schema(example = "1", description = "This field is used for complaint type")
+    private Integer compResolveEmpId;
+
+    private String compResolveEmpName;
+
+
+    private String compResolveEmpEId;
 
     @Schema(example = "This is remark", description = "This field is used for department remark")
     private String remark;

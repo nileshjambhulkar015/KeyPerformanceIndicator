@@ -58,6 +58,12 @@ public class ComplaintController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/emp-assign-complaint-him")
+    public ResponseEntity<KPIResponse> updateEmpAssignComplaintHimself(@RequestBody EmployeeComplaintUpdateRequest complaintUpdateRequest) {
+        KPIResponse response = complaintService.updateEmpAssignComplaintHimself(complaintUpdateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @GetMapping(value = "/employee-search")
     @PageableAsQueryParam

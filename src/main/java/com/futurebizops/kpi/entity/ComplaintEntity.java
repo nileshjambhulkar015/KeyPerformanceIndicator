@@ -61,7 +61,16 @@ public class ComplaintEntity extends AuditEnabledEntity{
     private String compDesc;
 
     @Column(name = "comp_status")
-        private String compStatus;
+    private String compStatus;
+
+    @Column(name = "comp_resolve_emp_id")
+    private Integer compResolveEmpId;
+
+    @Column(name = "comp_resolve_emp_name")
+    private String compResolveEmpName;
+
+    @Column(name = "comp_resolve_emp_eid")
+    private String compResolveEmpEId;
 
     @Column(name = "remark")
     private String remark;

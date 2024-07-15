@@ -41,4 +41,8 @@ public interface ComplaintRepo extends JpaRepository<ComplaintEntity, Integer> {
     @Query(value = "update employee_complaint set comp_status=:compStatus,comp_resolve_date=:complaintResolveDate, remark=:remark where emp_comp_id =:empCompId", nativeQuery = true)
     public int updateAdminHandleComplaintDescription(@Param("empCompId") Integer empCompId, @Param("compStatus") String compStatus, @Param("complaintResolveDate") Instant complaintResolveDate, @Param("remark") String remark);
 
+    @Modifying
+    @Query(value = "update employee_complaint set comp_status=:compStatus,comp_resolve_emp_id=:compResolveEmpId, comp_resolve_emp_name=:compResolveEmpName,comp_resolve_emp_eid=:compResolveEmpEId where emp_comp_id =:empCompId", nativeQuery = true)
+    public int updateEmpAssignComplaintHimself(@Param("empCompId") Integer empCompId, @Param("compStatus") String compStatus, @Param("compResolveEmpId") Integer compResolveEmpId,@Param("compResolveEmpName") String compResolveEmpName,@Param("compResolveEmpEId") String compResolveEmpEId);
+
 }

@@ -60,6 +60,16 @@ public class ComplaintAudit extends AuditEnabledEntity {
     @Column(name = "comp_status")
     private String compStatus;
 
+
+    @Column(name = "comp_resolve_emp_id")
+    private Integer compResolveEmpId;
+
+    @Column(name = "comp_resolve_emp_name")
+    private String compResolveEmpName;
+
+    @Column(name = "comp_resolve_emp_eid")
+    private String compResolveEmpEId;
+
     @Column(name = "remark")
     private String remark;
 
@@ -68,8 +78,8 @@ public class ComplaintAudit extends AuditEnabledEntity {
 
     public ComplaintAudit(ComplaintEntity complaintEntity) {
         super(complaintEntity.getCreatedDate(), complaintEntity.getCreatedUserId(), complaintEntity.getUpdatedDate(), complaintEntity.getUpdatedUserId());
-        this.empCompId=complaintEntity.getEmpCompId();
-        this.compId=complaintEntity.getCompId();
+        this.empCompId = complaintEntity.getEmpCompId();
+        this.compId = complaintEntity.getCompId();
         this.empId = complaintEntity.getEmpId();
         this.empEId = complaintEntity.getEmpEId();
         this.roleId = complaintEntity.getRoleId();
@@ -79,6 +89,9 @@ public class ComplaintAudit extends AuditEnabledEntity {
         this.compDesc = complaintEntity.getCompDesc();
         this.compStatus = complaintEntity.getCompStatus();
         this.compTypeId = complaintEntity.getCompTypeId();
+        this.compResolveEmpId = complaintEntity.getCompResolveEmpId();
+        this.compResolveEmpName = complaintEntity.getCompResolveEmpName();
+        this.compResolveEmpId = complaintEntity.getCompResolveEmpId();
         this.remark = complaintEntity.getRemark();
         this.statusCd = complaintEntity.getStatusCd();
     }

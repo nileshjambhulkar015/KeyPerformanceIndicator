@@ -11,10 +11,10 @@ import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeComplaintResponse;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.ComplaintService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,6 +40,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Autowired
     ComplaintTypeRepo complaintTypeRepo;
 
+    @Value("${complaint-max-no}")
+    private Integer compMaxNumber;
 
     @Override
     public KPIResponse saveComplaint(ComplaintCreateRequest complaintCreateRequest) {
@@ -88,6 +90,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     public KPIResponse updateAdminHandleComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
         try {
+            log.info("complaintUpdateRequest : {}", complaintUpdateRequest);
             Instant complaintResolveDate = Instant.now();
             complaintRepo.updateAdminHandleComplaintDescription(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompStatus(), complaintResolveDate, complaintUpdateRequest.getRemark());
             return KPIResponse.builder()
@@ -96,6 +99,21 @@ public class ComplaintServiceImpl implements ComplaintService {
                     .build();
         } catch (Exception ex) {
             log.error("Inside ComplaintServiceImpl >> updateEmployeeComplaint() :{}", ex);
+            throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
+        }
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse updateEmpAssignComplaintHimself(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
+        try {
+            complaintRepo.updateEmpAssignComplaintHimself(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompStatus(), complaintUpdateRequest.getCompResolveEmpId(),complaintUpdateRequest.getCompResolveEmpName(), complaintUpdateRequest.getCompResolveEmpEId() );
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage(KPIConstants.RECORD_UPDATE)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside ComplaintServiceImpl >> updateEmpAssignComplaintHimself() :{}", ex);
             throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
         }
     }
@@ -173,7 +191,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         }
 
         Integer totalCount = complaintRepo.getEmployeeComplaintCount(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId, statusCd);
-        List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus,  compTypeDeptId, statusCd, sortName, pageSize, pageOffset);
+        List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId, statusCd, sortName, pageSize, pageOffset);
 
         List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
@@ -205,10 +223,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
 
-
-
-
     private Integer getRandomNumber() {
-        return (int) (Math.random() * 10000);
+        return (int) (Math.random() * compMaxNumber);
     }
 }

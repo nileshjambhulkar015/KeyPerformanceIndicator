@@ -50,6 +50,16 @@ public class EmployeeComplaintResponse {
     @Schema(example = "Pending / Completed", description = "This field is used for complaint description")
     private String compStatus;
 
+    @Schema(example = "1", description = "This field is used for complaint description")
+    private Integer compResolveEmpId;
+
+    @Schema(example = "Nilesh", description = "This field is used for complaint description")
+    private String compResolveEmpName;
+
+    @Schema(example = "e111", description = "This field is used for complaint description")
+    private String compResolveEmpEId;
+
+
     @Schema(example = "This is remark", description = "This field is used for department remark")
     private String remark;
 
@@ -78,8 +88,12 @@ public class EmployeeComplaintResponse {
         this.compDesc=String.valueOf(objects[19]);
         this.compStatus=String.valueOf(objects[20]);
 
-        this.remark=String.valueOf(objects[21]);
-        this.statusCd=String.valueOf(objects[22]);
+        this.compResolveEmpId=null != objects[21] ?Integer.parseInt(String.valueOf(objects[21])):null;
+        this.compResolveEmpName=String.valueOf(objects[22]);
+        this.compResolveEmpEId=String.valueOf(objects[23]);
+
+        this.remark=String.valueOf(objects[24]);
+        this.statusCd=String.valueOf(objects[25]);
     }
 
 }
