@@ -3,6 +3,7 @@ package com.futurebizops.kpi.controller;
 import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.ComplaintService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.Column;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -81,6 +83,10 @@ public class ComplaintController {
         return new ResponseEntity<>(complaintService.findAllEmployeeCompById(empCompId), HttpStatus.OK);
     }
 
-
+    @GetMapping (value = "/comp-type-dd-dept")
+    public ResponseEntity<List<DepartmentDDResponse>> findAllDepartmentFromComplaint() {
+        List<DepartmentDDResponse> response = complaintService.findAllDepartmentFromComplaintType();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }

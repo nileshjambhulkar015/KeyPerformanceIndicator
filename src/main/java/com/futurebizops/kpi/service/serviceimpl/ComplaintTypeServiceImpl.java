@@ -125,7 +125,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
                 complaintTypeDDResponse = new ComplaintTypeDDResponse();
                 complaintTypeDDResponse.setCompTypeId(complaintTypeEntity.getCompTypeId());
                 complaintTypeDDResponse.setCompTypeName(complaintTypeEntity.getCompTypeName());
-                complaintTypeDDResponse.setCompTypeRoleId(complaintTypeEntity.getRoleId());
+
                 complaintTypeDDResponse.setCompTypeDeptId(complaintTypeEntity.getDeptId());
                 complaintTypeDDResponse.setStatusCd(complaintTypeEntity.getStatusCd());
                 complaintTypeDDResponses.add(complaintTypeDDResponse);
@@ -139,7 +139,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     private ComplaintTypeEntity convertComplaintTypeCreateRequestToEntity(ComplaintTypeCreateRequest compTypeCreateRequest) {
         ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();
         complaintTypeEntity.setDeptId(compTypeCreateRequest.getDeptId());
-        complaintTypeEntity.setRoleId(compTypeCreateRequest.getRoleId());
+
         complaintTypeEntity.setCompTypeName(compTypeCreateRequest.getCompTypeName());
         complaintTypeEntity.setRemark(compTypeCreateRequest.getRemark());
         complaintTypeEntity.setStatusCd(compTypeCreateRequest.getStatusCd());
@@ -151,7 +151,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
         ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();
         complaintTypeEntity.setCompTypeId(complaintTypeUpdateRequest.getCompTypeId());
         complaintTypeEntity.setDeptId(complaintTypeEntity.getDeptId());
-        complaintTypeEntity.setRoleId(complaintTypeEntity.getRoleId());
+
         complaintTypeEntity.setCompTypeName(complaintTypeUpdateRequest.getCompTypeName());
         complaintTypeEntity.setRemark(complaintTypeUpdateRequest.getRemark());
         complaintTypeEntity.setStatusCd(complaintTypeUpdateRequest.getStatusCd());

@@ -12,9 +12,6 @@ public class ComplaintTypeUpdateRequest {
     @Schema(example = "1", description = "This field is used for department id")
     private Integer deptId;
 
-    @Schema(example = "1", description = "This field is used for department id")
-    private Integer roleId;
-
     @Schema(example = "HR and Admin", description = "This field is used for department name")
     private String compTypeName;
 

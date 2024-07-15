@@ -2,6 +2,9 @@ package com.futurebizops.kpi.repository;
 
 import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.ComplaintTypeEntity;
+import com.futurebizops.kpi.entity.DepartmentEntity;
+import com.futurebizops.kpi.response.dropdown.ComplaintTypeDDResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +26,7 @@ public interface ComplaintTypeRepo extends JpaRepository<ComplaintTypeEntity, In
 
     @Query(value = SQLQueryConstants.COMPLAINT_TYPE_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getComplaintTypeByIdDetail(@Param("compTypeId") Integer compTypeId);
+
+    @Query(value = "select comp.dept_id,dept.dept_name, comp.status_cd from complaint_type comp,department dept where dept.status_cd ='A' and comp.status_cd='A' and comp.dept_id=dept.dept_id", nativeQuery = true)
+    public List<Object[]> findAllDepartmentFromComplaintType();
 }
