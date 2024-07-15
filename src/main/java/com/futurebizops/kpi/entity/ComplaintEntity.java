@@ -51,9 +51,6 @@ public class ComplaintEntity extends AuditEnabledEntity{
     @Column(name = "comp_resolve_date")
     private Instant compResolveDate;
 
-    @Column(name = "comp_type_role_id")
-    private Integer compTypeRoleId;
-
     @Column(name = "comp_type_dept_id")
     private Integer compTypeDeptId;
 

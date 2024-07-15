@@ -5,6 +5,7 @@ import com.futurebizops.kpi.request.ComplaintTypeCreateRequest;
 import com.futurebizops.kpi.request.ComplaintTypeUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.ComplaintTypeDDResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.ComplaintTypeService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -61,9 +62,15 @@ public class ComplaintTypeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping (value = "/all-dd-comp-type")
-    public ResponseEntity<List<ComplaintTypeDDResponse>> findAllComlaintType() {
-        List<ComplaintTypeDDResponse> response = complaintTypeService.findAllComlaintType();
+    @GetMapping (value = "/comp-type-dd-dept")
+    public ResponseEntity<List<DepartmentDDResponse>> findAllDepartmentFromComplaintType() {
+        List<DepartmentDDResponse> response = complaintTypeService.findAllDepartmentFromComplaintType();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping (value = "/dd-comp-type-by-dept-id")
+    public ResponseEntity<List<ComplaintTypeDDResponse>> findAllComlaintTypeByDeptId(@RequestParam(required = false) Integer compTypeDeptId) {
+        List<ComplaintTypeDDResponse> response = complaintTypeService.findAllComplaintTypeByDeptId(compTypeDeptId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

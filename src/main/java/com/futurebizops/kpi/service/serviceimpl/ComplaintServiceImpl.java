@@ -111,7 +111,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         complaintEntity.setCompDate(Instant.now());
         complaintEntity.setCompDesc(complaintUpdateRequest.getCompDesc());
 
-        complaintEntity.setCompTypeRoleId(complaintUpdateRequest.getCompTypeRoleId());
+
         complaintEntity.setCompTypeDeptId(complaintUpdateRequest.getCompTypeDeptId());
         complaintEntity.setCompTypeId(complaintUpdateRequest.getCompTypeId());
         complaintEntity.setCompStatus(complaintUpdateRequest.getCompStatus());
@@ -133,7 +133,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         complaintEntity.setDesigId(complaintCreateRequest.getDesigId());
         complaintEntity.setCompDate(Instant.now());
         complaintEntity.setCompDesc(complaintCreateRequest.getCompDesc());
-        complaintEntity.setCompTypeRoleId(complaintCreateRequest.getCompTypeRoleId());
+
         complaintEntity.setCompTypeDeptId(complaintCreateRequest.getCompTypeDeptId());
         complaintEntity.setCompTypeId(complaintCreateRequest.getCompTypeId());
         complaintEntity.setCompStatus("Pending");
@@ -160,7 +160,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public KPIResponse findComplaintDetails(Integer empId, String compId, Integer roleId, Integer deptId, String compDesc, String compStatus, Integer compTypeRoleId, Integer compTypeDeptId, String statusCd, Pageable requestPageable) {
+    public KPIResponse findComplaintDetails(Integer empId, String compId, Integer roleId, Integer deptId, String compDesc, String compStatus, Integer compTypeDeptId, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -172,8 +172,8 @@ public class ComplaintServiceImpl implements ComplaintService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = complaintRepo.getEmployeeComplaintCount(empId, compId, roleId, deptId, compDesc, compStatus, compTypeRoleId, compTypeDeptId, statusCd);
-        List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus, compTypeRoleId, compTypeDeptId, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = complaintRepo.getEmployeeComplaintCount(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId, statusCd);
+        List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus,  compTypeDeptId, statusCd, sortName, pageSize, pageOffset);
 
         List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
@@ -205,15 +205,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
 
-    @Override
-    public List<DepartmentDDResponse> findAllDepartmentFromComplaintType() {
-        List<Object[]> complaintData = complaintTypeRepo.findAllDepartmentFromComplaintType();
-        List<DepartmentDDResponse> departmentDDResponses = null;
-        if (complaintData.size() > 0) {
-            departmentDDResponses = complaintData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
-        }
-        return departmentDDResponses;
-    }
+
 
 
     private Integer getRandomNumber() {

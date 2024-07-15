@@ -68,11 +68,10 @@ public class ComplaintController {
             @RequestParam(required = false) Integer deptId,
             @RequestParam(required = false) String compDesc,
             @RequestParam(required = false) String compStatus,
-            @RequestParam(required = false)  Integer compTypeRoleId,
             @RequestParam(required = false)  Integer compTypeDeptId,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = complaintService.findComplaintDetails(empId, compId,roleId,deptId, compDesc,compStatus,compTypeRoleId,compTypeDeptId, statusCd, pageable);
+        KPIResponse response = complaintService.findComplaintDetails(empId, compId,roleId,deptId, compDesc,compStatus,compTypeDeptId, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -82,11 +81,4 @@ public class ComplaintController {
     public ResponseEntity<Object> findAllEmployeeCompById(@RequestParam(required = false) Integer empCompId) {
         return new ResponseEntity<>(complaintService.findAllEmployeeCompById(empCompId), HttpStatus.OK);
     }
-
-    @GetMapping (value = "/comp-type-dd-dept")
-    public ResponseEntity<List<DepartmentDDResponse>> findAllDepartmentFromComplaint() {
-        List<DepartmentDDResponse> response = complaintService.findAllDepartmentFromComplaintType();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
 }

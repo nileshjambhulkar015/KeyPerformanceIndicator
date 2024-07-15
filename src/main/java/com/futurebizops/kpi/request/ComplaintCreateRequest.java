@@ -25,9 +25,6 @@ public class ComplaintCreateRequest {
 
 
     @Schema(example = "1", description = "This field is used for complaint type")
-    private Integer compTypeRoleId;
-
-    @Schema(example = "1", description = "This field is used for complaint type")
     private Integer compTypeDeptId;
 
     @Schema(example = "1", description = "This field is used for complaint type")

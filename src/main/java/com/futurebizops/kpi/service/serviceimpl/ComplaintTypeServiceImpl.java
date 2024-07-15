@@ -115,26 +115,24 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     }
 
     @Override
-    public List<ComplaintTypeDDResponse> findAllComlaintType() {
-        List<ComplaintTypeEntity> complaintTypeEntities = complaintTypeRepo.findAll();
-        ComplaintTypeDDResponse complaintTypeDDResponse = null;
-        List<ComplaintTypeDDResponse> complaintTypeDDResponses =new ArrayList<>();
-
-        for(ComplaintTypeEntity complaintTypeEntity : complaintTypeEntities){
-            if(complaintTypeEntity.getStatusCd().equalsIgnoreCase("A")){
-                complaintTypeDDResponse = new ComplaintTypeDDResponse();
-                complaintTypeDDResponse.setCompTypeId(complaintTypeEntity.getCompTypeId());
-                complaintTypeDDResponse.setCompTypeName(complaintTypeEntity.getCompTypeName());
-
-                complaintTypeDDResponse.setCompTypeDeptId(complaintTypeEntity.getDeptId());
-                complaintTypeDDResponse.setStatusCd(complaintTypeEntity.getStatusCd());
-                complaintTypeDDResponses.add(complaintTypeDDResponse);
-            }
-
+    public List<DepartmentDDResponse> findAllDepartmentFromComplaintType() {
+        List<Object[]> complaintData = complaintTypeRepo.findAllDepartmentFromComplaintType();
+        List<DepartmentDDResponse> departmentDDResponses = null;
+        if (complaintData.size() > 0) {
+            departmentDDResponses = complaintData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
         }
-        return complaintTypeDDResponses;
+        return departmentDDResponses;
     }
 
+    @Override
+    public List<ComplaintTypeDDResponse> findAllComplaintTypeByDeptId(Integer deptId) {
+        List<Object[]> complaintData = complaintTypeRepo.findAllComplaintTypeByDeptId(deptId);
+        List<ComplaintTypeDDResponse> departmentDDResponses = null;
+        if (complaintData.size() > 0) {
+            departmentDDResponses = complaintData.stream().map(ComplaintTypeDDResponse::new).collect(Collectors.toList());
+        }
+        return departmentDDResponses;
+    }
 
     private ComplaintTypeEntity convertComplaintTypeCreateRequestToEntity(ComplaintTypeCreateRequest compTypeCreateRequest) {
         ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();

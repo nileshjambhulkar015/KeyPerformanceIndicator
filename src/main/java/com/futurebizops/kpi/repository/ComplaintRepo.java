@@ -21,10 +21,10 @@ public interface ComplaintRepo extends JpaRepository<ComplaintEntity, Integer> {
     public Optional<ComplaintEntity> findByCompIdAndCompStatusEqualsIgnoreCase(String compTypeId, String compStatus);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_COMPLAINT_QUERY, nativeQuery = true)
-    List<Object[]> getEmployeeComplaintDetail(@Param("empId") Integer empId, @Param("compId") String compId,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId,@Param("compTypeName") String compTypeName,@Param("compStatus") String compStatus, @Param("compTypeRoleId") Integer compTypeRoleId, @Param("compTypeDeptId") Integer compTypeDeptId, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getEmployeeComplaintDetail(@Param("empId") Integer empId, @Param("compId") String compId,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId,@Param("compTypeName") String compTypeName,@Param("compStatus") String compStatus, @Param("compTypeDeptId") Integer compTypeDeptId, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_COMPLAINT_COUNT_UERY, nativeQuery = true)
-    Integer getEmployeeComplaintCount(@Param("empId") Integer empId, @Param("compId") String compId,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId, @Param("compTypeName") String compTypeName,@Param("compStatus") String compStatus,@Param("compTypeRoleId") Integer compTypeRoleId, @Param("compTypeDeptId") Integer compTypeDeptId, @Param("statusCd") String statusCd);
+    Integer getEmployeeComplaintCount(@Param("empId") Integer empId, @Param("compId") String compId,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId, @Param("compTypeName") String compTypeName,@Param("compStatus") String compStatus,@Param("compTypeDeptId") Integer compTypeDeptId, @Param("statusCd") String statusCd);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_COMPLAINT_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeComplaintByIdDetail(@Param("empCompId") Integer empCompId);
