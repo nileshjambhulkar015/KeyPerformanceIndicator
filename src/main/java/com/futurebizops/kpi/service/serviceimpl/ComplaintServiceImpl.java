@@ -3,15 +3,19 @@ package com.futurebizops.kpi.service.serviceimpl;
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.ComplaintAudit;
 import com.futurebizops.kpi.entity.ComplaintEntity;
+import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.ComplaintAuditRepo;
 import com.futurebizops.kpi.repository.ComplaintRepo;
 import com.futurebizops.kpi.repository.ComplaintTypeRepo;
+import com.futurebizops.kpi.repository.DepartmentRepo;
 import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
+import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.EmployeeComplaintResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.ComplaintService;
+import com.futurebizops.kpi.service.DepartmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +46,10 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Value("${complaint-max-no}")
     private Integer compMaxNumber;
+
+
+    @Autowired
+    DepartmentRepo departmentRepo;
 
     @Override
     public KPIResponse saveComplaint(ComplaintCreateRequest complaintCreateRequest) {
@@ -195,6 +203,10 @@ public class ComplaintServiceImpl implements ComplaintService {
 
         List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
+        for(EmployeeComplaintResponse employeeComplaintResponse : complaintResponses){
+            employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+        }
+
         complaintResponses = complaintResponses.stream()
                 .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
                 .collect(Collectors.toList());
@@ -206,6 +218,14 @@ public class ComplaintServiceImpl implements ComplaintService {
                 .build();
     }
 
+
+    public String findDepartmentNameById(Integer deptId){
+        Optional<DepartmentEntity> departmentEntity =   departmentRepo.findById(deptId);
+        if(departmentEntity.isPresent()){
+            return departmentEntity.get().getDeptName();
+        }
+        return null;
+    }
 
     @Transactional
     @Override

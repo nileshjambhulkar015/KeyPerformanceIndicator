@@ -28,6 +28,7 @@ public class EmployeeComplaintResponse {
 
 
     private Integer compTypeDeptId;
+    private String compTypeDeptName;
 
     @Schema(example = "1", description = "This field is used for complaint date")
     private String compId;
