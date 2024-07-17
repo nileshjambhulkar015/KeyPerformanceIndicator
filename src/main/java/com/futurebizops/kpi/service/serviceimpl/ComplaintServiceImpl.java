@@ -186,7 +186,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public KPIResponse findComplaintDetails(Integer empId, String compId, Integer roleId, Integer deptId, String compDesc, String compStatus, Integer compTypeDeptId, String statusCd, Pageable requestPageable) {
+    public KPIResponse findComplaintDetails(Integer empId, String compId, Integer roleId, Integer deptId, String compDesc, String compStatus, Integer compTypeDeptId,Integer resolveEmpId, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -198,8 +198,8 @@ public class ComplaintServiceImpl implements ComplaintService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = complaintRepo.getEmployeeComplaintCount(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId, statusCd);
-        List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = complaintRepo.getEmployeeComplaintCount(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId,resolveEmpId, statusCd);
+        List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId,resolveEmpId, statusCd, sortName, pageSize, pageOffset);
 
         List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
