@@ -16,6 +16,7 @@ import com.futurebizops.kpi.response.EmployeeComplaintResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.ComplaintService;
 import com.futurebizops.kpi.service.DepartmentService;
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -98,8 +99,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     public KPIResponse updateAdminHandleComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
         try {
-            log.info("complaintUpdateRequest : {}", complaintUpdateRequest);
-            Instant complaintResolveDate = Instant.now();
+            Instant complaintResolveDate = null != complaintUpdateRequest.getCompResolveDateTime()? DateTimeUtils.convertResolveDateStringToInstant(complaintUpdateRequest.getCompResolveDateTime()):null;
+
             complaintRepo.updateAdminHandleComplaintDescription(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompStatus(), complaintResolveDate, complaintUpdateRequest.getRemark());
             return KPIResponse.builder()
                     .isSuccess(true)

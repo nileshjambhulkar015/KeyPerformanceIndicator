@@ -33,6 +33,18 @@ public class DateTimeUtils {
     }
 
 
+    //used thos method when emloye resolve complaint
+    public static Instant convertResolveDateStringToInstant(String dateTime) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        try {
+            return dateFormatter.parse(dateTime).toInstant();
+        } catch (ParseException ex) {
+            log.error("Inside DateTimeUtils >> convertResolveDateStringToInstant()");
+            throw new KPIException("DateTimeUtils", false, ex.getMessage());
+        }
+    }
+
+
 
     //Addding one day becuase when cummulative date is getting it's reducing one day in that
     public static Instant addOneDayToInstant(String dateTime) {
@@ -102,5 +114,6 @@ public class DateTimeUtils {
             throw new KPIException("DateTimeUtils", false, ex.getMessage());
         }
     }
+
 
 }

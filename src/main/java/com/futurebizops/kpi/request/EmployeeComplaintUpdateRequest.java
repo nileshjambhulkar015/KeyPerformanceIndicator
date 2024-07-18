@@ -41,6 +41,10 @@ public class EmployeeComplaintUpdateRequest {
     @Schema(example = "HR and Admin", description = "This field is used for complaint description")
     private String compStatus;
 
+
+    @Schema(example = "01-08-2024 04:24", description = "This field is used for complaint description")
+    private String compResolveDateTime;
+
     @Schema(example = "1", description = "This field is used for complaint type")
     private Integer compResolveEmpId;
 
