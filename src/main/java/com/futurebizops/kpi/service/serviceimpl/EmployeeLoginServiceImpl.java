@@ -35,23 +35,32 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
     public KPIResponse employeeLogin(String userName, String userPassword) {
         List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(userName, userPassword);
         List<LoginResponse> loginResponses = employeeLogin.stream().map(LoginResponse::new).collect(Collectors.toList());
+        KPIResponse response = new KPIResponse();
         if (!loginResponses.isEmpty()) {
             Optional<EmployeeKppMasterEntity> entityOptional = employeeKppMasterRepo.findByEmpId(loginResponses.get(0).getEmpId());
             if(entityOptional.isPresent()) {
                 log.info("Login successfully");
-                return KPIResponse.builder()
+                response= KPIResponse.builder()
                         .isSuccess(true)
                         .responseData(loginResponses.get(0))
                         .responseMessage("Login successfully")
                         .build();
             } else {
                 log.info("Please contact GM. Kpp is not set for you");
-                throw new KPIException("EmployeeLoginServiceImpl", false, "Please contact GM. Kpp is not set for you");
+                response= KPIResponse.builder()
+                        .isSuccess(false)
+                        .responseMessage("Please contact GM. Kpp is not set for you")
+                        .build();
+
             }
         } else {
             log.error("Inside EmployeeLoginServiceImpl >> employeeLogin()");
-            throw new KPIException("EmployeeLoginServiceImpl", false, "Login failed");
+            response= KPIResponse.builder()
+                    .isSuccess(false)
+                    .responseMessage("User name or Password is not correct. Please try again")
+                    .build();
         }
+        return response;
     }
 
     @Transactional
