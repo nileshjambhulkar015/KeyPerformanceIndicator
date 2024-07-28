@@ -16,7 +16,7 @@ public interface EmployeeLoginRepo extends JpaRepository<EmployeeLoginEntity, In
 
     public Optional<EmployeeLoginEntity> findByRoleIdAndEmpMobileNoAndEmpPasswordAndStatusCd(Integer roleId, String empMobileNo, String empPassword, String statusCd);
 
-    @Query(value = "select emp.emp_id , emp.emp_eid , emp.role_id, role.role_name, emp.dept_id , dept.dept_name, emp.desig_id, desig.desig_name , emp.emp_fname , emp.emp_mname , emp.emp_lname from employee emp, roles role, department dept, designation desig, employee_login emplog where emp.role_id = role.role_id and emp.dept_id = dept.dept_id and emp.desig_id = desig.desig_id and emp.emp_eid =emplog.emp_eid and (emplog.emp_eid = :userName or emplog.emp_mbno = :userName or emplog.emp_email_id = :userName) and emplog.emp_password = :userPassword", nativeQuery = true)
+    @Query(value = "select emp.emp_id , emp.emp_eid , emp.role_id, role.role_name, emp.dept_id , dept.dept_name, emp.desig_id, desig.desig_name , emp.emp_fname , emp.emp_mname , emp.emp_lname,emp.emp_email_id from employee emp, roles role, department dept, designation desig, employee_login emplog where emp.role_id = role.role_id and emp.dept_id = dept.dept_id and emp.desig_id = desig.desig_id and emp.emp_eid =emplog.emp_eid and (emplog.emp_eid = :userName or emplog.emp_mbno = :userName or emplog.emp_email_id = :userName) and emplog.emp_password = :userPassword", nativeQuery = true)
     public List<Object[]> employeeLogin(@Param("userName") String userName, @Param("userPassword")String userPassword);
 
     @Modifying

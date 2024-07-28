@@ -17,6 +17,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.ComplaintService;
 import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
+import com.futurebizops.kpi.utils.EmailUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,9 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Autowired
     DepartmentRepo departmentRepo;
 
+    @Autowired
+    EmailUtils emailUtils;
+
     @Override
     public KPIResponse saveComplaint(ComplaintCreateRequest complaintCreateRequest) {
         String complaintId = "COMP00" + getRandomNumber();
@@ -68,10 +72,18 @@ public class ComplaintServiceImpl implements ComplaintService {
             complaintRepo.save(complaintEntity);
             ComplaintAudit complaintAudit = new ComplaintAudit(complaintEntity);
             complaintAuditRepo.save(complaintAudit);
+
+            String messageBody = "Your complaint is register with complaint id :"+complaintId;
+
+            //Send mail
+            emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint Registered", messageBody);
+
+            log.info("");
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_SUCCESS + " With complaint id : " + complaintId)
                     .build();
+
         } catch (Exception ex) {
             log.error("Inside ComplaintServiceImpl >> saveComplaint()");
             throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());

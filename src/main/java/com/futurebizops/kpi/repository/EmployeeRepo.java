@@ -76,4 +76,7 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
     List<Object[]> getDesignationFromEmployee(@Param("roleId") Integer roleId ,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
 
     List<EmployeeEntity> findByReportingEmpId(Integer empId);
+
+    @Query(value = SQLQueryConstants.EMPLOYEE_TODAYS_BIRTHDAYS, nativeQuery = true)
+    List<Object[]> getTodaysBirthDaysList();
 }

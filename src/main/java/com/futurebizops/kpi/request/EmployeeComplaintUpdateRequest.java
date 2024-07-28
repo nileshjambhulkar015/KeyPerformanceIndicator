@@ -19,6 +19,9 @@ public class EmployeeComplaintUpdateRequest {
     @Schema(example = "e111", description = "This field is used for complaint date")
     private String empEId;
 
+    @Schema(example = "e111", description = "This field is used for complaint date")
+    private String empEmailId;
+
     @Schema(example = "1", description = "This field is used for complaint date")
     private Integer roleId;
 

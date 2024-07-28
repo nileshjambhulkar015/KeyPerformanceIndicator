@@ -24,6 +24,7 @@ public class LoginResponse {
     private String empFirstName;
     private String empMiddleName;
     private String empLastName;
+    private String empEmailId;
 
     public LoginResponse(Object[] objects) {
         this.empId = Integer.parseInt(String.valueOf(objects[0]));
@@ -37,5 +38,6 @@ public class LoginResponse {
         this.empFirstName = String.valueOf(objects[8]);
         this.empMiddleName = String.valueOf(objects[9]);
         this.empLastName = String.valueOf(objects[10]);
+        this.empEmailId = String.valueOf(objects[11]);
     }
 }
