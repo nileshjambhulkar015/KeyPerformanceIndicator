@@ -19,7 +19,7 @@ public class BirthdayWishesController {
     BirthdayEmailService birthdayEmailService;
 
     @GetMapping
-    public ResponseEntity<KPIResponse> findDepartmentDetails() throws Exception {
+    public ResponseEntity<KPIResponse> getBirthdays() throws Exception {
         KPIResponse response = birthdayEmailService.getBirthdays();
         return new ResponseEntity<>(response, HttpStatus.OK);
 

@@ -30,6 +30,7 @@ public class EmailUtils {
             helper.setSubject(mailSubject);
             helper.setText(htmlBody, true); // Set to true to enable HTML
             javaMailSender.send(message);
+            log.info("Mail send successfully to mail id : {}", senderMailId);
         } catch (Exception ex){
          log.error("Exception inside EmailUtils >> sendEmail() : ",ex);
         }
