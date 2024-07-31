@@ -13,7 +13,7 @@ public class BirthdaySchedular {
     @Autowired
     private BirthdayEmailService birthdayEmailService;
 
-    @Scheduled(cron = "0 0 1 * * ?") // Cron expression for running every minute
+    @Scheduled(cron = "0 0 1 * * ?") // Cron expression for running every day 1 am
     public void execute() {
         try {
             log.info("Birthday scheduler started");
