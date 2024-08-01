@@ -11,6 +11,7 @@ import com.futurebizops.kpi.repository.ComplaintTypeRepo;
 import com.futurebizops.kpi.repository.DepartmentRepo;
 import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
+import com.futurebizops.kpi.request.advsearch.ComplaintAdvSearch;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.EmployeeComplaintResponse;
 import com.futurebizops.kpi.response.KPIResponse;
@@ -18,7 +19,9 @@ import com.futurebizops.kpi.service.ComplaintService;
 import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import com.futurebizops.kpi.utils.EmailUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageImpl;
@@ -138,6 +141,53 @@ public class ComplaintServiceImpl implements ComplaintService {
             throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
         }
     }
+    @Override
+    public KPIResponse advSearchEmployeeComplaintDetails(ComplaintAdvSearch complaintAdvSearch, Pageable requestPageable) {
+
+        String compFromDate = StringUtils.isNotEmpty(complaintAdvSearch.getCompFromDate()) ? complaintAdvSearch.getCompFromDate() : null;
+
+        String compToDate = StringUtils.isNotEmpty(complaintAdvSearch.getCompToDate()) ? complaintAdvSearch.getCompToDate() : null;
+
+        Integer empId = null != complaintAdvSearch.getEmpId() ? complaintAdvSearch.getEmpId() : null;
+
+        Integer asDeptId = null != complaintAdvSearch.getAsDeptId() ? complaintAdvSearch.getAsDeptId() : null;
+
+        String asCompId = StringUtils.isNotEmpty(complaintAdvSearch.getAsCompId()) ? complaintAdvSearch.getAsCompId() : null;
+
+        String asCompStatus = StringUtils.isNotEmpty(complaintAdvSearch.getAsCompStatus()) ? complaintAdvSearch.getAsCompStatus() : null;
+
+        String sortName = null;
+        //  String sortDirection = null;
+        Integer pageSize = requestPageable.getPageSize();
+        Integer pageOffset = (int) requestPageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = requestPageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = complaintRepo.getAdvSearchEmployeeComplaintCount(empId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate);
+        List<Object[]> complaintData = complaintRepo.getAdvSearchEmployeeComplaintDetail(empId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate, sortName, pageSize, pageOffset);
+
+        List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
+
+        for(EmployeeComplaintResponse employeeComplaintResponse : complaintResponses){
+            employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+        }
+
+        complaintResponses = complaintResponses.stream()
+               // .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
+                .sorted((o1, o2)->o2.getCompDate().
+                        compareTo(o1.getCompDate()))
+                .collect(Collectors.toList());
+
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
+                .responseMessage(KPIConstants.RECORD_FETCH)
+                .build();
+    }
 
     private ComplaintEntity convertEmployeeComplaintUpdateRequestToEntity(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
         ComplaintEntity complaintEntity = new ComplaintEntity();
@@ -221,7 +271,9 @@ public class ComplaintServiceImpl implements ComplaintService {
         }
 
         complaintResponses = complaintResponses.stream()
-                .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
+                //.sorted(Comparator.comparing(EmployeeComplaintResponse::getCompDate))
+                .sorted((o1, o2)->o2.getCompDate().
+                        compareTo(o1.getCompDate()))
                 .collect(Collectors.toList());
 
         return KPIResponse.builder()

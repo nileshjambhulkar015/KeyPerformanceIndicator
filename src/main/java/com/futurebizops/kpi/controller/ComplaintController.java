@@ -2,6 +2,7 @@ package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
+import com.futurebizops.kpi.request.advsearch.ComplaintAdvSearch;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.ComplaintService;
@@ -65,7 +66,7 @@ public class ComplaintController {
     }
 
 
-    @GetMapping(value = "/employee-search")
+    @GetMapping(value = "/complaint-search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> findDepartmentDetails(
             @RequestParam(required = false) Integer empId,
@@ -82,6 +83,15 @@ public class ComplaintController {
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
+
+    @PostMapping(value = "/complaint-adv-search")
+    @PageableAsQueryParam
+    public ResponseEntity<KPIResponse> advSearchEmployeeComplaintDetails(@RequestBody ComplaintAdvSearch complaintAdvSearch,@Parameter(hidden = true) Pageable pageable) {
+        System.out.println("Advance Search Request : "+complaintAdvSearch);
+        KPIResponse response = complaintService.advSearchEmployeeComplaintDetails(complaintAdvSearch, pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     // show complaint details when click on view button of complaint ui table
     @GetMapping(value = "/by-emp-comp-id")

@@ -3,6 +3,7 @@ package com.futurebizops.kpi.repository;
 import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.ComplaintEntity;
 import com.futurebizops.kpi.entity.DepartmentEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -44,5 +45,11 @@ public interface ComplaintRepo extends JpaRepository<ComplaintEntity, Integer> {
     @Modifying
     @Query(value = "update employee_complaint set comp_status=:compStatus,comp_resolve_emp_id=:compResolveEmpId, comp_resolve_emp_name=:compResolveEmpName,comp_resolve_emp_eid=:compResolveEmpEId where emp_comp_id =:empCompId", nativeQuery = true)
     public int updateEmpAssignComplaintHimself(@Param("empCompId") Integer empCompId, @Param("compStatus") String compStatus, @Param("compResolveEmpId") Integer compResolveEmpId,@Param("compResolveEmpName") String compResolveEmpName,@Param("compResolveEmpEId") String compResolveEmpEId);
+
+    @Query(value = SQLQueryConstants.ADVANCE_SEARCH_EMPLOYEE_COMPLAINT_QUERY, nativeQuery = true)
+    List<Object[]> getAdvSearchEmployeeComplaintDetail(@Param("empId") Integer empId, @Param("compId") String compId,@Param("asDeptId") Integer asDeptId,@Param("compStatus") String compStatus, @Param("compFromDate") String compFromDate,@Param("compToDate") String compToDate, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.ADVANCE_SEARCH_EMPLOYEE_COMPLAINT_COUNT_QUERY, nativeQuery = true)
+    Integer getAdvSearchEmployeeComplaintCount(@Param("empId") Integer empId, @Param("compId") String compId,@Param("deptId") Integer deptId,@Param("compStatus") String compStatus,@Param("compFromDate") String compFromDate,@Param("compToDate") String compToDate);
 
 }

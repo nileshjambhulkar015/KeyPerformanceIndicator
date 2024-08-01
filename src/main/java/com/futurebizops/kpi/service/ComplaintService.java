@@ -2,6 +2,7 @@ package com.futurebizops.kpi.service;
 
 import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
+import com.futurebizops.kpi.request.advsearch.ComplaintAdvSearch;
 import com.futurebizops.kpi.response.EmployeeComplaintResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
@@ -24,6 +25,6 @@ public interface ComplaintService {
 
     public KPIResponse updateEmpAssignComplaintHimself(EmployeeComplaintUpdateRequest complaintUpdateRequest);
 
-
+    public KPIResponse advSearchEmployeeComplaintDetails(ComplaintAdvSearch complaintAdvSearch, Pageable pageable);
 
 }
