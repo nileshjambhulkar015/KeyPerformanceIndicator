@@ -8,6 +8,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import org.springframework.data.domain.Pageable;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface ComplaintService {
@@ -26,5 +27,7 @@ public interface ComplaintService {
     public KPIResponse updateEmpAssignComplaintHimself(EmployeeComplaintUpdateRequest complaintUpdateRequest);
 
     public KPIResponse advSearchEmployeeComplaintDetails(ComplaintAdvSearch complaintAdvSearch, Pageable pageable);
+
+    public KPIResponse downloadEmployeeComplaints(HttpServletResponse httpServletResponse,String compFromDate,String compToDate,Integer empId,String empCompDeptId,Integer asCompTypeDeptId,String empCompId,String asCompStatus,Integer resolveEmpId);
 
 }

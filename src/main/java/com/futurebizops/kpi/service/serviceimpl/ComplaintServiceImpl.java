@@ -4,6 +4,7 @@ import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.ComplaintAudit;
 import com.futurebizops.kpi.entity.ComplaintEntity;
 import com.futurebizops.kpi.entity.DepartmentEntity;
+import com.futurebizops.kpi.excel.ComplaintExcel;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.ComplaintAuditRepo;
 import com.futurebizops.kpi.repository.ComplaintRepo;
@@ -13,6 +14,7 @@ import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
 import com.futurebizops.kpi.request.advsearch.ComplaintAdvSearch;
 import com.futurebizops.kpi.response.DepartmentReponse;
+import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.response.EmployeeComplaintResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.ComplaintService;
@@ -29,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Comparator;
@@ -58,6 +61,9 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Autowired
     EmailUtils emailUtils;
+
+    @Autowired
+    ComplaintExcel complaintExcel;
 
     @Override
     public KPIResponse saveComplaint(ComplaintCreateRequest complaintCreateRequest) {
@@ -150,11 +156,16 @@ public class ComplaintServiceImpl implements ComplaintService {
 
         Integer empId = null != complaintAdvSearch.getEmpId() ? complaintAdvSearch.getEmpId() : null;
 
-        Integer asDeptId = null != complaintAdvSearch.getAsDeptId() ? complaintAdvSearch.getAsDeptId() : null;
+        Integer deptId = null != complaintAdvSearch.getEmpCompDeptId() ? complaintAdvSearch.getEmpCompDeptId() : null;
+
+        Integer asDeptId = null != complaintAdvSearch.getAsCompTypeDeptId() ? complaintAdvSearch.getAsCompTypeDeptId() : null;
 
         String asCompId = StringUtils.isNotEmpty(complaintAdvSearch.getAsCompId()) ? complaintAdvSearch.getAsCompId() : null;
 
+
         String asCompStatus = StringUtils.isNotEmpty(complaintAdvSearch.getAsCompStatus()) ? complaintAdvSearch.getAsCompStatus() : null;
+
+        Integer asCompResolveEmpId = null != complaintAdvSearch.getAsCompResolveEmpId() ? complaintAdvSearch.getAsCompResolveEmpId() : null;
 
         String sortName = null;
         //  String sortDirection = null;
@@ -167,8 +178,8 @@ public class ComplaintServiceImpl implements ComplaintService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = complaintRepo.getAdvSearchEmployeeComplaintCount(empId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate);
-        List<Object[]> complaintData = complaintRepo.getAdvSearchEmployeeComplaintDetail(empId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate, sortName, pageSize, pageOffset);
+        Integer totalCount = complaintRepo.getAdvSearchEmployeeComplaintCount(empId,deptId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate,asCompResolveEmpId);
+        List<Object[]> complaintData = complaintRepo.getAdvSearchEmployeeComplaintDetail(empId,deptId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate,asCompResolveEmpId, sortName, pageSize, pageOffset);
 
         List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
@@ -181,13 +192,70 @@ public class ComplaintServiceImpl implements ComplaintService {
                 .sorted((o1, o2)->o2.getCompDate().
                         compareTo(o1.getCompDate()))
                 .collect(Collectors.toList());
-
+        if(complaintResponses.size()>0) {
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        }
         return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
+                .isSuccess(false)
+                .responseData(null)
+                .responseMessage(KPIConstants.RECORD_NOT_FOUND)
                 .build();
     }
+
+    @Override
+    public KPIResponse downloadEmployeeComplaints(HttpServletResponse httpServletResponse, String compFromDate,String compToDate,Integer empId,String empCompDeptId,Integer asCompTypeDeptId,String empCompId,String asCompStatus,Integer asCompResolveEmpId) {
+        compFromDate = StringUtils.isNotEmpty(compFromDate) ? compFromDate : null;
+
+        compToDate = StringUtils.isNotEmpty(compToDate) ? compToDate : null;
+
+        empId = null != empId ? empId : null;
+
+
+        Integer deptId = StringUtils.isNotEmpty(empCompDeptId) ?Integer.parseInt(empCompDeptId) : null;
+
+        Integer asDeptId = null != asCompTypeDeptId ? asCompTypeDeptId : null;
+
+        String asCompId = StringUtils.isNotEmpty(empCompId) ? empCompId : null;
+
+        asCompStatus = StringUtils.isNotEmpty(asCompStatus) ? asCompStatus : null;
+
+        asCompResolveEmpId = null != asCompResolveEmpId ? asCompResolveEmpId : null;
+
+
+        List<Object[]> complaintData = complaintRepo.downloadEmployeeComplaintDetail(empId, asCompId,deptId,asDeptId, asCompStatus, compFromDate,compToDate,asCompResolveEmpId);
+
+        List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
+
+        for(EmployeeComplaintResponse employeeComplaintResponse : complaintResponses){
+            employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+        }
+
+        complaintResponses = complaintResponses.stream()
+                // .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
+                .sorted((o1, o2)->o2.getCompDate().
+                        compareTo(o1.getCompDate()))
+                .collect(Collectors.toList());
+
+        if(complaintResponses.size()>0) {
+            complaintExcel.getEmployeeComplaintExcel(complaintResponses, httpServletResponse);
+
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(complaintResponses)
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseData(null)
+                .responseMessage(KPIConstants.RECORD_NOT_FOUND)
+                .build();
+    }
+
 
     private ComplaintEntity convertEmployeeComplaintUpdateRequestToEntity(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
         ComplaintEntity complaintEntity = new ComplaintEntity();

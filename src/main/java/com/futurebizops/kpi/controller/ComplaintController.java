@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.Column;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @CrossOrigin
@@ -91,6 +92,22 @@ public class ComplaintController {
         KPIResponse response = complaintService.advSearchEmployeeComplaintDetails(complaintAdvSearch, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/download-employee-complaint")
+    public KPIResponse exportCompletedToExcelEmployee(HttpServletResponse httpServletResponse,
+                                               @RequestParam(required = false) String compFromDate,
+                                               @RequestParam(required = false) String compToDate,
+                                               @RequestParam(required = false) Integer empId,
+                                               @RequestParam(required = false) String empCompDeptId,
+                                               @RequestParam(required = false) Integer asCompTypeDeptId,
+                                               @RequestParam(required = false) String empCompId,
+                                               @RequestParam(required = false) String asCompStatus,
+                                               @RequestParam(required = false)  Integer asCompResolveEmpId)  {
+
+        KPIResponse kpiResponse=  complaintService.downloadEmployeeComplaints(httpServletResponse, compFromDate,compToDate,empId,empCompDeptId,asCompTypeDeptId,empCompId,asCompStatus,asCompResolveEmpId);
+        return kpiResponse;
+    }
+
 
 
     // show complaint details when click on view button of complaint ui table

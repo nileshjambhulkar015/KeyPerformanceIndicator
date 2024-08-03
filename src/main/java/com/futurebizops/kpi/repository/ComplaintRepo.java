@@ -47,9 +47,12 @@ public interface ComplaintRepo extends JpaRepository<ComplaintEntity, Integer> {
     public int updateEmpAssignComplaintHimself(@Param("empCompId") Integer empCompId, @Param("compStatus") String compStatus, @Param("compResolveEmpId") Integer compResolveEmpId,@Param("compResolveEmpName") String compResolveEmpName,@Param("compResolveEmpEId") String compResolveEmpEId);
 
     @Query(value = SQLQueryConstants.ADVANCE_SEARCH_EMPLOYEE_COMPLAINT_QUERY, nativeQuery = true)
-    List<Object[]> getAdvSearchEmployeeComplaintDetail(@Param("empId") Integer empId, @Param("compId") String compId,@Param("asDeptId") Integer asDeptId,@Param("compStatus") String compStatus, @Param("compFromDate") String compFromDate,@Param("compToDate") String compToDate, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getAdvSearchEmployeeComplaintDetail(@Param("empId") Integer empId,@Param("deptId") Integer deptId, @Param("compId") String compId,@Param("asDeptId") Integer asDeptId,@Param("compStatus") String compStatus, @Param("compFromDate") String compFromDate,@Param("compToDate") String compToDate,@Param("asCompResolveEmpId") Integer asCompResolveEmpId, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.ADVANCE_SEARCH_EMPLOYEE_COMPLAINT_COUNT_QUERY, nativeQuery = true)
-    Integer getAdvSearchEmployeeComplaintCount(@Param("empId") Integer empId, @Param("compId") String compId,@Param("deptId") Integer deptId,@Param("compStatus") String compStatus,@Param("compFromDate") String compFromDate,@Param("compToDate") String compToDate);
+    Integer getAdvSearchEmployeeComplaintCount(@Param("empId") Integer empId,@Param("deptId") Integer deptId, @Param("compId") String compId,@Param("asDeptId") Integer asDeptId,@Param("compStatus") String compStatus, @Param("compFromDate") String compFromDate,@Param("compToDate") String compToDate,@Param("asCompResolveEmpId") Integer asCompResolveEmpId);
+
+    @Query(value = SQLQueryConstants.DOWNLOAD_ADVANCE_SEARCH_EMPLOYEE_COMPLAINT_QUERY, nativeQuery = true)
+    List<Object[]> downloadEmployeeComplaintDetail(@Param("empId") Integer empId, @Param("compId") String compId,@Param("deptId") Integer deptId,@Param("asDeptId") Integer asDeptId,@Param("compStatus") String compStatus, @Param("compFromDate") String compFromDate,@Param("compToDate") String compToDate,@Param("asCompResolveEmpId") Integer asCompResolveEmpId);
 
 }

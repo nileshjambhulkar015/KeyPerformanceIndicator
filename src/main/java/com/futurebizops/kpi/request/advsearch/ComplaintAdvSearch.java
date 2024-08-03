@@ -18,12 +18,21 @@ public class ComplaintAdvSearch {
     @Schema(example = "1", description = "This field is used for complaint date")
     private Integer empId;
 
+
     @Schema(example = "1", description = "This field is used for complaint date")
-    private Integer asDeptId;
+    private Integer empCompDeptId;
+
+    @Schema(example = "1", description = "This field is used for complaint date")
+    private Integer asCompTypeDeptId;
 
     @Schema(example = "1", description = "This field is used for complaint date")
     private String asCompId;
 
+
     @Schema(example = "HR and Admin", description = "This field is used for complaint description")
     private String asCompStatus;
+
+
+    @Schema(example = "1", description = "This field is used for complaint date")
+    private Integer asCompResolveEmpId;
 }
