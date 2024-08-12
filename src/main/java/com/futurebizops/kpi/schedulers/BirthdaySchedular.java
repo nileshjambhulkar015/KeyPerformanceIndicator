@@ -1,4 +1,4 @@
-package com.futurebizops.kpi.schedular;
+package com.futurebizops.kpi.schedulers;
 
 import com.futurebizops.kpi.service.BirthdayEmailService;
 import lombok.extern.slf4j.Slf4j;
