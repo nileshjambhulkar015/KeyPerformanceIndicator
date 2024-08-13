@@ -858,7 +858,7 @@ create table company_master(
                values(1,'ADM001',1,1,1,1,1,1,'Admin', 'Admin','Admin','Male','9503232728','admin@gmail.com','A','admin');
 
                insert into employee_audit(emp_id,emp_eid,role_id,dept_id,desig_id ,reporting_emp_id,region_id,site_id,emp_fname,emp_mname,emp_lname,emp_gender,emp_mbno,emp_email_id, STATUS_CD,crte_user_id)
-               values(1,'ADM001',1,+1,1,1,1,1,'Admin', 'Admin','Admin','Male','9503232728','admin@gmail.com','A','admin');
+               values(1,'ADM001',1,1,1,1,1,1,'Admin', 'Admin','Admin','Male','9503232728','admin@gmail.com','A','admin');
 
 
                insert into employee_login(emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password ,STATUS_CD,crte_user_id) values('ADM001',1,1,1,'ADM001','ADM001','ADM001','A','admin');
