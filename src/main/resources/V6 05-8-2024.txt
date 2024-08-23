@@ -44,6 +44,10 @@
 
        drop table report_evidence;
        drop table report_evidence_audit;
+
+       drop table meeting_master;
+       drop table meeting_master_audit;
+
     **/
 
 
@@ -824,6 +828,59 @@ create table company_master(
         lst_updt_ts TIMESTAMP null,
         lst_updt_user_id VARCHAR(20) null
     );
+
+
+    create table meeting_master(
+           meet_id serial PRIMARY key,
+           meet_start_date TIMESTAMP null,
+           meet_end_date TIMESTAMP null,
+            meet_created_by_emp_id INTEGER,
+            meet_created_by_emp_eid VARCHAR(50),
+            meet_created_by_emp_name VARCHAR(150),
+            meet_created_by_emp_role_id INTEGER,
+            meet_created_by_emp_role_name VARCHAR(50),
+            meet_created_by_emp_dept_id INTEGER,
+            meet_created_by_emp_dept_name VARCHAR(50),
+            meet_created_by_emp_desig_id INTEGER,
+            meet_created_by_emp_desig_name VARCHAR(50),
+            meet_venue VARCHAR(250),
+            meet_title VARCHAR(250),
+            meet_description VARCHAR(550),
+            meet_status VARCHAR(50),
+            REMARK VARCHAR(200),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table meeting_master_audit(
+           meet_aud_id serial PRIMARY key,
+           meet_id INTEGER,
+           meet_start_date TIMESTAMP null,
+           meet_end_date TIMESTAMP null,
+            meet_created_by_emp_id INTEGER,
+            meet_created_by_emp_eid VARCHAR(50),
+            meet_created_by_emp_name VARCHAR(150),
+            meet_created_by_emp_role_id INTEGER,
+            meet_created_by_emp_role_name VARCHAR(50),
+            meet_created_by_emp_dept_id INTEGER,
+            meet_created_by_emp_dept_name VARCHAR(50),
+            meet_created_by_emp_desig_id INTEGER,
+            meet_created_by_emp_desig_name VARCHAR(50),
+            meet_venue VARCHAR(250),
+            meet_title VARCHAR(250),
+            meet_description VARCHAR(550),
+            meet_status VARCHAR(50),
+            REMARK VARCHAR(200),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
 
     /*
 
