@@ -106,6 +106,16 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
         return null;
     }
 
+    @Override
+    public List<EmployeeMeetingReponse> findAllMeeting(Integer meetingId, String statusCd) {
+        List<Object[]> meetingData = employeeMeetingRepo.getMeetingByMeetingId(meetingId, statusCd);
+        if (meetingData.size() > 0) {
+            List<EmployeeMeetingReponse> employeeMeetingReponses = meetingData.stream().map(EmployeeMeetingReponse::new).collect(Collectors.toList());
+            return employeeMeetingReponses;
+        }
+        return null;
+    }
+
 
     private EmployeeMeetingEntity convertMeetingCreateRequestToEntity(EmployeeMeetingCreateRequest employeeMeetingCreateRequest) {
         Instant meetinStartDateTime = StringUtils.isNotEmpty(employeeMeetingCreateRequest.getMeetStartDate())? DateTimeUtils.convertResolveDateStringToInstant(employeeMeetingCreateRequest.getMeetStartDate()):null;

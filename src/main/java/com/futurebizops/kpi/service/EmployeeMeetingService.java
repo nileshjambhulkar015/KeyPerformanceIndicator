@@ -20,5 +20,9 @@ public interface EmployeeMeetingService {
     public KPIResponse cancelEmployeeMeeting(EmployeeMeetingUpdateRequest employeeMeetingUpdateRequest);
     public KPIResponse findAllMeetings(Pageable pageable);
 
+
+
     public EmployeeMeetingReponse findMeetingById(Integer meetingId, String statusCd);
+
+    public List<EmployeeMeetingReponse> findAllMeeting(Integer meetingId, String statusCd);
 }

@@ -6,10 +6,12 @@ import com.futurebizops.kpi.entity.EmployeeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,11 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
     public Optional<EmployeeEntity> findByEmpEIdEqualsIgnoreCase(String empEId);
     public EmployeeEntity findByEmpMobileNoAndStatusCd(String empMobileNo, String statusCd);
+
+
+    @Modifying
+    @Query(value = "update employee set emp_dob=:empoyeeDob where emp_id =:empId", nativeQuery = true)
+    public int updateEmployeeDobByEmpId(@Param("empId") Integer empId, @Param("empoyeeDob") Instant empoyeeDob);
 
 
     @Query(value = SQLQueryConstants.EMPLOYEE_QUERY, nativeQuery = true)

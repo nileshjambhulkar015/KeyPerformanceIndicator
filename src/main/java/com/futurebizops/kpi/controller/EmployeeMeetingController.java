@@ -45,7 +45,6 @@ public class EmployeeMeetingController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
     //Cancle the meeting
     @PutMapping(value = "/cancel-meeting")
     public ResponseEntity<KPIResponse> deleteEmployeeMeeting(@RequestBody EmployeeMeetingUpdateRequest employeeMeetingUpdateRequest) {
@@ -64,10 +63,18 @@ public class EmployeeMeetingController {
     }
 
     @GetMapping(value = "/by-meeting-id")
-    public ResponseEntity<EmployeeMeetingReponse> findAllMeetings(
+    public ResponseEntity<EmployeeMeetingReponse> findAllMeetingsById(
             @RequestParam(required = false) Integer meetingId,
             @RequestParam(required = false) String statusCd) {
         EmployeeMeetingReponse response = employeeMeetingService.findMeetingById(meetingId,statusCd);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+    @GetMapping(value = "/all-meeting-id")
+    public ResponseEntity<List<EmployeeMeetingReponse>> findAllMeetings(
+            @RequestParam(required = false) Integer meetingId,
+            @RequestParam(required = false) String statusCd) {
+       List<EmployeeMeetingReponse> response = employeeMeetingService.findAllMeeting(meetingId,statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

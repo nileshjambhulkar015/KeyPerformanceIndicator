@@ -213,6 +213,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+    @Transactional
+    @Override
+    public KPIResponse updateEmployeeDOB(Integer empId, String empDob) {
+        try {
+            Instant empoyeeDob = null != empDob? DateTimeUtils.convertStringToInstant(empDob):null;
+
+            employeeRepo.updateEmployeeDobByEmpId(empId, empoyeeDob);
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage(KPIConstants.RECORD_UPDATE)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside ComplaintServiceImpl >> updateEmployeeComplaint() :{}", ex);
+            throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
+        }
+    }
+
 
     @Override
     public KPIResponse getAllEmployeeDetails(Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Integer empTypeId, Integer companyId, Integer reportingEmpId, Pageable pageable) {
