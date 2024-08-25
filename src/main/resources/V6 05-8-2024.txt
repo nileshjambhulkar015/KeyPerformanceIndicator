@@ -921,8 +921,8 @@ create table company_master(
                insert into employee_login(emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password ,STATUS_CD,crte_user_id) values('ADM001',1,1,1,'ADM001','ADM001','ADM001','A','admin');
                insert into employee_login_audit (emp_eid,role_id,dept_id,desig_id,emp_mbno,emp_email_id, emp_password,STATUS_CD,crte_user_id) values('ADM001',1,1,1,'ADM001','ADM001','ADM001','A','admin');
 
-               insert into key_perf_parameter(kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values('Kpp Not requires','Kpp Not requires','A','admin');
-               insert into key_perf_parameter_audit(kpp_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,'Kpp Not requires','Kpp Not requires','A','admin');
+               insert into key_perf_parameter(kpp_objective_no,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values('KPP001','Kpp Not requires','Kpp Not requires','A','admin');
+               insert into key_perf_parameter_audit(kpp_objective_no, kpp_id,kpp_objective,kpp_performance_indi,STATUS_CD,crte_user_id) values(1,'KPP001','Kpp Not requires','Kpp Not requires','A','admin');
 
 
          insert into employee_kpp_master (emp_id ,role_id,dept_id,desig_id,STATUS_CD,crte_user_id) values(1,1,1,1,'A','admin');
