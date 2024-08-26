@@ -48,6 +48,13 @@
        drop table meeting_master;
        drop table meeting_master_audit;
 
+
+       drop table announcement_type;
+       drop table announcement_type_audit;
+       drop table announcement_master;
+       drop table announcement_master_audit;
+
+
     **/
 
 
@@ -886,6 +893,87 @@ create table company_master(
 
 alter table complaint_type add column dept_mail_id VARCHAR(200);
 alter table complaint_type_audit add column dept_mail_id VARCHAR(200);
+
+create table announcement_type(
+        announ_type_ID serial  PRIMARY key,
+        announ_type_NAME VARCHAR(100),
+        REMARK VARCHAR(200),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table announcement_type_audit(
+        announ_type_AUD_ID serial PRIMARY key,
+        announ_type_ID INTEGER,
+       announ_type_NAME VARCHAR(100),
+        REMARK VARCHAR(200),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table announcement_master(
+           announ_id serial PRIMARY key,
+           announ_type_ID Integer,
+            announ_type_name VARCHAR(100),
+           announ_start_date TIMESTAMP null,
+           announ_end_date TIMESTAMP null,
+            announ_created_by_emp_id INTEGER,
+            announ_created_by_emp_eid VARCHAR(50),
+            announ_created_by_emp_name VARCHAR(150),
+            announ_created_by_emp_role_id INTEGER,
+            announ_created_by_emp_role_name VARCHAR(50),
+            announ_created_by_emp_dept_id INTEGER,
+            announ_created_by_emp_dept_name VARCHAR(50),
+            announ_created_by_emp_desig_id INTEGER,
+            announ_created_by_emp_desig_name VARCHAR(50),
+            announ_venue VARCHAR(250),
+            announ_title VARCHAR(250),
+            announ_description VARCHAR(550),
+            announ_status VARCHAR(50),
+            REMARK VARCHAR(200),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table announcement_master_audit(
+           announ_aud_id serial PRIMARY key,
+           announ_id INTEGER,
+            announ_type_ID Integer,
+           announ_type_name VARCHAR(100),
+           announ_start_date TIMESTAMP null,
+           announ_end_date TIMESTAMP null,
+            announ_created_by_emp_id INTEGER,
+            announ_created_by_emp_eid VARCHAR(50),
+            announ_created_by_emp_name VARCHAR(150),
+            announ_created_by_emp_role_id INTEGER,
+            announ_created_by_emp_role_name VARCHAR(50),
+            announ_created_by_emp_dept_id INTEGER,
+            announ_created_by_emp_dept_name VARCHAR(50),
+            announ_created_by_emp_desig_id INTEGER,
+            announ_created_by_emp_desig_name VARCHAR(50),
+            announ_venue VARCHAR(250),
+            announ_title VARCHAR(250),
+            announ_description VARCHAR(550),
+            announ_status VARCHAR(50),
+            REMARK VARCHAR(200),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
 
     /*
 
