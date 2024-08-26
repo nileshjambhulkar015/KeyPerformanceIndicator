@@ -16,10 +16,10 @@ public interface EmployeeMeetingRepo extends JpaRepository<EmployeeMeetingEntity
 
 
     @Query(value = SQLQueryConstants.EMPLOYEE_MEETING_QUERY, nativeQuery = true)
-    List<Object[]> getEmployeeMeetingDetail( @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getEmployeeMeetingDetail( @Param("meetFromDate") String meetFromDate,@Param("meetToDate") String meetToDate, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_MEETING_COUNT_QUERY, nativeQuery = true)
-    Integer getEmployeeMeetingCount();
+    Integer getEmployeeMeetingCount(@Param("meetFromDate") String meetFromDate,@Param("meetToDate") String meetToDate);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_MEETING_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getMeetingByMeetingId( @Param("meetingId") Integer meetingId, @Param("statusCd") String statusCd);
@@ -27,5 +27,11 @@ public interface EmployeeMeetingRepo extends JpaRepository<EmployeeMeetingEntity
     @Modifying
     @Query(value = "update meeting_master set meet_status=:meetStatus where meet_id =:meetId", nativeQuery = true)
     public int cancelMeeting(@Param("meetId") Integer meetId, @Param("meetStatus") String meetStatus);
+
+    @Query(value = SQLQueryConstants.ADVANCE_SEARCH_MEETING_QUERY, nativeQuery = true)
+    List<Object[]> getAdvanceSearchMeetingDetail( @Param("meetFromDate") String meetFromDate,@Param("meetToDate") String meetToDate,@Param("asMeetStatus") String asMeetStatus, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.ADVANCE_SEARCH_MEETING_COUNT_QUERY, nativeQuery = true)
+    Integer getAdvanceSearcheMeetingCount(@Param("meetFromDate") String meetFromDate,@Param("meetToDate") String meetToDate, @Param("asMeetStatus") String asMeetStatus);
 
 }

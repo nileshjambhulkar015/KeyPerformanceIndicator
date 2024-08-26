@@ -32,4 +32,6 @@ public interface ComplaintTypeRepo extends JpaRepository<ComplaintTypeEntity, In
 
     @Query(value = "select comp.comp_type_id, comp.comp_type_NAME, comp.status_cd from complaint_type comp where comp.status_cd='A' and comp.dept_id=:deptId", nativeQuery = true)
     public List<Object[]> findAllComplaintTypeByDeptId(@Param("deptId") Integer deptId);
+
+    public Optional<ComplaintTypeEntity> findByDeptId(Integer deptId);
 }

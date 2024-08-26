@@ -8,6 +8,8 @@ import com.futurebizops.kpi.repository.EmployeeMeetingAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeMeetingRepo;
 import com.futurebizops.kpi.request.EmployeeMeetingCreateRequest;
 import com.futurebizops.kpi.request.EmployeeMeetingUpdateRequest;
+import com.futurebizops.kpi.request.advsearch.MeetingAdvSearch;
+import com.futurebizops.kpi.response.EmployeeComplaintResponse;
 import com.futurebizops.kpi.response.EmployeeMeetingReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeMeetingService;
@@ -71,7 +73,44 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
     }
 
     @Override
-    public KPIResponse findAllMeetings(Pageable requestPageable) {
+    public KPIResponse findAllMeetings(String meetFromDate, String meetToDate,Pageable requestPageable) {
+        String sortName = null;
+        //  String sortDirection = null;
+
+        meetFromDate = StringUtils.isNotEmpty(meetFromDate) ? meetFromDate : null;
+
+        meetToDate = StringUtils.isNotEmpty(meetToDate) ? meetToDate : null;
+        Integer pageSize = requestPageable.getPageSize();
+        Integer pageOffset = (int) requestPageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = requestPageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = employeeMeetingRepo.getEmployeeMeetingCount(meetFromDate,meetToDate);
+        List<Object[]> departmentData = employeeMeetingRepo.getEmployeeMeetingDetail(meetFromDate,meetToDate,pageSize, pageOffset);
+
+        List<EmployeeMeetingReponse> employeeMeetingReponses = departmentData.stream().map(EmployeeMeetingReponse::new).collect(Collectors.toList());
+
+
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseData(new PageImpl<>(employeeMeetingReponses, requestPageable, totalCount))
+                .responseMessage(KPIConstants.RECORD_FETCH)
+                .build();
+    }
+
+    @Override
+    public KPIResponse advSearchMeetingDetails(MeetingAdvSearch meetingAdvSearch, Pageable requestPageable) {
+        String meetFromDate = StringUtils.isNotEmpty(meetingAdvSearch.getMeetFromDate()) ? meetingAdvSearch.getMeetFromDate() : null;
+
+        String meetToDate = StringUtils.isNotEmpty(meetingAdvSearch.getMeetToDate()) ? meetingAdvSearch.getMeetToDate() : null;
+
+        String asMeetStatus = StringUtils.isNotEmpty(meetingAdvSearch.getAsMeetStatus()) ? meetingAdvSearch.getAsMeetStatus() : null;
+
+
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -83,16 +122,26 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = employeeMeetingRepo.getEmployeeMeetingCount();
-        List<Object[]> departmentData = employeeMeetingRepo.getEmployeeMeetingDetail(pageSize, pageOffset);
+        Integer totalCount = employeeMeetingRepo.getAdvanceSearcheMeetingCount(meetFromDate,meetToDate, asMeetStatus);
+        List<Object[]> complaintData = employeeMeetingRepo.getAdvanceSearchMeetingDetail(meetFromDate,meetToDate, asMeetStatus, pageSize, pageOffset);
 
-        List<EmployeeMeetingReponse> employeeMeetingReponses = departmentData.stream().map(EmployeeMeetingReponse::new).collect(Collectors.toList());
-
-
+        List<EmployeeMeetingReponse> meetingReponses = complaintData.stream().map(EmployeeMeetingReponse::new).collect(Collectors.toList());
+        meetingReponses = meetingReponses.stream()
+                // .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
+                .sorted((o1, o2)->o2.getMeetStartDate().
+                        compareTo(o1.getMeetStartDate()))
+                .collect(Collectors.toList());
+        if(meetingReponses.size()>0) {
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(meetingReponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        }
         return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(employeeMeetingReponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
+                .isSuccess(false)
+                .responseData(null)
+                .responseMessage(KPIConstants.RECORD_NOT_FOUND)
                 .build();
     }
 
@@ -107,13 +156,18 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
     }
 
     @Override
-    public List<EmployeeMeetingReponse> findAllMeeting(Integer meetingId, String statusCd) {
+    public KPIResponse findAllMeeting(Integer meetingId, String statusCd) {
+        KPIResponse kpiResponse = new KPIResponse();
         List<Object[]> meetingData = employeeMeetingRepo.getMeetingByMeetingId(meetingId, statusCd);
         if (meetingData.size() > 0) {
             List<EmployeeMeetingReponse> employeeMeetingReponses = meetingData.stream().map(EmployeeMeetingReponse::new).collect(Collectors.toList());
-            return employeeMeetingReponses;
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseData(employeeMeetingReponses);
+            return kpiResponse;
+
         }
-        return null;
+        kpiResponse.setSuccess(false);
+        return kpiResponse;
     }
 
 

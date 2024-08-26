@@ -3,6 +3,7 @@ package com.futurebizops.kpi.service.serviceimpl;
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.ComplaintAudit;
 import com.futurebizops.kpi.entity.ComplaintEntity;
+import com.futurebizops.kpi.entity.ComplaintTypeEntity;
 import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.excel.ComplaintExcel;
 import com.futurebizops.kpi.exception.KPIException;
@@ -13,6 +14,7 @@ import com.futurebizops.kpi.repository.DepartmentRepo;
 import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
 import com.futurebizops.kpi.request.advsearch.ComplaintAdvSearch;
+import com.futurebizops.kpi.response.ComplaintTypeReponse;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.response.EmployeeComplaintResponse;
@@ -82,10 +84,17 @@ public class ComplaintServiceImpl implements ComplaintService {
             ComplaintAudit complaintAudit = new ComplaintAudit(complaintEntity);
             complaintAuditRepo.save(complaintAudit);
 
-            String messageBody = "Your complaint is register with complaint id :"+complaintId;
+            Optional<ComplaintTypeEntity>  optionalComplaintType =complaintTypeRepo.findByDeptId(complaintEntity.getDeptId());
+
+
+            String messageBody = "<html><body>  Complaint is register with complaint id :"+complaintId+" <br><br>" +
+                    "Complaint details : "+complaintEntity.getCompDesc()+ "</body></html>";
 
             //Send mail
-            emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint Registered", messageBody);
+            emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
+
+            //send request complaint raised department also
+            emailUtils.sendEmail(optionalComplaintType.get().getDeptMailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
 
             log.info("");
             return KPIResponse.builder()
