@@ -1021,4 +1021,11 @@ create table announcement_type(
          insert into employee_kpp_master (emp_id ,role_id,dept_id,desig_id,STATUS_CD,crte_user_id) values(1,1,1,1,'A','admin');
        insert into employee_kpp_master_audit (emp_id ,role_id,dept_id,desig_id,STATUS_CD,crte_user_id) values(1,1,1,1,'A','admin');
 
+
+insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(1, 'Bulletines', 'A');
+insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(2, 'News', 'A');
+insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(3, 'Meeting', 'A');
+insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(4, 'Announcement', 'A');
+
+insert into announcement_master(announ_id,announ_type_ID,announ_type_name,status_cd)  values(1, 1, 'Bulletines', 'A')  ;
     */

@@ -108,6 +108,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+
+
     public KPIResponse advSearchAnnouncementDetails(AnnouncementAdvSearch announcementAdvSearch, Pageable requestPageable) {
         String statusCd=null;
         String announFromDate = StringUtils.isNotEmpty(announcementAdvSearch.getAsAnnounFromDate()) ? announcementAdvSearch.getAsAnnounFromDate() : null;
@@ -172,9 +174,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public KPIResponse findAllAnnouncement(Integer announId, String statusCd) {
+    public KPIResponse findAllAnnouncement(Integer announId, Integer announTypeId,String statusCd) {
         KPIResponse kpiResponse = new KPIResponse();
-        List<Object[]> announcementData = announcementRepo.getAnnouncementByAnnounId(announId, statusCd);
+        List<Object[]> announcementData = announcementRepo.getAnnouncementByAnnounId(announId, announTypeId,statusCd);
         if (announcementData.size() > 0) {
             List<AnnouncementReponse> announcementReponses = announcementData.stream().map(AnnouncementReponse::new).collect(Collectors.toList());
             kpiResponse.setSuccess(true);

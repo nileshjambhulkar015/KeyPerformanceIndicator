@@ -23,6 +23,9 @@ public interface AnnouncementRepo extends JpaRepository<AnnouncementEntity, Inte
     @Query(value = SQLQueryConstants.ANNOUNCEMENT_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getAnnouncementByAnnounId( @Param("announId") Integer announId, @Param("statusCd") String statusCd);
 
+    @Query(value = SQLQueryConstants.ALL_ANNOUNCEMENT_BY_ID_QUERY, nativeQuery = true)
+    List<Object[]> getAnnouncementByAnnounId( @Param("announId") Integer announId,@Param("announTypeId") Integer announTypeId, @Param("statusCd") String statusCd);
+
     @Modifying
     @Query(value = "update announcement_master set announ_status=:announStatus, status_cd=:statusCd where announ_id =:announId", nativeQuery = true)
     public int cancelAnnouncement(@Param("announId") Integer announId, @Param("announStatus") String announStatus,@Param("statusCd") String statusCd);

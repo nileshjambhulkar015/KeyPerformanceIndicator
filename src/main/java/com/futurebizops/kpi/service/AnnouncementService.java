@@ -25,7 +25,7 @@ public interface AnnouncementService {
 
     public AnnouncementReponse findAnnouncementById(Integer announId, String statusCd);
 
-    public KPIResponse findAllAnnouncement(Integer announId, String statusCd);
+    public KPIResponse findAllAnnouncement(Integer announId, Integer announTypeId,String statusCd);
 
     public List<AnnouncementTypeResponse> ddAllAnnouncementType(String statusCd);
 }

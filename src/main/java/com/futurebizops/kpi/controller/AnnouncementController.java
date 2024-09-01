@@ -80,8 +80,9 @@ public class AnnouncementController {
     @GetMapping(value = "/all-announ-id")
     public ResponseEntity<KPIResponse> findAllAnnouncement(
             @RequestParam(required = false) Integer announId,
+            @RequestParam(required = false) Integer announTypeId,
             @RequestParam(required = false) String statusCd) {
-        KPIResponse response = announcementService.findAllAnnouncement(announId,statusCd);
+        KPIResponse response = announcementService.findAllAnnouncement(announId,announTypeId,statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
