@@ -15,10 +15,10 @@ public interface AnnouncementRepo extends JpaRepository<AnnouncementEntity, Inte
 
 
     @Query(value = SQLQueryConstants.ANNOUNCEMENT_QUERY, nativeQuery = true)
-    List<Object[]> getAnnouncementDetail( @Param("announFromDate") String announFromDate,@Param("announToDate") String announToDate,@Param("statusCd") String statusCd, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getAnnouncementDetail( @Param("announFromDate") String announFromDate,@Param("announToDate") String announToDate,@Param("announTypeId") Integer announTypeId,@Param("statusCd") String statusCd, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.ANNOUNCEMENT_COUNT_QUERY, nativeQuery = true)
-    Integer getAnnouncementCount(@Param("announFromDate") String announFromDate,@Param("announToDate") String announToDate,@Param("statusCd") String statusCd);
+    Integer getAnnouncementCount(@Param("announFromDate") String announFromDate,@Param("announToDate") String announToDate,@Param("announTypeId") Integer announTypeId,@Param("statusCd") String statusCd);
 
     @Query(value = SQLQueryConstants.ANNOUNCEMENT_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getAnnouncementByAnnounId( @Param("announId") Integer announId, @Param("statusCd") String statusCd);
@@ -28,9 +28,12 @@ public interface AnnouncementRepo extends JpaRepository<AnnouncementEntity, Inte
     public int cancelAnnouncement(@Param("announId") Integer announId, @Param("announStatus") String announStatus,@Param("statusCd") String statusCd);
 
     @Query(value = SQLQueryConstants.ADVANCE_SEARCH_ANNOUNCEMENT_QUERY, nativeQuery = true)
-    List<Object[]> getAdvanceSearchAnnouncementDetail( @Param("announFromDate") String announFromDate,@Param("announToDate") String announToDate,@Param("asAnnounStatus") String asAnnounStatus, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getAdvanceSearchAnnouncementDetail( @Param("announFromDate") String announFromDate,@Param("announToDate") String announToDate,@Param("asAnnounStatus") String asAnnounStatus, @Param("asAnnounTypeId") Integer asAnnounTypeId, @Param("statusCd") String statusCd, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.ADVANCE_SEARCH_ANNOUNCEMENT_COUNT_QUERY, nativeQuery = true)
-    Integer getAdvanceSearcheAnnouncementCount(@Param("announFromDate") String announFromDate,@Param("announToDate") String announToDate, @Param("asAnnounStatus") String asAnnounStatus);
+    Integer getAdvanceSearcheAnnouncementCount(@Param("announFromDate") String announFromDate,@Param("announToDate") String announToDate, @Param("asAnnounStatus") String asAnnounStatus, @Param("asAnnounTypeId") Integer asAnnounTypeId, @Param("statusCd") String statusCd);
+
+    @Query(value = SQLQueryConstants.DD_ANNOUNCEMENT_TYPE_QUERY, nativeQuery = true)
+    List<Object[]> getDDAnnouncementByAnnounId(@Param("statusCd") String statusCd);
 
 }

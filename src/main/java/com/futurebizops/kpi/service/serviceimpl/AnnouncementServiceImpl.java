@@ -3,13 +3,16 @@ package com.futurebizops.kpi.service.serviceimpl;
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.AnnouncementAudit;
 import com.futurebizops.kpi.entity.AnnouncementEntity;
+import com.futurebizops.kpi.entity.AnnouncementTypeEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.AnnouncementAuditRepo;
 import com.futurebizops.kpi.repository.AnnouncementRepo;
+import com.futurebizops.kpi.repository.AnnouncementTypeRepo;
 import com.futurebizops.kpi.request.AnnouncementCreateRequest;
 import com.futurebizops.kpi.request.AnnouncementUpdateRequest;
 import com.futurebizops.kpi.request.advsearch.AnnouncementAdvSearch;
 import com.futurebizops.kpi.response.AnnouncementReponse;
+import com.futurebizops.kpi.response.AnnouncementTypeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.AnnouncementService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
@@ -36,6 +39,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Autowired
     AnnouncementAuditRepo announcementAuditRepo;
+
+    @Autowired
+    AnnouncementTypeRepo announcementTypeRepo;
 
     @Override
     public KPIResponse saveAnnouncement(AnnouncementCreateRequest announcementCreateRequest) {
@@ -71,11 +77,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public KPIResponse findAllAnnouncements(String announFromDate, String announToDate,String statusCd,Pageable requestPageable) {
+    public KPIResponse findAllAnnouncements(String announFromDate, String announToDate,Integer announTypeId,String statusCd,Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
 
         announFromDate = StringUtils.isNotEmpty(announFromDate) ? announFromDate : null;
+        announTypeId = (null!=announTypeId)?announTypeId:null;
 
         announToDate = StringUtils.isNotEmpty(announToDate) ? announToDate : null;
         Integer pageSize = requestPageable.getPageSize();
@@ -87,8 +94,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = announcementRepo.getAnnouncementCount(announFromDate,announToDate,statusCd);
-        List<Object[]> departmentData = announcementRepo.getAnnouncementDetail(announFromDate,announToDate,statusCd,pageSize, pageOffset);
+        Integer totalCount = announcementRepo.getAnnouncementCount(announFromDate,announToDate,announTypeId,statusCd);
+        List<Object[]> departmentData = announcementRepo.getAnnouncementDetail(announFromDate,announToDate,announTypeId,statusCd,pageSize, pageOffset);
 
         List<AnnouncementReponse> announcementReponses = departmentData.stream().map(AnnouncementReponse::new).collect(Collectors.toList());
 
@@ -102,12 +109,23 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public KPIResponse advSearchAnnouncementDetails(AnnouncementAdvSearch announcementAdvSearch, Pageable requestPageable) {
-        String announFromDate = StringUtils.isNotEmpty(announcementAdvSearch.getAnnounFromDate()) ? announcementAdvSearch.getAnnounFromDate() : null;
+        String statusCd=null;
+        String announFromDate = StringUtils.isNotEmpty(announcementAdvSearch.getAsAnnounFromDate()) ? announcementAdvSearch.getAsAnnounFromDate() : null;
 
-        String announToDate = StringUtils.isNotEmpty(announcementAdvSearch.getAnnounToDate()) ? announcementAdvSearch.getAnnounToDate() : null;
+        System.out.println("announFromDate : "+announFromDate);
 
+        String announToDate = StringUtils.isNotEmpty(announcementAdvSearch.getAsAnnounToDate()) ? announcementAdvSearch.getAsAnnounToDate() : null;
+
+        System.out.println("announToDate : "+announToDate);
         String asAnnounStatus = StringUtils.isNotEmpty(announcementAdvSearch.getAsAnnounStatus()) ? announcementAdvSearch.getAsAnnounStatus() : null;
 
+        Integer asAnnounTypeId = (null != announcementAdvSearch.getAsAnnounTypeId() ? announcementAdvSearch.getAsAnnounTypeId() : null);
+
+        if(null != asAnnounStatus && asAnnounStatus.equalsIgnoreCase("Cancel")){
+            statusCd = "I";
+        } else {
+            statusCd = "A";
+        }
 
         String sortName = null;
         //  String sortDirection = null;
@@ -120,8 +138,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = announcementRepo.getAdvanceSearcheAnnouncementCount(announFromDate,announToDate, asAnnounStatus);
-        List<Object[]> complaintData = announcementRepo.getAdvanceSearchAnnouncementDetail(announFromDate,announToDate, asAnnounStatus, pageSize, pageOffset);
+        Integer totalCount = announcementRepo.getAdvanceSearcheAnnouncementCount(announFromDate,announToDate, asAnnounStatus,asAnnounTypeId,statusCd);
+        List<Object[]> complaintData = announcementRepo.getAdvanceSearchAnnouncementDetail(announFromDate,announToDate, asAnnounStatus,asAnnounTypeId,statusCd,+ pageSize, pageOffset);
 
         List<AnnouncementReponse> announcementReponses = complaintData.stream().map(AnnouncementReponse::new).collect(Collectors.toList());
         announcementReponses = announcementReponses.stream()
@@ -168,6 +186,28 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return kpiResponse;
     }
 
+    @Override
+    public List<AnnouncementTypeResponse> ddAllAnnouncementType(String statusCd) {
+        KPIResponse kpiResponse = new KPIResponse();
+        List<Object[]> announcementData = announcementRepo.getDDAnnouncementByAnnounId(statusCd);
+        if (announcementData.size() > 0) {
+            List<AnnouncementTypeResponse> announcementReponses = announcementData.stream().map(AnnouncementTypeResponse::new).collect(Collectors.toList());
+
+            return announcementReponses;
+
+        }
+
+        return null;
+    }
+
+
+    private String getAnnounceTypeName(Integer announTypeId){
+        Optional<AnnouncementTypeEntity> optionalAnnouncementTypeEntity = announcementTypeRepo.findById(announTypeId);
+        if(optionalAnnouncementTypeEntity.isPresent()){
+            return optionalAnnouncementTypeEntity.get().getAnnounTypeName();
+        }
+        return null;
+    }
 
     private AnnouncementEntity convertAnnouncementCreateRequestToEntity(AnnouncementCreateRequest announcementCreateRequest) {
         Instant annountartDateTime = StringUtils.isNotEmpty(announcementCreateRequest.getAnnounStartDate())? DateTimeUtils.convertResolveDateStringToInstant(announcementCreateRequest.getAnnounStartDate()):null;
@@ -175,7 +215,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
 
         AnnouncementEntity announcementEntity = new AnnouncementEntity();
-
+announcementEntity.setAnnounTypeId(announcementCreateRequest.getAnnounTypeId());
+      announcementEntity.setAnnounTypeName(getAnnounceTypeName(announcementCreateRequest.getAnnounTypeId()));
         announcementEntity.setAnnounStartDate(annountartDateTime);
         announcementEntity.setAnnounEndDate(announEndDateTime);
         announcementEntity.setAnnounCreatedByEmpId(announcementCreateRequest.getAnnounCreatedByEmpId());

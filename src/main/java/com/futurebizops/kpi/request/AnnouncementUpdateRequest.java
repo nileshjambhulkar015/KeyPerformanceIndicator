@@ -10,6 +10,9 @@ public class AnnouncementUpdateRequest {
     @Schema(example = "1", description = "This field is used for meeting id")
     private Integer announId;
 
+    @Schema(example = "1", description = "This field is used for meeting id")
+    private Integer announTypeId;
+
     @Schema(example = "2023-10-01", description = "This field is used for department id")
     private String announStartDate;
 

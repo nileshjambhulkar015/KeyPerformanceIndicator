@@ -122,7 +122,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
         for(AnnouncementTypeEntity announcementTypeEntity : announcementTypeEntities){
             announcementTypeResponse = new AnnouncementTypeResponse();
             if("A".equalsIgnoreCase(announcementTypeEntity.getStatusCd())) {
-                announcementTypeResponse.setAnnonTypeId(announcementTypeEntity.getAnnounTypeId());
+                announcementTypeResponse.setAnnounTypeId(announcementTypeEntity.getAnnounTypeId());
                 announcementTypeResponse.setAnnounTypeName(announcementTypeEntity.getAnnounTypeName());
                 announcementTypeResponse.setRemark(announcementTypeEntity.getRemark());
                 announcementTypeResponse.setStatusCd(announcementTypeEntity.getStatusCd());
@@ -141,7 +141,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
                 AnnouncementTypeEntity announcementType = optionalAnnouncementTypeEntity.get();
 
                  announcementTypeResponse = new AnnouncementTypeResponse();
-                announcementTypeResponse.setAnnonTypeId(announcementType.getAnnounTypeId());
+                announcementTypeResponse.setAnnounTypeId(announcementType.getAnnounTypeId());
                 announcementTypeResponse.setAnnounTypeName(announcementType.getAnnounTypeName());
                 announcementTypeResponse.setRemark(announcementType.getRemark());
                 announcementTypeResponse.setStatusCd(announcementType.getStatusCd());

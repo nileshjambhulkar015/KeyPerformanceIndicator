@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class AnnouncementReponse {
 
     private Integer announId;
+
+    private Integer announTypeId;
+    private String announTypeName;
     private String announStartDate;
     private String announEndDate;
     private Integer announCreatedByEmpId;
@@ -31,23 +35,26 @@ public class AnnouncementReponse {
     private String statusCd;
 
     public AnnouncementReponse(Object[] objects){
+
         announId=Integer.parseInt(String.valueOf(objects[0]));
-        announStartDate=String.valueOf(objects[1]);
-        announEndDate=String.valueOf(objects[2]);
-        announCreatedByEmpId=Integer.parseInt(String.valueOf(objects[3]));
-        announCreatedByEmpEId=String.valueOf(objects[4]);
-        announCreatedByEmpName=String.valueOf(objects[5]);
-        announCreatedByRoleId=Integer.parseInt(String.valueOf(objects[6]));
-        announCreatedByRoleName=String.valueOf(objects[7]);
-        announCreatedByDeptId=Integer.parseInt(String.valueOf(objects[8]));
-        announCreatedByDeptName=String.valueOf(objects[9]);
-        announCreatedByDesigId=Integer.parseInt(String.valueOf(objects[10]));
-        announCreatedByDesigName=String.valueOf(objects[11]);
-        announVenue=String.valueOf(objects[12]);
-        announTitle=String.valueOf(objects[13]);
-        announDescription=String.valueOf(objects[14]);
-        announStatus=String.valueOf(objects[15]);
-        remark=String.valueOf(objects[16]);
-        statusCd=String.valueOf(objects[17]);
+        announTypeId=Integer.parseInt(String.valueOf(objects[1]));
+        announTypeName=String.valueOf(objects[2]);
+        announStartDate=String.valueOf(objects[3]);
+        announEndDate=String.valueOf(objects[4]);
+        announCreatedByEmpId=Integer.parseInt(String.valueOf(objects[5]));
+        announCreatedByEmpEId=String.valueOf(objects[6]);
+        announCreatedByEmpName=String.valueOf(objects[7]);
+        announCreatedByRoleId=Integer.parseInt(String.valueOf(objects[8]));
+        announCreatedByRoleName=String.valueOf(objects[9]);
+        announCreatedByDeptId=Integer.parseInt(String.valueOf(objects[10]));
+        announCreatedByDeptName=String.valueOf(objects[11]);
+        announCreatedByDesigId=Integer.parseInt(String.valueOf(objects[12]));
+        announCreatedByDesigName=String.valueOf(objects[13]);
+        announVenue=String.valueOf(objects[14]);
+        announTitle=String.valueOf(objects[15]);
+        announDescription=String.valueOf(objects[16]);
+        announStatus=String.valueOf(objects[17]);
+        remark=String.valueOf(objects[18]);
+        statusCd=String.valueOf(objects[19]);
     }
 }

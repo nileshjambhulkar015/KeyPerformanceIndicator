@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AnnouncementTypeResponse {
 
-    private Integer annonTypeId;
+    private Integer announTypeId;
     private String announTypeName;
     private String remark;
     private String statusCd;
 
     public AnnouncementTypeResponse(Object[] objects){
-        annonTypeId=Integer.parseInt(String.valueOf(objects[0]));
+        announTypeId=Integer.parseInt(String.valueOf(objects[0]));
         announTypeName =String.valueOf(objects[1]);
         remark=String.valueOf(objects[2]);
         statusCd=String.valueOf(objects[3]);

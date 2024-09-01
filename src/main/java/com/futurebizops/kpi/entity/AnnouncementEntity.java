@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,12 @@ public class AnnouncementEntity extends AuditEnabledEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name =  "announ_id")
     private Integer announId;
+
+    @Column(name =  "announ_type_id")
+    private Integer announTypeId;
+
+    @Column(name =  "announ_type_name")
+    private String announTypeName;
 
     @Column(name = "announ_start_date")
     private Instant announStartDate;

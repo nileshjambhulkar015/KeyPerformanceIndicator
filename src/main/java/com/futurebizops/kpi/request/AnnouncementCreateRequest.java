@@ -10,10 +10,15 @@ import javax.persistence.Column;
 @ToString
 public class AnnouncementCreateRequest {
 
-    @Schema(example = "2023-10-01", description = "This field is used for department id")
+    @Schema(example = "1", description = "This field is used for meeting id")
+    private Integer announTypeId;
+
+    @Schema(example = "2024-08-30T14:49", description = "This field is used for department id")
     private String announStartDate;
 
-    @Schema(example = "2023-10-01", description = "This field is used for designation name")
+
+
+    @Schema(example = "2024-08-30T14:49", description = "This field is used for designation name")
     private String announEndDate;
 
     @Schema(example = "1", description = "This field is used for designation remark")

@@ -48,11 +48,11 @@ public class AnnouncementTypeController {
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> findAnnouncementTypeSearch(
-            @RequestParam(required = false) Integer annonTypeId,
-            @RequestParam(required = false) String annonTypeName,
+            @RequestParam(required = false) Integer announTypeId,
+            @RequestParam(required = false) String announTypeName,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = announcementTypeService.findAnnouncementTypeSearch(annonTypeId, annonTypeName, statusCd, pageable);
+        KPIResponse response = announcementTypeService.findAnnouncementTypeSearch(announTypeId, announTypeName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

@@ -5,6 +5,7 @@ import com.futurebizops.kpi.request.AnnouncementCreateRequest;
 import com.futurebizops.kpi.request.AnnouncementUpdateRequest;
 import com.futurebizops.kpi.request.advsearch.AnnouncementAdvSearch;
 import com.futurebizops.kpi.response.AnnouncementReponse;
+import com.futurebizops.kpi.response.AnnouncementTypeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.AnnouncementService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -49,9 +52,10 @@ public class AnnouncementController {
     public ResponseEntity<KPIResponse> findAllAnnouncements(
             @RequestParam(required = false) String announFromDate,
             @RequestParam(required = false) String announToDate,
+            @RequestParam(required = false) Integer announTypeId,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = announcementService.findAllAnnouncements(announFromDate,announToDate,statusCd, pageable);
+        KPIResponse response = announcementService.findAllAnnouncements(announFromDate,announToDate,announTypeId,statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -78,6 +82,14 @@ public class AnnouncementController {
             @RequestParam(required = false) Integer announId,
             @RequestParam(required = false) String statusCd) {
         KPIResponse response = announcementService.findAllAnnouncement(announId,statusCd);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    @GetMapping(value = "/dd-announ-all")
+    public ResponseEntity<List<AnnouncementTypeResponse>> ddAllAnouncementType(
+            @RequestParam(required = false) String statusCd) {
+        List<AnnouncementTypeResponse> response = announcementService.ddAllAnnouncementType(statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
