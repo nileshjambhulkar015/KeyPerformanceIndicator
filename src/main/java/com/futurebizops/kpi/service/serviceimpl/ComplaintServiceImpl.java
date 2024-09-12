@@ -54,12 +54,12 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Autowired
     ComplaintTypeRepo complaintTypeRepo;
 
-    @Value("${complaint-max-no}")
-    private Integer compMaxNumber;
-
-
     @Autowired
     DepartmentRepo departmentRepo;
+
+
+    @Value("${complaint-max-no}")
+    private Integer compMaxNumber;
 
     @Autowired
     EmailUtils emailUtils;
@@ -69,6 +69,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public KPIResponse saveComplaint(ComplaintCreateRequest complaintCreateRequest) {
+        System.out.println("complaintCreateRequest :"+complaintCreateRequest.getDeptId());
         String complaintId = "COMP00" + getRandomNumber();
         Optional<ComplaintEntity> complaintEntityOptional = complaintRepo.findByCompIdAndCompStatusEqualsIgnoreCase(complaintId, "Pending");
         if (complaintEntityOptional.isPresent()) {
@@ -86,15 +87,16 @@ public class ComplaintServiceImpl implements ComplaintService {
 
             Optional<ComplaintTypeEntity>  optionalComplaintType =complaintTypeRepo.findByDeptId(complaintEntity.getDeptId());
 
+            Optional<DepartmentEntity>  optionalDepartmentEntity =departmentRepo.findById(complaintEntity.getDeptId());
 
             String messageBody = "<html><body>  Complaint is register with complaint id :"+complaintId+" <br><br>" +
                     "Complaint details : "+complaintEntity.getCompDesc()+ "</body></html>";
 
             //Send mail
-            emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
+        //    emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
 
             //send request complaint raised department also
-            emailUtils.sendEmail(optionalComplaintType.get().getDeptMailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
+            emailUtils.sendEmail(optionalDepartmentEntity.get().getDeptMailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
 
             log.info("");
             return KPIResponse.builder()

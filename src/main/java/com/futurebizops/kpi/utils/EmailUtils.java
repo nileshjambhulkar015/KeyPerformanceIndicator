@@ -24,6 +24,7 @@ public class EmailUtils {
     public void sendEmail(String senderMailId,String mailSubject, String htmlBody){
         MimeMessage message = javaMailSender.createMimeMessage();
         try{
+            System.out.println("Sender Mail id : "+ senderMailId);
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(senderMailId);
             helper.setFrom("akshay@futurebizops.com");

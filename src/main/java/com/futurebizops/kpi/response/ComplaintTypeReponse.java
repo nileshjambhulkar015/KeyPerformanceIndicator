@@ -15,7 +15,6 @@ public class ComplaintTypeReponse {
     private String compTypeName;
     private Integer compTypeDeptId;
     private String deptName;
-    private String deptMailId;
     private String remark;
     private String statusCd;
 
@@ -26,8 +25,8 @@ public class ComplaintTypeReponse {
         compTypeDeptId=Integer.parseInt(String.valueOf(objects[2]));
 
         deptName=String.valueOf(objects[3]);
-        deptMailId=String.valueOf(objects[4]);
-        remark=String.valueOf(objects[5]);
-        statusCd=String.valueOf(objects[6]);
+
+        remark=String.valueOf(objects[4]);
+        statusCd=String.valueOf(objects[5]);
     }
 }

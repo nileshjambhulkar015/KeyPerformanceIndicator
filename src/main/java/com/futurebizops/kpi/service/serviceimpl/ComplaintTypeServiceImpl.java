@@ -137,7 +137,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     private ComplaintTypeEntity convertComplaintTypeCreateRequestToEntity(ComplaintTypeCreateRequest compTypeCreateRequest) {
         ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();
         complaintTypeEntity.setDeptId(compTypeCreateRequest.getDeptId());
-        complaintTypeEntity.setDeptMailId(compTypeCreateRequest.getDeptMailId());
+
         complaintTypeEntity.setCompTypeName(compTypeCreateRequest.getCompTypeName());
         complaintTypeEntity.setRemark(compTypeCreateRequest.getRemark());
         complaintTypeEntity.setStatusCd(compTypeCreateRequest.getStatusCd());
@@ -149,7 +149,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
         ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();
         complaintTypeEntity.setCompTypeId(complaintTypeUpdateRequest.getCompTypeId());
         complaintTypeEntity.setDeptId(complaintTypeUpdateRequest.getDeptId());
-        complaintTypeEntity.setDeptMailId(complaintTypeUpdateRequest.getDeptMailId());
+
         complaintTypeEntity.setCompTypeName(complaintTypeUpdateRequest.getCompTypeName());
         complaintTypeEntity.setRemark(complaintTypeUpdateRequest.getRemark());
         complaintTypeEntity.setStatusCd(complaintTypeUpdateRequest.getStatusCd());

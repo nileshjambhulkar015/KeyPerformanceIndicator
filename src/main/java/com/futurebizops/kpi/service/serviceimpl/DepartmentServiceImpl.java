@@ -149,6 +149,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             departmentReponse = new DepartmentReponse();
             departmentReponse.setDeptId(departmentEntity.getDeptId());
             departmentReponse.setDeptName(departmentEntity.getDeptName());
+            departmentReponse.setDeptMailId(departmentEntity.getDeptMailId());
             departmentReponse.setRemark(departmentEntity.getRemark());
             departmentReponse.setStatusCd(departmentEntity.getStatusCd());
             departmentReponses.add(departmentReponse);
@@ -253,6 +254,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         DepartmentEntity departmentEntity = new DepartmentEntity();
 
         departmentEntity.setDeptName(departmentCreateRequest.getDeptName());
+        departmentEntity.setDeptMailId(departmentCreateRequest.getDeptMailId());
         departmentEntity.setRemark(departmentCreateRequest.getRemark());
         departmentEntity.setStatusCd(departmentCreateRequest.getStatusCd());
         departmentEntity.setCreatedUserId(departmentCreateRequest.getEmployeeId());
@@ -263,6 +265,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         DepartmentEntity departmentEntity = new DepartmentEntity();
         departmentEntity.setDeptId(departmentUpdateRequest.getDeptId());
         departmentEntity.setDeptName(departmentUpdateRequest.getDeptName());
+        departmentEntity.setDeptMailId(departmentUpdateRequest.getDeptMailId());
         departmentEntity.setRemark(departmentUpdateRequest.getRemark());
         departmentEntity.setStatusCd(departmentUpdateRequest.getStatusCd());
         departmentEntity.setCreatedUserId(departmentUpdateRequest.getEmployeeId());

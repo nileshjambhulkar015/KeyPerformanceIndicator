@@ -12,6 +12,9 @@ public class DepartmentUpdateRequest {
     @Schema(example = "HR and Admin", description = "This field is used for department name")
     private String deptName;
 
+    @Schema(example = "hr@futurebizos.com", description = "This field is used for department name")
+    private String deptMailId;
+
     @Schema(example = "This is remark", description = "This field is used for department remark")
     private String remark;
 

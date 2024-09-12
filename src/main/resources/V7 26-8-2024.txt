@@ -975,6 +975,9 @@ create table announcement_type(
             lst_updt_user_id VARCHAR(20) null
         );
 
+        alter table department add column dept_mail_id VARCHAR(100);
+        alter table department_audit  add column dept_mail_id VARCHAR(100);
+
     /*
 
                insert into roles(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(1,'Admin','Added Admin role','A','admin');

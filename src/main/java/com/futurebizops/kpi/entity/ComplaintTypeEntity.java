@@ -29,9 +29,6 @@ public class ComplaintTypeEntity extends AuditEnabledEntity {
     @Column(name = "dept_id")
     private Integer deptId;
 
-    @Column(name = "dept_mail_id")
-    private String deptMailId;
-
     @Column(name = "comp_type_NAME")
     private String compTypeName;
 

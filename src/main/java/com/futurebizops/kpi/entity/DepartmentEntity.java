@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +28,10 @@ public class DepartmentEntity extends AuditEnabledEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dept_id")
     private Integer deptId;
+
+
+    @Column(name = "dept_mail_id")
+    private String deptMailId;
 
     @Column(name = "dept_name")
     private String deptName;
