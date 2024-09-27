@@ -105,6 +105,12 @@ public class EmployeeKppMasterEntity extends AuditEnabledEntity {
     @Column(name = "gm_remark")
     private String gmRemark;
 
+    @Column(name = "avg_total_overall_rating")
+    private String avgTotalOverallRating;
+
+    @Column(name = "avg_total_overall_achivement_per")
+    private String avgTotalOverallPer;
+
     @Column(name = "remark")
     private String remark;
 

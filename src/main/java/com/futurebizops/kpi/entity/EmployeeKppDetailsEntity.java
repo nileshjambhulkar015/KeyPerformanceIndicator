@@ -85,6 +85,14 @@ public class EmployeeKppDetailsEntity extends AuditEnabledEntity {
     @Column(name = "ekpp_gm_overall_task_comp")
     private String gmOverallTaskComp;
 
+    @Column(name = "avg_overall_rating")
+    private String avgOverallRating;
+
+    @Column(name = "avg_overall_achivement_per")
+    private String avgOverallPer;
+
+
+
     @Column(name = "status_cd")
     private String statusCd;
 }

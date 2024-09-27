@@ -71,26 +71,26 @@ public class CumulativeServiceImpl implements CumulativeService {
             if(employeeDetail.size()>0) {
                 List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
 
-                Integer sumOfEmployeeRatings = 0;
-                Integer sumOfHodRatings = 0;
-                Integer sumOfGMRatings = 0;
+                Double sumOfEmployeeRatings = 0.0;
+                Double sumOfHodRatings = 0.0;
+                Double sumOfGMRatings = 0.0;
 
-                Integer cummulativeRatings = 0;
-                Float avgCummulativeRatings = 0.0f;
+                Double cummulativeRatings = 0.0;
+                Double avgCummulativeRatings = 0.0;
                 for (EmployeeKppStatusResponse statusResponse : employeeKppStatusResponses) {
-                    Integer sumOfRatings = 0;
-                    sumOfRatings = Integer.parseInt(statusResponse.getEmpOverallAchive()) + Integer.parseInt(statusResponse.getHodOverallAchieve()) + Integer.parseInt(statusResponse.getGmOverallAchieve());
+                    Double sumOfRatings = 0.0;
+                    sumOfRatings = Double.parseDouble(statusResponse.getEmpOverallAchive()) + Double.parseDouble(statusResponse.getHodOverallAchieve()) + Double.parseDouble(statusResponse.getGmOverallAchieve());
                     statusResponse.setSumOfRatings(sumOfRatings);
 
-                    sumOfEmployeeRatings += Integer.parseInt(statusResponse.getEmpOverallAchive());
-                    sumOfHodRatings += Integer.parseInt(statusResponse.getHodOverallAchieve());
-                    sumOfGMRatings += Integer.parseInt(statusResponse.getGmOverallAchieve());
+                    sumOfEmployeeRatings += Double.parseDouble(statusResponse.getEmpOverallAchive());
+                    sumOfHodRatings += Double.parseDouble(statusResponse.getHodOverallAchieve());
+                    sumOfGMRatings += Double.parseDouble(statusResponse.getGmOverallAchieve());
 
                     // statusResponse.setEmpOverallAchive(String.valueOf(sumOfEmployeeRatings));
                     cummulativeRatings += sumOfRatings;
 
                 }
-                avgCummulativeRatings = Float.valueOf(cummulativeRatings / employeeKppStatusResponses.size());
+                avgCummulativeRatings = Double.valueOf(cummulativeRatings / employeeKppStatusResponses.size());
                 employeeKppStatusResponses = employeeKppStatusResponses.stream()
                         .sorted(Comparator.comparing(EmployeeKppStatusResponse::getEkppMonth))
                         .collect(Collectors.toList());

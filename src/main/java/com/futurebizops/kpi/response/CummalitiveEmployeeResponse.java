@@ -7,13 +7,13 @@ import java.util.List;
 
 @Data
 public class CummalitiveEmployeeResponse {
-    private Integer sumOfEmployeeRatings;
-    private Integer sumOfHodRatings;
-    private Integer sumOfGMRatings;
+    private Double sumOfEmployeeRatings;
+    private Double sumOfHodRatings;
+    private Double sumOfGMRatings;
 
-    private Integer cummulativeRatings;
+    private Double cummulativeRatings;
     private Integer totalMonths;
-    private Float avgCummulativeRatings;
+    private Double avgCummulativeRatings;
 
     PageImpl<EmployeeKppStatusResponse> employeeKppStatusResponses;
 }

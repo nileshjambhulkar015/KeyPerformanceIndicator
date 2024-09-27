@@ -268,6 +268,8 @@ create table company_master(
     );
 
 
+
+
     create table department_audit(
         DEPT_AUD_ID serial PRIMARY key,
         DEPT_ID INTEGER,
@@ -455,6 +457,142 @@ create table company_master(
                 lst_updt_user_id VARCHAR(20) null
             );
 
+
+create table announcement_type(
+        announ_type_ID serial  PRIMARY key,
+        announ_type_NAME VARCHAR(100),
+        REMARK VARCHAR(200),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table announcement_type_audit(
+        announ_type_AUD_ID serial PRIMARY key,
+        announ_type_ID INTEGER,
+       announ_type_NAME VARCHAR(100),
+        REMARK VARCHAR(200),
+        STATUS_CD VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
+
+
+    create table announcement_master(
+           announ_id serial PRIMARY key,
+           announ_type_ID Integer,
+            announ_type_name VARCHAR(100),
+           announ_start_date TIMESTAMP null,
+           announ_end_date TIMESTAMP null,
+            announ_created_by_emp_id INTEGER,
+            announ_created_by_emp_eid VARCHAR(50),
+            announ_created_by_emp_name VARCHAR(150),
+            announ_created_by_emp_role_id INTEGER,
+            announ_created_by_emp_role_name VARCHAR(50),
+            announ_created_by_emp_dept_id INTEGER,
+            announ_created_by_emp_dept_name VARCHAR(50),
+            announ_created_by_emp_desig_id INTEGER,
+            announ_created_by_emp_desig_name VARCHAR(50),
+            announ_venue VARCHAR(250),
+            announ_title VARCHAR(250),
+            announ_description VARCHAR(550),
+            announ_status VARCHAR(50),
+            REMARK VARCHAR(200),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table announcement_master_audit(
+           announ_aud_id serial PRIMARY key,
+           announ_id INTEGER,
+            announ_type_ID Integer,
+           announ_type_name VARCHAR(100),
+           announ_start_date TIMESTAMP null,
+           announ_end_date TIMESTAMP null,
+            announ_created_by_emp_id INTEGER,
+            announ_created_by_emp_eid VARCHAR(50),
+            announ_created_by_emp_name VARCHAR(150),
+            announ_created_by_emp_role_id INTEGER,
+            announ_created_by_emp_role_name VARCHAR(50),
+            announ_created_by_emp_dept_id INTEGER,
+            announ_created_by_emp_dept_name VARCHAR(50),
+            announ_created_by_emp_desig_id INTEGER,
+            announ_created_by_emp_desig_name VARCHAR(50),
+            announ_venue VARCHAR(250),
+            announ_title VARCHAR(250),
+            announ_description VARCHAR(550),
+            announ_status VARCHAR(50),
+            REMARK VARCHAR(200),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+
+    create table meeting_master(
+           meet_id serial PRIMARY key,
+           meet_start_date TIMESTAMP null,
+           meet_end_date TIMESTAMP null,
+            meet_created_by_emp_id INTEGER,
+            meet_created_by_emp_eid VARCHAR(50),
+            meet_created_by_emp_name VARCHAR(150),
+            meet_created_by_emp_role_id INTEGER,
+            meet_created_by_emp_role_name VARCHAR(50),
+            meet_created_by_emp_dept_id INTEGER,
+            meet_created_by_emp_dept_name VARCHAR(50),
+            meet_created_by_emp_desig_id INTEGER,
+            meet_created_by_emp_desig_name VARCHAR(50),
+            meet_venue VARCHAR(250),
+            meet_title VARCHAR(250),
+            meet_description VARCHAR(550),
+            meet_status VARCHAR(50),
+            REMARK VARCHAR(200),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
+
+    create table meeting_master_audit(
+           meet_aud_id serial PRIMARY key,
+           meet_id INTEGER,
+           meet_start_date TIMESTAMP null,
+           meet_end_date TIMESTAMP null,
+            meet_created_by_emp_id INTEGER,
+            meet_created_by_emp_eid VARCHAR(50),
+            meet_created_by_emp_name VARCHAR(150),
+            meet_created_by_emp_role_id INTEGER,
+            meet_created_by_emp_role_name VARCHAR(50),
+            meet_created_by_emp_dept_id INTEGER,
+            meet_created_by_emp_dept_name VARCHAR(50),
+            meet_created_by_emp_desig_id INTEGER,
+            meet_created_by_emp_desig_name VARCHAR(50),
+            meet_venue VARCHAR(250),
+            meet_title VARCHAR(250),
+            meet_description VARCHAR(550),
+            meet_status VARCHAR(50),
+            REMARK VARCHAR(200),
+            STATUS_CD VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+            lst_updt_ts TIMESTAMP null,
+            lst_updt_user_id VARCHAR(20) null
+        );
+
     create table employee(
         emp_id serial  PRIMARY key,
         emp_eid VARCHAR(20) ,
@@ -592,6 +730,8 @@ create table company_master(
         lst_updt_user_id VARCHAR(20) null
     );
 
+
+
     create table employee_kpp_master_audit(
         ekpp_aud_mid serial PRIMARY key,
          ekpp_mid INTEGER,
@@ -661,7 +801,6 @@ create table company_master(
         lst_updt_ts TIMESTAMP null,
         lst_updt_user_id VARCHAR(20) null
     );
-
 
     create table employee_kpp_details_audit(
         ekpp_aud_did serial PRIMARY key,
@@ -839,144 +978,40 @@ create table company_master(
     );
 
 
-    create table meeting_master(
-           meet_id serial PRIMARY key,
-           meet_start_date TIMESTAMP null,
-           meet_end_date TIMESTAMP null,
-            meet_created_by_emp_id INTEGER,
-            meet_created_by_emp_eid VARCHAR(50),
-            meet_created_by_emp_name VARCHAR(150),
-            meet_created_by_emp_role_id INTEGER,
-            meet_created_by_emp_role_name VARCHAR(50),
-            meet_created_by_emp_dept_id INTEGER,
-            meet_created_by_emp_dept_name VARCHAR(50),
-            meet_created_by_emp_desig_id INTEGER,
-            meet_created_by_emp_desig_name VARCHAR(50),
-            meet_venue VARCHAR(250),
-            meet_title VARCHAR(250),
-            meet_description VARCHAR(550),
-            meet_status VARCHAR(50),
-            REMARK VARCHAR(200),
-            STATUS_CD VARCHAR(10),
-            crte_user_id VARCHAR(20) ,
-            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-            lst_updt_ts TIMESTAMP null,
-            lst_updt_user_id VARCHAR(20) null
-        );
 
-
-    create table meeting_master_audit(
-           meet_aud_id serial PRIMARY key,
-           meet_id INTEGER,
-           meet_start_date TIMESTAMP null,
-           meet_end_date TIMESTAMP null,
-            meet_created_by_emp_id INTEGER,
-            meet_created_by_emp_eid VARCHAR(50),
-            meet_created_by_emp_name VARCHAR(150),
-            meet_created_by_emp_role_id INTEGER,
-            meet_created_by_emp_role_name VARCHAR(50),
-            meet_created_by_emp_dept_id INTEGER,
-            meet_created_by_emp_dept_name VARCHAR(50),
-            meet_created_by_emp_desig_id INTEGER,
-            meet_created_by_emp_desig_name VARCHAR(50),
-            meet_venue VARCHAR(250),
-            meet_title VARCHAR(250),
-            meet_description VARCHAR(550),
-            meet_status VARCHAR(50),
-            REMARK VARCHAR(200),
-            STATUS_CD VARCHAR(10),
-            crte_user_id VARCHAR(20) ,
-            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-            lst_updt_ts TIMESTAMP null,
-            lst_updt_user_id VARCHAR(20) null
-        );
-
-alter table complaint_type add column dept_mail_id VARCHAR(200);
-alter table complaint_type_audit add column dept_mail_id VARCHAR(200);
-
-create table announcement_type(
-        announ_type_ID serial  PRIMARY key,
-        announ_type_NAME VARCHAR(100),
-        REMARK VARCHAR(200),
-        STATUS_CD VARCHAR(10),
-        crte_user_id VARCHAR(20) ,
-        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-        lst_updt_ts TIMESTAMP null,
-        lst_updt_user_id VARCHAR(20) null
-    );
-
-
-    create table announcement_type_audit(
-        announ_type_AUD_ID serial PRIMARY key,
-        announ_type_ID INTEGER,
-       announ_type_NAME VARCHAR(100),
-        REMARK VARCHAR(200),
-        STATUS_CD VARCHAR(10),
-        crte_user_id VARCHAR(20) ,
-        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-        lst_updt_ts TIMESTAMP null,
-        lst_updt_user_id VARCHAR(20) null
-    );
-
-
-    create table announcement_master(
-           announ_id serial PRIMARY key,
-           announ_type_ID Integer,
-            announ_type_name VARCHAR(100),
-           announ_start_date TIMESTAMP null,
-           announ_end_date TIMESTAMP null,
-            announ_created_by_emp_id INTEGER,
-            announ_created_by_emp_eid VARCHAR(50),
-            announ_created_by_emp_name VARCHAR(150),
-            announ_created_by_emp_role_id INTEGER,
-            announ_created_by_emp_role_name VARCHAR(50),
-            announ_created_by_emp_dept_id INTEGER,
-            announ_created_by_emp_dept_name VARCHAR(50),
-            announ_created_by_emp_desig_id INTEGER,
-            announ_created_by_emp_desig_name VARCHAR(50),
-            announ_venue VARCHAR(250),
-            announ_title VARCHAR(250),
-            announ_description VARCHAR(550),
-            announ_status VARCHAR(50),
-            REMARK VARCHAR(200),
-            STATUS_CD VARCHAR(10),
-            crte_user_id VARCHAR(20) ,
-            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-            lst_updt_ts TIMESTAMP null,
-            lst_updt_user_id VARCHAR(20) null
-        );
-
-
-    create table announcement_master_audit(
-           announ_aud_id serial PRIMARY key,
-           announ_id INTEGER,
-            announ_type_ID Integer,
-           announ_type_name VARCHAR(100),
-           announ_start_date TIMESTAMP null,
-           announ_end_date TIMESTAMP null,
-            announ_created_by_emp_id INTEGER,
-            announ_created_by_emp_eid VARCHAR(50),
-            announ_created_by_emp_name VARCHAR(150),
-            announ_created_by_emp_role_id INTEGER,
-            announ_created_by_emp_role_name VARCHAR(50),
-            announ_created_by_emp_dept_id INTEGER,
-            announ_created_by_emp_dept_name VARCHAR(50),
-            announ_created_by_emp_desig_id INTEGER,
-            announ_created_by_emp_desig_name VARCHAR(50),
-            announ_venue VARCHAR(250),
-            announ_title VARCHAR(250),
-            announ_description VARCHAR(550),
-            announ_status VARCHAR(50),
-            REMARK VARCHAR(200),
-            STATUS_CD VARCHAR(10),
-            crte_user_id VARCHAR(20) ,
-            crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-            lst_updt_ts TIMESTAMP null,
-            lst_updt_user_id VARCHAR(20) null
-        );
 
         alter table department add column dept_mail_id VARCHAR(100);
         alter table department_audit  add column dept_mail_id VARCHAR(100);
+
+
+alter table employee_kpp_details add column avg_overall_rating VARCHAR(150);
+alter table employee_kpp_details_audit add column avg_overall_rating VARCHAR(150);
+
+alter table employee_kpp_details add column avg_overall_achivement_per VARCHAR(150);
+alter table employee_kpp_details_audit add column avg_overall_achivement_per VARCHAR(150);
+
+
+alter table employee_kpp_master add column avg_total_overall_rating VARCHAR(150);
+alter table employee_kpp_master_audit add column avg_total_overall_rating VARCHAR(150);
+
+alter table employee_kpp_master add column avg_total_overall_achivement_per VARCHAR(150);
+alter table employee_kpp_master_audit add column avg_total_overall_achivement_per VARCHAR(150);
+
+
+
+alter table report_employee_kpp_details add column avg_overall_rating VARCHAR(150);
+alter table report_employee_kpp_details_audit add column avg_overall_rating VARCHAR(150);
+
+alter table report_employee_kpp_details add column avg_overall_achivement_per VARCHAR(150);
+alter table report_employee_kpp_details_audit add column avg_overall_achivement_per VARCHAR(150);
+
+
+alter table report_employee_kpp_master add column avg_total_overall_rating VARCHAR(150);
+alter table report_employee_kpp_master_audit add column avg_total_overall_rating VARCHAR(150);
+
+alter table report_employee_kpp_master add column avg_total_overall_achivement_per VARCHAR(150);
+alter table report_employee_kpp_master_audit add column avg_total_overall_achivement_per VARCHAR(150);
+
 
     /*
 

@@ -29,7 +29,7 @@ public class EmployeeKppStatusResponse {
 
     private String ekppMonth;
 
-    private Integer sumOfRatings;
+    private Double sumOfRatings;
 
 
     public EmployeeKppStatusResponse(Object[] objects) {
