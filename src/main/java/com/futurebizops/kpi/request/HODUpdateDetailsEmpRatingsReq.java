@@ -2,8 +2,10 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class HODUpdateDetailsEmpRatingsReq {
 
 
@@ -33,6 +35,12 @@ public class HODUpdateDetailsEmpRatingsReq {
 
     @Schema(example = "90", description = "This field is used for Overall Task Completed")
     private String hodOverallTaskComp;
+
+    @Schema(example = "54", description = "This field is used for Employee Key Performance month")
+    String overallRatings;
+
+    @Schema(example = "54", description = "This field is used for Employee Key Performance month")
+    String overallPercentage;
 
     @Schema(example = "e111", description = "This field is used for General Manager KPP status")
     private String employeeId;

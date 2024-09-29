@@ -19,12 +19,12 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     public int updateEmployeeKppDetails(@Param("empId") Integer empId,@Param("ekppMonth") Instant ekppMonth,@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp,@Param("overallRatings") String overallRatings,@Param("overallPercentage") String overallPercentage, @Param("kppId") Integer kppId,@Param("empEId") String empEId,@Param("roleId") Integer roleId, @Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
 
     @Modifying
-    @Query(value = "update employee_kpp_details set ekpp_hod_achived_weight =:ekppAchivedWeight,ekpp_hod_overall_achieve =:ekppOverallAchieve,ekpp_hod_overall_task_comp = :ekppOverallTaskComp where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
-    public int updateEmpApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
+    @Query(value = "update employee_kpp_details set ekpp_hod_achived_weight =:ekppAchivedWeight,ekpp_hod_overall_achieve =:ekppOverallAchieve,ekpp_hod_overall_task_comp = :ekppOverallTaskComp,avg_overall_rating=:overallRatings,avg_overall_achivement_per=:overallPercentage where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
+    public int updateEmpApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp,@Param("overallRatings") String overallRatings,@Param("overallPercentage") String overallPercentage, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 
     @Modifying
-    @Query(value = "update employee_kpp_details set ekpp_gm_achived_weight =:ekppAchivedWeight,ekpp_gm_overall_achieve =:ekppOverallAchieve,ekpp_gm_overall_task_comp = :ekppOverallTaskComp where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
-    public int updateGMApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
+    @Query(value = "update employee_kpp_details set ekpp_gm_achived_weight =:ekppAchivedWeight,ekpp_gm_overall_achieve =:ekppOverallAchieve,ekpp_gm_overall_task_comp = :ekppOverallTaskComp,avg_overall_rating=:overallRatings,avg_overall_achivement_per=:overallPercentage where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
+    public int updateGMApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp,@Param("overallRatings") String overallRatings,@Param("overallPercentage") String overallPercentage, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 
     List<EmployeeKppDetailsEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd);
 

@@ -26,6 +26,7 @@ public class HoDApprovalController {
 
     @PutMapping
     public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceDetails(@RequestBody HODUpdateMasterEmployeeRatingReq empKPPMasterUpdateRequest) {
+        System.out.println("empKPPMasterUpdateRequest : "+empKPPMasterUpdateRequest);
         KPIResponse response = keyPerfParamService.updateHoDApprovalRequest(empKPPMasterUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -240,14 +240,14 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         try {
             for (HODUpdateDetailsEmpRatingsReq paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
 
-                employeeKppDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getHodAchivedWeight(), paramUpdateRequest.getHodOverallAchieve(), paramUpdateRequest.getHodOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
+                employeeKppDetailsRepo.updateEmpApproveOrRejectHod(paramUpdateRequest.getHodAchivedWeight(), paramUpdateRequest.getHodOverallAchieve(), paramUpdateRequest.getHodOverallTaskComp(),paramUpdateRequest.getOverallRatings(),paramUpdateRequest.getOverallPercentage(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
             if ("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getHodKppStatus())) {
                 empKppStatus = "Approved";
             } else if ("Reject".equalsIgnoreCase(empKPPMasterUpdateRequest.getHodKppStatus())) {
                 empKppStatus = "Reject";
             }
-            employeeKppMasterRepo.updateEmpKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getHodTotalAchivedWeight(), empKPPMasterUpdateRequest.getHodTotalOverallAchieve(), empKPPMasterUpdateRequest.getHodTotalOverallTaskComp(), Instant.now(), empKPPMasterUpdateRequest.getHodKppStatus(), empKPPMasterUpdateRequest.getHodRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
+            employeeKppMasterRepo.updateEmpKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getHodTotalAchivedWeight(), empKPPMasterUpdateRequest.getHodTotalOverallAchieve(), empKPPMasterUpdateRequest.getHodTotalOverallTaskComp(),empKPPMasterUpdateRequest.getTotalOverallRatings(),empKPPMasterUpdateRequest.getTotalOverallPercentage(), Instant.now(), empKPPMasterUpdateRequest.getHodKppStatus(), empKPPMasterUpdateRequest.getHodRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -265,14 +265,14 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         String empKppStatus = "In-Progress";
         try {
             for (GMUpdateDetailsEmpRatingsReq paramUpdateRequest : empKPPMasterUpdateRequest.getKppUpdateRequests()) {
-                employeeKppDetailsRepo.updateGMApproveOrRejectHod(paramUpdateRequest.getGmAchivedWeight(), paramUpdateRequest.getGmOverallAchieve(), paramUpdateRequest.getGmOverallTaskComp(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
+                employeeKppDetailsRepo.updateGMApproveOrRejectHod(paramUpdateRequest.getGmAchivedWeight(), paramUpdateRequest.getGmOverallAchieve(), paramUpdateRequest.getGmOverallTaskComp(),paramUpdateRequest.getOverallRatings(),paramUpdateRequest.getOverallPercentage(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpId());
             }
             if ("Approved".equalsIgnoreCase(empKPPMasterUpdateRequest.getGmKppStatus())) {
                 empKppStatus = "Approved";
             } else if ("Reject".equalsIgnoreCase(empKPPMasterUpdateRequest.getGmKppStatus())) {
                 empKppStatus = "Reject";
             }
-            employeeKppMasterRepo.updateGMKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getGmTotalAchivedWeight(), empKPPMasterUpdateRequest.getGmTotalOverallAchieve(), empKPPMasterUpdateRequest.getGmTotalOverallTaskComp(), Instant.now(), empKPPMasterUpdateRequest.getGmKppStatus(), empKPPMasterUpdateRequest.getGmRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
+            employeeKppMasterRepo.updateGMKppApproveOrRejectByHod(empKppStatus, empKPPMasterUpdateRequest.getGmTotalAchivedWeight(), empKPPMasterUpdateRequest.getGmTotalOverallAchieve(), empKPPMasterUpdateRequest.getGmTotalOverallTaskComp(),empKPPMasterUpdateRequest.getTotalOverallRatings(),empKPPMasterUpdateRequest.getTotalOverallPercentage(), Instant.now(), empKPPMasterUpdateRequest.getGmKppStatus(), empKPPMasterUpdateRequest.getGmRemark(), empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
