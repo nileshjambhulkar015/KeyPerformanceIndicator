@@ -35,7 +35,7 @@ public class GMApprovalController {
     }
 
     @Transactional
-    @GetMapping(value = "/report")
+    @GetMapping(value = "/finish")
     public ResponseEntity<KPIResponse> generateEmployeeKppReport(@RequestParam(required = false) Integer empId,@RequestParam(required = false) String statusCd) {
         KPIResponse response = keyPerfParamService.generateEmployeeKppReport(empId, statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);

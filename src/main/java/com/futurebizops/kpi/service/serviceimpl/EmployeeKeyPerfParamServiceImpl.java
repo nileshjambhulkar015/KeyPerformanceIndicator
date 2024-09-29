@@ -346,6 +346,9 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             kppMaster.setGmAchivedWeight(kppMasterEntity.getGmTotalAchivedWeight());
             kppMaster.setGmOverallAchieve(kppMasterEntity.getGmTotalOverallAchieve());
             kppMaster.setGmOverallTaskComp(kppMasterEntity.getGmTotalOverallTaskComp());
+           kppMaster.setAvgTotalOverallRating(kppMasterEntity.getAvgTotalOverallRating());
+           kppMaster.setAvgTotalOverallPer(kppMasterEntity.getAvgTotalOverallPer());
+
             kppMaster.setGmKppAppliedDate(kppMasterEntity.getGmKppAppliedDate());
             kppMaster.setGmKppStatus(kppMasterEntity.getGmKppStatus());
             kppMaster.setGmRemark(kppMasterEntity.getGmRemark());
@@ -382,6 +385,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 detailsEntity.setGmAchivedWeight(employeeKppDetailsEntity.getGmAchivedWeight());
                 detailsEntity.setGmOverallAchieve(employeeKppDetailsEntity.getGmOverallAchieve());
                 detailsEntity.setGmOverallTaskComp(employeeKppDetailsEntity.getGmOverallTaskComp());
+                detailsEntity.setAvgOverallRating(employeeKppDetailsEntity.getAvgOverallRating());
+                detailsEntity.setAvgOverallPer(employeeKppDetailsEntity.getAvgOverallPer());
                 detailsEntity.setStatusCd(employeeKppDetailsEntity.getStatusCd());
                 detailsEntity.setKppOverallTarget(employeeKppDetailsEntity.getKppOverallTarget());
                 detailsEntity.setKppOverallWeightage(employeeKppDetailsEntity.getKppOverallWeightage());
