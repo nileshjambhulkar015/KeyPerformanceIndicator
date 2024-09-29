@@ -236,19 +236,19 @@ public class HODCompletedKPPReport {
 
 
             Cell cell14 = kppRow.createCell(13);
-            Integer totalApprover = 2;
-            Double avgCummRatings = (Double.parseDouble(employeeKppDetailsDto.getEmpOverallAchieve()) +  Double.parseDouble(employeeKppDetailsDto.getGmOverallAchieve()))/totalApprover;
-            cell14.setCellValue(formatter.format(avgCummRatings));
+           // Integer totalApprover = 2;
+           // Double avgCummRatings = (Double.parseDouble(employeeKppDetailsDto.getEmpOverallAchieve()) +  Double.parseDouble(employeeKppDetailsDto.getGmOverallAchieve()))/totalApprover;
+            cell14.setCellValue(employeeKppDetailsDto.getOverallRatings());
             cell14.setCellStyle(wrapTextStyle);
 
-            overallCumulativeRatings +=avgCummRatings;
+          //  overallCumulativeRatings +=avgCummRatings;
 
             Cell cell15 = kppRow.createCell(14);
-            Double avgRatingsPercentage = (avgCummRatings / 5)*100;
-            cell15.setCellValue(formatter.format(avgRatingsPercentage)); // Replace this with your logic to get the cell value
+            //Double avgRatingsPercentage = (avgCummRatings / 5)*100;
+            cell15.setCellValue(employeeKppDetailsDto.getOverallPercentage()); // Replace this with your logic to get the cell value
             cell15.setCellStyle(wrapTextStyle);
 
-            overallCumulativeRatingsPer+=avgRatingsPercentage;
+        //    overallCumulativeRatingsPer+=avgRatingsPercentage;
 
             Cell cell16 = kppRow.createCell(15);
             cell16.setCellValue(employeeKppDetailsDto.getKppRating1()); // Replace this with your logic to get the cell value
@@ -308,22 +308,22 @@ public class HODCompletedKPPReport {
         cell010.setCellStyle(kppTotalRowHeaderStyle);
 
         Cell cell001 = kppTotalRow.createCell(11);
-        Double avgTotalEmpAchiveWeight =Double.parseDouble(response.getTotalEmpAchivedWeight()) / totalKpp;
-        cell001.setCellValue(formatter.format(avgTotalEmpAchiveWeight));
+      //  Double avgTotalEmpAchiveWeight =Double.parseDouble(response.getTotalEmpAchivedWeight()) / totalKpp;
+        cell001.setCellValue(response.getTotalEmpOverallAchieve());
         cell001.setCellStyle(kppTotalRowHeaderStyle);
 
 
         Cell cell003 = kppTotalRow.createCell(12);
         Double avgTotalGMAchiveWeight =Double.parseDouble(response.getTotalGmOverallAchieve()) / totalKpp;
-        cell003.setCellValue(formatter.format(avgTotalGMAchiveWeight));
+        cell003.setCellValue(response.getTotalGmOverallAchieve());
         cell003.setCellStyle(kppTotalRowHeaderStyle);
 
         Cell cell004 = kppTotalRow.createCell(13);
-        cell004.setCellValue(formatter.format(overallCumulativeRatings/totalKpp));
+        cell004.setCellValue(response.getTotalOverallRatings());
         cell004.setCellStyle(kppTotalRowHeaderStyle);
 
         Cell cell005 = kppTotalRow.createCell(14);
-        cell005.setCellValue(formatter.format(overallCumulativeRatingsPer / totalKpp));
+        cell005.setCellValue(response.getTotalOverallPercentage());
         cell005.setCellStyle(kppTotalRowHeaderStyle);
 
 
