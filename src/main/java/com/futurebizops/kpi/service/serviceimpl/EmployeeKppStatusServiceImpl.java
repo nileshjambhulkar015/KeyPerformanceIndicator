@@ -140,6 +140,10 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
                 statusResponse.setTotalGmAchivedWeight(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
                 statusResponse.setTotalGmOverallAchieve(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
                 statusResponse.setTotalGmOverallTaskComp(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
+
+                statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
+                statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
+
                 // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
                 statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
                 statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());

@@ -46,6 +46,7 @@ public class EmployeeKppStatusDto {
 
         employeeKppMasterDto.setTotalOverallRatings(String.valueOf(objects[30]));
         employeeKppMasterDto.setTotalOverallPercentage(String.valueOf(objects[31]));
+
         employeeKppMasterDto.setGmKppStatus(String.valueOf(objects[32]));
 
         employeeKppMasterDto.setGmKppAppliedDate(String.valueOf(objects[33]));

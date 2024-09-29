@@ -42,8 +42,8 @@ public class EmpKppStatusResponse {
     private String totalGmAchivedWeight;
     private String totalGmOverallAchieve;
     private String totalGmOverallTaskComp;
-    String totalOverallRatings;
-    String totalOverallPercentage;
+    private String totalOverallRatings;
+    private String totalOverallPercentage;
     private Instant gmKppAppliedDate;
     private String gmKppStatus;
     private String gmRemark;
