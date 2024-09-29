@@ -43,46 +43,53 @@ public class EmployeeKppStatusDto {
         employeeKppMasterDto.setTotalGmAchivedWeight(String.valueOf(objects[27]));
         employeeKppMasterDto.setTotalGmOverallAchieve(String.valueOf(objects[28]));
         employeeKppMasterDto.setTotalGmOverallTaskComp(String.valueOf(objects[29]));
-        employeeKppMasterDto.setGmKppStatus(String.valueOf(objects[30]));
-        employeeKppMasterDto.setGmKppAppliedDate(String.valueOf(objects[31]));
 
-        employeeKppMasterDto.setGmRemark(String.valueOf(objects[32]));
-        employeeKppMasterDto.setRemark(String.valueOf(objects[33]));
+        employeeKppMasterDto.setTotalOverallRatings(String.valueOf(objects[30]));
+        employeeKppMasterDto.setTotalOverallPercentage(String.valueOf(objects[31]));
+        employeeKppMasterDto.setGmKppStatus(String.valueOf(objects[32]));
 
-        employeeKppDetailsDto.setEkppId(Integer.parseInt(String.valueOf(objects[34])));
-        employeeKppDetailsDto.setKppId(Integer.parseInt(String.valueOf(objects[35])));
-        employeeKppDetailsDto.setEmpAchivedWeight(String.valueOf(objects[36]));
-        employeeKppDetailsDto.setEmpOverallAchieve(String.valueOf(objects[37]));
-        employeeKppDetailsDto.setEmpOverallTaskComp(String.valueOf(objects[38]));
-        employeeKppDetailsDto.setHodEmployeeId(Integer.parseInt(String.valueOf(objects[39])));
-        employeeKppDetailsDto.setHodAchivedWeight(String.valueOf(objects[40]));
-        employeeKppDetailsDto.setHodOverallAchieve(String.valueOf(objects[41]));
-        employeeKppDetailsDto.setHodOverallTaskComp(String.valueOf(objects[42]));
-        employeeKppDetailsDto.setGmEmployeeId(Integer.parseInt(String.valueOf(objects[43])));
-        employeeKppDetailsDto.setGmAchivedWeight(String.valueOf(objects[44]));
-        employeeKppDetailsDto.setGmOverallAchieve(String.valueOf(objects[45]));
-        employeeKppDetailsDto.setGmOverallTaskComp(String.valueOf(objects[46]));
+        employeeKppMasterDto.setGmKppAppliedDate(String.valueOf(objects[33]));
 
-        employeeKppDetailsDto.setKppObjective(String.valueOf(objects[47]));
-        employeeKppDetailsDto.setKppPerformanceIndi(String.valueOf(objects[48]));
-        employeeKppDetailsDto.setKppOverallTarget(String.valueOf(objects[49]));
-        employeeKppDetailsDto.setKppTargetPeriod(String.valueOf(objects[50]));
-        employeeKppDetailsDto.setUomId(Integer.parseInt(String.valueOf(objects[51])));
-        employeeKppDetailsDto.setUomName(String.valueOf(objects[52]));
-        employeeKppDetailsDto.setKppOverallWeightage(String.valueOf(objects[53]));
 
-        employeeKppDetailsDto.setKppRating1(String.valueOf(objects[54]));
-        employeeKppDetailsDto.setKppRating2(String.valueOf(objects[55]));
-        employeeKppDetailsDto.setKppRating3(String.valueOf(objects[56]));
-        employeeKppDetailsDto.setKppRating4(String.valueOf(objects[57]));
-        employeeKppDetailsDto.setKppRating5(String.valueOf(objects[58]));
+        employeeKppMasterDto.setGmRemark(String.valueOf(objects[34]));
+        employeeKppMasterDto.setRemark(String.valueOf(objects[35]));
+
+        employeeKppDetailsDto.setEkppId(Integer.parseInt(String.valueOf(objects[36])));
+        employeeKppDetailsDto.setKppId(Integer.parseInt(String.valueOf(objects[37])));
+        employeeKppDetailsDto.setEmpAchivedWeight(String.valueOf(objects[38]));
+        employeeKppDetailsDto.setEmpOverallAchieve(String.valueOf(objects[39]));
+        employeeKppDetailsDto.setEmpOverallTaskComp(String.valueOf(objects[40]));
+        employeeKppDetailsDto.setHodEmployeeId(Integer.parseInt(String.valueOf(objects[41])));
+        employeeKppDetailsDto.setHodAchivedWeight(String.valueOf(objects[42]));
+        employeeKppDetailsDto.setHodOverallAchieve(String.valueOf(objects[43]));
+        employeeKppDetailsDto.setHodOverallTaskComp(String.valueOf(objects[44]));
+        employeeKppDetailsDto.setGmEmployeeId(Integer.parseInt(String.valueOf(objects[45])));
+        employeeKppDetailsDto.setGmAchivedWeight(String.valueOf(objects[46]));
+        employeeKppDetailsDto.setGmOverallAchieve(String.valueOf(objects[47]));
+        employeeKppDetailsDto.setGmOverallTaskComp(String.valueOf(objects[48]));
+employeeKppDetailsDto.setOverallRatings(String.valueOf(objects[49]));
+employeeKppDetailsDto.setOverallPercentage(String.valueOf(objects[50]));
+
+        employeeKppDetailsDto.setKppObjective(String.valueOf(objects[51]));
+        employeeKppDetailsDto.setKppPerformanceIndi(String.valueOf(objects[52]));
+        employeeKppDetailsDto.setKppOverallTarget(String.valueOf(objects[53]));
+        employeeKppDetailsDto.setKppTargetPeriod(String.valueOf(objects[54]));
+        employeeKppDetailsDto.setUomId(Integer.parseInt(String.valueOf(objects[55])));
+        employeeKppDetailsDto.setUomName(String.valueOf(objects[56]));
+        employeeKppDetailsDto.setKppOverallWeightage(String.valueOf(objects[57]));
+
+        employeeKppDetailsDto.setKppRating1(String.valueOf(objects[58]));
+        employeeKppDetailsDto.setKppRating2(String.valueOf(objects[59]));
+        employeeKppDetailsDto.setKppRating3(String.valueOf(objects[60]));
+        employeeKppDetailsDto.setKppRating4(String.valueOf(objects[61]));
+        employeeKppDetailsDto.setKppRating5(String.valueOf(objects[62]));
 
         //for company details
-        employeeKppMasterDto.setCompanyId(String.valueOf(objects[59]));
-        employeeKppMasterDto.setCompanyName(String.valueOf(objects[60]));
-        employeeKppMasterDto.setCompanyAddress(String.valueOf(objects[61]));
-        employeeKppMasterDto.setCompanyMbNo(String.valueOf(objects[62]));
-        employeeKppMasterDto.setCompanyFinYear(String.valueOf(objects[63]));
+        employeeKppMasterDto.setCompanyId(String.valueOf(objects[63]));
+        employeeKppMasterDto.setCompanyName(String.valueOf(objects[64]));
+        employeeKppMasterDto.setCompanyAddress(String.valueOf(objects[65]));
+        employeeKppMasterDto.setCompanyMbNo(String.valueOf(objects[66]));
+        employeeKppMasterDto.setCompanyFinYear(String.valueOf(objects[67]));
 
     }
 }

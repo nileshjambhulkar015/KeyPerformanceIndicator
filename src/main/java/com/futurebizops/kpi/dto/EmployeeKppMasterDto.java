@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,9 @@ public class EmployeeKppMasterDto {
     private String totalGmAchivedWeight;
     private String totalGmOverallAchieve;
     private String totalGmOverallTaskComp;
+    private String totalOverallRatings;
+    private String totalOverallPercentage;
+
     private String gmKppAppliedDate;
     private String gmKppStatus;
     private String gmRemark;
@@ -77,9 +81,13 @@ public class EmployeeKppMasterDto {
         this.totalGmAchivedWeight=String.valueOf(objects[25]);
         this.totalGmOverallAchieve=String.valueOf(objects[26]);
         this.totalGmOverallTaskComp=String.valueOf(objects[27]);
-        this.gmKppAppliedDate=String.valueOf(objects[28]);
-        this.gmKppStatus=String.valueOf(objects[29]);
-        this.gmRemark=String.valueOf(objects[30]);
-        this.remark=String.valueOf(objects[31]);
+
+       this.totalOverallRatings=String.valueOf(objects[28]);
+       this.totalOverallPercentage=String.valueOf(objects[29]);
+
+        this.gmKppAppliedDate=String.valueOf(objects[30]);
+        this.gmKppStatus=String.valueOf(objects[31]);
+        this.gmRemark=String.valueOf(objects[32]);
+        this.remark=String.valueOf(objects[33]);
     }
 }

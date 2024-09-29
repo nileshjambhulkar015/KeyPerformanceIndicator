@@ -55,6 +55,7 @@ public class EmployeeKppController {
 
     @PutMapping
     public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceParamDetails(@RequestBody EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
+        System.out.println("empKPPMasterUpdateRequest : "+empKPPMasterUpdateRequest);
         KPIResponse response = employeeKeyPerfParamService.updateEmployeeKeyPerfParamDetails(empKPPMasterUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

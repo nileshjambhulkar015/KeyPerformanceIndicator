@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,9 @@ public class EmployeeKppDetailsDto {
     private String gmAchivedWeight;
     private String gmOverallAchieve;
     private String gmOverallTaskComp;
+
+    private String overallRatings;
+    private String overallPercentage;
 
     private String kppObjective;
     private String kppPerformanceIndi;

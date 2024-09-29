@@ -56,6 +56,8 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
                 statusResponse.setTotalEmpAchivedWeight(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
                 statusResponse.setTotalEmpOverallAchieve(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
                 statusResponse.setTotalEmpOverallTaskComp(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
+                statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
+                statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
                 //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
                 statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
                 statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
@@ -63,6 +65,7 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
                 statusResponse.setTotalHodAchivedWeight(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
                 statusResponse.setTotalHodOverallAchieve(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
                 statusResponse.setTotalHodOverallTaskComp(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
+
                 //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
                 statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
                 statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
