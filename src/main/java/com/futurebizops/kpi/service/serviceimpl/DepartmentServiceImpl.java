@@ -202,8 +202,9 @@ public class DepartmentServiceImpl implements DepartmentService {
                         currentRow = rowIndex;
                         DepartmentExcelReadData model = new DepartmentExcelReadData();
                         model.setDeptName(row.getCell(0).getStringCellValue());
-                        model.setRemark(row.getCell(1).getStringCellValue());
-                        model.setEmployeeId(row.getCell(2).getStringCellValue().trim());
+                        model.setDeptMailId(row.getCell(1).getStringCellValue());
+                        model.setRemark(row.getCell(2).getStringCellValue());
+                        model.setEmployeeId(row.getCell(3).getStringCellValue().trim());
 
                         model.setStatusCd("A");
                         departmentData.add(model);
@@ -211,7 +212,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 }
                 workbook.close();
             } catch (Exception ex) {
-                log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile()");
+                log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile() :", ex);
                // throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
             }
 
@@ -222,6 +223,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                         currentExcelRow++;
                         DepartmentCreateRequest departmentCreateRequest = new DepartmentCreateRequest();
                         departmentCreateRequest.setDeptName(request.getDeptName());
+                        departmentCreateRequest.setDeptMailId(request.getDeptMailId());
                         departmentCreateRequest.setRemark(request.getRemark());
                         departmentCreateRequest.setStatusCd(request.getStatusCd());
                         departmentCreateRequest.setEmployeeId(request.getEmployeeId());
@@ -229,7 +231,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                     }
                 } catch (Exception ex) {
                  //   throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
-
+                    log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile() :{}", ex);
                 }
             }
             for (DepartmentCreateRequest request : createRequests) {
