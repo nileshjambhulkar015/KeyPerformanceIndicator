@@ -61,7 +61,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     }
 
     @Override
-    public KPIResponse findComplaintTypeDetails(Integer compTypeId, String compTypeName, String statusCd, Pageable requestPageable) {
+    public KPIResponse findComplaintTypeDetails(Integer compTypeId, String compTypeName,Integer deptId, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -73,8 +73,8 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = complaintTypeRepo.getComplaintTypeCount(compTypeId, compTypeName, statusCd);
-        List<Object[]> departmentData = complaintTypeRepo.getComplaintTypeDetail(compTypeId, compTypeName, statusCd, sortName, pageSize, pageOffset);
+        Integer totalCount = complaintTypeRepo.getComplaintTypeCount(compTypeId, compTypeName,deptId, statusCd);
+        List<Object[]> departmentData = complaintTypeRepo.getComplaintTypeDetail(compTypeId, compTypeName,deptId, statusCd, sortName, pageSize, pageOffset);
 
         List<ComplaintTypeReponse> complaintTypeReponses = departmentData.stream().map(ComplaintTypeReponse::new).collect(Collectors.toList());
 
@@ -82,10 +82,15 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
                 .sorted(Comparator.comparing(ComplaintTypeReponse::getCompTypeName))
                 .collect(Collectors.toList());
 
+        if(complaintTypeReponses.size()>0) {
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(complaintTypeReponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        }
         return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(complaintTypeReponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
+                .isSuccess(false)
                 .build();
     }
 

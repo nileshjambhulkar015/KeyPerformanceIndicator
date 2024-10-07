@@ -43,9 +43,10 @@ public class ComplaintTypeController {
     public ResponseEntity<KPIResponse> findComplaintTypeDetails(
             @RequestParam(required = false) Integer compTypeId,
             @RequestParam(required = false) String compTypeName,
+            @RequestParam(required = false) Integer deptId,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = complaintTypeService.findComplaintTypeDetails(compTypeId, compTypeName, statusCd, pageable);
+        KPIResponse response = complaintTypeService.findComplaintTypeDetails(compTypeId, compTypeName,deptId, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
