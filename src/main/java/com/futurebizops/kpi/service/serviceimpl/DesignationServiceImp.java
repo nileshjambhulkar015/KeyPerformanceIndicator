@@ -121,11 +121,15 @@ public class DesignationServiceImp implements DesignationService {
         designationReponses = designationReponses.stream()
                 .sorted(Comparator.comparing(DesignationReponse::getDeptName))
                 .collect(Collectors.toList());
-
+        if (designationReponses.size() > 0) {
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(designationReponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        }
         return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(designationReponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
+                .isSuccess(false)
                 .build();
     }
 
