@@ -43,6 +43,12 @@ public interface DesignationRepo extends JpaRepository<DesignationEntity, Intege
     List<Object[]> getDeptInDesigById(@Param("deptId") Integer deptId);
 
 
+    //only for deptId and name which is inside designation table
+    @Query(value = SQLQueryConstants.DEPT_IN_DESIGNATION_QUERY_EXCEPT_GM, nativeQuery = true)
+    List<Object[]> getDeptInDesigByIdExceptGM(@Param("deptId") Integer deptId);
+
+
+
     //only for desig id and desig name from desig table
     @Query(value = SQLQueryConstants.DESIGNATION_BY_DEPT_ID_QUERY, nativeQuery = true)
     List<Object[]> getAllDesigByDeptId(@Param("deptId") Integer deptId);

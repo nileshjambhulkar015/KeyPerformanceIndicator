@@ -57,6 +57,8 @@ public final class SQLQueryConstants {
 
     public static final String DEPT_IN_DESIGNATION_QUERY = "select distinct(dept.dept_id) ,dept.dept_name,dept.dept_mail_id, dept.remark, dept.status_cd from designation desig, department dept where dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.dept_id = coalesce(:deptId, desig.dept_id) and desig.status_cd ='A'";
 
+    public static final String DEPT_IN_DESIGNATION_QUERY_EXCEPT_GM = "select distinct(dept.dept_id) ,dept.dept_name,dept.dept_mail_id, dept.remark, dept.status_cd from designation desig, department dept where dept.dept_id =desig.dept_id  and dept.status_cd ='A'and desig.dept_id != 2 and desig.dept_id = coalesce(:deptId, desig.dept_id) and desig.status_cd ='A'";
+
     //get departnment by role id for designation
     public static final String DEPT_BY_ROLE_ID = "select dept.dept_id, dept.dept_name,dept.dept_mail_id,dept.remark, dept.status_cd from department dept, roles role where dept.status_cd = 'A' order by dept.dept_name";
 

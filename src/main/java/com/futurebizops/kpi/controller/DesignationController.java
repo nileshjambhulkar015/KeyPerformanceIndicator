@@ -80,4 +80,9 @@ public class DesignationController {
 
     }
 
+    @GetMapping(value = "/department-except-gm")
+    public ResponseEntity<Object> findAllDepartmentByDesigExceptGM(@RequestParam(required = false) Integer deptId) {
+        return new ResponseEntity<>(designationService.getAllDepartmentFromDesig(deptId), HttpStatus.OK);
+    }
+
 }
