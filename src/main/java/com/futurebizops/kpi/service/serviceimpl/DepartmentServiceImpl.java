@@ -113,10 +113,15 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .sorted(Comparator.comparing(DepartmentReponse::getDeptName))
                 .collect(Collectors.toList());
 
+        if (departmentReponses.size() > 0) {
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(departmentReponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        }
         return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(departmentReponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
+                .isSuccess(false)
                 .build();
     }
 
