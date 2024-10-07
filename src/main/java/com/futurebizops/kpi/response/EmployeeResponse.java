@@ -2,6 +2,8 @@ package com.futurebizops.kpi.response;
 
 import lombok.Data;
 
+import javax.persistence.Column;
+
 @Data
 public class EmployeeResponse {
 
@@ -39,7 +41,8 @@ public class EmployeeResponse {
     private String companyName;
     private String reportingHODName;
     private String reportingHODEId;
-
+    private Double totalOverallTarget;
+    private Double totalOverallWeightage;
     public  EmployeeResponse(Object[] objects){
         empId=Integer.parseInt(String.valueOf(objects[0]));
         empEId=String.valueOf(objects[1]);

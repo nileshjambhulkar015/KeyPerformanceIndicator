@@ -35,6 +35,7 @@ import com.futurebizops.kpi.response.AssignKPPResponse;
 import com.futurebizops.kpi.response.AssignKPPResponseSearch;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.EmployeeAssignKppResponse;
+import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
@@ -101,6 +102,53 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Autowired
     private ReportEvidenceRepo reportEvidenceRepo;
 
+    @Override
+    public KPIResponse getAllEmployeeKPPDetails(Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Integer empTypeId, Integer companyId, Integer reportingEmpId, Pageable pageable) {
+        KPIResponse kpiResponse = new KPIResponse();
+        String sortName = null;
+        //  String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = employeeRepo.getEmployeeCount(empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empTypeId, companyId, reportingEmpId);
+        List<Object[]> employeeDetail = employeeRepo.getEmployeeDetail(empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empTypeId, companyId, reportingEmpId, sortName, pageSize, pageOffset);
+        if (employeeDetail.size() > 0) {
+            List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
+            for (EmployeeResponse response : employeeResponses) {
+                Optional<EmployeeEntity> employeeEntity = employeeRepo.findById(response.getReportingEmpId());
+                if (employeeEntity.isPresent()) {
+                    EmployeeEntity entity = employeeEntity.get();
+                    response.setReportingHODName(entity.getEmpFirstName() + " " + entity.getEmpMiddleName() + " " + entity.getEmpLastName());
+                    response.setReportingHODEId(entity.getEmpEId());
+                }
+                Optional<EmployeeKppMasterEntity> employeeKppMasterEntity = employeeKeyPerfParamMasterRepo.findByEmpIdAndStatusCd(response.getEmpId(), "A");
+                if (employeeKppMasterEntity.isPresent()) {
+                    Double totalOverallTarget = null != employeeKppMasterEntity.get().getTotalOverallTarget() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallTarget()) : 0.0;
+                    Double totalOverallWeightage = null != employeeKppMasterEntity.get().getTotalOverallWeightage() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallWeightage()) : 0.0;
+                    response.setTotalOverallTarget(totalOverallTarget);
+                    response.setTotalOverallWeightage(totalOverallWeightage);
+                }
+            }
+
+            employeeResponses = employeeResponses.stream()
+                    .sorted(Comparator.comparing(EmployeeResponse::getDeptName))
+                    .collect(Collectors.toList());
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseData(new PageImpl<>(employeeResponses, pageable, totalCount));
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_FETCH);
+
+        } else {
+            kpiResponse.setSuccess(false);
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_NOT_FOUND);
+        }
+        return kpiResponse;
+    }
 
 
     @Override
@@ -199,13 +247,18 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
                 //Only Update Overall target and overall achivement
                 EmployeeKppMasterEntity kppMasterEntity = employeeKppMasterEntity.get();
-                Double kppTotalTarget = null != employeeKppMasterEntity.get().getTotalOverallTarget() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallTarget()) : 0.0;
-                Double kppTotalWeightage = null != employeeKppMasterEntity.get().getTotalOverallWeightage() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallWeightage()) : 0.0;
+                Double kppTotalTarget = null != kppMasterEntity.getTotalOverallTarget() ? Double.parseDouble(kppMasterEntity.getTotalOverallTarget()) : 0.0;
+                Double kppTotalWeightage = null != kppMasterEntity.getTotalOverallWeightage() ? Double.parseDouble(kppMasterEntity.getTotalOverallWeightage()) : 0.0;
 
-                Double totalOverallTarget=  kppTotalTarget - Double.parseDouble(kppOverallTarget) ;
-                Double totalOverallWeightage = kppTotalWeightage - Double.parseDouble(kppOverallWeightage) ;
+                Double overallTarget = null != kppOverallTarget ? Double.parseDouble(kppOverallTarget) : 0.0;
+                Double overallWeightage = null != kppOverallWeightage ? Double.parseDouble(kppOverallWeightage) : 0.0;
+
+
+                Double totalOverallTarget= Math.abs(kppTotalTarget - overallTarget);
+                Double totalOverallWeightage = Math.abs(kppTotalWeightage - overallWeightage);
                 kppMasterEntity.setTotalOverallTarget(totalOverallTarget.toString());
                 kppMasterEntity.setTotalOverallWeightage(totalOverallWeightage.toString());
+
                 employeeKeyPerfParamMasterRepo.save(kppMasterEntity);
                 EmployeeKppMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKppMasterAudit();
                 employeeKeyPerfParamMasterAuditRepo.save(employeeKeyPerfParamMasterAudit);
@@ -216,7 +269,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside EmployeeKppServiceImpl >> deleteEmployeeKeyPerfParamDetails()");
+            log.error("Inside EmployeeKppServiceImpl >> deleteEmployeeKeyPerfParamDetails() : {}", ex);
             throw new KPIException("EmployeeKppServiceImpl", false, ex.getMessage());
         }
     }

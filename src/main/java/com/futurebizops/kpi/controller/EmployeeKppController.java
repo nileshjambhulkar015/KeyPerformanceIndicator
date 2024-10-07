@@ -40,6 +40,29 @@ public class EmployeeKppController {
     @Autowired
     private EmployeeKeyPerfParamService employeeKeyPerfParamService;
 
+    //for employee master page to get details of employee
+    @GetMapping
+    @PageableAsQueryParam
+    public ResponseEntity<KPIResponse> getAllEmployee(@RequestParam(required = false) Integer empId,
+                                                      @RequestParam(required = false) String empEId,
+                                                      @RequestParam(required = false) Integer roleId,
+                                                      @RequestParam(required = false) Integer deptId,
+                                                      @RequestParam(required = false) Integer desigId,
+                                                      @RequestParam(required = false) String empFirstName,
+                                                      @RequestParam(required = false) String empMiddleName,
+                                                      @RequestParam(required = false) String empLastName,
+                                                      @RequestParam(required = false) String empMobileNo,
+                                                      @RequestParam(required = false) String emailId,
+                                                      @RequestParam(required = false) String statusCd,
+                                                      @RequestParam(required = false) Integer empTypeId,
+                                                      @RequestParam(required = false) Integer companyId,
+                                                      @RequestParam(required = false)  Integer reportingEmpId,
+                                                      @Parameter(hidden = true) Pageable pageable) {
+
+        KPIResponse response = employeeKeyPerfParamService.getAllEmployeeKPPDetails(empId, empEId,roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId,reportingEmpId, pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping(value = "/assign-kpp")
     public ResponseEntity<KPIResponse> saveEmployeeKeyPerfomanceParamDetails(@RequestBody EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         KPIResponse response = employeeKeyPerfParamService.saveEmployeeKeyPerfParamDetails(keyPerfParamCreateRequest);
