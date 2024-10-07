@@ -123,8 +123,22 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             keyPerfParamAuditRepo.save(partAudit);
 
             Optional<EmployeeKppMasterEntity> employeeKppMasterEntity = employeeKeyPerfParamMasterRepo.findByEmpIdAndStatusCd(keyPerfParamCreateRequest.getEmpId(), "A");
+
+
             if (employeeKppMasterEntity.isPresent()) {
-                // do nothing
+
+                //Only Update Overall target and overall achivement
+                EmployeeKppMasterEntity kppMasterEntity = employeeKppMasterEntity.get();
+                Double kppTotalTarget = null != employeeKppMasterEntity.get().getTotalOverallTarget() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallTarget()) : 0.0;
+                Double kppTotalWeightage = null != employeeKppMasterEntity.get().getTotalOverallWeightage() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallWeightage()) : 0.0;
+
+                Double totalOverallTarget=  kppTotalTarget + Double.parseDouble(employeeKppDetailsEntities.getKppOverallTarget()) ;
+                Double totalOverallWeightage = kppTotalWeightage + Double.parseDouble(employeeKppDetailsEntities.getKppOverallWeightage()) ;
+                kppMasterEntity.setTotalOverallTarget(totalOverallTarget.toString());
+                kppMasterEntity.setTotalOverallWeightage(totalOverallWeightage.toString());
+                employeeKeyPerfParamMasterRepo.save(kppMasterEntity);
+                EmployeeKppMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKppMasterAudit();
+                employeeKeyPerfParamMasterAuditRepo.save(employeeKeyPerfParamMasterAudit);
             } else {
                 EmployeeKppMasterEntity kppMasterEntity = new EmployeeKppMasterEntity();
                 kppMasterEntity.setEmpId(keyPerfParamCreateRequest.getEmpId());
@@ -132,6 +146,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 kppMasterEntity.setRoleId(keyPerfParamCreateRequest.getRoleId());
                 kppMasterEntity.setDeptId(keyPerfParamCreateRequest.getDeptId());
                 kppMasterEntity.setDesigId(keyPerfParamCreateRequest.getDesigId());
+                kppMasterEntity.setTotalOverallTarget("0.0");
+                kppMasterEntity.setTotalOverallWeightage("0.0");
                 kppMasterEntity.setEmpTotalAchivedWeight("0");
                 kppMasterEntity.setEmpTotalOverallAchieve("0");
                 kppMasterEntity.setEmpTotalOverallTaskComp("0");
@@ -166,16 +182,34 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside DepartmentServiceImpl >> saveDepartment()");
-            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> saveEmployeeKeyPerfParamDetails() : {}",ex);
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
         }
     }
 
     @Override
     @Transactional
-    public KPIResponse deleteEmployeeKeyPerfParamDetails(Integer empId, Integer kppId) {
+    public KPIResponse deleteEmployeeKeyPerfParamDetails(Integer empId,Integer kppId,String kppOverallTarget,String kppOverallWeightage) {
         try {
             log.debug("empId={}, kppId={}", empId, kppId);
+            Optional<EmployeeKppMasterEntity> employeeKppMasterEntity = employeeKeyPerfParamMasterRepo.findByEmpIdAndStatusCd(empId, "A");
+
+
+            if (employeeKppMasterEntity.isPresent()) {
+
+                //Only Update Overall target and overall achivement
+                EmployeeKppMasterEntity kppMasterEntity = employeeKppMasterEntity.get();
+                Double kppTotalTarget = null != employeeKppMasterEntity.get().getTotalOverallTarget() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallTarget()) : 0.0;
+                Double kppTotalWeightage = null != employeeKppMasterEntity.get().getTotalOverallWeightage() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallWeightage()) : 0.0;
+
+                Double totalOverallTarget=  kppTotalTarget - Double.parseDouble(kppOverallTarget) ;
+                Double totalOverallWeightage = kppTotalWeightage - Double.parseDouble(kppOverallWeightage) ;
+                kppMasterEntity.setTotalOverallTarget(totalOverallTarget.toString());
+                kppMasterEntity.setTotalOverallWeightage(totalOverallWeightage.toString());
+                employeeKeyPerfParamMasterRepo.save(kppMasterEntity);
+                EmployeeKppMasterAudit employeeKeyPerfParamMasterAudit = new EmployeeKppMasterAudit();
+                employeeKeyPerfParamMasterAuditRepo.save(employeeKeyPerfParamMasterAudit);
+            }
             employeeKppDetailsRepo.deleteByEmpIdAndKppId(empId, kppId);
             return KPIResponse.builder()
                     .isSuccess(true)

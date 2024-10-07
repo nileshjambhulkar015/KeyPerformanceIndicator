@@ -23,7 +23,7 @@ public interface EmployeeKeyPerfParamService {
 
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest);
 
-    public KPIResponse deleteEmployeeKeyPerfParamDetails(Integer empId,Integer kppId);
+    public KPIResponse deleteEmployeeKeyPerfParamDetails(Integer empId,Integer kppId,String kppOverallTarget,String kppOverallWeightage);
 
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest);
 

@@ -42,6 +42,12 @@ public class EmployeeKppMasterEntity extends AuditEnabledEntity {
     @Column(name = "desig_id")
     private Integer desigId;
 
+    @Column(name = "total_kpp_overall_tar")
+    private String totalOverallTarget;
+
+    @Column(name = "total_kpp_overall_weightage")
+    private String totalOverallWeightage;
+
     @Column(name = "total_emp_achived_weight")
     private String empTotalAchivedWeight;
 

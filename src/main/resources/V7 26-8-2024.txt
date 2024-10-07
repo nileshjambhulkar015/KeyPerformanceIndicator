@@ -731,7 +731,6 @@ create table announcement_type(
     );
 
 
-
     create table employee_kpp_master_audit(
         ekpp_aud_mid serial PRIMARY key,
          ekpp_mid INTEGER,
@@ -1011,6 +1010,15 @@ alter table report_employee_kpp_master_audit add column avg_total_overall_rating
 
 alter table report_employee_kpp_master add column avg_total_overall_achivement_per VARCHAR(150);
 alter table report_employee_kpp_master_audit add column avg_total_overall_achivement_per VARCHAR(150);
+
+
+
+alter table employee_kpp_master add column total_kpp_overall_tar VARCHAR(150);
+alter table employee_kpp_master_audit add column total_kpp_overall_tar VARCHAR(150);
+
+alter table employee_kpp_master add column total_kpp_overall_weightage VARCHAR(150);
+alter table employee_kpp_master_audit add column total_kpp_overall_weightage VARCHAR(150);
+
 
 
     /*

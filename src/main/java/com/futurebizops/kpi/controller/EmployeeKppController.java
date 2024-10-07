@@ -48,8 +48,10 @@ public class EmployeeKppController {
 
     @DeleteMapping(value = "/assign-kpp")
     public ResponseEntity<KPIResponse> deleteEmployeeKeyPerfomanceParamDetails(@RequestParam(required = false) Integer empId,
-                                                                               @RequestParam(required = false) Integer kppId) {
-        KPIResponse response = employeeKeyPerfParamService.deleteEmployeeKeyPerfParamDetails(empId,kppId);
+                                                                               @RequestParam(required = false) Integer kppId,
+                                                                               @RequestParam(required = false) String kppOverallTarget,
+                                                                               @RequestParam(required = false) String kppOverallWeightage) {
+        KPIResponse response = employeeKeyPerfParamService.deleteEmployeeKeyPerfParamDetails(empId,kppId,kppOverallTarget,kppOverallWeightage);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
