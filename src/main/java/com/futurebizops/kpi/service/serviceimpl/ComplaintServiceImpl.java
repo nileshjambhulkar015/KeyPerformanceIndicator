@@ -85,7 +85,8 @@ public class ComplaintServiceImpl implements ComplaintService {
             ComplaintAudit complaintAudit = new ComplaintAudit(complaintEntity);
             complaintAuditRepo.save(complaintAudit);
 
-            Optional<ComplaintTypeEntity>  optionalComplaintType =complaintTypeRepo.findByDeptId(complaintEntity.getDeptId());
+            Optional<ComplaintTypeEntity>  optionalComplaintType =complaintTypeRepo.findByDeptId(complaintEntity.getCompTypeDeptId());
+
 
             Optional<DepartmentEntity>  optionalDepartmentEntity =departmentRepo.findById(complaintEntity.getDeptId());
 
@@ -93,19 +94,19 @@ public class ComplaintServiceImpl implements ComplaintService {
                     "Complaint details : "+complaintEntity.getCompDesc()+ "</body></html>";
 
             //Send mail
-        //    emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
+            emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
 
             //send request complaint raised department also
-            emailUtils.sendEmail(optionalDepartmentEntity.get().getDeptMailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
+            emailUtils.sendEmail(optionalDepartmentEntity.get().getDeptMailId(),
+                    "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
 
-            log.info("");
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_SUCCESS + " With complaint id : " + complaintId)
                     .build();
 
         } catch (Exception ex) {
-            log.error("Inside ComplaintServiceImpl >> saveComplaint()");
+            log.error("Inside ComplaintServiceImpl >> saveComplaint() :{}", ex);
             throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
         }
 
