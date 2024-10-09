@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.response;
 
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.Data;
 
 import java.time.Instant;
@@ -51,6 +52,10 @@ public class EmployeeKppStatusResponse {
         hodKppStatus=String.valueOf(objects[14]);
         gmOverallAchieve=String.valueOf(objects[15]);
         gmKppStatus=String.valueOf(objects[16]);
-        ekppMonth=String.valueOf(objects[17]);
+
+        if(null!=objects[17]) {
+            this.ekppMonth = DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[17]));
+        }
+
     }
 }

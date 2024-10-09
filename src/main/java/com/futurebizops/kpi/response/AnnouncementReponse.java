@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.response;
 
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +40,13 @@ public class AnnouncementReponse {
         announId=Integer.parseInt(String.valueOf(objects[0]));
         announTypeId=Integer.parseInt(String.valueOf(objects[1]));
         announTypeName=String.valueOf(objects[2]);
-        announStartDate=String.valueOf(objects[3]);
-        announEndDate=String.valueOf(objects[4]);
+        if(null!=objects[3]) {
+            this.announStartDate = DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[3]));
+        }
+        if(null!=objects[4]) {
+            this.announEndDate = DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[4]));
+        }
+
         announCreatedByEmpId=Integer.parseInt(String.valueOf(objects[5]));
         announCreatedByEmpEId=String.valueOf(objects[6]);
         announCreatedByEmpName=String.valueOf(objects[7]);
