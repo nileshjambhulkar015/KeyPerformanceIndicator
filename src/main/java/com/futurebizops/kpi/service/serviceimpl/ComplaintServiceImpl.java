@@ -352,8 +352,8 @@ public class ComplaintServiceImpl implements ComplaintService {
 
         complaintResponses = complaintResponses.stream()
                 //.sorted(Comparator.comparing(EmployeeComplaintResponse::getCompDate))
-                .sorted((o1, o2)->o2.getCompDate().
-                        compareTo(o1.getCompDate()))
+                .sorted((o1, o2)->o2.getCreatedDate().
+                        compareTo(o1.getCreatedDate()))
                 .collect(Collectors.toList());
 
         return KPIResponse.builder()

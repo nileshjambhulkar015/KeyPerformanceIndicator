@@ -3,6 +3,7 @@ package com.futurebizops.kpi.utils;
 import com.futurebizops.kpi.exception.KPIException;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -115,5 +116,17 @@ public class DateTimeUtils {
         }
     }
 
+    public static String extractDateInDDMMYYY(String inputDate) {
+        try {
+            // define formatter
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            // This is the format date we want
+            DateFormat mSDF = new SimpleDateFormat("dd MMM, yyyy hh:mm a");
 
+            return mSDF.format(formatter.parse(inputDate));
+        } catch (Exception ex) {
+            log.error("Inside DateTimeUtils >> extractDateInDDMMYYY() : {}", ex);
+            throw new KPIException("DateTimeUtils", false, ex.getMessage());
+        }
+    }
 }

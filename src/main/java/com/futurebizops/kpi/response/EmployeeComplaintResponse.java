@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.response;
 
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -67,6 +68,8 @@ public class EmployeeComplaintResponse {
     @Schema(example = "A", description = "This field is used for role status")
     private String statusCd;
 
+    private String createdDate;
+
     public EmployeeComplaintResponse(Object[] objects){
         this.empCompId=Integer.parseInt(String.valueOf(objects[0]));
         this.empId=Integer.parseInt(String.valueOf(objects[1]));
@@ -80,8 +83,13 @@ public class EmployeeComplaintResponse {
         this.desigId=Integer.parseInt(String.valueOf(objects[11]));
         this.desigName=String.valueOf(objects[12]);
         this.compId=String.valueOf(objects[13]);
-        this.compDate=String.valueOf(objects[14]);
-        this.compResolveDate=String.valueOf(objects[15]);
+        if(null!=objects[14]) {
+            this.compDate = DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[14]));
+        }
+        if(null!=objects[15]) {
+            this.compResolveDate = DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[15]));
+        }
+
         this.compTypeId=Integer.parseInt(String.valueOf(objects[16]));
 
         this.compTypeDeptId=Integer.parseInt(String.valueOf(objects[17]));
@@ -95,6 +103,7 @@ public class EmployeeComplaintResponse {
 
         this.remark=String.valueOf(objects[24]);
         this.statusCd=String.valueOf(objects[25]);
+        this.createdDate=String.valueOf(objects[26]);
     }
 
 }
