@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.response.cumulative;
 
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.Data;
 
 @Data
@@ -20,7 +21,10 @@ public class CumulativeHoDResponse {
         hodCumulativeData.setDesigId(Integer.parseInt(String.valueOf(objects[10])));
         hodCumulativeData.setDesigName(String.valueOf(objects[11]));
 
-        totalCumulativeHoD.setEkppMonth(String.valueOf(objects[0]));
+        if(null!=objects[0]) {
+            totalCumulativeHoD.setEkppMonth(DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[0])));
+        }
+
         totalCumulativeHoD.setTotalEmpOverallAchieve(String.valueOf(objects[12]));
         totalCumulativeHoD.setTotalHodOverallAchieve(String.valueOf(objects[13]));
         totalCumulativeHoD.setTotalGmOverallAchieve(String.valueOf(objects[14]));

@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.dto;
 
+import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,10 @@ public class EmployeeKppStatusDto {
 
     public EmployeeKppStatusDto(Object[] objects) {
         employeeKppMasterDto.setEKppMId(Integer.parseInt(String.valueOf(objects[0])));
-        employeeKppMasterDto.setEkppMonth(String.valueOf(objects[1]));
+        if(null!=objects[1]) {
+            employeeKppMasterDto.setEkppMonth(DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[1])));
+        }
+
         employeeKppMasterDto.setEmpId(Integer.parseInt(String.valueOf(objects[2])));
         employeeKppMasterDto.setEmpName(String.valueOf(objects[3]) + " " + String.valueOf(objects[4]) + " " + String.valueOf(objects[5]));
         employeeKppMasterDto.setEmpEId(String.valueOf(objects[6]));
