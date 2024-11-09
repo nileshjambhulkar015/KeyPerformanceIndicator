@@ -136,7 +136,6 @@ public class DepartmentServiceImpl implements DepartmentService {
                 departmentDDResponse = new DepartmentDDResponse();
                 departmentDDResponse.setDeptId(departmentEntity.getDeptId());
                 departmentDDResponse.setDeptName(departmentEntity.getDeptName());
-                departmentDDResponse.setStatusCd(departmentEntity.getStatusCd());
                 departmentDDResponses.add(departmentDDResponse);
             }
 

@@ -11,12 +11,9 @@ public class RoleDDResponse {
 
     private Integer roleId;
     private String roleName;
-    private String statusCd;
 
     public RoleDDResponse(Object[] objects){
         this.roleId=Integer.parseInt(String.valueOf(objects[0]));
         this.roleName=String.valueOf(objects[1]);
-
-        this.statusCd=String.valueOf(objects[2]);
     }
 }

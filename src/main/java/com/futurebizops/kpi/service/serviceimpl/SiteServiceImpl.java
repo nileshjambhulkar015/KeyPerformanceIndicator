@@ -157,7 +157,6 @@ public class SiteServiceImpl implements SiteService {
             SiteDDResponse siteDDResponse = new SiteDDResponse();
             siteDDResponse.setSiteId(siteEntity.getSiteId());
             siteDDResponse.setSiteName(siteEntity.getSiteName());
-            siteDDResponse.setStatusCd(siteEntity.getStatusCd());
 
             siteDDResponses.add(siteDDResponse);
         }

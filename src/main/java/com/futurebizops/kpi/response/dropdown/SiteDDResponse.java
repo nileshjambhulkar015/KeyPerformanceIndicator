@@ -13,12 +13,9 @@ public class SiteDDResponse {
 
     private String siteName;
     private Integer siteId;
-    private String statusCd;
 
     public SiteDDResponse(Object[] objects){
         this.siteId=Integer.parseInt(String.valueOf(objects[0]));
         this.siteName=String.valueOf(objects[1]);
-
-        this.statusCd=String.valueOf(objects[2]);
     }
 }

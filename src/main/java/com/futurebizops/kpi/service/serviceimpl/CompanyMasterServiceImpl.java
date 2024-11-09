@@ -197,7 +197,6 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
             CompanyDDResponse companyDDResponse = new CompanyDDResponse();
             companyDDResponse.setCompanyId(companyMasterEntity.getCompanyId());
             companyDDResponse.setCompanyName(companyMasterEntity.getCompanyName());
-            companyDDResponse.setStatusCd(companyMasterEntity.getStatusCd());
 
             companyDDResponses.add(companyDDResponse);
         }

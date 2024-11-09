@@ -13,11 +13,9 @@ public class ComplaintTypeDDResponse {
 
     private Integer compTypeId;
     private String compTypeName;
-    private String statusCd;
 
     public ComplaintTypeDDResponse(Object[] objects){
         this.compTypeId=Integer.parseInt(String.valueOf(objects[0]));
         this.compTypeName=String.valueOf(objects[1]);
-        this.statusCd=String.valueOf(objects[2]);
     }
 }
