@@ -1,6 +1,7 @@
 package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.entity.EvidenceEntity;
+import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EvidenceRepo;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EvidenceService;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,12 +40,25 @@ public class EvidenceController {
     @Autowired
     EvidenceRepo evidenceRepo;
 
+    private static final long MAX_SIZE_MB = 5;
+    private static final long MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // Convert MB to bytes
+
     @PostMapping
     public ResponseEntity<KPIResponse> uploadNewFile(@NotNull @RequestParam("multipartFile") MultipartFile multipartFile,
                                                      @RequestParam(required = false) Integer empId,
                                                      @RequestParam(required = false)String evMonth
                                                      ) throws IOException {
 
+
+if(multipartFile.getBytes().length>MAX_SIZE_BYTES ){
+    log.error("Inside EvidenceController >> uploadNewFile() File size greater than {} MB",MAX_SIZE_MB);
+   KPIResponse kpiResponse =  KPIResponse.builder()
+            .responseMessage("Please upload file size less than "+MAX_SIZE_MB+" MB")
+            .isSuccess(false)
+            .build();
+
+    return ResponseEntity.ok(kpiResponse);
+}
         return ResponseEntity.ok(evidenceService.uploadFile(multipartFile, empId, evMonth));
 
 
