@@ -35,5 +35,5 @@ public static final String DD_REGION_FROM_EMPLOYEE_QUERY = "select distinct emp.
 
     public static final String DD_DESIGNATION_FROM_EMPLOYEE = "select distinct emp.desig_id, desig.desig_name, emp.status_cd from employee emp, designation desig where emp.desig_id = desig.desig_id and emp.status_cd = 'A' and emp.role_id = coalesce(:roleId, emp.role_id) and emp.dept_id = coalesce(:deptId, emp.dept_id) and emp.desig_id = coalesce(:desigId, emp.desig_id)";
 
-
+    public static final String DD_EMPLOYEE_NAME = "select emp_id,emp_fname,emp_mname,emp_lname from employee where status_cd = 'A' and role_id = coalesce(:roleId, role_id) and dept_id = coalesce(:deptId, dept_id) and desig_id = coalesce(:desigId, desig_id)";
 }

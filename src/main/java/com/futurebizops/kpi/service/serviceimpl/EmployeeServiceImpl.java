@@ -40,6 +40,7 @@ import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
+import com.futurebizops.kpi.response.dropdown.EmployeeDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.EmployeeService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
@@ -643,7 +644,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Object[]> roleData = employeeRepo.getDesignationFromEmployee(roleId, deptId, desigId);
         return roleData.stream().map(DesignationDDResponse::new).collect(Collectors.toList());
     }
-
+    @Override
+    public List<EmployeeDDResponse> getDDEmpName(Integer roleId, Integer deptId, Integer desigId) {
+        List<Object[]> roleData = employeeRepo.getDDEmpName(roleId, deptId,desigId);
+        return roleData.stream().map(EmployeeDDResponse::new).collect(Collectors.toList());
+    }
 //Save employee from excel
 
     @Transactional

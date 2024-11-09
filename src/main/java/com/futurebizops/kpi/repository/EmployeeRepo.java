@@ -86,4 +86,8 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
     @Query(value = SQLQueryConstants.EMPLOYEE_TODAYS_BIRTHDAYS, nativeQuery = true)
     List<Object[]> getTodaysBirthDaysList();
+
+    @Query(value = DropDownQueryConstants.DD_EMPLOYEE_NAME, nativeQuery = true)
+    List<Object[]> getDDEmpName(@Param("roleId") Integer roleId, @Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
+
 }

@@ -9,6 +9,7 @@ import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
+import com.futurebizops.kpi.response.dropdown.EmployeeDDResponse;
 import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.EmployeeService;
@@ -183,5 +184,11 @@ public class EmployeeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
+    @GetMapping(value = "/dd-employee")
+    public ResponseEntity<List<EmployeeDDResponse>> getDDEmpName(@RequestParam(required = false) Integer roleId,
+                                                                 @RequestParam(required = false) Integer deptId,
+                                                                 @RequestParam(required = false) Integer desigId) {
+        List<EmployeeDDResponse> response = employeeService.getDDEmpName(roleId, deptId, desigId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
