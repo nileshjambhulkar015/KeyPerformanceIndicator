@@ -5,6 +5,7 @@ import com.futurebizops.kpi.entity.DepartmentEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -52,7 +53,9 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity, Integer>
 
     public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCase(String deptName);
 
-   // public Optional<DepartmentEntity> findByDeptNameEqualsIgnoreCase(String deptName);
+    @Modifying
+    @Query(value = "update department set status_cd='I' where dept_id =:deptId", nativeQuery = true)
+    public int deleteDepartmentDetails(@Param("deptId") Integer deptId);
 
 
 }

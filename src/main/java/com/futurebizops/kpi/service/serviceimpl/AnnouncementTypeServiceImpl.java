@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -61,11 +62,28 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
             } catch (Exception ex) {
-            log.error("Inside AnnouncementTypeServiceImpl >> saveAnnouncementTypeDetails()");
+            log.error("Inside AnnouncementTypeServiceImpl >> saveAnnouncementTypeDetails() : {}", ex);
             throw new KPIException("AnnouncementTypeServiceImpl", false, ex.getMessage());
         }
     }
-   //
+
+    @Transactional
+    @Override
+    public KPIResponse deleteAnnouncementTypeDetails(Integer announTypeId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            announcementTypeRepo.deleteAnnouncementTypeDetails(announTypeId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Announcement Type details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside AnnouncementTypeServiceImpl >> deleteAnnouncementTypeDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
+    }
 
     @Override
     public KPIResponse updateAnnouncementTypeDetails(AnnouncementTypeUpdateRequest announcementTypeUpdateRequest) {

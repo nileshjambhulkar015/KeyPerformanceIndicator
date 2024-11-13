@@ -175,7 +175,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             kpiResponse.setResponseMessage(KPIConstants.RECORD_SUCCESS);
             return kpiResponse;
         } catch (Exception ex) {
-            log.error("Inside EmployeeServiceImpl >> saveEmployee()");
+            log.error("Inside EmployeeServiceImpl >> saveEmployee() : {}",ex);
             throw new KPIException("EmployeeServiceImpl", false, ex.getMessage());
         }
     }
@@ -186,6 +186,24 @@ public class EmployeeServiceImpl implements EmployeeService {
             return employeeEntity.get().getReportingEmpId();
         }
         return null;
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse deleteEmployeeDetails(Integer empId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            employeeRepo.deleteEmployeeDetails(empId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Employee details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeServiceImpl >> deleteEmployeeDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
     }
 
     @Override

@@ -17,6 +17,7 @@ public interface DesignationService {
 
     public KPIResponse updateDesignation(DesignationUpdateRequest departmentUpdateRequest);
 
+    public KPIResponse deleteDesignationDetails(Integer desigId);
 
     public KPIResponse findDesignationDetails(Integer deptId, String desigName, String statusCd, Pageable pageable);
 

@@ -14,6 +14,7 @@ public interface SiteService {
 
     public KPIResponse saveSite(SiteCreateRequest siteCreateRequest);
 
+    public KPIResponse deleteSiteDetails(Integer siteId);
     public KPIResponse updateSite(SiteUpdateRequest siteUpdateRequest);
 
     public KPIResponse findSiteDetails(Integer siteId, Integer regionId, String siteName, String statusCd, Pageable requestPageable);

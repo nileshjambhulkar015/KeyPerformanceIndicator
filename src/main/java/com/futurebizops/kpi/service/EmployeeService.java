@@ -19,6 +19,7 @@ public interface EmployeeService {
 
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeRequest);
 
+    public KPIResponse deleteEmployeeDetails(Integer empId);
     public KPIResponse updateEmployee(EmployeeUpdateRequest employeeUpdateRequest);
 
     public KPIResponse updateEmployeeDOB(Integer empId, String empDob);

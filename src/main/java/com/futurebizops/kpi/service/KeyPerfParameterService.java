@@ -23,7 +23,7 @@ public interface KeyPerfParameterService {
     public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, String kppObjectiveNo,String kppObjective,String statusCd,Pageable pageable);
 
     //show kpp when assign kpp for employee
-
+    public KPIResponse deleteKeyPerfomanceParamDetails(Integer kppId);
 
 
     public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId);

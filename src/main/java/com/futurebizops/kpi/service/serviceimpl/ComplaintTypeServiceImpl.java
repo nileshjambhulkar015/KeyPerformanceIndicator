@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -55,9 +56,28 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside ComplaintTypeServiceImpl >> saveComplaintType()");
+            log.error("Inside ComplaintTypeServiceImpl >> saveComplaintType() : {}", ex);
             throw new KPIException("ComplaintTypeServiceImpl", false, ex.getMessage());
         }
+    }
+
+
+    @Transactional
+    @Override
+    public KPIResponse deleteComplaintTypeDetails(Integer compTypeId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            complaintTypeRepo.deleteComplaintTypeDetails(compTypeId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Department details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> deleteDepartmentDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
     }
 
     @Override

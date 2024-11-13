@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,6 +80,24 @@ public class UoMServiceImpl implements UoMService {
             throw new KPIException("UoMServiceImpl", false, ex.getMessage());
         }
 
+
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse deleteUOMDetails(Integer uomId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            uoMRepo.deleteUOMDetails(uomId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("UOM details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside UoMServiceImpl >> deleteUOMDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
 
     }
 

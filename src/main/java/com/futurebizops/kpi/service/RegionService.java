@@ -20,4 +20,6 @@ public interface RegionService {
     public KPIResponse findRegionDetails(Integer regionIde);
 
     public List<RegionDDResponse> ddRegionDetails(Integer regionId);
+
+    public KPIResponse deleteRegionDetails(Integer regionId);
 }

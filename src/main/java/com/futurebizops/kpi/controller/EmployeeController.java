@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,6 +46,12 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<KPIResponse> saveEmployee(@RequestBody EmployeeCreateRequest employeeRequest) {
         return ResponseEntity.ok(employeeService.saveEmployee(employeeRequest));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<KPIResponse> deleteEmployeeDetails(@RequestParam(required = false) Integer empId) {
+        KPIResponse response = employeeService.deleteEmployeeDetails(empId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping

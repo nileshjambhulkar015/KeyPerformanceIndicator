@@ -31,6 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,6 +81,24 @@ public class DesignationServiceImp implements DesignationService {
             log.error("Inside DesignationServiceImp >> saveDesignation()");
             throw new KPIException("DesignationServiceImp", false, ex.getMessage());
         }
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse deleteDesignationDetails(Integer desigId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            designationRepo.deleteDesignationDetails(desigId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Designation details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside DesignationServiceImp >> deleteDesignationDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
     }
 
     @Override

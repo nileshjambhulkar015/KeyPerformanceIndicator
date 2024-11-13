@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,13 +33,18 @@ public class RegionController {
     private RegionService regionService;
 
     @PostMapping
-    public ResponseEntity<KPIResponse> saveDepartmentDetails(@RequestBody RegionCreateRequest regionCreateRequest) {
+    public ResponseEntity<KPIResponse> saveRegion(@RequestBody RegionCreateRequest regionCreateRequest) {
         KPIResponse response = regionService.saveRegion(regionCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @DeleteMapping
+    public ResponseEntity<KPIResponse> deleteRegionDetails(@RequestParam(required = false) Integer regionId) {
+        KPIResponse response = regionService.deleteRegionDetails(regionId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @PutMapping
-    public ResponseEntity<KPIResponse> updateDepartmentDetails(@RequestBody RegionUpdateRequest regionUpdateRequest) {
+    public ResponseEntity<KPIResponse> updateRegion(@RequestBody RegionUpdateRequest regionUpdateRequest) {
         KPIResponse response = regionService.updateRegion(regionUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -65,4 +71,5 @@ public class RegionController {
         List<RegionDDResponse>   response = regionService.ddRegionDetails(regionId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }

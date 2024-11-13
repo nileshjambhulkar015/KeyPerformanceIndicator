@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,10 +53,29 @@ public class RegionServiceImpl implements RegionService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside RegionServiceImpl >> saveRegion()");
-            throw new KPIException("RegionServiceImpl", false, ex.getMessage());
+            log.error("Inside RegionServiceImpl >> saveRegion() : {}", ex);
+            throw new KPIException("RegionServiceImpl  >> saveRegion()", false, ex.getMessage());
         }
     }
+
+    @Transactional
+    @Override
+    public KPIResponse deleteRegionDetails(Integer regionId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            regionRepo.deleteRegionDetails(regionId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Region details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside RegionServiceImpl >> deleteRegionDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
+    }
+
 
     @Override
     public KPIResponse updateRegion(RegionUpdateRequest regionUpdateRequest) {

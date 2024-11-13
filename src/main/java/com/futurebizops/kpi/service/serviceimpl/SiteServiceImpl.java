@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -57,9 +58,27 @@ public class SiteServiceImpl implements SiteService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside SiteServiceImpl >> saveSite()");
+            log.error("Inside SiteServiceImpl >> saveSite(): {}",ex);
             throw new KPIException("SiteServiceImpl", false, ex.getMessage());
         }
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse deleteSiteDetails(Integer siteId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            siteRepo.deleteSiteDetails(siteId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Site details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside SiteServiceImpl >> deleteSiteDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
     }
 
     @Override

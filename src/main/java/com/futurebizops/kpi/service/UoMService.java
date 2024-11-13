@@ -25,4 +25,6 @@ public interface UoMService {
     public RoleResponse findUoMById(Integer roleId);
 
     public List<UoMEntity> findAllUoMDetails();
+
+    public KPIResponse deleteUOMDetails(Integer uomId);
 }

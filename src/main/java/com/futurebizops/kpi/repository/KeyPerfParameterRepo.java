@@ -5,6 +5,7 @@ import com.futurebizops.kpi.entity.KeyPerfParamEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,9 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
 
     public Page<KeyPerfParamEntity> findByStatusCd(String status, Pageable pageable);
 
-    //public List<KeyPerfParamEntity> findByRoleIdAndDeptIdAndDesigIdAndStatusCd(Integer roleId, Integer deptId, Integer degidId, String status);
+    @Modifying
+    @Query(value = "update key_perf_parameter set status_cd='I' where kpp_id =:kppId", nativeQuery = true)
+    public int deleteKeyPerfomanceParamDetails(@Param("kppId") Integer kppId);
 
     @Query(value = SQLQueryConstants.KPP_QUERY, nativeQuery = true)
     List<Object[]> getKeyPerfParameterDetail(@Param("kppId") Integer kppId, @Param("kppObjectiveNo") String kppObjectiveNo,@Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);

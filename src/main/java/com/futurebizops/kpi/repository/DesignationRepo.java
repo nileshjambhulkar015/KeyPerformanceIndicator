@@ -5,6 +5,7 @@ import com.futurebizops.kpi.entity.DesignationEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,6 +26,10 @@ public interface DesignationRepo extends JpaRepository<DesignationEntity, Intege
 
     @Query(value = "select * from designation desig where desig.status_cd='A' and desig.dept_id = :deptId", nativeQuery = true)
     public List<DesignationEntity> findAllDesignation(Integer deptId);
+
+    @Modifying
+    @Query(value = "update designation set status_cd='I' where desig_id =:desigId", nativeQuery = true)
+    public int deleteDesignationDetails(@Param("desigId") Integer desigId);
 
     public Optional<DesignationEntity> findByDeptIdAndDesigNameEqualsIgnoreCase(Integer deptId, String desigName);
 

@@ -2,6 +2,7 @@ package com.futurebizops.kpi.service;
 
 import com.futurebizops.kpi.request.EmployeeTypeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeTypeUpdateRequest;
+import com.futurebizops.kpi.response.EmployeeTypeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.EmployeeTypeDDResponse;
 import org.springframework.data.domain.Pageable;
@@ -15,5 +16,9 @@ public interface EmployeeTypeService {
     public KPIResponse updateEmployeeType(EmployeeTypeUpdateRequest employeeTypeUpdateRequest);
 
     public KPIResponse findEmployeeTypeDetails(Integer empTypeId, String empTypeName, String statusCd);
+
+    public EmployeeTypeResponse findEmployeeTypeDetailsByEmpTypeId(Integer empTypeId);
+
+    public KPIResponse deleteEmployeeTypeDetails(Integer empTypeId);
 }
 

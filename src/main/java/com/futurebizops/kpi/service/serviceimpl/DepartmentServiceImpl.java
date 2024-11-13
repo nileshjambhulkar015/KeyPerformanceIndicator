@@ -28,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,24 +70,53 @@ public class DepartmentServiceImpl implements DepartmentService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside DepartmentServiceImpl >> saveDepartment()");
+            log.error("Inside DepartmentServiceImpl >> saveDepartment() : {}",ex);
             throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
         }
     }
 
+    @Transactional
+    @Override
+    public KPIResponse deleteDepartmentDetails(Integer deptId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            departmentRepo.deleteDepartmentDetails(deptId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Department details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> deleteDepartmentDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
+    }
+
     @Override
     public KPIResponse updateDepartment(DepartmentUpdateRequest departmentUpdateRequest) {
-        DepartmentEntity departmentEntity = convertDepartmentUpdateRequestToEntity(departmentUpdateRequest);
         try {
-            departmentRepo.save(departmentEntity);
-            DepartmentAudit departmentAudit = new DepartmentAudit(departmentEntity);
-            departmentAuditRepo.save(departmentAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_UPDATE)
-                    .build();
+            Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findById(departmentUpdateRequest.getDeptId());
+            DepartmentEntity departmentEntity = null;
+            if (optionalDepartmentEntity.isPresent()) {
+                departmentEntity = optionalDepartmentEntity.get();
+                departmentEntity.setDeptName(departmentUpdateRequest.getDeptName());
+                departmentEntity.setRemark(departmentUpdateRequest.getRemark());
+                departmentRepo.save(departmentEntity);
+                DepartmentAudit departmentAudit = new DepartmentAudit(departmentEntity);
+                departmentAuditRepo.save(departmentAudit);
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage(KPIConstants.RECORD_UPDATE)
+                        .build();
+            } else {
+                return KPIResponse.builder()
+                        .isSuccess(false)
+                        .responseMessage("Department is not available")
+                        .build();
+            }
         } catch (Exception ex) {
-            log.error("Inside DepartmentServiceImpl >> updateDepartment()");
+            log.error("Inside DepartmentServiceImpl >> updateDepartment() : {}", ex);
             throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
         }
     }

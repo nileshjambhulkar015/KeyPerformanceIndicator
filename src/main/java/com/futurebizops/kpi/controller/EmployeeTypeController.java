@@ -4,6 +4,7 @@ import com.futurebizops.kpi.request.DepartmentCreateRequest;
 import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeTypeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeTypeUpdateRequest;
+import com.futurebizops.kpi.response.EmployeeTypeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.EmployeeTypeDDResponse;
 import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,25 +39,39 @@ public class EmployeeTypeController {
 
 
     @PostMapping
-    public ResponseEntity<KPIResponse> saveDepartmentDetails(@RequestBody EmployeeTypeCreateRequest employeeTypeCreateRequest) {
+    public ResponseEntity<KPIResponse> saveEmployeeType(@RequestBody EmployeeTypeCreateRequest employeeTypeCreateRequest) {
         KPIResponse response = employeeTypeService.saveEmployeeType(employeeTypeCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<KPIResponse> updateDepartmentDetails(@RequestBody EmployeeTypeUpdateRequest employeeTypeUpdateRequest) {
+    public ResponseEntity<KPIResponse> updateEmployeeType(@RequestBody EmployeeTypeUpdateRequest employeeTypeUpdateRequest) {
         KPIResponse response = employeeTypeService.updateEmployeeType(employeeTypeUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<KPIResponse> findDepartmentDetails(
+    public ResponseEntity<KPIResponse> findEmployeeTypeDetails(
             @RequestParam(required = false) Integer empTypeId,
             @RequestParam(required = false) String empTypeName,
             @RequestParam(required = false) String statusCd) {
         KPIResponse response = employeeTypeService.findEmployeeTypeDetails(empTypeId, empTypeName, statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+
+    @GetMapping(value = "/by-emptypeid")
+    public ResponseEntity<EmployeeTypeResponse> findEmployeeTypeDetailsByEmpTypeId(
+            @RequestParam(required = false) Integer empTypeId) {
+        EmployeeTypeResponse response = employeeTypeService.findEmployeeTypeDetailsByEmpTypeId(empTypeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    @DeleteMapping
+    public ResponseEntity<KPIResponse> deleteEmployeeTypeDetails(@RequestParam(required = false) Integer empTypeId) {
+        KPIResponse response = employeeTypeService.deleteEmployeeTypeDetails(empTypeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

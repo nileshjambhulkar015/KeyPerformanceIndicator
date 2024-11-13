@@ -14,6 +14,7 @@ public interface ComplaintTypeService {
 
     public KPIResponse saveComplaintType(ComplaintTypeCreateRequest complaintCreateRequest);
 
+    public KPIResponse deleteComplaintTypeDetails(Integer compTypeId);
     public KPIResponse findComplaintTypeDetails(Integer compTypeId, String compTypeName,Integer deptId, String statusCd, Pageable pageable);
 
     public ComplaintTypeReponse findAllComplaintTypeById(Integer compTypeId);

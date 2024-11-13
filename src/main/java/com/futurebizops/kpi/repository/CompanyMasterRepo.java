@@ -4,6 +4,7 @@ import com.futurebizops.kpi.constants.DropDownQueryConstants;
 import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.CompanyMasterEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,10 @@ import java.util.Optional;
 public interface CompanyMasterRepo extends JpaRepository<CompanyMasterEntity, Integer> {
 
     public Optional<CompanyMasterEntity> findByCompanyNameEqualsIgnoreCaseAndRegionIdAndSiteId(String companyName, Integer regionId, Integer siteId);
+
+    @Modifying
+    @Query(value = "update company_master set status_cd='I' where comp_id =:companyId", nativeQuery = true)
+    public int deleteCompanyDetails(@Param("companyId") Integer companyId);
 
     @Query(value = SQLQueryConstants.COMPANY_MASTER_QUERY, nativeQuery = true)
     List<Object[]> getCompanyDetail(@Param("regionId") Integer regionId, @Param("siteId") Integer siteId, @Param("companyName") String companyName, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);

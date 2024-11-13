@@ -18,6 +18,7 @@ public interface CompanyMasterService {
 
     public KPIResponse updateCompanyDetails(CompanyMasterUpdateRequest companyMasterUpdateRequest);
 
+    public KPIResponse deleteCompanyDetails(Integer companyId);
 
     public KPIResponse findCompanyDetails( Integer regionId, Integer siteId, String companyName, String statusCd, Pageable pageable);
 

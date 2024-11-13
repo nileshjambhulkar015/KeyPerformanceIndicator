@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -62,11 +63,28 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside CompanyMasterServiceImpl >> saveCompanyDetails()");
+            log.error("Inside CompanyMasterServiceImpl >> saveCompanyDetails(): {}", ex);
             throw new KPIException("CompanyMasterServiceImpl", false, ex.getMessage());
         }
     }
 
+    @Transactional
+    @Override
+    public KPIResponse deleteCompanyDetails(Integer companyId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            companyMasterRepo.deleteCompanyDetails(companyId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Company details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside CompanyMasterServiceImpl >> deleteCompanyDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
+    }
 
     private CompanyMasterEntity convertCompanyCreateRequestToEntity(CompanyMasterCreateRequest companyMasterRequest) {
         CompanyMasterEntity companyMasterEntity = new CompanyMasterEntity();

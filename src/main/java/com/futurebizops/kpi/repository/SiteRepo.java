@@ -4,6 +4,7 @@ import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.DesignationEntity;
 import com.futurebizops.kpi.entity.SiteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -31,4 +32,9 @@ public interface SiteRepo extends JpaRepository<SiteEntity, Integer> {
 
     @Query(value = SQLQueryConstants.DD_REGION_FROM_SITE_QUERY, nativeQuery = true)
     List<Object[]> getDDRegionFromSite();
+
+    @Modifying
+    @Query(value = "update site set status_cd='I' where site_id =:siteId", nativeQuery = true)
+    public int deleteSiteDetails(@Param("siteId") Integer siteId);
+
 }

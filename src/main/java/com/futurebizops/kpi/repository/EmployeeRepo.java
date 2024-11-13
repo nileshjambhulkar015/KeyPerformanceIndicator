@@ -22,6 +22,9 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
     public Optional<EmployeeEntity> findByEmpEIdEqualsIgnoreCase(String empEId);
     public EmployeeEntity findByEmpMobileNoAndStatusCd(String empMobileNo, String statusCd);
 
+    @Modifying
+    @Query(value = "update employee set status_cd='I' where emp_id =:empId", nativeQuery = true)
+    public int deleteEmployeeDetails(@Param("empId") Integer empId);
 
     @Modifying
     @Query(value = "update employee set emp_dob=:empoyeeDob where emp_id =:empId", nativeQuery = true)

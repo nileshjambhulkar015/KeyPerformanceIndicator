@@ -18,6 +18,7 @@ public interface AnnouncementTypeService {
 
     public KPIResponse saveAnnouncementTypeDetails(AnnouncementTypeCreateRequest departmentCreateRequest);
 
+    public KPIResponse deleteAnnouncementTypeDetails(Integer announTypeId);
     public KPIResponse updateAnnouncementTypeDetails(AnnouncementTypeUpdateRequest announcementTypeUpdateRequest);
 
     public KPIResponse findAnnouncementTypeSearch(Integer announTypeId, String announTypeName, String statusCd, Pageable pageable);

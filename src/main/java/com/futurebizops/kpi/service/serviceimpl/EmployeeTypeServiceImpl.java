@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -58,8 +59,26 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside EmployeeTypeServiceImpl >> saveEmployeeType()");
+            log.error("Inside EmployeeTypeServiceImpl >> saveEmployeeType() : {}",ex);
             throw new KPIException("EmployeeTypeServiceImpl", false, ex.getMessage());
+        }
+
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse deleteEmployeeTypeDetails(Integer empTypeId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            employeeTypeRepo.deleteEmployeeTypeDetails(empTypeId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("Employee Type  details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeTypeServiceImpl >> deleteEmployeeTypeDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
         }
 
     }
@@ -94,6 +113,22 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
     }
+
+    @Override
+    public EmployeeTypeResponse findEmployeeTypeDetailsByEmpTypeId(Integer empTypeId) {
+        try {
+            List<Object[]> employeeTypeData = employeeTypeRepo.findEmployeeTypeDetailsByEmpTypeId(empTypeId);
+            List<EmployeeTypeResponse> employeeTypeResponses = employeeTypeData.stream().map(EmployeeTypeResponse::new).collect(Collectors.toList());
+            if(employeeTypeResponses.size()>0) {
+                return employeeTypeResponses.get(0);
+            }
+            return null;
+        } catch (Exception ex) {
+            log.error("DepartmentServiceImpl >>findAllDepartmentById :{}", ex);
+            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+        }
+    }
+
 
 
     private EmployeeTypeEntity convertEmployeeTypeCreateRequestToEntity(EmployeeTypeCreateRequest employeeTypeCreateRequest) {

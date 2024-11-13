@@ -4,6 +4,7 @@ import com.futurebizops.kpi.constants.SQLQueryConstants;
 import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.entity.UoMEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,10 @@ import java.util.Optional;
 public interface UoMRepo extends JpaRepository<UoMEntity, Integer> {
 
     public Optional<UoMEntity> findByUomNameEqualsIgnoreCase(String uomName);
+
+    @Modifying
+    @Query(value = "update uom set status_cd='I' where uom_id =:uomId", nativeQuery = true)
+    public int deleteUOMDetails(@Param("uomId") Integer uomId);
 
     @Query(value = SQLQueryConstants.UOM_QUERY, nativeQuery = true)
     List<Object[]> getUoMDetails(@Param("uomId")Integer uomId, @Param("uomName") String uomName, @Param("statusCd") String statusCd, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);

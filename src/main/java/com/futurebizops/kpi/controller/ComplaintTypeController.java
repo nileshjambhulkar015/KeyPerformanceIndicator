@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,6 +36,12 @@ public class ComplaintTypeController {
     @PostMapping
     public ResponseEntity<KPIResponse> saveDepartmentDetails(@RequestBody ComplaintTypeCreateRequest complaintTypeCreateRequest) {
         KPIResponse response = complaintTypeService.saveComplaintType(complaintTypeCreateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<KPIResponse> deleteComplaintTypeDetails(@RequestParam(required = false) Integer compTypeId) {
+        KPIResponse response = complaintTypeService.deleteComplaintTypeDetails(compTypeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -37,6 +37,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,9 +87,27 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
             response.setSuccess(true);
             return  response;
         } catch (Exception ex) {
-            log.error("Inside KeyPerfParameterServiceImpl >> saveKeyPerfomanceParameter()");
+            log.error("Inside KeyPerfParameterServiceImpl >> saveKeyPerfomanceParameter() : {}", ex);
             throw new KPIException("KeyPerfParameterServiceImpl", false, ex.getMessage());
         }
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse deleteKeyPerfomanceParamDetails(Integer kppId) {
+        KPIResponse busPassResponse = new KPIResponse();
+        try {
+            keyPerfParameterRepo.deleteKeyPerfomanceParamDetails(kppId);
+            busPassResponse.setSuccess(true);
+            busPassResponse.setResponseMessage("KPP details deleted Successfully");
+            return busPassResponse;
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> deleteDepartmentDetails() : {}",ex);
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+
     }
 
     @Override

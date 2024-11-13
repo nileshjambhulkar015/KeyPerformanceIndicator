@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,6 +37,12 @@ public class AnnouncementTypeController {
     @PostMapping
     public ResponseEntity<KPIResponse> saveAnnouncementTypeDetails(@RequestBody AnnouncementTypeCreateRequest announcementTypeCreateRequest) {
         KPIResponse response = announcementTypeService.saveAnnouncementTypeDetails(announcementTypeCreateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<KPIResponse> deleteAnnouncementTypeDetails(@RequestParam(required = false) Integer announTypeId) {
+        KPIResponse response = announcementTypeService.deleteAnnouncementTypeDetails(announTypeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -6,6 +6,7 @@ import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.response.dropdown.ComplaintTypeDDResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -34,4 +35,8 @@ public interface ComplaintTypeRepo extends JpaRepository<ComplaintTypeEntity, In
     public List<Object[]> findAllComplaintTypeByDeptId(@Param("deptId") Integer deptId);
 
     public Optional<ComplaintTypeEntity> findByDeptId(Integer deptId);
+
+    @Modifying
+    @Query(value = "update complaint_type set status_cd='I' where comp_type_id =:compTypeId", nativeQuery = true)
+    public int deleteComplaintTypeDetails(@Param("compTypeId") Integer compTypeId);
 }
