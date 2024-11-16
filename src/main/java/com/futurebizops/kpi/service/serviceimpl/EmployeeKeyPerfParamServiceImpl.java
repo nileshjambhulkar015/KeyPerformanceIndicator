@@ -133,6 +133,9 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                     Double totalOverallWeightage = null != employeeKppMasterEntity.get().getTotalOverallWeightage() ? Double.parseDouble(employeeKppMasterEntity.get().getTotalOverallWeightage()) : 0.0;
                     response.setTotalOverallTarget(totalOverallTarget);
                     response.setTotalOverallWeightage(totalOverallWeightage);
+                } else{
+                    response.setTotalOverallTarget(0.0);
+                    response.setTotalOverallWeightage(0.0);
                 }
             }
 
