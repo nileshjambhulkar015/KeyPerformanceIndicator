@@ -1036,10 +1036,10 @@ alter table employee_kpp_master_audit add column total_kpp_overall_weightage VAR
        insert into roles_audit(ROLE_ID,ROLE_NAME,remark,STATUS_CD,crte_user_id) values(4,'General Manager','Added General Manager role','A','admin');
 
 
-               insert into department(DEPT_NAME,STATUS_CD,crte_user_id) values('Admin','A','admin');
+               insert into department(DEPT_NAME,DEPT_MAIL_ID, STATUS_CD,crte_user_id) values('Admin','admininfo@gmail.com','A','admin');
                insert into department_audit (DEPT_NAME,STATUS_CD,crte_user_id) values('Admin','A','admin');
 
-               insert into department(DEPT_NAME,STATUS_CD,crte_user_id) values('General Manager','A','admin');
+               insert into department(DEPT_NAME,DEPT_MAIL_ID,STATUS_CD,crte_user_id) values('General Manager','gminfo@gmail.com','A','admin');
                insert into department_audit (DEPT_NAME,STATUS_CD,crte_user_id) values('General Manager','A','admin');
 
 

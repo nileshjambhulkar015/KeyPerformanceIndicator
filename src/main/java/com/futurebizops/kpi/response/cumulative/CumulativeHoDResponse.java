@@ -24,6 +24,7 @@ public class CumulativeHoDResponse {
         if(null!=objects[0]) {
             totalCumulativeHoD.setEkppMonth(DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[0])));
         }
+        //totalCumulativeHoD.setEkppMonth(String.valueOf(objects[0]));
 
         totalCumulativeHoD.setTotalEmpOverallAchieve(String.valueOf(objects[12]));
         totalCumulativeHoD.setTotalHodOverallAchieve(String.valueOf(objects[13]));
