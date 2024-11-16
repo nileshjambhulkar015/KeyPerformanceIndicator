@@ -45,7 +45,10 @@ public class UoMServiceImpl implements UoMService {
         Optional<UoMEntity> optionalUoMEntity = uoMRepo.findByUomNameEqualsIgnoreCase(uoMCreateRequest.getUomName());
         if(optionalUoMEntity.isPresent()){
             log.error("Inside UoMServiceImpl >> saveUoM()");
-            throw new KPIException("UoMServiceImpl Class", false, "UoM name already exist");
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .responseMessage("UoM name already exist")
+                    .build();
         }
 
         UoMEntity uoMEntity = convertUoMCreateRequestToEntity(uoMCreateRequest);

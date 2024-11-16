@@ -143,17 +143,12 @@ public class EmployeeController {
                                                                            @RequestParam(required = false) Integer roleId,
                                                                            @RequestParam(required = false) Integer deptId,
                                                                            @RequestParam(required = false) Integer desigId,
-                                                                           @RequestParam(required = false) String empFirstName,
-                                                                           @RequestParam(required = false) String empMiddleName,
-                                                                           @RequestParam(required = false) String empLastName,
-                                                                           @RequestParam(required = false) String empMobileNo,
-                                                                           @RequestParam(required = false) String emailId,
                                                                            @RequestParam(required = false) String statusCd,
                                                                            @RequestParam(required = false) String empKppStatus,
                                                                            @RequestParam(required = false) String hodKppStatus,
                                                                            @RequestParam(required = false) String gmKppStatus,
                                                                            @Parameter(hidden = true) Pageable pageable) {
-        KPIResponse response = employeeService.getAllEmployeeKPPStatus(reportingEmployee, gmEmployeedId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, pageable);
+        KPIResponse response = employeeService.getAllEmployeeKPPStatus(reportingEmployee, gmEmployeedId, empId, empEId, roleId, deptId, desigId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

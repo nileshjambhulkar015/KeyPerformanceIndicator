@@ -355,7 +355,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     //get details for employee, HOD and GM to approve or reject kpp details
     @Override
-    public KPIResponse getAllEmployeeKPPStatus(Integer reportingEmployee, Integer gmEmpId, Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable) {
+    public KPIResponse getAllEmployeeKPPStatus(Integer reportingEmployee, Integer gmEmpId, Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String statusCd, String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable) {
         String sortName = null;
 
         //for all records
@@ -372,23 +372,29 @@ public class EmployeeServiceImpl implements EmployeeService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
         try {
-            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus);
-            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusDetail(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, sortName, pageSize, pageOffset);
+            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, statusCd, empKppStatus, hodKppStatus, gmKppStatus);
+            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusDetail(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId,statusCd, empKppStatus, hodKppStatus, gmKppStatus, sortName, pageSize, pageOffset);
 
             List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
-            employeeKppStatusResponses = employeeKppStatusResponses.stream()
-                    .sorted(Comparator.comparing(EmployeeKppStatusResponse::getDesigName))
-                    .collect(Collectors.toList());
+            if(employeeKppStatusResponses.size()>0) {
+                employeeKppStatusResponses = employeeKppStatusResponses.stream()
+                        .sorted(Comparator.comparing(EmployeeKppStatusResponse::getDesigName))
+                        .collect(Collectors.toList());
 
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount))
-                    .responseMessage(KPIConstants.RECORD_FETCH)
-                    .build();
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseData(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount))
+                        .responseMessage(KPIConstants.RECORD_FETCH)
+                        .build();
+            }
         } catch (Exception ex) {
             log.error("Inside EmployeeKeyPerfParamServiceImpl >> getAllEmployeeDetailsForHod()");
             throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
         }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not found")
+                .build();
     }
 
     //get details for employee, HOD and GM to approve or reject kpp details

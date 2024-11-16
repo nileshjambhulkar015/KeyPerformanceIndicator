@@ -58,8 +58,9 @@ public class CumulativeController {
                                                                   @RequestParam(required = false) Integer deptId,
                                                                   @RequestParam(required = false) Integer desigId,
                                                                   @RequestParam(required = false) Integer reportingEmpId,
-                                                                  @RequestParam(required = false) Integer gmEmpId) {
-        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate,roleId,deptId,desigId, reportingEmpId,gmEmpId);
+                                                                  @RequestParam(required = false) Integer gmEmpId,
+                                                                  @Parameter(hidden = true) Pageable pageable) {
+        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate,roleId,deptId,desigId, reportingEmpId,gmEmpId,pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

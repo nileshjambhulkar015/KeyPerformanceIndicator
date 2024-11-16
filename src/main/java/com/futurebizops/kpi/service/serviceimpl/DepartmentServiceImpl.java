@@ -57,7 +57,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDeptName() );
         if(optionalDepartmentEntity.isPresent()){
             log.error("Inside DepartmentServiceImpl >> saveDepartment()");
-            throw new KPIException("DepartmentServiceImpl Class", false, "Department name already exist");
+            return KPIResponse.builder()
+                    .isSuccess(false)
+                    .responseMessage("Department name already exist")
+                    .build();
+
         }
 
         DepartmentEntity departmentEntity = convertDepartmentCreateRequestToEntity(departmentCreateRequest);

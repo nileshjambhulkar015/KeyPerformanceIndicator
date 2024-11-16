@@ -125,18 +125,27 @@ public class CumulativeServiceImpl implements CumulativeService {
 
 
     @Override
-    public KPIResponse allEmployeeKppDetails(String fromDate, String toDate, Integer roleId,Integer deptId,Integer desigId,Integer reportingEmpId,Integer gmEmpId) {
-        String sortName = null;
+    public KPIResponse allEmployeeKppDetails(String fromDate, String toDate, Integer roleId,Integer deptId,Integer desigId,Integer reportingEmpId,Integer gmEmpId,Pageable requestPageable) {
+
 
         KPIResponse kpiResponse = new KPIResponse();
-
+        String sortName = null;
+        //  String sortDirection = null;
+        Integer pageSize = requestPageable.getPageSize();
+        Integer pageOffset = (int) requestPageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = requestPageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
         String startDate = StringUtils.isNotEmpty(fromDate) ? DateTimeUtils.convertStringToInstant(fromDate).toString() : DateTimeUtils.getFirstDateOfYear();
         String endDate = StringUtils.isNotEmpty(toDate) ? DateTimeUtils.convertStringToInstant(toDate).toString() : Instant.now().toString();
 
 
         try{
-            //Integer totalCount = employeeKppMasterRepo.getEmployeeKppStatusDetailCount(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empKppStatus, hodKppStatus, gmKppStatus);
-            List<Object[]> employeeDetail = employeeKppMasterRepo.cumulativeEmpForHoDAndGM(startDate, endDate,roleId,deptId,desigId, reportingEmpId,gmEmpId);
+            Integer totalCount = employeeKppMasterRepo.cumulativeEmpForHoDAndGMCount(startDate, endDate,roleId,deptId,desigId, reportingEmpId,gmEmpId);
+            List<Object[]> employeeDetail = employeeKppMasterRepo.cumulativeEmpForHoDAndGM(startDate, endDate,roleId,deptId,desigId, reportingEmpId,gmEmpId, sortName, pageSize, pageOffset);
             List<CumulativeHoDResponse> employeeKppStatusDtos = employeeDetail.stream().map(CumulativeHoDResponse::new).collect(Collectors.toList());
 
            if(employeeKppStatusDtos.size()>0) {
@@ -161,7 +170,7 @@ public class CumulativeServiceImpl implements CumulativeService {
                    hoDCumulativeResponses.add(hoDCumulativeResponse);
 
                }
-               System.out.println(hoDCumulativeResponses);
+
 
 
 
@@ -180,7 +189,7 @@ public class CumulativeServiceImpl implements CumulativeService {
                    cumulativeHoDResponse.setTotalCumulativeHoDS(null);
                }
                kpiResponse.setResponseMessage("Total Kpp fetched");
-               kpiResponse.setResponseData(hoDCumulativeResponses);
+               kpiResponse.setResponseData(new PageImpl<>(hoDCumulativeResponses, requestPageable, totalCount));
                kpiResponse.setSuccess(true);
            }
            else {
