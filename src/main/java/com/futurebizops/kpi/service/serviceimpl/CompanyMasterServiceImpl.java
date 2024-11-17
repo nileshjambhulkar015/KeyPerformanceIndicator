@@ -123,20 +123,32 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
 
     @Override
     public KPIResponse updateCompanyDetails(CompanyMasterUpdateRequest companyMasterUpdateRequest) {
-
-        CompanyMasterEntity companyMasterEntity = convertCompanyUpdateRequestToEntity(companyMasterUpdateRequest);
         try {
+        Optional<CompanyMasterEntity> optionalCompanyMasterEntity = companyMasterRepo.findById(companyMasterUpdateRequest.getCompanyId());
+        if(optionalCompanyMasterEntity.isPresent()){
+            CompanyMasterEntity companyMasterEntity = optionalCompanyMasterEntity.get();
+            companyMasterEntity.setSiteId(companyMasterEntity.getSiteId());
+            companyMasterEntity.setRegionId(companyMasterEntity.getRegionId());
+            companyMasterEntity.setCompanyAddress(companyMasterEntity.getCompanyAddress());
+            companyMasterEntity.setCompanyName(companyMasterEntity.getCompanyName());
+            companyMasterEntity.setCompanyFinYear(companyMasterEntity.getCompanyFinYear());
+            companyMasterEntity.setCompanyMbNo(companyMasterEntity.getCompanyMbNo());
+            companyMasterEntity.setRemark(companyMasterEntity.getRemark());
             companyMasterRepo.save(companyMasterEntity);
-            CompanyMasterAudit companyMasterAudit = new CompanyMasterAudit(companyMasterEntity);
-            companyMasterAuditRepo.save(companyMasterAudit);
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
+        }
+
         } catch (Exception ex) {
             log.error("Inside CompanyMasterServiceImpl >> updateCompanyDetails() : {}", ex);
             throw new KPIException("CompanyMasterServiceImpl", false, ex.getMessage());
         }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not updated")
+                .build();
     }
 
     @Override

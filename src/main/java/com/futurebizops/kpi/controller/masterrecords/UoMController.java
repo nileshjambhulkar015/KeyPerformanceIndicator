@@ -1,4 +1,4 @@
-package com.futurebizops.kpi.controller;
+package com.futurebizops.kpi.controller.masterrecords;
 
 import com.futurebizops.kpi.entity.UoMEntity;
 import com.futurebizops.kpi.enums.PageDirection;
