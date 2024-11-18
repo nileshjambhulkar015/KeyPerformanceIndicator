@@ -312,6 +312,16 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .sorted(Comparator.comparing(EmployeeResponse::getDeptName))
                 .collect(Collectors.toList());
 
+        for (EmployeeResponse response : employeeResponses) {
+            Optional<EmployeeEntity> employeeEntity = employeeRepo.findById(response.getReportingEmpId());
+            if (employeeEntity.isPresent()) {
+                EmployeeEntity entity = employeeEntity.get();
+                response.setReportingHODName(entity.getEmpFirstName() + " " + entity.getEmpMiddleName() + " " + entity.getEmpLastName());
+                response.setReportingHODEId(entity.getEmpEId());
+            }
+        }
+
+
         return KPIResponse.builder()
                 .isSuccess(true)
                 .responseData(new PageImpl<>(employeeResponses, pageable, totalCount))
