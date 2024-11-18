@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -190,16 +191,17 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public List<AnnouncementTypeResponse> ddAllAnnouncementType(String statusCd) {
-        KPIResponse kpiResponse = new KPIResponse();
+
         List<Object[]> announcementData = announcementRepo.getDDAnnouncementByAnnounId(statusCd);
+        List<AnnouncementTypeResponse> announcementReponses = new ArrayList<>();
         if (announcementData.size() > 0) {
-            List<AnnouncementTypeResponse> announcementReponses = announcementData.stream().map(AnnouncementTypeResponse::new).collect(Collectors.toList());
+            announcementReponses = announcementData.stream().map(AnnouncementTypeResponse::new).collect(Collectors.toList());
 
             return announcementReponses;
 
         }
 
-        return null;
+        return announcementReponses;
     }
 
 

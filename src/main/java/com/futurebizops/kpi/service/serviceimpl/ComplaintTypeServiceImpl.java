@@ -142,7 +142,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     @Override
     public List<DepartmentDDResponse> findAllDepartmentFromComplaintType() {
         List<Object[]> complaintData = complaintTypeRepo.findAllDepartmentFromComplaintType();
-        List<DepartmentDDResponse> departmentDDResponses = null;
+        List<DepartmentDDResponse> departmentDDResponses = new ArrayList<>();
         if (complaintData.size() > 0) {
             departmentDDResponses = complaintData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
         }

@@ -72,6 +72,7 @@ public class ComplaintTypeController {
 
     @GetMapping (value = "/comp-type-dd-dept")
     public ResponseEntity<List<DepartmentDDResponse>> findAllDepartmentFromComplaintType() {
+
         List<DepartmentDDResponse> response = complaintTypeService.findAllDepartmentFromComplaintType();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
