@@ -39,16 +39,6 @@ public class CumulativeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //load kpp details as per employee id for hod ratings
-   /* @GetMapping("/hod-employee-all")
-    @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> getEmployeeKppStatus(@RequestParam(required = false) String fromDate,
-                                                            @RequestParam(required = false) String toDate,
-                                                            @RequestParam(required = false) Integer empId) {
-        KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate, empId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-
-    }*/
 
     @GetMapping("/hod-cummulatve")
     // @PageableAsQueryParam
