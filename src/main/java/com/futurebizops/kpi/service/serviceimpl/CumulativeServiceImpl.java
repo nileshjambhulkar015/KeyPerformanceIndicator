@@ -108,8 +108,7 @@ public class CumulativeServiceImpl implements CumulativeService {
             else{
                 return KPIResponse.builder()
                         .isSuccess(false)
-                        .responseData(cummalitiveEmployeeResponse)
-                        .responseMessage("No Record found")
+                        .responseMessage("KPP is not approved yet")
                         .build();
             }
             return KPIResponse.builder()
