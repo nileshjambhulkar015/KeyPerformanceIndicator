@@ -197,8 +197,8 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 kppMasterEntity.setRoleId(keyPerfParamCreateRequest.getRoleId());
                 kppMasterEntity.setDeptId(keyPerfParamCreateRequest.getDeptId());
                 kppMasterEntity.setDesigId(keyPerfParamCreateRequest.getDesigId());
-                kppMasterEntity.setTotalOverallTarget("0.0");
-                kppMasterEntity.setTotalOverallWeightage("0.0");
+                kppMasterEntity.setTotalOverallTarget(keyPerfParamCreateRequest.getKppOverallTarget());
+                kppMasterEntity.setTotalOverallWeightage(keyPerfParamCreateRequest.getKppOverallWeightage());
                 kppMasterEntity.setEmpTotalAchivedWeight("0");
                 kppMasterEntity.setEmpTotalOverallAchieve("0");
                 kppMasterEntity.setEmpTotalOverallTaskComp("0");
@@ -291,7 +291,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             for(EmployeeMasterReportDTO employeeMasterReportDTO :reportDataReponses){
                 int  reportMonthValue =DateTimeUtils.extractMonthValue(employeeMasterReportDTO.getEkppMonth());
                 int  reportYearValue =DateTimeUtils.extractYear(employeeMasterReportDTO.getEkppMonth());
-                if(requestMonthValue==reportMonthValue && requestYearValue==reportYearValue){
+                if(requestMonthValue==reportMonthValue && requestYearValue==reportYearValue && empKPPMasterUpdateRequest.getEkppStatus()=="Pending"){
                     return KPIResponse.builder()
                             .isSuccess(false)
                             .responseMessage("For this month report is already approved")
