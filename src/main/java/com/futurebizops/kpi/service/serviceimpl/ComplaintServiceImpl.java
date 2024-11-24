@@ -193,23 +193,25 @@ public class ComplaintServiceImpl implements ComplaintService {
         Integer totalCount = complaintRepo.getAdvSearchEmployeeComplaintCount(empId,deptId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate,asCompResolveEmpId);
         List<Object[]> complaintData = complaintRepo.getAdvSearchEmployeeComplaintDetail(empId,deptId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate,asCompResolveEmpId, sortName, pageSize, pageOffset);
 
-        List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
+        if(null != complaintData) {
+            List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
-        for(EmployeeComplaintResponse employeeComplaintResponse : complaintResponses){
-            employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
-        }
+            for (EmployeeComplaintResponse employeeComplaintResponse : complaintResponses) {
+                employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+            }
 
-        complaintResponses = complaintResponses.stream()
-               // .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
-                .sorted((o1, o2)->o2.getCompDate().
-                        compareTo(o1.getCompDate()))
-                .collect(Collectors.toList());
-        if(complaintResponses.size()>0) {
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
-                    .responseMessage(KPIConstants.RECORD_FETCH)
-                    .build();
+            complaintResponses = complaintResponses.stream()
+                    // .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
+                    .sorted((o1, o2) -> o2.getCompDate().
+                            compareTo(o1.getCompDate()))
+                    .collect(Collectors.toList());
+            if (complaintResponses.size() > 0) {
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
+                        .responseMessage(KPIConstants.RECORD_FETCH)
+                        .build();
+            }
         }
         return KPIResponse.builder()
                 .isSuccess(false)
@@ -344,22 +346,29 @@ public class ComplaintServiceImpl implements ComplaintService {
         Integer totalCount = complaintRepo.getEmployeeComplaintCount(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId,resolveEmpId, statusCd);
         List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId,resolveEmpId, statusCd, sortName, pageSize, pageOffset);
 
-        List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
+        if(null != complaintData && complaintData.size()>0) {
+            List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
-        for(EmployeeComplaintResponse employeeComplaintResponse : complaintResponses){
-            employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+            for (EmployeeComplaintResponse employeeComplaintResponse : complaintResponses) {
+                employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+            }
+
+            complaintResponses = complaintResponses.stream()
+                    //.sorted(Comparator.comparing(EmployeeComplaintResponse::getCompDate))
+                    .sorted((o1, o2) -> o2.getCreatedDate().
+                            compareTo(o1.getCreatedDate()))
+                    .collect(Collectors.toList());
+
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
         }
-
-        complaintResponses = complaintResponses.stream()
-                //.sorted(Comparator.comparing(EmployeeComplaintResponse::getCompDate))
-                .sorted((o1, o2)->o2.getCreatedDate().
-                        compareTo(o1.getCreatedDate()))
-                .collect(Collectors.toList());
-
         return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
+                .isSuccess(false)
+                .responseData(null)
+                .responseMessage(KPIConstants.RECORD_NOT_FOUND)
                 .build();
     }
 

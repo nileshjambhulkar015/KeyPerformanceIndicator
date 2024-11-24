@@ -148,6 +148,7 @@ public class DesignationServiceImp implements DesignationService {
                     .build();
         }
         return KPIResponse.builder()
+                .responseMessage("Designation name is not available")
                 .isSuccess(false)
                 .build();
     }

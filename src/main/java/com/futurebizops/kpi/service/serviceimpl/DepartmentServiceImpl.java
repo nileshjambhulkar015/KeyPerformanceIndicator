@@ -177,6 +177,20 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentDDResponses;
     }
 
+    @Override
+    public List<DepartmentDDResponse> ddAllDepartment() {
+        List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
+        DepartmentDDResponse departmentDDResponse = null;
+        List<DepartmentDDResponse> departmentDDResponses =new ArrayList<>();
+
+        for(DepartmentEntity departmentEntity : departmentEntities){
+                departmentDDResponse = new DepartmentDDResponse();
+                departmentDDResponse.setDeptId(departmentEntity.getDeptId());
+                departmentDDResponse.setDeptName(departmentEntity.getDeptName());
+                departmentDDResponses.add(departmentDDResponse);
+        }
+        return departmentDDResponses;
+    }
 
     @Override
     public List<DepartmentReponse> findAllDepartmentDetails() {

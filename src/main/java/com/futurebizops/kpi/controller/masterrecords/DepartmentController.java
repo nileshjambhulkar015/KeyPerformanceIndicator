@@ -85,6 +85,12 @@ public class DepartmentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping (value = "/all-dd-dept")
+    public ResponseEntity<List<DepartmentDDResponse>> ddAllDepartmentExceptGM() {
+        List<DepartmentDDResponse> response = departmentService.findAllDepartmentExceptGM();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @DeleteMapping
     public ResponseEntity<KPIResponse> deleteDepartmentDetails(@RequestParam(required = false) Integer deptId) {
         KPIResponse response = departmentService.deleteDepartmentDetails(deptId);

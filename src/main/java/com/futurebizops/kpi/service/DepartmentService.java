@@ -30,5 +30,6 @@ public interface DepartmentService {
 
     public List<DepartmentDDResponse> findAllDepartmentExceptGM();
 
+    public List<DepartmentDDResponse> ddAllDepartment();
     public KPIResponse deleteDepartmentDetails(Integer deptId);
 }
