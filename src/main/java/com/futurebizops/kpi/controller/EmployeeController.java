@@ -51,6 +51,14 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.updateEmployee(employeeUpdateRequest));
     }
 
+    @PutMapping(value = "/update-dob")
+    public ResponseEntity<KPIResponse> updateEmployeeDOB(@RequestParam(required = false) Integer empId,
+                                                         @RequestParam(required = false) String empDob) {
+        return ResponseEntity.ok(employeeService.updateEmployeeDOB(empId,empDob));
+    }
+
+
+
     //for employee master page to get details of employee
     @GetMapping(value = "/search")
     @PageableAsQueryParam
