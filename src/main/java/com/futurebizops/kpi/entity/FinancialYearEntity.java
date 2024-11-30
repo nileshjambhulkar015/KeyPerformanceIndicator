@@ -26,8 +26,8 @@ public class FinancialYearEntity extends AuditEnabledEntity {
     @Column(name = "fin_year_id")
     private Integer finYearId;
 
-    @Column(name = "fin_year_name")
-    private String finYearName;
+    @Column(name = "fin_year")
+    private String finYear;
 
     @Column(name = "remark")
     private String remark;

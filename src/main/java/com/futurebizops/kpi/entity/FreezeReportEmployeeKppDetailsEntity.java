@@ -12,17 +12,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 
-@Table(name = "report_employee_kpp_details")
+@Table(name = "freeze_report_employee_kpp_details")
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReportEmployeeKppDetailsEntity {
+public class FreezeReportEmployeeKppDetailsEntity {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "report_ekpp_details_id")
-    private Integer reportEkppDId;
+    @Column(name = "freeze_report_ekpp_details_id")
+    private Integer freezeReportEkppDId;
 
     @Column(name = "ekpp_month")
     private Instant ekppMonth;

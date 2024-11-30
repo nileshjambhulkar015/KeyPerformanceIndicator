@@ -55,12 +55,12 @@
        drop table announcement_master_audit;
 drop table financial_year;
 drop table financial_year_audit;
-
+drop table freeze_report_employee_kpp_details;
     **/
 
  create table financial_year(
             fin_year_id serial  PRIMARY key,
-            fin_year_name VARCHAR(40),
+            fin_year VARCHAR(40),
             REMARK VARCHAR(200),
             STATUS_CD VARCHAR(10),
             crte_user_id VARCHAR(20) ,
@@ -1015,8 +1015,115 @@ create table announcement_type(
         lst_updt_user_id VARCHAR(20) null
     );
 
+    	create table freeze_report_employee_kpp_details(
+    	    freeze_report_ekpp_details_id serial PRIMARY key,
+    	        ekpp_month timestamp,
+    	        emp_id INTEGER,
+    	        emp_eid VARCHAR(20) ,
+    	        role_id INTEGER,
+    	        dept_id INTEGER,
+    	        desig_id INTEGER,
+    	        kpp_id INTEGER,
+    	        kpp_overall_tar VARCHAR(50),
+    	        kpp_overall_weightage VARCHAR(50),
+    	        ekpp_emp_achived_weight VARCHAR(50),
+    	        ekpp_emp_overall_achieve VARCHAR(50),
+    	        ekpp_emp_overall_task_comp VARCHAR(50),
+    	        hod_emp_id INTEGER,
+    	        ekpp_hod_achived_weight VARCHAR(50),
+    	        ekpp_hod_overall_achieve VARCHAR(50),
+    	        ekpp_hod_overall_task_comp VARCHAR(50),
+    	        gm_emp_id INTEGER,
+    	        ekpp_gm_achived_weight VARCHAR(50),
+    	        ekpp_gm_overall_achieve VARCHAR(50),
+    	        ekpp_gm_overall_task_comp VARCHAR(50),
+    	        avg_overall_rating VARCHAR(150),
+    	        avg_overall_achivement_per VARCHAR(150),
+    	        key_strength VARCHAR(1500),
+    	        are_of_improvement VARCHAR(1500),
+    	        training_dev_needs VARCHAR(1500),
+    	        status_cd VARCHAR(10),
+    	        crte_user_id VARCHAR(20) ,
+    	        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+    	        lst_updt_ts TIMESTAMP null,
+    	        lst_updt_user_id VARCHAR(20) null
+    	    );
 
+create table freeze_report_employee_kpp_master(
+        freeze_report_ekpp_id serial PRIMARY key,
+        fin_year VARCHAR(20),
+        ekpp_month timestamp,
+            emp_id INTEGER,
+            emp_eid VARCHAR(20) ,
+            role_id INTEGER,
+            dept_id INTEGER,
+            desig_id INTEGER,
+            kpp_overall_tar VARCHAR(50),
+            kpp_overall_weightage VARCHAR(50),
+            total_emp_achived_weight VARCHAR(50),
+            total_emp_overall_achieve VARCHAR(50),
+            total_emp_overall_task_comp VARCHAR(50),
+            emp_ekpp_applied_date timestamp,
+            emp_ekpp_status varchar(50),
+            emp_remark  VARCHAR(200),
+            emp_ekpp_evidence varchar(100),
+            hod_emp_id INTEGER,
+            total_hod_achived_weight VARCHAR(50),
+            total_hod_overall_achieve VARCHAR(50),
+            total_hod_overall_task_comp VARCHAR(50),
+            hod_ekpp_status varchar(20),
+            hod_approved_date timestamp,
+            hod_remark varchar(200),
+            gm_emp_id INTEGER,
+            total_gm_achived_weight VARCHAR(50),
+            total_gm_overall_achieve VARCHAR(50),
+            total_gm_overall_task_comp VARCHAR(50),
+            gm_ekpp_status varchar(20),
+            gm_approved_date timestamp,
+            gm_remark varchar(200),
+            avg_total_overall_rating VARCHAR(150),
+            avg_total_overall_achivement_per VARCHAR(150),
+            key_strength VARCHAR(1500),
+        are_of_improvement VARCHAR(1500),
+        training_dev_needs VARCHAR(1500),
+           remark VARCHAR(100),
+            status_cd VARCHAR(10),
+            crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
 
+ create table freeze_report_employee_kpp_details(
+    freeze_report_ekpp_details_id serial PRIMARY key,
+        ekpp_month timestamp,
+        emp_id INTEGER,
+        emp_eid VARCHAR(20) ,
+        role_id INTEGER,
+        dept_id INTEGER,
+        desig_id INTEGER,
+        kpp_id INTEGER,
+        kpp_overall_tar VARCHAR(50),
+        kpp_overall_weightage VARCHAR(50),
+        ekpp_emp_achived_weight VARCHAR(50),
+        ekpp_emp_overall_achieve VARCHAR(50),
+        ekpp_emp_overall_task_comp VARCHAR(50),
+        hod_emp_id INTEGER,
+        ekpp_hod_achived_weight VARCHAR(50),
+        ekpp_hod_overall_achieve VARCHAR(50),
+        ekpp_hod_overall_task_comp VARCHAR(50),
+        gm_emp_id INTEGER,
+        ekpp_gm_achived_weight VARCHAR(50),
+        ekpp_gm_overall_achieve VARCHAR(50),
+        ekpp_gm_overall_task_comp VARCHAR(50),
+        avg_overall_rating VARCHAR(150),
+        avg_overall_achivement_per VARCHAR(150),
+        status_cd VARCHAR(10),
+        crte_user_id VARCHAR(20) ,
+        crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+        lst_updt_ts TIMESTAMP null,
+        lst_updt_user_id VARCHAR(20) null
+    );
 
     /*
 

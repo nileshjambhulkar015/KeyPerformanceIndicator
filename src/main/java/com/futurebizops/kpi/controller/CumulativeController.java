@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.controller;
 
+import com.futurebizops.kpi.request.CompanyMasterCreateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.CumulativeService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,5 +56,12 @@ public class CumulativeController {
         KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate,roleId,deptId,desigId, reportingEmpId,gmEmpId,pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+
+
+    @PostMapping(value = "/freeze")
+    public ResponseEntity<KPIResponse> freezeCumulative(@RequestBody CompanyMasterCreateRequest masterCreateRequest) {
+        KPIResponse response =null; //companyMasterService.saveCompanyDetails(masterCreateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

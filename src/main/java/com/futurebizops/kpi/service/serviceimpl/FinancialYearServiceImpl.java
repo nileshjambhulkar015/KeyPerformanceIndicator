@@ -1,20 +1,14 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
-import com.futurebizops.kpi.entity.EmployeeTypeAudit;
 import com.futurebizops.kpi.entity.EmployeeTypeEntity;
 import com.futurebizops.kpi.entity.FinancialYearEntity;
 import com.futurebizops.kpi.exception.KPIException;
-import com.futurebizops.kpi.repository.EmployeeTypeAuditRepo;
-import com.futurebizops.kpi.repository.EmployeeTypeRepo;
 import com.futurebizops.kpi.repository.FinancialYearRepo;
-import com.futurebizops.kpi.request.EmployeeTypeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeTypeUpdateRequest;
 import com.futurebizops.kpi.request.FinancialYearCreateRequest;
 import com.futurebizops.kpi.request.FinancialYearUpdateRequest;
-import com.futurebizops.kpi.response.EmployeeTypeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.service.EmployeeTypeService;
 import com.futurebizops.kpi.service.FinancialYearService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,7 +30,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
 
     @Override
     public KPIResponse saveFinancialYear(FinancialYearCreateRequest financialYearCreateRequest) {
-        Optional<FinancialYearEntity> optionalDepartmentEntity = financialYearRepo.findByFinYearNameEqualsIgnoreCase(financialYearCreateRequest.getFinYearName() );
+        Optional<FinancialYearEntity> optionalDepartmentEntity = financialYearRepo.findByFinYearEqualsIgnoreCase(financialYearCreateRequest.getFinYearName() );
         if(optionalDepartmentEntity.isPresent()){
             log.error("Inside FinancialYearServiceImpl >> saveEmployeeType() Financial year already exist");
             throw new KPIException("FinancialYearServiceImpl Class", false, "Financial year name already exist");
@@ -83,7 +76,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
         try {
             if(financialYearEntity.isPresent()){
                 FinancialYearEntity financialYear = financialYearEntity.get();
-                financialYear.setFinYearName(financialYearUpdateRequest.getFinYearName());
+                financialYear.setFinYear(financialYearUpdateRequest.getFinYearName());
                 financialYear.setRemark(financialYearUpdateRequest.getRemark());
                 financialYearRepo.save(financialYear);
                 return KPIResponse.builder()
@@ -118,7 +111,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
     private FinancialYearEntity convertFinancialYearCreateRequestToEntity(FinancialYearCreateRequest financialYearCreateRequest) {
         FinancialYearEntity financialYearEntity = new FinancialYearEntity();
 
-        financialYearEntity.setFinYearName(financialYearCreateRequest.getFinYearName());
+        financialYearEntity.setFinYear(financialYearCreateRequest.getFinYearName());
         financialYearEntity.setRemark(financialYearCreateRequest.getRemark());
         financialYearEntity.setStatusCd(financialYearCreateRequest.getStatusCd());
         financialYearEntity.setCreatedUserId(financialYearCreateRequest.getEmployeeId());

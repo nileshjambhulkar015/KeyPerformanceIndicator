@@ -96,21 +96,23 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
 
         Integer totalCount = announcementRepo.getAnnouncementCount(announFromDate,announToDate,announTypeId,statusCd);
-        List<Object[]> departmentData = announcementRepo.getAnnouncementDetail(announFromDate,announToDate,announTypeId,statusCd,pageSize, pageOffset);
+        List<Object[]> announcementDetail = announcementRepo.getAnnouncementDetail(announFromDate,announToDate,announTypeId,statusCd,pageSize, pageOffset);
 
-        List<AnnouncementReponse> announcementReponses = departmentData.stream().map(AnnouncementReponse::new).collect(Collectors.toList());
-
-
+        if(announcementDetail!=null && announcementDetail.size()>0) {
+            List<AnnouncementReponse> announcementReponses = announcementDetail.stream().map(AnnouncementReponse::new).collect(Collectors.toList());
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(announcementReponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        }
         return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(announcementReponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
+                .isSuccess(false)
+                .responseMessage("Announcement not found")
                 .build();
     }
 
     @Override
-
-
     public KPIResponse advSearchAnnouncementDetails(AnnouncementAdvSearch announcementAdvSearch, Pageable requestPageable) {
         String statusCd=null;
         String announFromDate = StringUtils.isNotEmpty(announcementAdvSearch.getAsAnnounFromDate()) ? announcementAdvSearch.getAsAnnounFromDate() : null;

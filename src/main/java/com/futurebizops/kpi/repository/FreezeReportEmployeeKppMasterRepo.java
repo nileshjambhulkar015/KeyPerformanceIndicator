@@ -1,13 +1,10 @@
 package com.futurebizops.kpi.repository;
 
+import com.futurebizops.kpi.entity.FreezeReportEmployeeKppMasterEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppMasterEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public interface ReportEmployeeKppMasterRepo extends JpaRepository<ReportEmployeeKppMasterEntity, Integer> {
-
-    List<ReportEmployeeKppMasterEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd);
+public interface FreezeReportEmployeeKppMasterRepo extends JpaRepository<FreezeReportEmployeeKppMasterEntity, Integer> {
 }

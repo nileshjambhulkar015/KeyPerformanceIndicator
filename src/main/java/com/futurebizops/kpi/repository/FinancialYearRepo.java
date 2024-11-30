@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface FinancialYearRepo extends JpaRepository<FinancialYearEntity, Integer> {
 
-    Optional<FinancialYearEntity> findByFinYearNameEqualsIgnoreCase(String finYearName);
+    Optional<FinancialYearEntity> findByFinYearEqualsIgnoreCase(String finYearName);
 
     @Modifying
     @Query(value = "update financial_year set status_cd='I' where fin_year_id =:finYearId", nativeQuery = true)

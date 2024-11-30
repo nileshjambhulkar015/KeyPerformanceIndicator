@@ -110,6 +110,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
                     .build();
         }
         return KPIResponse.builder()
+                .responseMessage("Complaint type not found")
                 .isSuccess(false)
                 .build();
     }
