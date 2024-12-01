@@ -95,11 +95,21 @@ public class CumulativeServiceImpl implements CumulativeService {
                         .sorted(Comparator.comparing(EmployeeKppStatusResponse::getEkppMonth))
                         .collect(Collectors.toList());
 
+                cummalitiveEmployeeResponse.setEmpId(employeeKppStatusResponses.get(0).getEmpId());
+                cummalitiveEmployeeResponse.setEmpEId(employeeKppStatusResponses.get(0).getEmpEId());
+                cummalitiveEmployeeResponse.setEmpName(employeeKppStatusResponses.get(0).getEmpFirstName()+" "+employeeKppStatusResponses.get(0).getEmpMiddleName()+" "+employeeKppStatusResponses.get(0).getEmpLastName());
+                cummalitiveEmployeeResponse.setDeptId(employeeKppStatusResponses.get(0).getDeptId());
+                cummalitiveEmployeeResponse.setDeptName(employeeKppStatusResponses.get(0).getDeptName());
+                cummalitiveEmployeeResponse.setDesigId(employeeKppStatusResponses.get(0).getDesigId());
+                cummalitiveEmployeeResponse.setDesigName(employeeKppStatusResponses.get(0).getDesigName());
+
 
                 cummalitiveEmployeeResponse.setEmployeeKppStatusResponses(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount));
                 cummalitiveEmployeeResponse.setSumOfEmployeeRatings(sumOfEmployeeRatings);
                 cummalitiveEmployeeResponse.setSumOfHodRatings(sumOfHodRatings);
                 cummalitiveEmployeeResponse.setSumOfGMRatings(sumOfGMRatings);
+
+
 
                 cummalitiveEmployeeResponse.setCummulativeRatings(cummulativeRatings);
                 cummalitiveEmployeeResponse.setAvgCummulativeRatings(avgCummulativeRatings);
