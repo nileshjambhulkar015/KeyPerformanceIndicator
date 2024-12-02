@@ -1,6 +1,7 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
+import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.entity.EmployeeTypeEntity;
 import com.futurebizops.kpi.entity.FinancialYearEntity;
 import com.futurebizops.kpi.exception.KPIException;
@@ -9,12 +10,15 @@ import com.futurebizops.kpi.request.EmployeeTypeUpdateRequest;
 import com.futurebizops.kpi.request.FinancialYearCreateRequest;
 import com.futurebizops.kpi.request.FinancialYearUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
+import com.futurebizops.kpi.response.dropdown.FinancialYearDDResponse;
 import com.futurebizops.kpi.service.FinancialYearService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,6 +97,21 @@ public class FinancialYearServiceImpl implements FinancialYearService {
                 .isSuccess(false)
                 .responseMessage("Financial year not updated")
                 .build();
+    }
+
+    @Override
+    public List<FinancialYearDDResponse> ddAllFinancialYear() {
+        List<FinancialYearEntity> financialYearEntities = financialYearRepo.ddAllFinancialYear();
+        FinancialYearDDResponse financialYearDDResponse = null;
+        List<FinancialYearDDResponse> financialYearDDResponses =new ArrayList<>();
+
+        for(FinancialYearEntity departmentEntity : financialYearEntities){
+            financialYearDDResponse = new FinancialYearDDResponse();
+            financialYearDDResponse.setFinYearId(departmentEntity.getFinYearId());
+            financialYearDDResponse.setFinYear(departmentEntity.getFinYear());
+            financialYearDDResponses.add(financialYearDDResponse);
+        }
+        return financialYearDDResponses;
     }
 
     @Override

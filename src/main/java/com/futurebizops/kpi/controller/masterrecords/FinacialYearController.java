@@ -6,8 +6,10 @@ import com.futurebizops.kpi.request.EmployeeTypeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeTypeUpdateRequest;
 import com.futurebizops.kpi.request.FinancialYearCreateRequest;
 import com.futurebizops.kpi.request.FinancialYearUpdateRequest;
+import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.EmployeeTypeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.FinancialYearDDResponse;
 import com.futurebizops.kpi.service.EmployeeTypeService;
 import com.futurebizops.kpi.service.FinancialYearService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
@@ -71,6 +74,13 @@ public class FinacialYearController {
     public ResponseEntity<KPIResponse> deleteFinancialYear(@RequestParam(required = false) Integer finYearId) {
         KPIResponse response = financialYearService.deleteFinancialYear(finYearId);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/dd-fin-year")
+    public ResponseEntity<List<FinancialYearDDResponse>> ddAllFinancialYear() {
+        List<FinancialYearDDResponse> response = financialYearService.ddAllFinancialYear();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 }
