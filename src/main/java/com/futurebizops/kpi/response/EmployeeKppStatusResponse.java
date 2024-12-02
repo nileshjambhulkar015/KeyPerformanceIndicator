@@ -31,7 +31,10 @@ public class EmployeeKppStatusResponse {
     private String ekppMonth;
 
     private Double sumOfRatings;
-
+    private String finYear;
+    private String empKeyStrength;
+    private String empAreaOfImprovement;
+    private String empTrainginDevelopmentNeeds;
 
     public EmployeeKppStatusResponse(Object[] objects) {
         empId = Integer.parseInt(String.valueOf(objects[0]));
@@ -56,6 +59,11 @@ public class EmployeeKppStatusResponse {
         if(null!=objects[17]) {
             this.ekppMonth = DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[17]));
         }
+
+        finYear=String.valueOf(objects[18]);
+        empKeyStrength=String.valueOf(objects[19]);
+        empAreaOfImprovement=String.valueOf(objects[20]);
+        empTrainginDevelopmentNeeds=String.valueOf(objects[21]);
 
     }
 }

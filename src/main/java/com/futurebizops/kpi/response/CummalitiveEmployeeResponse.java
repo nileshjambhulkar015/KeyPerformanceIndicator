@@ -26,5 +26,10 @@ public class CummalitiveEmployeeResponse {
     private String empMobileNo;
     private String emailId;
 
+    private String finYear;
+    private String empKeyStrength;
+    private String empAreaOfImprovement;
+    private String empTrainginDevelopmentNeeds;
+
     PageImpl<EmployeeKppStatusResponse> employeeKppStatusResponses;
 }

@@ -48,11 +48,6 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     @Query(value = SQLQueryConstants.EMPLOYEE_KPP_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeKeyPerfParameterDetail(@Param("empId") Integer empId, @Param("empEId") String empEId, @Param("statusCd") String statusCd);
 
-    @Query(value = SQLQueryConstants.EMPLOYEE_CUMULATIVE_KPP_STATUS_REPORT_QUERY, nativeQuery = true)
-    List<Object[]> getEmployeeKppStatusReportDetail(@Param("startDate") String startDate,@Param("endDate") String endDate, @Param("empId") Integer empId,  @Param("roleId") Integer roleId,  @Param("statusCd") String statusCd,  @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
-
-    @Query(value = SQLQueryConstants.EMPLOYEE_CUMULATIVE_KPP_STATUS_REPORT_COUNT_QUERY, nativeQuery = true)
-    Integer getEmployeeKppStatusReportCount(@Param("startDate") String startDate,@Param("endDate") String endDate, @Param("empId") Integer empId,  @Param("roleId") Integer roleId,  @Param("statusCd") String statusCd);
 
     Optional<KeyPerfParamEntity> findByKppObjectiveNoEqualsIgnoreCaseAndStatusCd(String kppObjectiveNo,String statusCd);
 

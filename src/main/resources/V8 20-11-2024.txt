@@ -858,6 +858,7 @@ lst_updt_user_id VARCHAR(20) null
 
 create table report_employee_kpp_master(
 report_ekpp_id serial PRIMARY key,
+fin_year VARCHAR(20),
 ekpp_month timestamp,
 emp_id INTEGER,
 emp_eid VARCHAR(20) ,
@@ -889,6 +890,9 @@ gm_approved_date timestamp,
 gm_remark varchar(200),
 avg_total_overall_rating VARCHAR(150),
 avg_total_overall_achivement_per VARCHAR(150),
+key_strength VARCHAR(1500),
+are_of_improvement VARCHAR(1500),
+training_dev_needs VARCHAR(1500),
 remark VARCHAR(100),
 status_cd VARCHAR(10),
 crte_user_id VARCHAR(20) ,
@@ -1129,5 +1133,11 @@ insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(2, 'News', 'A');
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(3, 'Meeting', 'A');
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(4, 'Announcement', 'A');
+
+
+alter table report_employee_kpp_master add column fin_year VARCHAR(20);
+alter table report_employee_kpp_master add column key_strength VARCHAR(1500);
+alter table report_employee_kpp_master add column are_of_improvement VARCHAR(1500);
+alter table report_employee_kpp_master add column training_dev_needs VARCHAR(1500);
 
 */

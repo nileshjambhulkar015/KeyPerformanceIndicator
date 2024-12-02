@@ -1,18 +1,14 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
-import com.futurebizops.kpi.dto.EmployeeKppDetailsDto;
-import com.futurebizops.kpi.dto.EmployeeKppMasterDto;
-import com.futurebizops.kpi.dto.EmployeeKppStatusDto;
 import com.futurebizops.kpi.exception.KPIException;
-import com.futurebizops.kpi.repository.EmployeeKppMasterRepo;
-import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
+import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
+import com.futurebizops.kpi.request.CumulativeUpdateRequest;
 import com.futurebizops.kpi.response.CummalitiveEmployeeResponse;
-import com.futurebizops.kpi.response.EmpKppStatusResponse;
-import com.futurebizops.kpi.response.cumulative.CumulativeHoDResponse;
 import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
-import com.futurebizops.kpi.response.cumulative.HODCumulativeData;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.cumulative.CumulativeHoDResponse;
+import com.futurebizops.kpi.response.cumulative.HODCumulativeData;
 import com.futurebizops.kpi.response.cumulative.HoDCumulativeResponse;
 import com.futurebizops.kpi.response.cumulative.TotalCumulativeHoD;
 import com.futurebizops.kpi.service.CumulativeService;
@@ -25,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -39,12 +36,9 @@ import java.util.stream.Collectors;
 public class CumulativeServiceImpl implements CumulativeService {
 
     @Autowired
-    EmployeeKppMasterRepo employeeKppMasterRepo;
+    ReportEmployeeKppMasterRepo reportEmployeeKppMasterRepo;
 
-    @Autowired
-    private KeyPerfParameterRepo keyPerfParameterRepo;
-
-    //shpw only 2 decimal value
+   //shpw only 2 decimal value
     private static final DecimalFormat decfor = new DecimalFormat("0.00");
 
     @Override
@@ -66,8 +60,8 @@ public class CumulativeServiceImpl implements CumulativeService {
         }
         try {
 
-            Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusReportCount(startDate, endDate, empId, roleId,  statusCd);
-            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusReportDetail(startDate, endDate, empId, roleId,  statusCd,  sortName, pageSize, pageOffset);
+            Integer totalCount = reportEmployeeKppMasterRepo.getEmployeeKppStatusReportCount(startDate, endDate, empId, roleId,  statusCd);
+            List<Object[]> employeeDetail = reportEmployeeKppMasterRepo.getEmployeeKppStatusReportDetail(startDate, endDate, empId, roleId,  statusCd,  sortName, pageSize, pageOffset);
             if(employeeDetail.size()>0) {
                 List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
 
@@ -103,6 +97,11 @@ public class CumulativeServiceImpl implements CumulativeService {
                 cummalitiveEmployeeResponse.setDesigId(employeeKppStatusResponses.get(0).getDesigId());
                 cummalitiveEmployeeResponse.setDesigName(employeeKppStatusResponses.get(0).getDesigName());
 
+                cummalitiveEmployeeResponse.setFinYear(employeeKppStatusResponses.get(0).getFinYear());
+                cummalitiveEmployeeResponse.setEmpKeyStrength(employeeKppStatusResponses.get(0).getEmpKeyStrength());
+                cummalitiveEmployeeResponse.setEmpAreaOfImprovement(employeeKppStatusResponses.get(0).getEmpAreaOfImprovement());
+                cummalitiveEmployeeResponse.setEmpTrainginDevelopmentNeeds(employeeKppStatusResponses.get(0).getEmpTrainginDevelopmentNeeds());
+
 
                 cummalitiveEmployeeResponse.setEmployeeKppStatusResponses(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount));
                 cummalitiveEmployeeResponse.setSumOfEmployeeRatings(sumOfEmployeeRatings);
@@ -127,8 +126,8 @@ public class CumulativeServiceImpl implements CumulativeService {
                     .responseMessage(KPIConstants.RECORD_FETCH)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside EmployeeKeyPerfParamServiceImpl >> getAllEmployeeDetailsForHod()");
-            throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
+            log.error("Inside CumulativeServiceImpl >> getAllEmployeeDetailsForHod()");
+            throw new KPIException("CumulativeServiceImpl", false, ex.getMessage());
         }
     }
 
@@ -153,8 +152,8 @@ public class CumulativeServiceImpl implements CumulativeService {
 
 
         try{
-            Integer totalCount = employeeKppMasterRepo.cumulativeEmpForHoDAndGMCount(startDate, endDate,roleId,deptId,desigId, reportingEmpId,gmEmpId);
-            List<Object[]> employeeDetail = employeeKppMasterRepo.cumulativeEmpForHoDAndGM(startDate, endDate,roleId,deptId,desigId, reportingEmpId,gmEmpId, sortName, pageSize, pageOffset);
+            Integer totalCount = reportEmployeeKppMasterRepo.cumulativeEmpForHoDAndGMCount(startDate, endDate,roleId,deptId,desigId, reportingEmpId,gmEmpId);
+            List<Object[]> employeeDetail = reportEmployeeKppMasterRepo.cumulativeEmpForHoDAndGM(startDate, endDate,roleId,deptId,desigId, reportingEmpId,gmEmpId, sortName, pageSize, pageOffset);
             List<CumulativeHoDResponse> employeeKppStatusDtos = employeeDetail.stream().map(CumulativeHoDResponse::new).collect(Collectors.toList());
 
            if(employeeKppStatusDtos.size()>0) {
@@ -179,9 +178,6 @@ public class CumulativeServiceImpl implements CumulativeService {
                    hoDCumulativeResponses.add(hoDCumulativeResponse);
 
                }
-
-
-
 
                for (HoDCumulativeResponse cumulativeHoDResponse : hoDCumulativeResponses) {
                    Double totalKppTotal = 0.0;
@@ -212,5 +208,20 @@ public class CumulativeServiceImpl implements CumulativeService {
         }
         return kpiResponse;
 
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse updateOverallEmployeeKppReportRemark(CumulativeUpdateRequest cumulativeUpdateRequest) {
+        try {
+            reportEmployeeKppMasterRepo.updateOverallEmployeeKppReportRemark(cumulativeUpdateRequest.getFinYear(),cumulativeUpdateRequest.getEmpKeyStrength(),cumulativeUpdateRequest.getEmpAreaOfImprovement(),cumulativeUpdateRequest.getEmpTrainginDevelopmentNeeds(),cumulativeUpdateRequest.getEmployeeId(),cumulativeUpdateRequest.getEmpId());
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage("Employee remark added")
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside CumulativeServiceImpl >> addEmployeeCumulativeRemark() :{}", ex);
+            throw new KPIException("CumulativeServiceImpl >> addEmployeeCumulativeRemark", false, ex.getMessage());
+        }
     }
 }

@@ -4,14 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.persistence.Column;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FreezeCumulativeCreateRequest {
+public class CumulativeUpdateRequest {
 
     @Schema(example = "2024-25", description = "This field is used for remark")
     private String finYear;

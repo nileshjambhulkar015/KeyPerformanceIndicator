@@ -1,50 +1,26 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
-import com.futurebizops.kpi.entity.EmployeeTypeAudit;
-import com.futurebizops.kpi.entity.EmployeeTypeEntity;
 import com.futurebizops.kpi.entity.FreezeReportEmployeeKppDetailsEntity;
 import com.futurebizops.kpi.entity.FreezeReportEmployeeKppMasterEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppDetailsEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppMasterEntity;
 import com.futurebizops.kpi.exception.KPIException;
-import com.futurebizops.kpi.repository.EmployeeKppMasterRepo;
 import com.futurebizops.kpi.repository.FreezeReportEmployeeKppDetailsRepo;
 import com.futurebizops.kpi.repository.FreezeReportEmployeeKppMasterRepo;
-import com.futurebizops.kpi.repository.KeyPerfParameterRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppDetailsRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
-import com.futurebizops.kpi.request.EmployeeTypeCreateRequest;
-import com.futurebizops.kpi.request.FreezeCumulativeCreateRequest;
-import com.futurebizops.kpi.response.CummalitiveEmployeeResponse;
-import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
+import com.futurebizops.kpi.request.CumulativeUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.response.cumulative.CumulativeHoDResponse;
-import com.futurebizops.kpi.response.cumulative.HODCumulativeData;
-import com.futurebizops.kpi.response.cumulative.HoDCumulativeResponse;
-import com.futurebizops.kpi.response.cumulative.TotalCumulativeHoD;
-import com.futurebizops.kpi.service.CumulativeService;
 import com.futurebizops.kpi.service.FreezeCumulativeService;
-import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.Column;
 import javax.transaction.Transactional;
-import java.text.DecimalFormat;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -65,7 +41,7 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
 
     @Transactional
     @Override
-    public KPIResponse saveFreezeCumulativeService(FreezeCumulativeCreateRequest freezeCumulativeCreateRequest) {
+    public KPIResponse saveFreezeCumulativeService(CumulativeUpdateRequest freezeCumulativeCreateRequest) {
 
         List<FreezeReportEmployeeKppMasterEntity> freezeReportEmployeeKppMasterEntities= new ArrayList<>();
 

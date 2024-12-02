@@ -1,6 +1,9 @@
 package com.futurebizops.kpi.controller;
 
+import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
 import com.futurebizops.kpi.request.CompanyMasterCreateRequest;
+import com.futurebizops.kpi.request.CumulativeUpdateRequest;
+import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.CumulativeService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +30,8 @@ public class CumulativeController {
 
     @Autowired
     CumulativeService cumulativeService;
+
+
 
     //get status of kpp  for employee, HOD and GM to approve or reject kpp details
     @GetMapping(value = "/employee-kpp-cumulative")
@@ -62,6 +68,12 @@ public class CumulativeController {
     @PostMapping(value = "/freeze")
     public ResponseEntity<KPIResponse> freezeCumulative(@RequestBody CompanyMasterCreateRequest masterCreateRequest) {
         KPIResponse response =null; //companyMasterService.saveCompanyDetails(masterCreateRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/add-employee-remark")
+    public ResponseEntity<KPIResponse> updateOverallEmployeeKppReportRemark(@RequestBody CumulativeUpdateRequest cumulativeUpdateRequest) {
+        KPIResponse response = cumulativeService.updateOverallEmployeeKppReportRemark(cumulativeUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
