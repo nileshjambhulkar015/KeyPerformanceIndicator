@@ -1140,4 +1140,8 @@ alter table report_employee_kpp_master add column key_strength VARCHAR(1500);
 alter table report_employee_kpp_master add column are_of_improvement VARCHAR(1500);
 alter table report_employee_kpp_master add column training_dev_needs VARCHAR(1500);
 
+alter table employee_kpp_master add column fin_year VARCHAR(20);
+alter table employee_kpp_master add column key_strength VARCHAR(1500);
+alter table employee_kpp_master add column are_of_improvement VARCHAR(1500);
+alter table employee_kpp_master add column training_dev_needs VARCHAR(1500);
 */

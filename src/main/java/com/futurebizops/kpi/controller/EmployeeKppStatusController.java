@@ -26,4 +26,11 @@ public class EmployeeKppStatusController {
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
+
+    @GetMapping(value = "/yearly-kpp")
+    public ResponseEntity<EmpKppStatusResponse> getEmployeeKppDataYearly(@RequestParam(required = false) Integer empId) {
+        EmpKppStatusResponse response = employeeKppStatusService.getEmployeeKppDataYearly(empId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
 }

@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmployeeKppStatusDto {
 
-    EmployeeKppMasterDto employeeKppMasterDto=new EmployeeKppMasterDto();
-    EmployeeKppDetailsDto employeeKppDetailsDto=new EmployeeKppDetailsDto();
+    EmployeeKppMasterDto employeeKppMasterDto = new EmployeeKppMasterDto();
+    EmployeeKppDetailsDto employeeKppDetailsDto = new EmployeeKppDetailsDto();
 
     public EmployeeKppStatusDto(Object[] objects) {
         employeeKppMasterDto.setEKppMId(Integer.parseInt(String.valueOf(objects[0])));
-        if(null!=objects[1]) {
+        if (null != objects[1]) {
             employeeKppMasterDto.setEkppMonth(DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[1])));
         }
 
@@ -40,7 +40,7 @@ public class EmployeeKppStatusDto {
         employeeKppMasterDto.setTotalHodOverallTaskComp(String.valueOf(objects[22]));
         employeeKppMasterDto.setHodKppStatus(String.valueOf(objects[23]));
         employeeKppMasterDto.setHodKppAppliedDate(String.valueOf(objects[24]));
-       // employeeKppMasterDto.setHodKppStatus(String.valueOf(objects[24]));
+        // employeeKppMasterDto.setHodKppStatus(String.valueOf(objects[24]));
 
         employeeKppMasterDto.setHodRemark(String.valueOf(objects[25]));
         employeeKppMasterDto.setGmEmpId(Integer.parseInt(String.valueOf(objects[26])));
@@ -72,8 +72,8 @@ public class EmployeeKppStatusDto {
         employeeKppDetailsDto.setGmAchivedWeight(String.valueOf(objects[46]));
         employeeKppDetailsDto.setGmOverallAchieve(String.valueOf(objects[47]));
         employeeKppDetailsDto.setGmOverallTaskComp(String.valueOf(objects[48]));
-employeeKppDetailsDto.setOverallRatings(String.valueOf(objects[49]));
-employeeKppDetailsDto.setOverallPercentage(String.valueOf(objects[50]));
+        employeeKppDetailsDto.setOverallRatings(String.valueOf(objects[49]));
+        employeeKppDetailsDto.setOverallPercentage(String.valueOf(objects[50]));
 
         employeeKppDetailsDto.setKppObjective(String.valueOf(objects[51]));
         employeeKppDetailsDto.setKppPerformanceIndi(String.valueOf(objects[52]));

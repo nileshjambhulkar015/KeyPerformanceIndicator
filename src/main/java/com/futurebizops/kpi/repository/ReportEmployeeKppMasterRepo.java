@@ -36,5 +36,8 @@ public interface ReportEmployeeKppMasterRepo extends JpaRepository<ReportEmploye
     @Query(value = "update report_employee_kpp_master set fin_year=:finYear,key_strength=:empKeyStrength, are_of_improvement=:empAreaOfImprovement, training_dev_needs=:empTrainginDevelopmentNeeds,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
     public int updateOverallEmployeeKppReportRemark(@Param("finYear") String finYear, @Param("empKeyStrength") String empKeyStrength, @Param("empAreaOfImprovement") String empAreaOfImprovement,@Param("empTrainginDevelopmentNeeds") String empTrainginDevelopmentNeeds,@Param("employeeId") String employeeId, @Param("empId") Integer empId);
 
+    @Query(value = SQLQueryConstants.MONTHLY_EMPLOYEE_KPP_STATUS_INFO_QUERY, nativeQuery = true)
+    List<Object[]> getEmployeeKppDataYearly(@Param("empId") Integer empId);
+
     List<ReportEmployeeKppMasterEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd);
 }
