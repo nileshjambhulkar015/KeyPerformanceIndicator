@@ -31,6 +31,7 @@ import com.futurebizops.kpi.request.GMUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.HODUpdateDetailsEmpRatingsReq;
 import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.request.ReportEvidenceCreateRequest;
+import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
 import com.futurebizops.kpi.response.AssignKPPResponse;
 import com.futurebizops.kpi.response.AssignKPPResponseSearch;
 import com.futurebizops.kpi.response.DepartmentReponse;
@@ -321,6 +322,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
             throw new KPIException("EmployeeKeyPerfParamServiceImpl >> updateEmployeeKeyPerfParamDetails() Class", false, ex.getMessage());
         }
     }
+
 
     //when employee fill kpp then coming for hod approval
     @Override

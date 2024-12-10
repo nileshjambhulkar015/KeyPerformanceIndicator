@@ -19,7 +19,6 @@ import java.time.Instant;
 @NoArgsConstructor
 public class FreezeReportEmployeeKppDetailsEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "freeze_report_ekpp_details_id")
@@ -90,6 +89,9 @@ public class FreezeReportEmployeeKppDetailsEntity {
 
     @Column(name = "avg_overall_achivement_per")
     private String avgOverallPer;
+
+    @Column(name = "emp_kpp_feedback")
+    private String empKppFeedback;
 
     @Column(name = "status_cd")
     private String statusCd;

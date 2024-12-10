@@ -5,6 +5,7 @@ import com.futurebizops.kpi.model.KppAdvanceSearchModel;
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
 import com.futurebizops.kpi.request.advsearch.KPPAdvanceSearchRequest;
+import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.KPPResponse;
 import com.futurebizops.kpi.response.dropdown.CompanyDDResponse;
@@ -84,6 +85,8 @@ public class EmployeeKppController {
         KPIResponse response = employeeKeyPerfParamService.updateEmployeeKeyPerfParamDetails(empKPPMasterUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
 
 
     //load kpp details as per role , dept and designation of employee

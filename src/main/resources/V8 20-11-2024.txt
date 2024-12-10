@@ -1034,9 +1034,7 @@ ekpp_gm_overall_achieve VARCHAR(50),
 ekpp_gm_overall_task_comp VARCHAR(50),
 avg_overall_rating VARCHAR(150),
 avg_overall_achivement_per VARCHAR(150),
-key_strength VARCHAR(1500),
-are_of_improvement VARCHAR(1500),
-training_dev_needs VARCHAR(1500),
+emp_kpp_feedback VARCHAR(1500),
 status_cd VARCHAR(10),
 crte_user_id VARCHAR(20) ,
 crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
@@ -1133,6 +1131,14 @@ insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(2, 'News', 'A');
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(3, 'Meeting', 'A');
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(4, 'Announcement', 'A');
+
+alter table employee_kpp_details  add column emp_self_kpp_feedback VARCHAR(1500);
+alter table employee_kpp_details  add column emp_hod_kpp_feedback VARCHAR(1500);
+alter table employee_kpp_details  add column emp_gm_kpp_feedback VARCHAR(1500);
+
+alter table report_employee_kpp_details  add column emp_self_kpp_feedback VARCHAR(1500);
+alter table report_employee_kpp_details  add column emp_hod_kpp_feedback VARCHAR(1500);
+alter table report_employee_kpp_details  add column emp_gm_kpp_feedback VARCHAR(1500);
 
 
 alter table report_employee_kpp_master add column fin_year VARCHAR(20);

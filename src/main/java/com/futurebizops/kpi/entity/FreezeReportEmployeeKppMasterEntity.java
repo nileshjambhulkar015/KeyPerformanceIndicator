@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,13 +49,13 @@ public class FreezeReportEmployeeKppMasterEntity {
     private Integer desigId;
 
     @Column(name = "total_emp_achived_weight")
-    private String totalAchivedWeight;
+    private String totalEmpAchivedWeight;
 
     @Column(name = "total_emp_overall_achieve")
-    private String totalOverallAchieve;
+    private String totalEmpOverallAchieve;
 
     @Column(name = "total_emp_overall_task_comp")
-    private String totalOverallTaskComp;
+    private String totalEmpOverallTaskComp;
 
     @Column(name = "emp_ekpp_applied_date")
     private Instant empKppAppliedDate;
@@ -72,13 +73,13 @@ public class FreezeReportEmployeeKppMasterEntity {
     private Integer hodEmpId;
 
     @Column(name = "total_hod_achived_weight")
-    private String hodAchivedWeight;
+    private String totalHodAchivedWeight;
 
     @Column(name = "total_hod_overall_achieve")
-    private String hodOverallAchieve;
+    private String totalHodOverallAchieve;
 
     @Column(name = "total_hod_overall_task_comp")
-    private String hodOverallTaskComp;
+    private String totalHodOverallTaskComp;
 
     @Column(name = "hod_approved_date")
     private Instant hodKppAppliedDate;
@@ -93,13 +94,13 @@ public class FreezeReportEmployeeKppMasterEntity {
     private Integer gmEmpId;
 
     @Column(name = "total_gm_achived_weight")
-    private String gmAchivedWeight;
+    private String totalGmAchivedWeight;
 
     @Column(name = "total_gm_overall_achieve")
-    private String gmOverallAchieve;
+    private String totalGmOverallAchieve;
 
     @Column(name = "total_gm_overall_task_comp")
-    private String gmOverallTaskComp;
+    private String totalGmOverallTaskComp;
 
     @Column(name = "gm_approved_date")
     private Instant gmKppAppliedDate;
