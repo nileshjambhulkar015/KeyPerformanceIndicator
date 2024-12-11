@@ -24,6 +24,9 @@ public class FreezeReportEmployeeKppDetailsEntity {
     @Column(name = "freeze_report_ekpp_details_id")
     private Integer freezeReportEkppDId;
 
+    @Column(name = "fin_year")
+    private String finYear;
+
     @Column(name = "ekpp_month")
     private Instant ekppMonth;
 
@@ -92,6 +95,12 @@ public class FreezeReportEmployeeKppDetailsEntity {
 
     @Column(name = "emp_kpp_feedback")
     private String empKppFeedback;
+
+    @Column(name = "hod_kpp_feedback")
+    private String hodKppFeedback;
+
+    @Column(name = "gm_kpp_feedback")
+    private String gmKppFeedback;
 
     @Column(name = "status_cd")
     private String statusCd;

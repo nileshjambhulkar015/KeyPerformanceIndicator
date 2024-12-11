@@ -101,8 +101,8 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
 
 
     @Override
-    public EmpKppStatusResponse getEmployeeKppDataYearly(Integer empId) {
-        List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
+    public EmpKppStatusResponse getEmployeeKppDataYearly(Integer empId, String finYear) {
+       // List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
         EmpKppStatusResponse statusResponse = null;
         Double totalEmpAchivedWeight=0.0;
         Double totalEmpOverallAchieve=0.0;
@@ -116,7 +116,7 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
         Double totalGmOverallAchieve=0.0;
         Double totalGmOverallTaskComp=0.0;
 
-        List<Object[]> employeeKppData = reportEmployeeKppMasterRepo.getEmployeeKppDataYearly(empId);
+        List<Object[]> employeeKppData = reportEmployeeKppMasterRepo.getEmployeeKppDataYearly(empId,finYear);
         if (employeeKppData.size() > 0) {
             List<EmployeeKppStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(EmployeeKppStatusDto::new).collect(Collectors.toList());
 
@@ -203,8 +203,9 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
                 statusResponse.setKppStatusDetails(employeeKppDetailsDtos);
             }
         } else {
-            log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
-            throw new KPIException("DepartmentServiceImpl", false, "No record found");
+          //  log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
+          //  throw new KPIException("DepartmentServiceImpl", false, "No record found");
+            return null;
         }
 
         statusResponse.setTotalEmpAchivedWeight(totalEmpAchivedWeight.toString());
@@ -285,8 +286,9 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
                 empKppStatusResponses.add(statusResponse);
             }
         } else {
-            log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
-            throw new KPIException("DepartmentServiceImpl", false, "No record found");
+            //log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
+            //throw new KPIException("DepartmentServiceImpl", false, "No record found");
+            return null;
         }
         return statusResponse;
     }

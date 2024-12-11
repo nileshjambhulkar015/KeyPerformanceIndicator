@@ -80,6 +80,10 @@ public class FreezeEmpKPPDetailsRequest {
 
     private String empKppFeedback;
 
+    private String hodKppFeedback;
+
+    private String gmKppFeedback;
+
     @Schema(example = "e111", description = "This field is used for General Manager KPP status")
     private String employeeId;
 }

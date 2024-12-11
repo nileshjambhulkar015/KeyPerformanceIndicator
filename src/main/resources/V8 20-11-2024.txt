@@ -1012,6 +1012,7 @@ lst_updt_user_id VARCHAR(20) null
 
 create table freeze_report_employee_kpp_details(
 freeze_report_ekpp_details_id serial PRIMARY key,
+fin_year VARCHAR(20),
 ekpp_month timestamp,
 emp_id INTEGER,
 emp_eid VARCHAR(20) ,
@@ -1035,6 +1036,8 @@ ekpp_gm_overall_task_comp VARCHAR(50),
 avg_overall_rating VARCHAR(150),
 avg_overall_achivement_per VARCHAR(150),
 emp_kpp_feedback VARCHAR(1500),
+hod_kpp_feedback VARCHAR(1500),
+gm_kpp_feedback VARCHAR(1500),
 status_cd VARCHAR(10),
 crte_user_id VARCHAR(20) ,
 crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
@@ -1132,22 +1135,4 @@ insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(3, 'Meeting', 'A');
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(4, 'Announcement', 'A');
 
-alter table employee_kpp_details  add column emp_self_kpp_feedback VARCHAR(1500);
-alter table employee_kpp_details  add column emp_hod_kpp_feedback VARCHAR(1500);
-alter table employee_kpp_details  add column emp_gm_kpp_feedback VARCHAR(1500);
-
-alter table report_employee_kpp_details  add column emp_self_kpp_feedback VARCHAR(1500);
-alter table report_employee_kpp_details  add column emp_hod_kpp_feedback VARCHAR(1500);
-alter table report_employee_kpp_details  add column emp_gm_kpp_feedback VARCHAR(1500);
-
-
-alter table report_employee_kpp_master add column fin_year VARCHAR(20);
-alter table report_employee_kpp_master add column key_strength VARCHAR(1500);
-alter table report_employee_kpp_master add column are_of_improvement VARCHAR(1500);
-alter table report_employee_kpp_master add column training_dev_needs VARCHAR(1500);
-
-alter table employee_kpp_master add column fin_year VARCHAR(20);
-alter table employee_kpp_master add column key_strength VARCHAR(1500);
-alter table employee_kpp_master add column are_of_improvement VARCHAR(1500);
-alter table employee_kpp_master add column training_dev_needs VARCHAR(1500);
 */

@@ -10,9 +10,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FreezeReportEmployeeKppMasterRepo extends JpaRepository<FreezeReportEmployeeKppMasterEntity, Integer> {
+
+    Optional<FreezeReportEmployeeKppMasterEntity> findByEmpIdAndFinYear(Integer empId, String finYear);
 
     //Check employee report fill for month or not
     @Query(value = "select rekm.emp_id, rekm.ekpp_month   from report_employee_kpp_master rekm where  rekm.emp_id = coalesce(:empId, rekm.emp_id)", nativeQuery = true)

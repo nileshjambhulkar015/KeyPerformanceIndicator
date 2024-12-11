@@ -29,6 +29,7 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,16 +80,32 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
         }
         Instant ekppMonth = DateTimeUtils.convertStringToInstant(freezeEmpKPPMasterRequest.getEkppMonth());
         try {
-            List<FreezeReportEmployeeKppDetailsEntity> freezeReportEmployeeKppDetailsEntities= freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
-            freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
+            Optional<FreezeReportEmployeeKppMasterEntity> optionalFreezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterRepo.findByEmpIdAndFinYear(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+            if (optionalFreezeReportEmployeeKppMasterEntity.isPresent()) {
 
-            FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
-            freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);
-          /*  for (EmpKPPUpdateRequest paramUpdateRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
-                freezeReportEmployeeKppDetailsRepo.updateEmployeeKppDetails(paramUpdateRequest.getEmpId(), ekppMonth, paramUpdateRequest.getEmpAchivedWeight(), paramUpdateRequest.getEmpOverallAchieve(), paramUpdateRequest.getEmpOverallTaskComp(), paramUpdateRequest.getOverallRatings(), paramUpdateRequest.getOverallPercentage(), paramUpdateRequest.getKppId(), paramUpdateRequest.getEmpEId(), paramUpdateRequest.getRoleId(), paramUpdateRequest.getDeptId(), paramUpdateRequest.getDesigId());
+                for (FreezeEmpKPPDetailsRequest empKPPUpdateRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
+                    FreezeReportEmployeeKppDetailsEntity reportEmployeeKppDetails = new FreezeReportEmployeeKppDetailsEntity();
+                    reportEmployeeKppDetails.setEkppMonth(ekppMonth);
+                    reportEmployeeKppDetails.setKppId(empKPPUpdateRequest.getKppId());
+                    reportEmployeeKppDetails.setEmpId(freezeEmpKPPMasterRequest.getEmpId());
+                    reportEmployeeKppDetails.setRoleId(freezeEmpKPPMasterRequest.getRoleId());
+                    reportEmployeeKppDetails.setDeptId(freezeEmpKPPMasterRequest.getDeptId());
+                    reportEmployeeKppDetails.setDesigId(freezeEmpKPPMasterRequest.getDesigId());
+                    reportEmployeeKppDetails.setEmpKppFeedback(empKPPUpdateRequest.getEmpKppFeedback());
+                    freezeReportEmployeeKppDetailsRepo.updateHODFeedbackKppDetails(empKPPUpdateRequest.getEmpKppFeedback(),freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getRoleId(),freezeEmpKPPMasterRequest.getDeptId(),freezeEmpKPPMasterRequest.getDesigId(),empKPPUpdateRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear());
+                }
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage("Update HOD KPP Feedback details successfully")
+                        .build();
+
+            } else {
+                List<FreezeReportEmployeeKppDetailsEntity> freezeReportEmployeeKppDetailsEntities = freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
+                freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
+
+                FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
+                freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);
             }
-            freezeReportEmployeeKppMasterRepo.updateEmployeeKppMaster(freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getEmpId(), ekppMonth, freezeEmpKPPMasterRequest.getTotalAchivedWeightage(), freezeEmpKPPMasterRequest.getTotalOverAllAchive(), freezeEmpKPPMasterRequest.getTotalOverallTaskCompleted(), freezeEmpKPPMasterRequest.getTotalOverallRatings(), freezeEmpKPPMasterRequest.getTotalOverallPercentage(), Instant.now(), freezeEmpKPPMasterRequest.getEkppStatus(), freezeEmpKPPMasterRequest.getEmpRemark(), freezeEmpKPPMasterRequest.getEvidence(), freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getEmpEId(), freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getRoleId(), freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getDeptId(), freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getDesigId());
-            */
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage("Save HOD KPP details successfully")
@@ -99,7 +116,7 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
         }
     }
 
-    private  FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntities (FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest, Instant ekppMonth){
+    private FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntities(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest, Instant ekppMonth) {
         FreezeReportEmployeeKppMasterEntity reportEmployeeKppMasterEntity = new FreezeReportEmployeeKppMasterEntity();
         reportEmployeeKppMasterEntity.setFinYear(freezeEmpKPPMasterRequest.getFinYear());
         reportEmployeeKppMasterEntity.setEkppMonth(ekppMonth);
@@ -146,6 +163,7 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
 
         for (FreezeEmpKPPDetailsRequest empKPPUpdateRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
             FreezeReportEmployeeKppDetailsEntity reportEmployeeKppDetails = new FreezeReportEmployeeKppDetailsEntity();
+            reportEmployeeKppDetails.setFinYear(freezeEmpKPPMasterRequest.getFinYear());
             reportEmployeeKppDetails.setEkppMonth(ekppMonth);
             reportEmployeeKppDetails.setKppId(empKPPUpdateRequest.getKppId());
             reportEmployeeKppDetails.setEmpId(freezeEmpKPPMasterRequest.getEmpId());
@@ -170,7 +188,9 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
             reportEmployeeKppDetails.setAvgOverallRating(empKPPUpdateRequest.getOverallRatings());
             reportEmployeeKppDetails.setAvgOverallPer(empKPPUpdateRequest.getOverallPercentage());
             reportEmployeeKppDetails.setStatusCd(empKPPUpdateRequest.getStatusCd());
-reportEmployeeKppDetails.setEmpKppFeedback(empKPPUpdateRequest.getEmpKppFeedback());
+            reportEmployeeKppDetails.setEmpKppFeedback(empKPPUpdateRequest.getEmpKppFeedback());
+            reportEmployeeKppDetails.setHodKppFeedback(empKPPUpdateRequest.getHodKppFeedback());
+            reportEmployeeKppDetails.setGmKppFeedback(empKPPUpdateRequest.getGmKppFeedback());
             freezeReportEmployeeKppDetailsEntities.add(reportEmployeeKppDetails);
         }
         return freezeReportEmployeeKppDetailsEntities;
