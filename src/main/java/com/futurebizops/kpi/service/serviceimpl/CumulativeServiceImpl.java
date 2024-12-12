@@ -97,10 +97,7 @@ public class CumulativeServiceImpl implements CumulativeService {
                 cummalitiveEmployeeResponse.setDesigId(employeeKppStatusResponses.get(0).getDesigId());
                 cummalitiveEmployeeResponse.setDesigName(employeeKppStatusResponses.get(0).getDesigName());
 
-                cummalitiveEmployeeResponse.setFinYear(employeeKppStatusResponses.get(0).getFinYear());
-                cummalitiveEmployeeResponse.setEmpKeyStrength(employeeKppStatusResponses.get(0).getEmpKeyStrength());
-                cummalitiveEmployeeResponse.setEmpAreaOfImprovement(employeeKppStatusResponses.get(0).getEmpAreaOfImprovement());
-                cummalitiveEmployeeResponse.setEmpTrainginDevelopmentNeeds(employeeKppStatusResponses.get(0).getEmpTrainginDevelopmentNeeds());
+              //  cummalitiveEmployeeResponse.setFinYear(employeeKppStatusResponses.get(0).getFinYear());
 
 
                 cummalitiveEmployeeResponse.setEmployeeKppStatusResponses(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount));

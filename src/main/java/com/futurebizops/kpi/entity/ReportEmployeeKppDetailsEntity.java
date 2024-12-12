@@ -24,6 +24,9 @@ public class ReportEmployeeKppDetailsEntity {
     @Column(name = "report_ekpp_details_id")
     private Integer reportEkppDId;
 
+    @Column(name = "fin_year")
+    private String finYear;
+
     @Column(name = "ekpp_month")
     private Instant ekppMonth;
 

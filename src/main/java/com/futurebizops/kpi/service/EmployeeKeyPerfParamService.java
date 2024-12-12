@@ -41,7 +41,7 @@ public interface EmployeeKeyPerfParamService {
 
 
 
-    public KPIResponse generateEmployeeKppReport(Integer empId, String statusCd);
+    public KPIResponse generateEmployeeKppReport(Integer empId,String finYear, String statusCd);
 
 
 

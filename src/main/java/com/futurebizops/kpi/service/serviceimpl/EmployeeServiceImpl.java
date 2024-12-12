@@ -398,7 +398,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .build();
             }
         } catch (Exception ex) {
-            log.error("Inside EmployeeKeyPerfParamServiceImpl >> getAllEmployeeDetailsForHod()");
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> getAllEmployeeDetailsForHod() ex= {}", ex);
             throw new KPIException("EmployeeKeyPerfParamServiceImpl", false, ex.getMessage());
         }
         return KPIResponse.builder()

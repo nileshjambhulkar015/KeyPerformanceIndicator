@@ -409,11 +409,12 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Transactional
     @Override
-    public KPIResponse generateEmployeeKppReport(Integer empId, String statusCd) {
+    public KPIResponse generateEmployeeKppReport(Integer empId,String finYear, String statusCd) {
         Optional<EmployeeKppMasterEntity> employeeKppMasterEntity = employeeKppMasterRepo.findByEmpIdAndStatusCd(empId, statusCd);
         ReportEmployeeKppMasterEntity kppMaster = new ReportEmployeeKppMasterEntity();
         if (employeeKppMasterEntity.isPresent()) {
             EmployeeKppMasterEntity kppMasterEntity = employeeKppMasterEntity.get();
+            kppMaster.setFinYear(finYear);
             kppMaster.setEkppMonth(kppMasterEntity.getEkppMonth());
             kppMaster.setEmpId(kppMasterEntity.getEmpId());
             kppMaster.setEmpEId(kppMasterEntity.getEmpEId());
@@ -458,7 +459,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         if (employeeKppDetailsEntities.size() > 0) {
             for (EmployeeKppDetailsEntity employeeKppDetailsEntity : employeeKppDetailsEntities) {
                 detailsEntity = new ReportEmployeeKppDetailsEntity();
-
+                detailsEntity.setFinYear(finYear);
                 detailsEntity.setEkppMonth(employeeKppDetailsEntity.getEkppMonth());
                 detailsEntity.setEmpId(employeeKppDetailsEntity.getEmpId());
                 detailsEntity.setEmpEId(employeeKppDetailsEntity.getEmpEId());
