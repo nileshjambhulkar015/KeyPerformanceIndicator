@@ -69,20 +69,29 @@ public class UoMServiceImpl implements UoMService {
 
     @Override
     public KPIResponse updateUoM(UoMUpdateRequest uoMUpdateRequest) {
-        UoMEntity uoMEntity = convertUoMUpdateRequestToEntity(uoMUpdateRequest);
         try {
+        Optional<UoMEntity> optionalUoMEntity = uoMRepo.findById(uoMUpdateRequest.getUomId());
+        if(optionalUoMEntity.isPresent()){
+            UoMEntity uoMEntity = optionalUoMEntity.get();
+            uoMEntity.setUomName(uoMUpdateRequest.getUomName());
+            uoMEntity.setRemark(uoMUpdateRequest.getRemark());
+            uoMEntity.setUpdatedUserId(uoMUpdateRequest.getEmployeeId());
+
             uoMRepo.save(uoMEntity);
-            UoMAudit partAudit = new UoMAudit(uoMEntity);
-            uoMAuditRepo.save(partAudit);
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
+        }
+
         } catch (Exception ex) {
             log.error("Inside UoMServiceImpl >> updateUoM()");
             throw new KPIException("UoMServiceImpl", false, ex.getMessage());
         }
-
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not found")
+                .build();
 
     }
 

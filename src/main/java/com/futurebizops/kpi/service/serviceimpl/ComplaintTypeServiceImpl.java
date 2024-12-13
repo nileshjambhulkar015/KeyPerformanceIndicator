@@ -124,9 +124,13 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
     @Override
     public KPIResponse updateComplaintType(ComplaintTypeUpdateRequest complaintTypeUpdateRequest) {
-        ComplaintTypeEntity complaintTypeEntity = convertComplaintTypeUpdateRequestToEntity(complaintTypeUpdateRequest
-        );
         try {
+        Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findById(complaintTypeUpdateRequest.getCompTypeId());
+        if(optionalComplaintType.isPresent()) {
+            ComplaintTypeEntity complaintTypeEntity = optionalComplaintType.get();
+            complaintTypeEntity.setCompTypeName(complaintTypeUpdateRequest.getCompTypeName());
+            complaintTypeEntity.setRemark(complaintTypeUpdateRequest.getRemark());
+            complaintTypeEntity.setUpdatedUserId(complaintTypeUpdateRequest.getEmployeeId());
             complaintTypeRepo.save(complaintTypeEntity);
             ComplaintTypeAudit departmentAudit = new ComplaintTypeAudit(complaintTypeEntity);
             complaintTypeAuditRepo.save(departmentAudit);
@@ -134,10 +138,15 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
+        }
         } catch (Exception ex) {
-            log.error("Inside ComplaintTypeServiceImpl >> updateComplaintType()");
+            log.error("Inside ComplaintTypeServiceImpl >> updateComplaintType() : {}", ex);
             throw new KPIException("ComplaintTypeServiceImpl", false, ex.getMessage());
         }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not found")
+                .build();
     }
 
     @Override

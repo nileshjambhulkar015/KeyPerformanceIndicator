@@ -85,8 +85,12 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
 
     @Override
     public KPIResponse updateEmployeeType(EmployeeTypeUpdateRequest employeeTypeUpdateRequest) {
-        EmployeeTypeEntity employeeTypeEntity = convertEmployeeTypeUpdateRequestToEntity(employeeTypeUpdateRequest);
         try {
+            Optional<EmployeeTypeEntity> optionalEmployeeTypeEntity = employeeTypeRepo.findById(employeeTypeUpdateRequest.getEmpTypeId());
+        if(optionalEmployeeTypeEntity.isPresent()){
+            EmployeeTypeEntity employeeTypeEntity = optionalEmployeeTypeEntity.get();
+            employeeTypeEntity.setEmpTypeName(employeeTypeUpdateRequest.getEmpTypeName());
+            employeeTypeEntity.setUpdatedUserId(employeeTypeUpdateRequest.getEmployeeId());
             employeeTypeRepo.save(employeeTypeEntity);
             EmployeeTypeAudit departmentAudit = new EmployeeTypeAudit(employeeTypeEntity);
             employeeTypeAuditRepo.save(departmentAudit);
@@ -94,10 +98,14 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
-        } catch (Exception ex) {
-            log.error("Inside EmployeeTypeServiceImpl >> updateEmployeeType()");
+        }} catch (Exception ex) {
+            log.error("Inside EmployeeTypeServiceImpl >> updateEmployeeType() : {}", ex);
             throw new KPIException("EmployeeTypeServiceImpl", false, ex.getMessage());
         }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not Found")
+                .build();
     }
 
     @Override

@@ -54,8 +54,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public KPIResponse saveDepartment(DepartmentCreateRequest departmentCreateRequest) {
 
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDeptName() );
-        if(optionalDepartmentEntity.isPresent()){
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDeptName());
+        if (optionalDepartmentEntity.isPresent()) {
             log.error("Inside DepartmentServiceImpl >> saveDepartment()");
             return KPIResponse.builder()
                     .isSuccess(false)
@@ -74,7 +74,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside DepartmentServiceImpl >> saveDepartment() : {}",ex);
+            log.error("Inside DepartmentServiceImpl >> saveDepartment() : {}", ex);
             throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
         }
     }
@@ -89,7 +89,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             busPassResponse.setResponseMessage("Department details deleted Successfully");
             return busPassResponse;
         } catch (Exception ex) {
-            log.error("Inside DepartmentServiceImpl >> deleteDepartmentDetails() : {}",ex);
+            log.error("Inside DepartmentServiceImpl >> deleteDepartmentDetails() : {}", ex);
             return KPIResponse.builder()
                     .isSuccess(false)
                     .build();
@@ -106,6 +106,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 departmentEntity = optionalDepartmentEntity.get();
                 departmentEntity.setDeptName(departmentUpdateRequest.getDeptName());
                 departmentEntity.setRemark(departmentUpdateRequest.getRemark());
+                departmentEntity.setUpdatedUserId(departmentUpdateRequest.getEmployeeId());
                 departmentRepo.save(departmentEntity);
                 DepartmentAudit departmentAudit = new DepartmentAudit(departmentEntity);
                 departmentAuditRepo.save(departmentAudit);
@@ -128,7 +129,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public KPIResponse findDepartmentDetails(Integer deptId, String deptName, String statusCd, Pageable requestPageable) {
         String sortName = null;
-      //  String sortDirection = null;
+        //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
         Integer pageOffset = (int) requestPageable.getOffset();
         // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
@@ -143,7 +144,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         List<DepartmentReponse> departmentReponses = departmentData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
 
-        departmentReponses= departmentReponses.stream()
+        departmentReponses = departmentReponses.stream()
                 .sorted(Comparator.comparing(DepartmentReponse::getDeptName))
                 .collect(Collectors.toList());
 
@@ -163,10 +164,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<DepartmentDDResponse> findAllDepartmentExceptGM() {
         List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         DepartmentDDResponse departmentDDResponse = null;
-        List<DepartmentDDResponse> departmentDDResponses =new ArrayList<>();
+        List<DepartmentDDResponse> departmentDDResponses = new ArrayList<>();
 
-        for(DepartmentEntity departmentEntity : departmentEntities){
-            if(departmentEntity.getDeptId()!=1){
+        for (DepartmentEntity departmentEntity : departmentEntities) {
+            if (departmentEntity.getDeptId() != 1) {
                 departmentDDResponse = new DepartmentDDResponse();
                 departmentDDResponse.setDeptId(departmentEntity.getDeptId());
                 departmentDDResponse.setDeptName(departmentEntity.getDeptName());
@@ -181,23 +182,23 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<DepartmentDDResponse> ddAllDepartment() {
         List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         DepartmentDDResponse departmentDDResponse = null;
-        List<DepartmentDDResponse> departmentDDResponses =new ArrayList<>();
+        List<DepartmentDDResponse> departmentDDResponses = new ArrayList<>();
 
-        for(DepartmentEntity departmentEntity : departmentEntities){
-                departmentDDResponse = new DepartmentDDResponse();
-                departmentDDResponse.setDeptId(departmentEntity.getDeptId());
-                departmentDDResponse.setDeptName(departmentEntity.getDeptName());
-                departmentDDResponses.add(departmentDDResponse);
+        for (DepartmentEntity departmentEntity : departmentEntities) {
+            departmentDDResponse = new DepartmentDDResponse();
+            departmentDDResponse.setDeptId(departmentEntity.getDeptId());
+            departmentDDResponse.setDeptName(departmentEntity.getDeptName());
+            departmentDDResponses.add(departmentDDResponse);
         }
         return departmentDDResponses;
     }
 
     @Override
     public List<DepartmentReponse> findAllDepartmentDetails() {
-        List<DepartmentEntity> departmentEntities =  departmentRepo.findAllDepartmentDetailsForEmployee();
+        List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         List<DepartmentReponse> departmentReponses = new ArrayList<>();
         DepartmentReponse departmentReponse = null;
-        for(DepartmentEntity departmentEntity : departmentEntities){
+        for (DepartmentEntity departmentEntity : departmentEntities) {
             departmentReponse = new DepartmentReponse();
             departmentReponse.setDeptId(departmentEntity.getDeptId());
             departmentReponse.setDeptName(departmentEntity.getDeptName());
@@ -214,7 +215,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
             List<Object[]> designationData = departmentRepo.getDepartmentByIdDetail(deptId);
             List<DepartmentReponse> departmentReponses = designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
-            if(departmentReponses.size()>0) {
+            if (departmentReponses.size() > 0) {
                 return departmentReponses.get(0);
             }
             return null;
@@ -227,81 +228,81 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void uploadDeptExcelFile(MultipartFile file) throws IOException {
 
-            Integer currentRow = 0;
-            List<DepartmentCreateRequest> createRequests = new ArrayList<>();
-            List<DepartmentCreateRequest> departmentNotSavedRecords = new ArrayList<>();
-            List<DepartmentExcelReadData> departmentData = new ArrayList<>();
+        Integer currentRow = 0;
+        List<DepartmentCreateRequest> createRequests = new ArrayList<>();
+        List<DepartmentCreateRequest> departmentNotSavedRecords = new ArrayList<>();
+        List<DepartmentExcelReadData> departmentData = new ArrayList<>();
 
-            byte[] excelBytes = null;
-            if (file.isEmpty()) {
-                throw new KPIException("DepartmentServiceImpl", false, "File not uploaded");
+        byte[] excelBytes = null;
+        if (file.isEmpty()) {
+            throw new KPIException("DepartmentServiceImpl", false, "File not uploaded");
+        }
+
+        try {
+            excelBytes = file.getBytes();
+
+        } catch (Exception ex) {
+            log.error("DepartmentServiceImpl >>departmentProcessExcel :{}", ex);
+            //   throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+        }
+        try (InputStream inputStream = new ByteArrayInputStream(excelBytes)) {
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            int startRow = 1;
+            for (int rowIndex = startRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row != null) {
+                    currentRow = rowIndex;
+                    DepartmentExcelReadData model = new DepartmentExcelReadData();
+                    model.setDeptName(row.getCell(0).getStringCellValue());
+                    model.setDeptMailId(row.getCell(1).getStringCellValue());
+                    model.setRemark(row.getCell(2).getStringCellValue());
+                    model.setEmployeeId(row.getCell(3).getStringCellValue().trim());
+
+                    model.setStatusCd("A");
+                    departmentData.add(model);
+                }
             }
+            workbook.close();
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile() :", ex);
+            // throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
+        }
 
+        Integer currentExcelRow = 0;
+        for (DepartmentExcelReadData request : departmentData) {
             try {
-                excelBytes = file.getBytes();
+                if (StringUtils.isNotEmpty(request.getDeptName())) {
+                    currentExcelRow++;
+                    DepartmentCreateRequest departmentCreateRequest = new DepartmentCreateRequest();
+                    departmentCreateRequest.setDeptName(request.getDeptName());
+                    departmentCreateRequest.setDeptMailId(request.getDeptMailId());
+                    departmentCreateRequest.setRemark(request.getRemark());
+                    departmentCreateRequest.setStatusCd(request.getStatusCd());
+                    departmentCreateRequest.setEmployeeId(request.getEmployeeId());
+                    createRequests.add(departmentCreateRequest);//final request
+                }
+            } catch (Exception ex) {
+                //   throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
+                log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile() :{}", ex);
+            }
+        }
+        for (DepartmentCreateRequest request : createRequests) {
+            try {
+                if (request.getDeptName() != null) {
+                    saveDepartment(request);
+                }
+                {
+                    log.info("Not saved department  : {}", request.getDeptName());
+                }
 
             } catch (Exception ex) {
-                log.error("DepartmentServiceImpl >>departmentProcessExcel :{}", ex);
-             //   throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+                departmentNotSavedRecords.add(request);
+                log.error("Inside DepartmentServiceImpl >> {}", ex);
             }
-            try (InputStream inputStream = new ByteArrayInputStream(excelBytes)) {
-                Workbook workbook = WorkbookFactory.create(inputStream);
-                Sheet sheet = workbook.getSheetAt(0);
-                int startRow = 1;
-                for (int rowIndex = startRow; rowIndex <=sheet.getLastRowNum(); rowIndex++) {
-                    Row row = sheet.getRow(rowIndex);
-                    if (row != null) {
-                        currentRow = rowIndex;
-                        DepartmentExcelReadData model = new DepartmentExcelReadData();
-                        model.setDeptName(row.getCell(0).getStringCellValue());
-                        model.setDeptMailId(row.getCell(1).getStringCellValue());
-                        model.setRemark(row.getCell(2).getStringCellValue());
-                        model.setEmployeeId(row.getCell(3).getStringCellValue().trim());
-
-                        model.setStatusCd("A");
-                        departmentData.add(model);
-                    }
-                }
-                workbook.close();
-            } catch (Exception ex) {
-                log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile() :", ex);
-               // throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
-            }
-
-            Integer currentExcelRow = 0;
-            for (DepartmentExcelReadData request : departmentData) {
-                try {
-                    if(StringUtils.isNotEmpty(request.getDeptName())) {
-                        currentExcelRow++;
-                        DepartmentCreateRequest departmentCreateRequest = new DepartmentCreateRequest();
-                        departmentCreateRequest.setDeptName(request.getDeptName());
-                        departmentCreateRequest.setDeptMailId(request.getDeptMailId());
-                        departmentCreateRequest.setRemark(request.getRemark());
-                        departmentCreateRequest.setStatusCd(request.getStatusCd());
-                        departmentCreateRequest.setEmployeeId(request.getEmployeeId());
-                        createRequests.add(departmentCreateRequest);//final request
-                    }
-                } catch (Exception ex) {
-                 //   throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
-                    log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile() :{}", ex);
-                }
-            }
-            for (DepartmentCreateRequest request : createRequests) {
-                try {
-                    if(request.getDeptName()!=null) {
-                        saveDepartment(request);
-                    }{
-                        log.info("Not saved department  : {}", request.getDeptName());
-                    }
-
-                } catch (Exception ex) {
-                    departmentNotSavedRecords.add(request);
-                    log.error("Inside DepartmentServiceImpl >> {}", ex);
-                }
-            }
+        }
 
     }
-
 
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest departmentCreateRequest) {
@@ -312,7 +313,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         departmentEntity.setRemark(departmentCreateRequest.getRemark());
         departmentEntity.setStatusCd(departmentCreateRequest.getStatusCd());
         departmentEntity.setCreatedUserId(departmentCreateRequest.getEmployeeId());
-        return  departmentEntity;
+        return departmentEntity;
     }
 
     private DepartmentEntity convertDepartmentUpdateRequestToEntity(DepartmentUpdateRequest departmentUpdateRequest) {
@@ -323,6 +324,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         departmentEntity.setRemark(departmentUpdateRequest.getRemark());
         departmentEntity.setStatusCd(departmentUpdateRequest.getStatusCd());
         departmentEntity.setCreatedUserId(departmentUpdateRequest.getEmployeeId());
-        return  departmentEntity;
+        return departmentEntity;
     }
 }
