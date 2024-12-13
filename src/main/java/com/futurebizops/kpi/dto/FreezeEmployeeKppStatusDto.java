@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeKppStatusDto {
+public class FreezeEmployeeKppStatusDto {
 
-    EmployeeKppMasterDto employeeKppMasterDto = new EmployeeKppMasterDto();
-    EmployeeKppDetailsDto employeeKppDetailsDto = new EmployeeKppDetailsDto();
+    FreezeEmployeeKppMasterDto employeeKppMasterDto = new FreezeEmployeeKppMasterDto();
+    FreezeEmployeeKppDetailsDto employeeKppDetailsDto = new FreezeEmployeeKppDetailsDto();
 
-    public EmployeeKppStatusDto(Object[] objects) {
+    public FreezeEmployeeKppStatusDto(Object[] objects) {
         employeeKppMasterDto.setEKppMId(Integer.parseInt(String.valueOf(objects[0])));
         if (null != objects[1]) {
             employeeKppMasterDto.setEkppMonth(DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[1])));
@@ -34,7 +34,9 @@ public class EmployeeKppStatusDto {
         employeeKppMasterDto.setEmpKppAppliedDate(String.valueOf(objects[16]));
         employeeKppMasterDto.setEmpKppStatus(String.valueOf(objects[17]));
         employeeKppMasterDto.setEmpRemark(String.valueOf(objects[18]));
-        employeeKppMasterDto.setHodEmpId(Integer.parseInt(String.valueOf(objects[19])));
+        if(null!=objects[19]) {
+            employeeKppMasterDto.setHodEmpId(Integer.parseInt(String.valueOf(objects[19])));
+        }
         employeeKppMasterDto.setTotalHodAchivedWeight(String.valueOf(objects[20]));
         employeeKppMasterDto.setTotalHodOverallAchieve(String.valueOf(objects[21]));
         employeeKppMasterDto.setTotalHodOverallTaskComp(String.valueOf(objects[22]));
@@ -43,7 +45,9 @@ public class EmployeeKppStatusDto {
         // employeeKppMasterDto.setHodKppStatus(String.valueOf(objects[24]));
 
         employeeKppMasterDto.setHodRemark(String.valueOf(objects[25]));
-        employeeKppMasterDto.setGmEmpId(Integer.parseInt(String.valueOf(objects[26])));
+        if(null!=objects[26]) {
+            employeeKppMasterDto.setGmEmpId(Integer.parseInt(String.valueOf(objects[26])));
+        }
         employeeKppMasterDto.setTotalGmAchivedWeight(String.valueOf(objects[27]));
         employeeKppMasterDto.setTotalGmOverallAchieve(String.valueOf(objects[28]));
         employeeKppMasterDto.setTotalGmOverallTaskComp(String.valueOf(objects[29]));
@@ -64,11 +68,15 @@ public class EmployeeKppStatusDto {
         employeeKppDetailsDto.setEmpAchivedWeight(String.valueOf(objects[38]));
         employeeKppDetailsDto.setEmpOverallAchieve(String.valueOf(objects[39]));
         employeeKppDetailsDto.setEmpOverallTaskComp(String.valueOf(objects[40]));
-        employeeKppDetailsDto.setHodEmpId(Integer.parseInt(String.valueOf(objects[41])));
+        if(null!=objects[41]) {
+            employeeKppDetailsDto.setHodEmployeeId(Integer.parseInt(String.valueOf(objects[41])));
+        }
         employeeKppDetailsDto.setHodAchivedWeight(String.valueOf(objects[42]));
         employeeKppDetailsDto.setHodOverallAchieve(String.valueOf(objects[43]));
         employeeKppDetailsDto.setHodOverallTaskComp(String.valueOf(objects[44]));
-        employeeKppDetailsDto.setGmEmployeeId(Integer.parseInt(String.valueOf(objects[45])));
+        if(null!=objects[45]) {
+            employeeKppDetailsDto.setGmEmployeeId(Integer.parseInt(String.valueOf(objects[45])));
+        }
         employeeKppDetailsDto.setGmAchivedWeight(String.valueOf(objects[46]));
         employeeKppDetailsDto.setGmOverallAchieve(String.valueOf(objects[47]));
         employeeKppDetailsDto.setGmOverallTaskComp(String.valueOf(objects[48]));
@@ -95,5 +103,16 @@ public class EmployeeKppStatusDto {
         employeeKppMasterDto.setCompanyAddress(String.valueOf(objects[65]));
         employeeKppMasterDto.setCompanyMbNo(String.valueOf(objects[66]));
         employeeKppMasterDto.setCompanyFinYear(String.valueOf(objects[67]));
+
+        if(null!=objects[68]){
+            employeeKppDetailsDto.setEmpKppFeedback(String.valueOf(objects[68]));
+        }
+        if(null!=objects[69]){
+            employeeKppDetailsDto.setHodKppFeedback(String.valueOf(objects[69]));
+        }
+        if(null !=objects[70]){
+            employeeKppDetailsDto.setGmKppFeedback(String.valueOf(objects[70]));
+        }
+
     }
 }

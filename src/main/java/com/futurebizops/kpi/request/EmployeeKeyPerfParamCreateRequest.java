@@ -40,6 +40,8 @@ public class EmployeeKeyPerfParamCreateRequest {
     @Schema(example = "1", description = "This field is used for reporting employee id")
     private Integer reportingEmpId;
 
+    private Integer gmEmpId;
+
     @Schema(example = "A", description = "This field is used for Acive / Inactive")
     private String statusCd;
 

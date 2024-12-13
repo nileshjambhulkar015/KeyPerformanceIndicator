@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeKppDetailsDto {
+public class FreezeEmployeeKppDetailsDto {
 
     private Integer ekppId;
     private Integer kppId;
     private String empAchivedWeight;
     private String empOverallAchieve;
     private String empOverallTaskComp;
-    private Integer hodEmpId;
+    private Integer hodEmployeeId;
     private String hodAchivedWeight;
     private String hodOverallAchieve;
     private String hodOverallTaskComp;
@@ -39,4 +39,8 @@ public class EmployeeKppDetailsDto {
     private String kppRating4;
     private String kppRating5;
     private String ekppStatus;
+
+    private String empKppFeedback;
+    private String hodKppFeedback;
+    private String gmKppFeedback;
 }

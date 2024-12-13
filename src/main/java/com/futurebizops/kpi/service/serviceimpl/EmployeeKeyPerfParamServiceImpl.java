@@ -160,14 +160,14 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
 
         //When hod is inserted then gm set to reporing employee id only
-        Integer gmEmpId = null;
+       /* Integer gmEmpId = null;
         //2 is for HOD role
         if (2 == keyPerfParamCreateRequest.getRoleId()) {
             gmEmpId = keyPerfParamCreateRequest.getReportingEmpId();
         } else {
             gmEmpId = getGmEmpId(keyPerfParamCreateRequest.getReportingEmpId());
-        }
-
+        }*/
+        //Integer gmEmpId = getGmEmpId(keyPerfParamCreateRequest.getReportingEmpId());
         EmployeeKppDetailsEntity employeeKppDetailsEntities = convertEmployeeKPPCreateRequestToEntity(keyPerfParamCreateRequest);
         try {
             employeeKppDetailsRepo.save(employeeKppDetailsEntities);
@@ -214,7 +214,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
                 kppMasterEntity.setHodKppAppliedDate(null);
                 kppMasterEntity.setHodKppStatus("Pending");
                 kppMasterEntity.setHodRemark("HoD Ratings added");
-                kppMasterEntity.setGmEmpId(gmEmpId);
+                kppMasterEntity.setGmEmpId(keyPerfParamCreateRequest.getGmEmpId());
                 kppMasterEntity.setGmKppStatus("Pending");
                 kppMasterEntity.setGmTotalAchivedWeight("0");
                 kppMasterEntity.setGmTotalOverallAchieve("0");
@@ -698,13 +698,13 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     private EmployeeKppDetailsEntity convertEmployeeKPPCreateRequestToEntity(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         //When hod is inserted then gm set to reporing employee id only
-        Integer gmEmpId = null;
+        /*Integer gmEmpId = null;
         //2 is for HOD role
         if (2 == keyPerfParamCreateRequest.getRoleId()) {
             gmEmpId = keyPerfParamCreateRequest.getReportingEmpId();
         } else {
             gmEmpId = getGmEmpId(keyPerfParamCreateRequest.getReportingEmpId());
-        }
+        }*/
 
         EmployeeKppDetailsEntity employeeKppDetailsEntity = new EmployeeKppDetailsEntity();
         employeeKppDetailsEntity.setEkppMonth(keyPerfParamCreateRequest.getEkppMonth());
@@ -727,7 +727,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
         employeeKppDetailsEntity.setHodAchivedWeight("0");
         employeeKppDetailsEntity.setHodOverallAchieve("0");
         employeeKppDetailsEntity.setHodOverallTaskComp("0");
-        employeeKppDetailsEntity.setGmEmpId(gmEmpId);
+        employeeKppDetailsEntity.setGmEmpId(keyPerfParamCreateRequest.getGmEmpId());
         employeeKppDetailsEntity.setGmAchivedWeight("0");
         employeeKppDetailsEntity.setGmOverallAchieve("0");
         employeeKppDetailsEntity.setGmOverallTaskComp("0");

@@ -80,7 +80,7 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
         }
         Instant ekppMonth = DateTimeUtils.convertStringToInstant(freezeEmpKPPMasterRequest.getEkppMonth());
         try {
-            Optional<FreezeReportEmployeeKppMasterEntity> optionalFreezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterRepo.findByEmpIdAndFinYear(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+           /* Optional<FreezeReportEmployeeKppMasterEntity> optionalFreezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterRepo.findByEmpIdAndFinYear(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
             if (optionalFreezeReportEmployeeKppMasterEntity.isPresent()) {
 
                 for (FreezeEmpKPPDetailsRequest empKPPUpdateRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
@@ -99,13 +99,13 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
                         .responseMessage("Update HOD KPP Feedback details successfully")
                         .build();
 
-            } else {
+            } else {*/
                 List<FreezeReportEmployeeKppDetailsEntity> freezeReportEmployeeKppDetailsEntities = freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
                 freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
 
                 FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
                 freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);
-            }
+           // }
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage("Save HOD KPP details successfully")
@@ -176,7 +176,7 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
             reportEmployeeKppDetails.setEmpAchivedWeight(empKPPUpdateRequest.getEmpAchivedWeight());
             reportEmployeeKppDetails.setEmpOverallAchieve(empKPPUpdateRequest.getEmpOverallAchieve());
             reportEmployeeKppDetails.setEmpOverallTaskComp(empKPPUpdateRequest.getEmpOverallTaskComp());
-            reportEmployeeKppDetails.setHodEmpId(freezeEmpKPPMasterRequest.getHodEmpId());
+            reportEmployeeKppDetails.setHodEmpId(empKPPUpdateRequest.getHodEmpId());
             reportEmployeeKppDetails.setHodAchivedWeight(empKPPUpdateRequest.getHodAchivedWeight());
             reportEmployeeKppDetails.setHodOverallAchieve(empKPPUpdateRequest.getHodOverallAchieve());
             reportEmployeeKppDetails.setHodOverallTaskComp(empKPPUpdateRequest.getHodOverallTaskComp());
