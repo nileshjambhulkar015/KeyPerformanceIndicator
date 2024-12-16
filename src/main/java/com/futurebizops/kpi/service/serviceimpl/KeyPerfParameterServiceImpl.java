@@ -111,8 +111,8 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
     @Override
-    public KPIResponse updateKeyPerfomanceParameter(KeyPerfParamUpdateRequest ratingRatioUpdateRequest) {
-        KeyPerfParamEntity keyPerfParamEntity = convertKeyPerfParamUpdateRequestToEntity(ratingRatioUpdateRequest);
+    public KPIResponse updateKeyPerfomanceParameter(KeyPerfParamUpdateRequest keyPerfParamUpdateRequest) {
+        KeyPerfParamEntity keyPerfParamEntity = convertKeyPerfParamUpdateRequestToEntity(keyPerfParamUpdateRequest);
         try {
             keyPerfParameterRepo.save(keyPerfParamEntity);
             KeyPerfParamAudit keyPerfParamAudit = new KeyPerfParamAudit(keyPerfParamEntity);

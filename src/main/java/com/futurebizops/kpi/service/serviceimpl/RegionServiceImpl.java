@@ -79,8 +79,13 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public KPIResponse updateRegion(RegionUpdateRequest regionUpdateRequest) {
-        RegionEntity regionEntity = convertRegionUpdateRequestToEntity(regionUpdateRequest);
         try {
+        Optional<RegionEntity> optionalRegionEntity = regionRepo.findById(regionUpdateRequest.getRegionId());
+        if(optionalRegionEntity.isPresent()){
+            RegionEntity regionEntity = optionalRegionEntity.get();
+            regionEntity.setRegionName(regionUpdateRequest.getRegionName());
+            regionEntity.setRemark(regionUpdateRequest.getRemark());
+            regionEntity.setUpdatedUserId(regionUpdateRequest.getEmployeeId());
             regionRepo.save(regionEntity);
             RegionAudit regionAudit = new RegionAudit(regionEntity);
             regionAuditRepo.save(regionAudit);
@@ -88,10 +93,15 @@ public class RegionServiceImpl implements RegionService {
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
+        }
         } catch (Exception ex) {
-            log.error("Inside RegionServiceImpl >> updateRegion()");
+            log.error("Inside RegionServiceImpl >> updateRegion() : {}", ex);
             throw new KPIException("RegionServiceImpl", false, ex.getMessage());
         }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record Not Found")
+                .build();
     }
 
     @Override
@@ -162,13 +172,5 @@ public class RegionServiceImpl implements RegionService {
         return regionEntity;
     }
 
-    private RegionEntity convertRegionUpdateRequestToEntity(RegionUpdateRequest regionUpdateRequest) {
-        RegionEntity regionEntity = new RegionEntity();
-        regionEntity.setRegionId(regionUpdateRequest.getRegionId());
-        regionEntity.setRegionName(regionUpdateRequest.getRegionName());
-        regionEntity.setRemark(regionUpdateRequest.getRemark());
-        regionEntity.setStatusCd(regionUpdateRequest.getStatusCd());
-        regionEntity.setUpdatedUserId(regionUpdateRequest.getEmployeeId());
-        return regionEntity;
-    }
+
 }

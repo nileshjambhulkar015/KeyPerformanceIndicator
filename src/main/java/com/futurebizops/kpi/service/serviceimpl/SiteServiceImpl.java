@@ -83,8 +83,14 @@ public class SiteServiceImpl implements SiteService {
 
     @Override
     public KPIResponse updateSite(SiteUpdateRequest siteUpdateRequest) {
-        SiteEntity siteEntity = convertSiteUpdateRequestToEntity(siteUpdateRequest);
         try {
+        Optional<SiteEntity> optionalSiteEntity = siteRepo.findById(siteUpdateRequest.getSiteId());
+        if(optionalSiteEntity.isPresent()){
+            SiteEntity siteEntity=optionalSiteEntity.get();
+            siteEntity.setSiteName(siteUpdateRequest.getSiteName());
+            siteEntity.setRegionId(siteUpdateRequest.getRegionId());
+            siteEntity.setRemark(siteUpdateRequest.getRemark());
+            siteEntity.setUpdatedUserId(siteUpdateRequest.getEmployeeId());
             siteRepo.save(siteEntity);
             SiteAudit siteAudit = new SiteAudit(siteEntity);
             siteAuditRepo.save(siteAudit);
@@ -92,10 +98,15 @@ public class SiteServiceImpl implements SiteService {
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
+        }
         } catch (Exception ex) {
             log.error("Inside SiteServiceImpl >> updateSite()");
             throw new KPIException("SiteServiceImpl", false, ex.getMessage());
         }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not found")
+                .build();
     }
 
     @Override
@@ -156,16 +167,6 @@ public class SiteServiceImpl implements SiteService {
         return siteEntity;
     }
 
-    private SiteEntity convertSiteUpdateRequestToEntity(SiteUpdateRequest siteUpdateRequest) {
-        SiteEntity siteEntity = new SiteEntity();
-        siteEntity.setSiteId(siteUpdateRequest.getSiteId());
-        siteEntity.setRegionId(siteUpdateRequest.getRegionId());
-        siteEntity.setSiteName(siteUpdateRequest.getSiteName());
-        siteEntity.setRemark(siteUpdateRequest.getRemark());
-        siteEntity.setStatusCd(siteUpdateRequest.getStatusCd());
-        siteEntity.setUpdatedUserId(siteUpdateRequest.getEmployeeId());
-        return siteEntity;
-    }
 
     @Override
     public  List<SiteDDResponse> getDDAllSite(){

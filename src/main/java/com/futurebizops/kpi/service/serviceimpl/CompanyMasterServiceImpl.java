@@ -127,13 +127,14 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
         Optional<CompanyMasterEntity> optionalCompanyMasterEntity = companyMasterRepo.findById(companyMasterUpdateRequest.getCompanyId());
         if(optionalCompanyMasterEntity.isPresent()){
             CompanyMasterEntity companyMasterEntity = optionalCompanyMasterEntity.get();
-            companyMasterEntity.setSiteId(companyMasterEntity.getSiteId());
-            companyMasterEntity.setRegionId(companyMasterEntity.getRegionId());
-            companyMasterEntity.setCompanyAddress(companyMasterEntity.getCompanyAddress());
-            companyMasterEntity.setCompanyName(companyMasterEntity.getCompanyName());
-            companyMasterEntity.setCompanyFinYear(companyMasterEntity.getCompanyFinYear());
-            companyMasterEntity.setCompanyMbNo(companyMasterEntity.getCompanyMbNo());
-            companyMasterEntity.setRemark(companyMasterEntity.getRemark());
+            companyMasterEntity.setSiteId(companyMasterUpdateRequest.getSiteId());
+            companyMasterEntity.setRegionId(companyMasterUpdateRequest.getRegionId());
+            companyMasterEntity.setCompanyAddress(companyMasterUpdateRequest.getCompanyAddress());
+            companyMasterEntity.setCompanyName(companyMasterUpdateRequest.getCompanyName());
+            companyMasterEntity.setCompanyFinYear(companyMasterUpdateRequest.getCompanyFinYear());
+            companyMasterEntity.setCompanyMbNo(companyMasterUpdateRequest.getCompanyMbNo());
+            companyMasterEntity.setRemark(companyMasterUpdateRequest.getRemark());
+            companyMasterEntity.setUpdatedUserId(companyMasterUpdateRequest.getEmployeeId());
             companyMasterRepo.save(companyMasterEntity);
             return KPIResponse.builder()
                     .isSuccess(true)
