@@ -2,6 +2,7 @@ package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.model.EmployeeAdvSearchModel;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
+import com.futurebizops.kpi.request.EmployeeUpdateDeptDesigRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.request.advsearch.EmployeeAdvSearchRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
@@ -57,6 +58,11 @@ public class EmployeeController {
     @PutMapping
     public ResponseEntity<KPIResponse> updateEmployee(@RequestBody EmployeeUpdateRequest employeeUpdateRequest) {
         return ResponseEntity.ok(employeeService.updateEmployee(employeeUpdateRequest));
+    }
+
+    @PutMapping(value = "/change-dept-or-desig")
+    public ResponseEntity<KPIResponse> updateEmployeeRoleOrDeptOrDesignation(@RequestBody EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest) {
+        return ResponseEntity.ok(employeeService.updateEmployeeRoleOrDeptOrDesignation(employeeUpdateDeptDesigRequest));
     }
 
     @PutMapping(value = "/update-dob")

@@ -23,6 +23,11 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     public int updateEmpApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp,@Param("overallRatings") String overallRatings,@Param("overallPercentage") String overallPercentage, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 
     @Modifying
+    @Query(value = "update employee_kpp_details set dept_id=:deptId, desig_id=:desigId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
+    public int updateEmployeeDeptOrDesignation(@Param("empId") Integer empId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId,String employeeId);
+
+
+    @Modifying
     @Query(value = "update employee_kpp_details set ekpp_gm_achived_weight =:ekppAchivedWeight,ekpp_gm_overall_achieve =:ekppOverallAchieve,ekpp_gm_overall_task_comp = :ekppOverallTaskComp,avg_overall_rating=:overallRatings,avg_overall_achivement_per=:overallPercentage where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
     public int updateGMApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp,@Param("overallRatings") String overallRatings,@Param("overallPercentage") String overallPercentage, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 

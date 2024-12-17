@@ -33,6 +33,7 @@ import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.repository.SiteRepo;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeExcelReadData;
+import com.futurebizops.kpi.request.EmployeeUpdateDeptDesigRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
 import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
 import com.futurebizops.kpi.response.EmployeeResponse;
@@ -175,7 +176,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             kpiResponse.setResponseMessage(KPIConstants.RECORD_SUCCESS);
             return kpiResponse;
         } catch (Exception ex) {
-            log.error("Inside EmployeeServiceImpl >> saveEmployee() : {}",ex);
+            log.error("Inside EmployeeServiceImpl >> saveEmployee() : {}", ex);
             throw new KPIException("EmployeeServiceImpl", false, ex.getMessage());
         }
     }
@@ -198,7 +199,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             busPassResponse.setResponseMessage("Employee details deleted Successfully");
             return busPassResponse;
         } catch (Exception ex) {
-            log.error("Inside EmployeeServiceImpl >> deleteEmployeeDetails() : {}",ex);
+            log.error("Inside EmployeeServiceImpl >> deleteEmployeeDetails() : {}", ex);
             return KPIResponse.builder()
                     .isSuccess(false)
                     .build();
@@ -217,26 +218,67 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .build();
             }
         }
-        EmployeeEntity employeeEntity = convertEmployeeUpdateRequestToEntity(employeeUpdateRequest);
         try {
-            employeeRepo.save(employeeEntity);
-            EmployeeAudit employeeAudit = new EmployeeAudit(employeeEntity);
-            employeeAuditRepo.save(employeeAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_UPDATE)
-                    .build();
+            Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findById(employeeUpdateRequest.getEmpId());
+            if (optionalEmployeeEntity.isPresent()) {
+                EmployeeEntity employeeEntity = optionalEmployeeEntity.get();
+                employeeEntity.setEmpFirstName(employeeUpdateRequest.getEmpFirstName());
+                employeeEntity.setEmpMiddleName(employeeUpdateRequest.getEmpMiddleName());
+                employeeEntity.setEmpLastName(employeeUpdateRequest.getEmpLastName());
+                employeeEntity.setEmpMobileNo(employeeUpdateRequest.getEmpMobileNo());
+                employeeEntity.setEmpEmerMobileNo(employeeUpdateRequest.getEmpEmerMobileNo());
+                employeeEntity.setTempAddress(employeeUpdateRequest.getTempAddress());
+                employeeEntity.setPermAddress(employeeUpdateRequest.getPermAddress());
+                employeeEntity.setEmailId(employeeUpdateRequest.getEmailId());
+                employeeEntity.setUpdatedUserId(employeeUpdateRequest.getEmployeeId());
+                employeeRepo.save(employeeEntity);
+                EmployeeAudit employeeAudit = new EmployeeAudit(employeeEntity);
+                employeeAuditRepo.save(employeeAudit);
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage(KPIConstants.RECORD_UPDATE)
+                        .build();
+            }
         } catch (Exception ex) {
-            log.error("Inside EmployeeServiceImpl >> updateEmployee()");
+            log.error("Inside EmployeeServiceImpl >> updateEmployee() : {}", ex);
             throw new KPIException("EmployeeServiceImpl", false, ex.getMessage());
         }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not found")
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse updateEmployeeRoleOrDeptOrDesignation(EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest) {
+        Boolean isEmployeePresent = employeeRepo.existsById(employeeUpdateDeptDesigRequest.getEmpId());
+        if(isEmployeePresent){
+            employeeRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
+
+            employeeLoginRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpEId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
+
+            employeeKeyPerfParamRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
+
+            employeeKeyPerfParamMasterRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
+
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage("Record updated successfully")
+                    .build();
+        }
+
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not updated")
+                .build();
     }
 
     @Transactional
     @Override
     public KPIResponse updateEmployeeDOB(Integer empId, String empDob) {
         try {
-            Instant empoyeeDob = null != empDob? DateTimeUtils.convertStringToInstant(empDob):null;
+            Instant empoyeeDob = null != empDob ? DateTimeUtils.convertStringToInstant(empDob) : null;
 
             employeeRepo.updateEmployeeDobByEmpId(empId, empoyeeDob);
             return KPIResponse.builder()
@@ -383,10 +425,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         try {
             Integer totalCount = keyPerfParameterRepo.getEmployeeKppStatusDetailCount(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, statusCd, empKppStatus, hodKppStatus, gmKppStatus);
-            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusDetail(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId,statusCd, empKppStatus, hodKppStatus, gmKppStatus, sortName, pageSize, pageOffset);
+            List<Object[]> employeeDetail = keyPerfParameterRepo.getEmployeeKppStatusDetail(reportingEmployee, gmEmpId, empId, empEId, roleId, deptId, desigId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, sortName, pageSize, pageOffset);
 
             List<EmployeeKppStatusResponse> employeeKppStatusResponses = employeeDetail.stream().map(EmployeeKppStatusResponse::new).collect(Collectors.toList());
-            if(employeeKppStatusResponses.size()>0) {
+            if (employeeKppStatusResponses.size() > 0) {
                 employeeKppStatusResponses = employeeKppStatusResponses.stream()
                         .sorted(Comparator.comparing(EmployeeKppStatusResponse::getDesigName))
                         .collect(Collectors.toList());
@@ -439,7 +481,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setEmpFirstName(employeeCreateRequest.getEmpFirstName());
         employeeEntity.setEmpMiddleName(employeeCreateRequest.getEmpMiddleName());
         employeeEntity.setEmpLastName(employeeCreateRequest.getEmpLastName());
-        employeeEntity.setEmpDob(StringUtils.isNotEmpty(employeeCreateRequest.getEmpDob())?DateTimeUtils.convertStringToInstant(employeeCreateRequest.getEmpDob()):null);
+        employeeEntity.setEmpDob(StringUtils.isNotEmpty(employeeCreateRequest.getEmpDob()) ? DateTimeUtils.convertStringToInstant(employeeCreateRequest.getEmpDob()) : null);
         employeeEntity.setEmpMobileNo(employeeCreateRequest.getEmpMobileNo());
         employeeEntity.setEmpEmerMobileNo(employeeCreateRequest.getEmpEmerMobileNo());
         employeeEntity.setEmpPhoto(employeeCreateRequest.getEmpPhoto());
@@ -455,35 +497,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeEntity;
     }
 
-    private EmployeeEntity convertEmployeeUpdateRequestToEntity(EmployeeUpdateRequest employeeUpdateRequest) {
-        EmployeeEntity employeeEntity = new EmployeeEntity();
-        employeeEntity.setEmpId(employeeUpdateRequest.getEmpId());
-        employeeEntity.setEmpEId(employeeUpdateRequest.getEmpEId());
-        employeeEntity.setRoleId(employeeUpdateRequest.getRoleId());
-        employeeEntity.setDeptId(employeeUpdateRequest.getDeptId());
-        employeeEntity.setDesigId(employeeUpdateRequest.getDesigId());
-        employeeEntity.setEmpTypeId(employeeUpdateRequest.getEmpTypeId());
-        employeeEntity.setReportingEmpId(employeeUpdateRequest.getReportingEmpId());
-        employeeEntity.setRegionId(employeeUpdateRequest.getRegionId());
-        employeeEntity.setSiteId(employeeUpdateRequest.getSiteId());
-        employeeEntity.setCompanyId(employeeUpdateRequest.getCompanyId());
-        employeeEntity.setEmpFirstName(employeeUpdateRequest.getEmpFirstName());
-        employeeEntity.setEmpMiddleName(employeeUpdateRequest.getEmpMiddleName());
-        employeeEntity.setEmpLastName(employeeUpdateRequest.getEmpLastName());
-        employeeEntity.setEmpDob(StringUtils.isNotEmpty(employeeUpdateRequest.getEmpDob())? DateTimeUtils.convertStringToInstant(employeeUpdateRequest.getEmpDob()):null);
-        employeeEntity.setEmpMobileNo(employeeUpdateRequest.getEmpMobileNo());
-        employeeEntity.setEmpEmerMobileNo(employeeUpdateRequest.getEmpEmerMobileNo());
-        employeeEntity.setEmpPhoto(employeeUpdateRequest.getEmpPhoto());
-        employeeEntity.setEmailId(employeeUpdateRequest.getEmailId());
-        employeeEntity.setTempAddress(employeeUpdateRequest.getTempAddress());
-        employeeEntity.setPermAddress(employeeUpdateRequest.getPermAddress());
-        employeeEntity.setEmpGender(employeeUpdateRequest.getEmpGender());
-        employeeEntity.setEmpBloodgroup(employeeUpdateRequest.getEmpBloodgroup());
-        employeeEntity.setRemark(employeeUpdateRequest.getRemark());
-        employeeEntity.setStatusCd(employeeUpdateRequest.getStatusCd());
-        employeeEntity.setUpdatedUserId(employeeUpdateRequest.getEmployeeId());
-        return employeeEntity;
-    }
 
     private String getCreatedEmployeeName(Integer empId) {
         Optional<EmployeeEntity> employeeEntity = employeeRepo.findById(empId);
@@ -542,15 +555,15 @@ public class EmployeeServiceImpl implements EmployeeService {
                         String mobileNo1 = null;
                         String mobileNo2 = null;
 
-                       if(row.getCell(13).getCellType().equals(CellType.STRING)){
-                           mobileNo1 = row.getCell(13).getStringCellValue().trim();
-                       } else{
-                           mobileNo1 = String.valueOf(row.getCell(13).getNumericCellValue());
-                       }
+                        if (row.getCell(13).getCellType().equals(CellType.STRING)) {
+                            mobileNo1 = row.getCell(13).getStringCellValue().trim();
+                        } else {
+                            mobileNo1 = String.valueOf(row.getCell(13).getNumericCellValue());
+                        }
 
-                        if(row.getCell(14).getCellType().equals(CellType.STRING)){
+                        if (row.getCell(14).getCellType().equals(CellType.STRING)) {
                             mobileNo2 = row.getCell(14).getStringCellValue().trim();
-                        } else{
+                        } else {
                             mobileNo2 = String.valueOf(row.getCell(14).getNumericCellValue());
                         }
 
@@ -571,7 +584,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
                 workbook.close();
             } catch (Exception ex) {
-                log.error("Inside EmployeeServiceImpl >> processExcelFile() :{} ",ex);
+                log.error("Inside EmployeeServiceImpl >> processExcelFile() :{} ", ex);
                 throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentRow);
             }
 
@@ -640,7 +653,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
 
                 } finally {
-                  //  System.out.println("employeeCreateRequests::" + employeeCreateRequests);
+                    //  System.out.println("employeeCreateRequests::" + employeeCreateRequests);
                 }
             }
             for (EmployeeCreateRequest request : employeeCreateRequests) {
@@ -678,9 +691,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Object[]> roleData = employeeRepo.getDesignationFromEmployee(roleId, deptId, desigId);
         return roleData.stream().map(DesignationDDResponse::new).collect(Collectors.toList());
     }
+
     @Override
     public List<EmployeeDDResponse> getDDEmpName(Integer roleId, Integer deptId, Integer desigId) {
-        List<Object[]> roleData = employeeRepo.getDDEmpName(roleId, deptId,desigId);
+        List<Object[]> roleData = employeeRepo.getDDEmpName(roleId, deptId, desigId);
         return roleData.stream().map(EmployeeDDResponse::new).collect(Collectors.toList());
     }
 //Save employee from excel

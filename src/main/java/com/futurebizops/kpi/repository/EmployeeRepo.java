@@ -27,6 +27,11 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
     public int deleteEmployeeDetails(@Param("empId") Integer empId);
 
     @Modifying
+    @Query(value = "update employee set dept_id=:deptId, desig_id=:desigId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
+    public int updateEmployeeDeptOrDesignation(@Param("empId") Integer empId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId,String employeeId);
+
+
+    @Modifying
     @Query(value = "update employee set emp_dob=:empoyeeDob where emp_id =:empId", nativeQuery = true)
     public int updateEmployeeDobByEmpId(@Param("empId") Integer empId, @Param("empoyeeDob") Instant empoyeeDob);
 

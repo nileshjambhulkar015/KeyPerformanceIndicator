@@ -45,17 +45,11 @@ public class EmployeeUpdateRequest {
     @Schema(example = "Jambhulkar", description = "This field is used for employee last name")
     private String empLastName;
 
-    @Schema(example = "2023-01-01", description = "This field is used for employee date of birth")
-    private String empDob;
-
     @Schema(example = "9503232728", description = "This field is used for employee mobile no")
     private String empMobileNo;
 
     @Schema(example = "9503232728", description = "This field is used for employee emergency number")
     private String empEmerMobileNo;
-
-    @Schema(example = " ", description = "This field is used for employee photo")
-    private String empPhoto;
 
     @Schema(example = "nileshj@gmail.com", description = "This field is used for employee photo")
     private String emailId;
@@ -65,12 +59,6 @@ public class EmployeeUpdateRequest {
 
     @Schema(example = "Hinjawadi,, Pune", description = "This field is used for employee permenent address")
     private String permAddress;
-
-    @Schema(example = "Male", description = "This field is used for employee gender")
-    private String empGender;
-
-    @Schema(example = "A+", description = "This field is used for employee blood group")
-    private String empBloodgroup;
 
     @Schema(example = "Adding new employee", description = "This field is used for employee remark")
     private String remark;
