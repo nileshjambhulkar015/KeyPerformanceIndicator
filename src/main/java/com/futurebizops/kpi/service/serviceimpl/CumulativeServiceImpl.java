@@ -108,7 +108,7 @@ public class CumulativeServiceImpl implements CumulativeService {
 
 
                 cummalitiveEmployeeResponse.setCummulativeRatings(cummulativeRatings);
-                cummalitiveEmployeeResponse.setAvgCummulativeRatings(avgCummulativeRatings);
+                cummalitiveEmployeeResponse.setAvgCummulativeRatings(Double.valueOf(decfor.format(avgCummulativeRatings)));
                 cummalitiveEmployeeResponse.setTotalMonths(employeeKppStatusResponses.size());
             }
             else{
