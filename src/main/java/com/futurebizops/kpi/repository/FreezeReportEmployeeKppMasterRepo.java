@@ -29,4 +29,6 @@ public interface FreezeReportEmployeeKppMasterRepo extends JpaRepository<FreezeR
     @Query(value = SQLQueryConstants.FREEZE_YEARLY_EMPLOYEE_KPP_STATUS_INFO_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeKppDataYearlyFromFreezeTable(@Param("empId") Integer empId,@Param("finYear") String finYear);
 
+    @Query(value = "select distinct fin_year from report_employee_kpp_master", nativeQuery = true)
+    public List<Object[]> ddAllFinancialYear();
 }

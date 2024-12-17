@@ -2,6 +2,7 @@ package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.dto.EmployeeMasterReportDTO;
+import com.futurebizops.kpi.entity.FinancialYearEntity;
 import com.futurebizops.kpi.entity.FreezeReportEmployeeKppDetailsEntity;
 import com.futurebizops.kpi.entity.FreezeReportEmployeeKppMasterEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppDetailsEntity;
@@ -15,7 +16,10 @@ import com.futurebizops.kpi.request.CumulativeUpdateRequest;
 import com.futurebizops.kpi.request.EmpKPPUpdateRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPDetailsRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
+import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.dropdown.FinancialYearDDResponse;
+import com.futurebizops.kpi.response.dropdown.FreezeFinancialYearDDResponse;
 import com.futurebizops.kpi.service.FreezeCumulativeService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -100,12 +104,12 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
                         .build();
 
             } else {*/
-                List<FreezeReportEmployeeKppDetailsEntity> freezeReportEmployeeKppDetailsEntities = freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
-                freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
+            List<FreezeReportEmployeeKppDetailsEntity> freezeReportEmployeeKppDetailsEntities = freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
+            freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
 
-                FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
-                freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);
-           // }
+            FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
+            freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);
+            // }
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage("Save HOD KPP details successfully")
@@ -316,5 +320,13 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
 
     }
 
-
+    @Override
+    public List<FreezeFinancialYearDDResponse> ddAllFinancialYear() {
+        List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddAllFinancialYear();
+        List<FreezeFinancialYearDDResponse> financialYearDDResponses = null;
+        if (financialYearData.size() > 0) {
+            financialYearDDResponses = financialYearData.stream().map(FreezeFinancialYearDDResponse::new).collect(Collectors.toList());
+        }
+        return financialYearDDResponses;
+    }
 }

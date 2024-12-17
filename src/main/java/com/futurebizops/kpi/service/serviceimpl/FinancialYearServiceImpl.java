@@ -137,13 +137,5 @@ public class FinancialYearServiceImpl implements FinancialYearService {
         return  financialYearEntity;
     }
 
-    private EmployeeTypeEntity convertEmployeeTypeUpdateRequestToEntity(EmployeeTypeUpdateRequest employeeTypeUpdateRequest) {
-        EmployeeTypeEntity employeeTypeEntity = new EmployeeTypeEntity();
-        employeeTypeEntity.setEmpTypeId(employeeTypeUpdateRequest.getEmpTypeId());
-        employeeTypeEntity.setEmpTypeName(employeeTypeUpdateRequest.getEmpTypeName());
-        employeeTypeEntity.setRemark(employeeTypeUpdateRequest.getRemark());
-        employeeTypeEntity.setStatusCd(employeeTypeUpdateRequest.getStatusCd());
-        employeeTypeEntity.setCreatedUserId(employeeTypeUpdateRequest.getEmployeeId());
-        return  employeeTypeEntity;
-    }
+
 }
