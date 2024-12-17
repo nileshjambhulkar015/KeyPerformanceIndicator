@@ -260,9 +260,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             employeeLoginRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpEId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
 
-            employeeKeyPerfParamRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
+            employeeKeyPerfParamRepo.deleteByEmpId(employeeUpdateDeptDesigRequest.getEmpId());
 
-            employeeKeyPerfParamMasterRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
+            employeeKeyPerfParamMasterRepo.deleteByEmpId(employeeUpdateDeptDesigRequest.getEmpId());
+        //    employeeKeyPerfParamRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
+
+          //  employeeKeyPerfParamMasterRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -284,10 +287,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
 
             employeeLoginRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpEId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
+            employeeKeyPerfParamRepo.deleteByEmpId(employeeUpdateRoleRequest.getEmpId());
 
-            employeeKeyPerfParamRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
+            employeeKeyPerfParamMasterRepo.deleteByEmpId(employeeUpdateRoleRequest.getEmpId());
+          //  employeeKeyPerfParamRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
 
-            employeeKeyPerfParamMasterRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
+            //employeeKeyPerfParamMasterRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
