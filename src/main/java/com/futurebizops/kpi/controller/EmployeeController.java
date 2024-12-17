@@ -3,7 +3,9 @@ package com.futurebizops.kpi.controller;
 import com.futurebizops.kpi.model.EmployeeAdvSearchModel;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateDeptDesigRequest;
+import com.futurebizops.kpi.request.EmployeeUpdateReportingRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
+import com.futurebizops.kpi.request.EmployeeUpdateRoleRequest;
 import com.futurebizops.kpi.request.advsearch.EmployeeAdvSearchRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
@@ -61,9 +63,20 @@ public class EmployeeController {
     }
 
     @PutMapping(value = "/change-dept-or-desig")
-    public ResponseEntity<KPIResponse> updateEmployeeRoleOrDeptOrDesignation(@RequestBody EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest) {
-        return ResponseEntity.ok(employeeService.updateEmployeeRoleOrDeptOrDesignation(employeeUpdateDeptDesigRequest));
+    public ResponseEntity<KPIResponse> updateEmployeeDeptOrDesignation(@RequestBody EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest) {
+        return ResponseEntity.ok(employeeService.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest));
     }
+
+    @PutMapping(value = "/change-role")
+    public ResponseEntity<KPIResponse> updateEmployeeRole(@RequestBody EmployeeUpdateRoleRequest employeeUpdateRoleRequest) {
+        return ResponseEntity.ok(employeeService.updateEmployeeRole(employeeUpdateRoleRequest));
+    }
+
+    @PutMapping(value = "/change-reporting")
+    public ResponseEntity<KPIResponse> updateEmployeeReportingName(@RequestBody EmployeeUpdateReportingRequest employeeUpdateReportingRequest) {
+        return ResponseEntity.ok(employeeService.updateEmployeeReportingName(employeeUpdateReportingRequest));
+    }
+
 
     @PutMapping(value = "/update-dob")
     public ResponseEntity<KPIResponse> updateEmployeeDOB(@RequestParam(required = false) Integer empId,

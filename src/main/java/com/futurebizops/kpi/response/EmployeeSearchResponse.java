@@ -22,6 +22,12 @@ public class EmployeeSearchResponse {
     private String empFirstName;
     private String empMiddleName;
     private String empLastName;
+    private Integer reportingEmpId;
+    private String reportingEmpEId;
+    private String reportingEmpName;
+    private Integer gmEmpId;
+    private String gmEmpEId;
+    private String gmEmpName;
 
     public EmployeeSearchResponse(Object[] objects){
         empId=Integer.parseInt(String.valueOf(objects[0]));
@@ -35,5 +41,7 @@ public class EmployeeSearchResponse {
         empFirstName=String.valueOf(objects[8]);
         empMiddleName=String.valueOf(objects[9]);
         empLastName=String.valueOf(objects[10]);
+        reportingEmpId=Integer.parseInt(String.valueOf(objects[11]));
+        gmEmpId=Integer.parseInt(String.valueOf(objects[12]));
     }
 }

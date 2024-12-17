@@ -2,7 +2,9 @@ package com.futurebizops.kpi.service;
 
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateDeptDesigRequest;
+import com.futurebizops.kpi.request.EmployeeUpdateReportingRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
+import com.futurebizops.kpi.request.EmployeeUpdateRoleRequest;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
 import com.futurebizops.kpi.response.KPIResponse;
@@ -12,6 +14,7 @@ import com.futurebizops.kpi.response.dropdown.DesignationDDResponse;
 import com.futurebizops.kpi.response.dropdown.EmployeeDDResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -23,7 +26,11 @@ public interface EmployeeService {
     public KPIResponse deleteEmployeeDetails(Integer empId);
     public KPIResponse updateEmployee(EmployeeUpdateRequest employeeUpdateRequest);
 
-    public KPIResponse updateEmployeeRoleOrDeptOrDesignation(EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest);
+    public KPIResponse updateEmployeeDeptOrDesignation(EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest);
+
+    public KPIResponse updateEmployeeRole(EmployeeUpdateRoleRequest employeeUpdateRoleRequest);
+
+    public KPIResponse updateEmployeeReportingName(EmployeeUpdateReportingRequest employeeUpdateReportingRequest);
     public KPIResponse updateEmployeeDOB(Integer empId, String empDob);
 
     public KPIResponse getAllEmployeeDetails(Integer empId,String empEId,Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd,Integer empTypeId,Integer companyId, Integer reportingEmpId, Pageable pageable);

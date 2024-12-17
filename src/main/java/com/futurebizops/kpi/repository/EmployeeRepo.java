@@ -26,10 +26,24 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
     @Query(value = "update employee set status_cd='I' where emp_id =:empId", nativeQuery = true)
     public int deleteEmployeeDetails(@Param("empId") Integer empId);
 
+    @Query(value = "select concat(emp_fname,' ',emp_mname,' ',emp_lname) from employee where emp_id =:empId", nativeQuery = true)
+    public String getEmployeeName(@Param("empId") Integer empId);
+
+    @Query(value = "select emp_eid from employee where emp_id =:empId", nativeQuery = true)
+    public String getEmployeeEId(@Param("empId") Integer empId);
+
     @Modifying
     @Query(value = "update employee set dept_id=:deptId, desig_id=:desigId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
     public int updateEmployeeDeptOrDesignation(@Param("empId") Integer empId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId,String employeeId);
 
+    @Modifying
+    @Query(value = "update employee set role_id=:roleId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
+    public int updateEmployeeRole(@Param("empId") Integer empId,@Param("roleId") Integer roleId,String employeeId);
+
+
+    @Modifying
+    @Query(value = "update employee set reporting_emp_id=:reportingEmpId,gm_emp_id=:gmEmpId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
+    public int updateEmployeeReporting(@Param("empId") Integer empId,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId,String employeeId);
 
     @Modifying
     @Query(value = "update employee set emp_dob=:empoyeeDob where emp_id =:empId", nativeQuery = true)

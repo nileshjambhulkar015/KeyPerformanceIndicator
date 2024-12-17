@@ -26,6 +26,10 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     @Query(value = "update employee_kpp_details set dept_id=:deptId, desig_id=:desigId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
     public int updateEmployeeDeptOrDesignation(@Param("empId") Integer empId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId,String employeeId);
 
+    @Modifying
+    @Query(value = "update employee_kpp_details set role_id=:roleId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
+    public int updateEmployeeRole(@Param("empId") Integer empId,@Param("roleId") Integer roleId,String employeeId);
+
 
     @Modifying
     @Query(value = "update employee_kpp_details set ekpp_gm_achived_weight =:ekppAchivedWeight,ekpp_gm_overall_achieve =:ekppOverallAchieve,ekpp_gm_overall_task_comp = :ekppOverallTaskComp,avg_overall_rating=:overallRatings,avg_overall_achivement_per=:overallPercentage where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
@@ -44,6 +48,8 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     List<Object[]> viewEmployeeKpp(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId);
 
     public void deleteByEmpIdAndKppId(Integer empId, Integer kppId);
+
+    public void deleteByEmpId(Integer empId);
 
     @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP_COUNT_QUERY, nativeQuery = true)
     Integer assignEmployeeKppCount(@Param("empId") Integer empId);

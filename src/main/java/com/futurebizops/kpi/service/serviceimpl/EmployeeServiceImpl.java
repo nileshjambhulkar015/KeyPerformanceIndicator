@@ -34,7 +34,9 @@ import com.futurebizops.kpi.repository.SiteRepo;
 import com.futurebizops.kpi.request.EmployeeCreateRequest;
 import com.futurebizops.kpi.request.EmployeeExcelReadData;
 import com.futurebizops.kpi.request.EmployeeUpdateDeptDesigRequest;
+import com.futurebizops.kpi.request.EmployeeUpdateReportingRequest;
 import com.futurebizops.kpi.request.EmployeeUpdateRequest;
+import com.futurebizops.kpi.request.EmployeeUpdateRoleRequest;
 import com.futurebizops.kpi.response.EmployeeKppStatusResponse;
 import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.EmployeeSearchResponse;
@@ -251,7 +253,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
-    public KPIResponse updateEmployeeRoleOrDeptOrDesignation(EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest) {
+    public KPIResponse updateEmployeeDeptOrDesignation(EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest) {
         Boolean isEmployeePresent = employeeRepo.existsById(employeeUpdateDeptDesigRequest.getEmpId());
         if(isEmployeePresent){
             employeeRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
@@ -261,6 +263,55 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeKeyPerfParamRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
 
             employeeKeyPerfParamMasterRepo.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest.getEmpId(),employeeUpdateDeptDesigRequest.getDeptId(),employeeUpdateDeptDesigRequest.getDesigId(),employeeUpdateDeptDesigRequest.getEmployeeId());
+
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage("Record updated successfully")
+                    .build();
+        }
+
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not updated")
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse updateEmployeeRole(EmployeeUpdateRoleRequest employeeUpdateRoleRequest){
+        Boolean isEmployeePresent = employeeRepo.existsById(employeeUpdateRoleRequest.getEmpId());
+        if(isEmployeePresent){
+            employeeRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
+
+            employeeLoginRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpEId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
+
+            employeeKeyPerfParamRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
+
+            employeeKeyPerfParamMasterRepo.updateEmployeeRole(employeeUpdateRoleRequest.getEmpId(),employeeUpdateRoleRequest.getRoleId(),employeeUpdateRoleRequest.getEmployeeId());
+
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage("Record updated successfully")
+                    .build();
+        }
+
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record not updated")
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse updateEmployeeReportingName(EmployeeUpdateReportingRequest employeeUpdateReportingRequest){
+        Boolean isEmployeePresent = employeeRepo.existsById(employeeUpdateReportingRequest.getEmpId());
+        if(isEmployeePresent){
+            Integer  gmEmpId = getGmEmpId(employeeUpdateReportingRequest.getReportingEmpId());
+            employeeRepo.updateEmployeeReporting(employeeUpdateReportingRequest.getEmpId(),employeeUpdateReportingRequest.getReportingEmpId(),gmEmpId,employeeUpdateReportingRequest.getEmployeeId());
+
+            employeeKeyPerfParamRepo.deleteByEmpId(employeeUpdateReportingRequest.getEmpId());
+
+            employeeKeyPerfParamMasterRepo.deleteByEmpId(employeeUpdateReportingRequest.getEmpId());
 
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -381,9 +432,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeSearchResponse getEmployeeSearchById(Integer empId) {
+        EmployeeSearchResponse employeeSearchResponse =null;
         List<Object[]> employeeDetail = employeeRepo.getEmployeeSearchById(empId);
         List<EmployeeSearchResponse> employeeResponses = employeeDetail.stream().map(EmployeeSearchResponse::new).collect(Collectors.toList());
-        return employeeResponses.get(0);
+        if(employeeResponses.size()>0){
+            employeeSearchResponse = employeeResponses.get(0);
+            employeeSearchResponse.setReportingEmpEId(getEmployeeEID(employeeSearchResponse.getReportingEmpId()));
+            employeeSearchResponse.setReportingEmpName(getEmployeeName(employeeSearchResponse.getReportingEmpId()));
+
+            employeeSearchResponse.setGmEmpEId(getEmployeeEID(employeeSearchResponse.getGmEmpId()));
+            employeeSearchResponse.setGmEmpName(getEmployeeName(employeeSearchResponse.getGmEmpId()));
+        }
+        return employeeSearchResponse;
     }
 
     @Override
@@ -400,9 +460,18 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .empFirstName(empDetails.getEmpFirstName())
                         .empMiddleName(empDetails.getEmpMiddleName())
                         .empLastName(empDetails.getEmpLastName())
+
                         .build())
                 .collect(Collectors.toList());
 
+    }
+
+    private String getEmployeeName(Integer empId){
+        return employeeRepo.getEmployeeName(empId);
+    }
+
+    private String getEmployeeEID(Integer empId){
+        return employeeRepo.getEmployeeEId(empId);
     }
 
     //get details for employee, HOD and GM to approve or reject kpp details
