@@ -343,8 +343,8 @@ public class EmployeeCompletedKPPReport {
         // Set content type and headers
         httpServletResponse.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-      //  httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + "-" + DateTimeUtils.extractMonthName(response.getEkppMonth()) + "-"+ DateTimeUtils.extractYear(response.getEkppMonth())+".xlsx");
-        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + "- 2024"+".xlsx");
+        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + "-" + DateTimeUtils.extractMonthName(response.getEkppMonth()) + "-"+ DateTimeUtils.extractYear(response.getEkppMonth())+".xlsx");
+      //  httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + response.getEmpEId() + "- 2024"+".xlsx");
         // Write the workbook to the response output stream
         try {
             workbook.write(httpServletResponse.getOutputStream());

@@ -53,6 +53,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void getCompletedEmployeeKppStatusReport(HttpServletResponse httpServletResponse, Integer empId,String ekppMonth) {
         EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getCompletedEmployeeKppStatus(empId,ekppMonth);
+        //for file name
+        empKppStatusResponse.setReportKppMonth(ekppMonth);
         employeeCompletedKPPReport.getEmployeeKppStatusExport(empKppStatusResponse,httpServletResponse);
     }
 
@@ -65,6 +67,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void getCompletedHODKppStatusReport(HttpServletResponse httpServletResponse, Integer empId, String ekppMonth) {
         EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getCompletedEmployeeKppStatus(empId,ekppMonth);
+        //for file name
+        empKppStatusResponse.setReportKppMonth(ekppMonth);
         hodCompletedKPPReport.getHodKppStatusExport(empKppStatusResponse,httpServletResponse);
     }
 

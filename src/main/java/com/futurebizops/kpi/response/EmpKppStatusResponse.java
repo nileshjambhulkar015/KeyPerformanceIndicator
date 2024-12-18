@@ -56,6 +56,9 @@ public class EmpKppStatusResponse {
     private String companyMbNo;
     private String companyFinYear;
 
+    //to add name kin file name
+    private String reportKppMonth;
+
     List<EmployeeKppDetailsDto> kppStatusDetails;
     List<FreezeEmployeeKppDetailsDto> freezeEmployeeKppDetailsDtos;
 }
