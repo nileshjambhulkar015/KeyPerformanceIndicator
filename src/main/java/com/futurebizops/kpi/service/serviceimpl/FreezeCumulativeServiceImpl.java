@@ -57,67 +57,38 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
     @Override
     public KPIResponse saveEmployeeKPPFeedbackDetails(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
 
-        List<Object[]> reportData = freezeReportEmployeeKppMasterRepo.getEmpIdAndDates(freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getEmpId());
-        //if kpp is already filled for month
-        if (!reportData.isEmpty()) {
-            List<EmployeeMasterReportDTO> reportDataReponses = reportData.stream().map(EmployeeMasterReportDTO::new).collect(Collectors.toList());
-            int requestMonthValue = DateTimeUtils.extractMonthValue(freezeEmpKPPMasterRequest.getEkppMonth());
-            int requestYearValue = DateTimeUtils.extractYear(freezeEmpKPPMasterRequest.getEkppMonth());
+        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+        if(freezeReportAvailable.size()>0){
+            System.out.println("Record is alreaddy present");
+            for(FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()){
+                System.out.println(freezeEmpKPPDetailsRequest);
+                log.info("Emp Id : {},Kpp Id : {},fin Year : {}, Feedback : {}",freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPDetailsRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPDetailsRequest.getEmpKppFeedback());
+                freezeReportEmployeeKppDetailsRepo.updateHODFeedbackKppDetails(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPDetailsRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPDetailsRequest.getEmpKppFeedback());
+            }
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage("Updated KPP feedback successfully")
+                    .build();
+        }else {
 
-            for (EmployeeMasterReportDTO employeeMasterReportDTO : reportDataReponses) {
-                int reportMonthValue = DateTimeUtils.extractMonthValue(employeeMasterReportDTO.getEkppMonth());
-                int reportYearValue = DateTimeUtils.extractYear(employeeMasterReportDTO.getEkppMonth());
-                if (requestMonthValue == reportMonthValue && requestYearValue == reportYearValue && freezeEmpKPPMasterRequest.getEkppStatus() == "Pending") {
-                    return KPIResponse.builder()
-                            .isSuccess(false)
-                            .responseMessage("For this month report is already approved")
-                            .build();
-                }
+            Instant ekppMonth = DateTimeUtils.convertStringToInstant(freezeEmpKPPMasterRequest.getEkppMonth());
+            try {
+                List<FreezeReportEmployeeKppDetailsEntity> freezeReportEmployeeKppDetailsEntities = freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
+                freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
+
+                FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
+                freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);
+
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage("Save HOD KPP details successfully")
+                        .build();
+            } catch (Exception ex) {
+                log.error("Inside EmployeeKeyPerfParamServiceImpl >> updateEmployeeKeyPerfParamDetails()", ex);
+                throw new KPIException("EmployeeKeyPerfParamServiceImpl >> updateEmployeeKeyPerfParamDetails() Class", false, ex.getMessage());
             }
         }
 
-        KPIResponse kpiResponse = new KPIResponse();
-        if (StringUtils.isEmpty(freezeEmpKPPMasterRequest.getEkppMonth())) {
-            kpiResponse.setResponseMessage("Please select date once again");
-            kpiResponse.setSuccess(false);
-            return kpiResponse;
-        }
-        Instant ekppMonth = DateTimeUtils.convertStringToInstant(freezeEmpKPPMasterRequest.getEkppMonth());
-        try {
-           /* Optional<FreezeReportEmployeeKppMasterEntity> optionalFreezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterRepo.findByEmpIdAndFinYear(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
-            if (optionalFreezeReportEmployeeKppMasterEntity.isPresent()) {
-
-                for (FreezeEmpKPPDetailsRequest empKPPUpdateRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
-                    FreezeReportEmployeeKppDetailsEntity reportEmployeeKppDetails = new FreezeReportEmployeeKppDetailsEntity();
-                    reportEmployeeKppDetails.setEkppMonth(ekppMonth);
-                    reportEmployeeKppDetails.setKppId(empKPPUpdateRequest.getKppId());
-                    reportEmployeeKppDetails.setEmpId(freezeEmpKPPMasterRequest.getEmpId());
-                    reportEmployeeKppDetails.setRoleId(freezeEmpKPPMasterRequest.getRoleId());
-                    reportEmployeeKppDetails.setDeptId(freezeEmpKPPMasterRequest.getDeptId());
-                    reportEmployeeKppDetails.setDesigId(freezeEmpKPPMasterRequest.getDesigId());
-                    reportEmployeeKppDetails.setEmpKppFeedback(empKPPUpdateRequest.getEmpKppFeedback());
-                    freezeReportEmployeeKppDetailsRepo.updateHODFeedbackKppDetails(empKPPUpdateRequest.getEmpKppFeedback(),freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getRoleId(),freezeEmpKPPMasterRequest.getDeptId(),freezeEmpKPPMasterRequest.getDesigId(),empKPPUpdateRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear());
-                }
-                return KPIResponse.builder()
-                        .isSuccess(true)
-                        .responseMessage("Update HOD KPP Feedback details successfully")
-                        .build();
-
-            } else {*/
-            List<FreezeReportEmployeeKppDetailsEntity> freezeReportEmployeeKppDetailsEntities = freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
-            freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
-
-            FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
-            freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);
-            // }
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage("Save HOD KPP details successfully")
-                    .build();
-        } catch (Exception ex) {
-            log.error("Inside EmployeeKeyPerfParamServiceImpl >> updateEmployeeKeyPerfParamDetails()", ex);
-            throw new KPIException("EmployeeKeyPerfParamServiceImpl >> updateEmployeeKeyPerfParamDetails() Class", false, ex.getMessage());
-        }
     }
 
     private FreezeReportEmployeeKppMasterEntity freezeReportEmployeeKppMasterEntities(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest, Instant ekppMonth) {
@@ -323,7 +294,7 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
     @Override
     public List<FreezeFinancialYearDDResponse> ddAllFinancialYear() {
         List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddAllFinancialYear();
-        List<FreezeFinancialYearDDResponse> financialYearDDResponses = null;
+        List<FreezeFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
         if (financialYearData.size() > 0) {
             financialYearDDResponses = financialYearData.stream().map(FreezeFinancialYearDDResponse::new).collect(Collectors.toList());
         }

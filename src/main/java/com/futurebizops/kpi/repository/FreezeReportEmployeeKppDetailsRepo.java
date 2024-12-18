@@ -18,7 +18,7 @@ public interface FreezeReportEmployeeKppDetailsRepo extends JpaRepository<Freeze
     public int updateEmployeeKppDetails(@Param("empId") Integer empId, @Param("ekppMonth") Instant ekppMonth, @Param("ekppAchivedWeight") String ekppAchivedWeight, @Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp, @Param("overallRatings") String overallRatings, @Param("overallPercentage") String overallPercentage, @Param("kppId") Integer kppId, @Param("empEId") String empEId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId);
 
     @Modifying
-    @Query(value = "update freeze_report_employee_kpp_details set emp_kpp_feedback =:empKppFeedback where emp_id =:empId and role_id =:roleId and dept_id =:deptId and desig_id =:desigId and kpp_id = :kppId and fin_year = :finYear", nativeQuery = true)
-    public int updateHODFeedbackKppDetails(@Param("empKppFeedback") String empKppFeedback,@Param("empId") Integer empId,  @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId,@Param("kppId") Integer kppId,@Param("finYear") String finYear);
+    @Query(value = "update freeze_report_employee_kpp_details set emp_kpp_feedback =:empKppFeedback where emp_id =:empId and kpp_id = :kppId and fin_year = :finYear", nativeQuery = true)
+    public int updateHODFeedbackKppDetails(@Param("empId") Integer empId,  @Param("kppId") Integer kppId,@Param("finYear") String finYear,@Param("empKppFeedback") String empKppFeedback);
 
 }

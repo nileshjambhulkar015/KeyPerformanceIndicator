@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class EmployeeKppMasterDto {
 
     private Integer eKppMId;
+    private String finYear;
     private String ekppMonth;
     private Integer empId;
     private String empName;

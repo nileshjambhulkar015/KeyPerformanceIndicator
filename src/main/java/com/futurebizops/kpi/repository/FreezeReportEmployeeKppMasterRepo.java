@@ -16,11 +16,14 @@ import java.util.Optional;
 @Repository
 public interface FreezeReportEmployeeKppMasterRepo extends JpaRepository<FreezeReportEmployeeKppMasterEntity, Integer> {
 
-    Optional<FreezeReportEmployeeKppMasterEntity> findByEmpIdAndFinYear(Integer empId, String finYear);
+    Boolean findByEmpIdAndFinYear(Integer empId, String finYear);
 
     //Check employee report fill for month or not
     @Query(value = "select rekm.emp_id, rekm.ekpp_month   from report_employee_kpp_master rekm where  rekm.emp_id = coalesce(:empId, rekm.emp_id)", nativeQuery = true)
     public List<Object[]> getEmpIdAndDates(@Param("empId") Integer empId);
+
+    @Query(value = "select * from freeze_report_employee_kpp_master where  emp_id = coalesce(:empId, emp_id) and fin_year=coalesce(:finYear, fin_year)", nativeQuery = true)
+    public List<Object[]> checkKppReportAdded(@Param("empId") Integer empId,@Param("finYear") String finYear);
 
     @Modifying
     @Query(value = "update freeze_report_employee_kpp_master set emp_id =:empId, ekpp_month =:ekppMonth, total_emp_achived_weight =:totalAchivedWeightage,total_emp_overall_achieve =:totalOverAllAchive,total_emp_overall_task_comp = :totalOverallTaskCompleted,avg_total_overall_rating=:totalOverallRatings,avg_total_overall_achivement_per=:totalOverallPercentage,emp_ekpp_applied_date=:eKppAppliedDate,emp_ekpp_status=:empKppStatus, emp_remark=:empRemark,emp_ekpp_evidence=:evidence,hod_ekpp_status='In-Progress', gm_ekpp_status='In-Progress' where emp_eid =:empEId and role_id =:roleId 	and dept_id =:deptId and desig_id =:desigId", nativeQuery = true)
@@ -29,6 +32,7 @@ public interface FreezeReportEmployeeKppMasterRepo extends JpaRepository<FreezeR
     @Query(value = SQLQueryConstants.FREEZE_YEARLY_EMPLOYEE_KPP_STATUS_INFO_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeKppDataYearlyFromFreezeTable(@Param("empId") Integer empId,@Param("finYear") String finYear);
 
-    @Query(value = "select distinct fin_year from report_employee_kpp_master", nativeQuery = true)
+    @Query(value = "select distinct fin_year from freeze_report_employee_kpp_master", nativeQuery = true)
     public List<Object[]> ddAllFinancialYear();
+
 }

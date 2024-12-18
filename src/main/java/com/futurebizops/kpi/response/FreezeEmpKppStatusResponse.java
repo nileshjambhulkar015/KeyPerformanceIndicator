@@ -2,7 +2,6 @@ package com.futurebizops.kpi.response;
 
 import com.futurebizops.kpi.dto.EmployeeKppDetailsDto;
 import com.futurebizops.kpi.dto.FreezeEmployeeKppDetailsDto;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmpKppStatusResponse {
+public class FreezeEmpKppStatusResponse {
 
     private Integer eKppMId;
     private String ekppMonth;
@@ -59,7 +58,5 @@ public class EmpKppStatusResponse {
     //to add name kin file name
     private String reportKppMonth;
 
-    List<EmployeeKppDetailsDto> kppStatusDetails;
-    private String finYear;
-
+    List<FreezeEmployeeKppDetailsDto> kppStatusDetails;
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class EmployeeKppDetailsDto {
 
     private Integer ekppId;
+    private String finYear;
     private Integer kppId;
     private String empAchivedWeight;
     private String empOverallAchieve;

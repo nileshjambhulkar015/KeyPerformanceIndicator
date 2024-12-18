@@ -9,8 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReportEmployeeKppMasterRepo extends JpaRepository<ReportEmployeeKppMasterEntity, Integer> {
@@ -38,6 +40,8 @@ public interface ReportEmployeeKppMasterRepo extends JpaRepository<ReportEmploye
 
     @Query(value = SQLQueryConstants.MONTHLY_EMPLOYEE_KPP_STATUS_INFO_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeKppDataYearly(@Param("empId") Integer empId,@Param("finYear") String finYear);
+
+
 
     List<ReportEmployeeKppMasterEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd);
 }

@@ -69,7 +69,7 @@ public class FreezeEmployeeKppStatusDto {
         employeeKppDetailsDto.setEmpOverallAchieve(String.valueOf(objects[39]));
         employeeKppDetailsDto.setEmpOverallTaskComp(String.valueOf(objects[40]));
         if(null!=objects[41]) {
-            employeeKppDetailsDto.setHodEmployeeId(Integer.parseInt(String.valueOf(objects[41])));
+            employeeKppDetailsDto.setHodEmpId(Integer.parseInt(String.valueOf(objects[41])));
         }
         employeeKppDetailsDto.setHodAchivedWeight(String.valueOf(objects[42]));
         employeeKppDetailsDto.setHodOverallAchieve(String.valueOf(objects[43]));

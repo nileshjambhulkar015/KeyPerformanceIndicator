@@ -14,7 +14,7 @@ public class FreezeEmployeeKppDetailsDto {
     private String empAchivedWeight;
     private String empOverallAchieve;
     private String empOverallTaskComp;
-    private Integer hodEmployeeId;
+    private Integer hodEmpId;
     private String hodAchivedWeight;
     private String hodOverallAchieve;
     private String hodOverallTaskComp;
