@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import java.time.Instant;
 import java.util.List;
 
@@ -58,4 +59,7 @@ public class FreezeEmpKppStatusResponse {
     private String reportKppMonth;
 
     List<OverallEmployeeKppFeedbackDetailsDto> kppStatusDetails;
+    private String empKeyStrength;
+    private String empAreaOfImprovement;
+    private String empTrainginDevelopmentNeeds;
 }

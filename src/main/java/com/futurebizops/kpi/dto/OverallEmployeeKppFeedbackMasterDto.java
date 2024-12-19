@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -49,7 +51,9 @@ public class OverallEmployeeKppFeedbackMasterDto {
     private String companyAddress;
     private String companyMbNo;
     private String companyFinYear;
-
+    private String empKeyStrength;
+    private String empAreaOfImprovement;
+    private String empTrainginDevelopmentNeeds;
 
    public OverallEmployeeKppFeedbackMasterDto(Object[] objects){
         this.eKppMId=Integer.parseInt(String.valueOf(objects[0]));
@@ -88,5 +92,8 @@ public class OverallEmployeeKppFeedbackMasterDto {
         this.gmKppStatus=String.valueOf(objects[31]);
         this.gmRemark=String.valueOf(objects[32]);
         this.remark=String.valueOf(objects[33]);
+       this.empKeyStrength=String.valueOf(objects[34]);
+       this.empAreaOfImprovement=String.valueOf(objects[35]);
+       this.empTrainginDevelopmentNeeds=String.valueOf(objects[36]);
     }
 }

@@ -114,5 +114,8 @@ public class OverallEmployeeKppFeedbackStatusDto {
             employeeKppDetailsDto.setGmKppFeedback(String.valueOf(objects[70]));
         }
 
+        employeeKppMasterDto.setEmpKeyStrength(String.valueOf(objects[71]));
+        employeeKppMasterDto.setEmpAreaOfImprovement(String.valueOf(objects[72]));
+        employeeKppMasterDto.setEmpTrainginDevelopmentNeeds(String.valueOf(objects[73]));
     }
 }
