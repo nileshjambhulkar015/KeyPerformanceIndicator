@@ -1,11 +1,14 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
+import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.dto.EmployeeKppDetailsDto;
 import com.futurebizops.kpi.dto.EmployeeKppMasterDto;
 import com.futurebizops.kpi.dto.EmployeeKppStatusDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackDetailsDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackMasterDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackStatusDto;
+import com.futurebizops.kpi.entity.EmployeeEntity;
+import com.futurebizops.kpi.entity.EmployeeKppMasterEntity;
 import com.futurebizops.kpi.entity.OverallEmployeeKppFeedbackDetailsEntity;
 import com.futurebizops.kpi.entity.OverallEmployeeKppFeedbackMasterEntity;
 import com.futurebizops.kpi.exception.KPIException;
@@ -16,22 +19,29 @@ import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPDetailsRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
+import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.FreezeEmpKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 
+import com.futurebizops.kpi.response.OverallEmpDetailsKppFeedbackResponse;
 import com.futurebizops.kpi.response.dropdown.KppFinancialYearDDResponse;
 import com.futurebizops.kpi.service.OverallEmployeeKppFeedbackService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,6 +64,35 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     private static final DecimalFormat decfor = new DecimalFormat("0.00");
 
     @Override
+    public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId, String finYear, Integer reportingEmpId,Integer gmEmpId, Pageable pageable) {
+        KPIResponse kpiResponse = new KPIResponse();
+        String sortName = null;
+        //  String sortDirection = null;
+        Integer pageSize = pageable.getPageSize();
+        Integer pageOffset = (int) pageable.getOffset();
+        // pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
+        Optional<Sort.Order> order = pageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
+        }
+
+        Integer totalCount = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPPCount(empId, finYear,reportingEmpId,gmEmpId);
+        List<Object[]> employeeDetail = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPP(empId, finYear, reportingEmpId,gmEmpId, sortName, pageSize, pageOffset);
+        if (employeeDetail.size() > 0) {
+            List<OverallEmpDetailsKppFeedbackResponse> employeeResponses = employeeDetail.stream().map(OverallEmpDetailsKppFeedbackResponse::new).collect(Collectors.toList());
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseData(new PageImpl<>(employeeResponses, pageable, totalCount));
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_FETCH);
+
+        } else {
+            kpiResponse.setSuccess(false);
+            kpiResponse.setResponseMessage(KPIConstants.RECORD_NOT_FOUND);
+        }
+        return kpiResponse;
+    }
+
+    @Override
     public List<KppFinancialYearDDResponse> ddAllFinancialYear() {
         List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddAllFinancialYear();
         List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
@@ -62,6 +101,8 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
         }
         return financialYearDDResponses;
     }
+
+
 
     @Transactional
     @Override
