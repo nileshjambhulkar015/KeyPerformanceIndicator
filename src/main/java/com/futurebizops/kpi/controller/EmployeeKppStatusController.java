@@ -1,7 +1,6 @@
 package com.futurebizops.kpi.controller;
 
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
-import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeKppStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,10 +27,5 @@ public class EmployeeKppStatusController {
 
     }
 
-    @GetMapping(value = "/yearly-kpp")
-    public ResponseEntity<KPIResponse> getEmployeeKppDataYearly(@RequestParam(required = false) Integer empId, @RequestParam(required = false) String finYear) {
-        KPIResponse response = employeeKppStatusService.getEmployeeKppDataYearly(empId,finYear);
-        return new ResponseEntity<>(response, HttpStatus.OK);
 
-    }
 }

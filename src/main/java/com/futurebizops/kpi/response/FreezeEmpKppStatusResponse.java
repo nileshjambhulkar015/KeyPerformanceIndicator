@@ -1,7 +1,6 @@
 package com.futurebizops.kpi.response;
 
-import com.futurebizops.kpi.dto.EmployeeKppDetailsDto;
-import com.futurebizops.kpi.dto.FreezeEmployeeKppDetailsDto;
+import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackDetailsDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -58,5 +57,5 @@ public class FreezeEmpKppStatusResponse {
     //to add name kin file name
     private String reportKppMonth;
 
-    List<FreezeEmployeeKppDetailsDto> kppStatusDetails;
+    List<OverallEmployeeKppFeedbackDetailsDto> kppStatusDetails;
 }

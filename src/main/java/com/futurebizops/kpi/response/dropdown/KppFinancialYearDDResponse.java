@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreezeFinancialYearDDResponse {
+public class KppFinancialYearDDResponse {
 
     private String finYearId;
     private String finYear;
 
-    public FreezeFinancialYearDDResponse(Object[] objects){
+    public KppFinancialYearDDResponse(Object[] objects){
         this.finYearId=String.valueOf(objects[0]);
         this.finYear=String.valueOf(objects[0]);
     }

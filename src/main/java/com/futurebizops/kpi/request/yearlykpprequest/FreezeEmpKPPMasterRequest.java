@@ -43,8 +43,6 @@ public class FreezeEmpKPPMasterRequest {
     @Schema(example = "54", description = "This field is used for Employee Key Performance month")
     String totalEmpOverallTaskComp;
 
-    private String ekppStatus;
-
     private String empKppStatus;
 
     private String empRemark;

@@ -1,8 +1,7 @@
 package com.futurebizops.kpi.repository;
 
 import com.futurebizops.kpi.constants.SQLQueryConstants;
-import com.futurebizops.kpi.entity.FreezeReportEmployeeKppMasterEntity;
-import com.futurebizops.kpi.entity.ReportEmployeeKppMasterEntity;
+import com.futurebizops.kpi.entity.OverallEmployeeKppFeedbackMasterEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,10 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface FreezeReportEmployeeKppMasterRepo extends JpaRepository<FreezeReportEmployeeKppMasterEntity, Integer> {
+public interface FreezeReportEmployeeKppMasterRepo extends JpaRepository<OverallEmployeeKppFeedbackMasterEntity, Integer> {
 
     Boolean findByEmpIdAndFinYear(Integer empId, String finYear);
 

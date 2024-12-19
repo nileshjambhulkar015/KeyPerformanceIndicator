@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FreezeEmployeeKppMasterDto {
+public class OverallEmployeeKppFeedbackMasterDto {
 
     private Integer eKppMId;
     private String ekppMonth;
@@ -51,7 +51,7 @@ public class FreezeEmployeeKppMasterDto {
     private String companyFinYear;
 
 
-   public FreezeEmployeeKppMasterDto(Object[] objects){
+   public OverallEmployeeKppFeedbackMasterDto(Object[] objects){
         this.eKppMId=Integer.parseInt(String.valueOf(objects[0]));
         this.ekppMonth=String.valueOf(objects[1]);
         this.empId=Integer.parseInt(String.valueOf(objects[2]));

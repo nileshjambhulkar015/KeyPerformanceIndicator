@@ -17,7 +17,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FreezeReportEmployeeKppDetailsEntity {
+public class OverallEmployeeKppFeedbackDetailsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

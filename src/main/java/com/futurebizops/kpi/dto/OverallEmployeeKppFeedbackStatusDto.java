@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FreezeEmployeeKppStatusDto {
+public class OverallEmployeeKppFeedbackStatusDto {
 
-    FreezeEmployeeKppMasterDto employeeKppMasterDto = new FreezeEmployeeKppMasterDto();
-    FreezeEmployeeKppDetailsDto employeeKppDetailsDto = new FreezeEmployeeKppDetailsDto();
+    OverallEmployeeKppFeedbackMasterDto employeeKppMasterDto = new OverallEmployeeKppFeedbackMasterDto();
+    OverallEmployeeKppFeedbackDetailsDto employeeKppDetailsDto = new OverallEmployeeKppFeedbackDetailsDto();
 
-    public FreezeEmployeeKppStatusDto(Object[] objects) {
+    public OverallEmployeeKppFeedbackStatusDto(Object[] objects) {
         employeeKppMasterDto.setEKppMId(Integer.parseInt(String.valueOf(objects[0])));
         if (null != objects[1]) {
             employeeKppMasterDto.setEkppMonth(DateTimeUtils.extractDateInDDMMYYY(String.valueOf(objects[1])));

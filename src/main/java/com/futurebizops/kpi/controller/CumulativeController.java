@@ -1,10 +1,10 @@
 package com.futurebizops.kpi.controller;
 
-import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
 import com.futurebizops.kpi.request.CompanyMasterCreateRequest;
 import com.futurebizops.kpi.request.CumulativeUpdateRequest;
-import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+
+import com.futurebizops.kpi.response.dropdown.KppFinancialYearDDResponse;
 import com.futurebizops.kpi.service.CumulativeService;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -75,5 +77,12 @@ public class CumulativeController {
     public ResponseEntity<KPIResponse> updateOverallEmployeeKppReportRemark(@RequestBody CumulativeUpdateRequest cumulativeUpdateRequest) {
         KPIResponse response = cumulativeService.updateOverallEmployeeKppReportRemark(cumulativeUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/dd-report-fin-year")
+    public ResponseEntity<List<KppFinancialYearDDResponse>> ddAllFinancialYear() {
+        List<KppFinancialYearDDResponse> response = cumulativeService.ddAllFinancialYear();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 }

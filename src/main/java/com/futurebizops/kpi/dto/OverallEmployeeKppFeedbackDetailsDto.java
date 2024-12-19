@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FreezeEmployeeKppDetailsDto {
+public class OverallEmployeeKppFeedbackDetailsDto {
 
     private Integer ekppId;
     private Integer kppId;

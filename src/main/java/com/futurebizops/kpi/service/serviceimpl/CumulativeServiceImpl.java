@@ -11,6 +11,7 @@ import com.futurebizops.kpi.response.cumulative.CumulativeHoDResponse;
 import com.futurebizops.kpi.response.cumulative.HODCumulativeData;
 import com.futurebizops.kpi.response.cumulative.HoDCumulativeResponse;
 import com.futurebizops.kpi.response.cumulative.TotalCumulativeHoD;
+import com.futurebizops.kpi.response.dropdown.KppFinancialYearDDResponse;
 import com.futurebizops.kpi.service.CumulativeService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -220,5 +221,16 @@ public class CumulativeServiceImpl implements CumulativeService {
             log.error("Inside CumulativeServiceImpl >> addEmployeeCumulativeRemark() :{}", ex);
             throw new KPIException("CumulativeServiceImpl >> addEmployeeCumulativeRemark", false, ex.getMessage());
         }
+    }
+
+    @Override
+    public List<KppFinancialYearDDResponse> ddAllFinancialYear() {
+        List<Object[]> financialYearData = reportEmployeeKppMasterRepo.ddAllFinancialYear();
+        List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
+        if (financialYearData.size() > 0) {
+            financialYearDDResponses = financialYearData.stream().map(KppFinancialYearDDResponse::new).collect(Collectors.toList());
+        }
+        return financialYearDDResponses;
+
     }
 }

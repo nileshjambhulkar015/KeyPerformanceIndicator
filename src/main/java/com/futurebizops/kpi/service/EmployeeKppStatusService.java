@@ -6,7 +6,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 public interface EmployeeKppStatusService {
     public EmpKppStatusResponse getInPrgressEmployeeKppStatus(Integer empId);
 
-    public KPIResponse getEmployeeKppDataYearly(Integer empId, String finYear);
+
 
     public EmpKppStatusResponse getCompletedEmployeeKppStatus(Integer empId, String ekppMonth);
 }
