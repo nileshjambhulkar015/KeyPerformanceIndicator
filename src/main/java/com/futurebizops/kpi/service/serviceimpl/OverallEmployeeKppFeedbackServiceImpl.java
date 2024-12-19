@@ -6,13 +6,12 @@ import com.futurebizops.kpi.dto.EmployeeKppStatusDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackDetailsDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackMasterDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackStatusDto;
-import com.futurebizops.kpi.entity.FinancialYearEntity;
 import com.futurebizops.kpi.entity.OverallEmployeeKppFeedbackDetailsEntity;
 import com.futurebizops.kpi.entity.OverallEmployeeKppFeedbackMasterEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.FinancialYearRepo;
-import com.futurebizops.kpi.repository.FreezeReportEmployeeKppDetailsRepo;
-import com.futurebizops.kpi.repository.FreezeReportEmployeeKppMasterRepo;
+import com.futurebizops.kpi.repository.OverallEmployeeKppFeedbackDetailsRepo;
+import com.futurebizops.kpi.repository.OverallEmployeeKppFeedbackMasterRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPDetailsRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
@@ -33,7 +32,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,10 +45,10 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     private ReportEmployeeKppMasterRepo reportEmployeeKppMasterRepo;
 
     @Autowired
-    private FreezeReportEmployeeKppMasterRepo freezeReportEmployeeKppMasterRepo;
+    private OverallEmployeeKppFeedbackMasterRepo freezeReportEmployeeKppMasterRepo;
 
     @Autowired
-    FreezeReportEmployeeKppDetailsRepo freezeReportEmployeeKppDetailsRepo;
+    OverallEmployeeKppFeedbackDetailsRepo freezeReportEmployeeKppDetailsRepo;
 
     //shpw only 2 decimal value
     private static final DecimalFormat decfor = new DecimalFormat("0.00");

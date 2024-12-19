@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Repository
-public interface FreezeReportEmployeeKppMasterRepo extends JpaRepository<OverallEmployeeKppFeedbackMasterEntity, Integer> {
+public interface OverallEmployeeKppFeedbackMasterRepo extends JpaRepository<OverallEmployeeKppFeedbackMasterEntity, Integer> {
 
     Boolean findByEmpIdAndFinYear(Integer empId, String finYear);
 

@@ -6,8 +6,8 @@ import com.futurebizops.kpi.entity.OverallEmployeeKppFeedbackMasterEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppDetailsEntity;
 import com.futurebizops.kpi.entity.ReportEmployeeKppMasterEntity;
 import com.futurebizops.kpi.exception.KPIException;
-import com.futurebizops.kpi.repository.FreezeReportEmployeeKppDetailsRepo;
-import com.futurebizops.kpi.repository.FreezeReportEmployeeKppMasterRepo;
+import com.futurebizops.kpi.repository.OverallEmployeeKppFeedbackDetailsRepo;
+import com.futurebizops.kpi.repository.OverallEmployeeKppFeedbackMasterRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppDetailsRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
 import com.futurebizops.kpi.request.CumulativeUpdateRequest;
@@ -34,10 +34,10 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
     ReportEmployeeKppDetailsRepo reportEmployeeKppDetailsRepo;
 
     @Autowired
-    FreezeReportEmployeeKppMasterRepo freezeReportEmployeeKppMasterRepo;
+    OverallEmployeeKppFeedbackMasterRepo freezeReportEmployeeKppMasterRepo;
 
     @Autowired
-    FreezeReportEmployeeKppDetailsRepo freezeReportEmployeeKppDetailsRepo;
+    OverallEmployeeKppFeedbackDetailsRepo freezeReportEmployeeKppDetailsRepo;
 
 
     @Transactional

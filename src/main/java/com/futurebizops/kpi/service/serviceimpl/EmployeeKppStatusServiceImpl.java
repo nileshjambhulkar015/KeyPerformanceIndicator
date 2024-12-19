@@ -5,7 +5,7 @@ import com.futurebizops.kpi.dto.EmployeeKppMasterDto;
 import com.futurebizops.kpi.dto.EmployeeKppStatusDto;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EmployeeKppMasterRepo;
-import com.futurebizops.kpi.repository.FreezeReportEmployeeKppMasterRepo;
+import com.futurebizops.kpi.repository.OverallEmployeeKppFeedbackMasterRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.service.EmployeeKppStatusService;
@@ -33,7 +33,7 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
     private ReportEmployeeKppMasterRepo reportEmployeeKppMasterRepo;
 
     @Autowired
-    private FreezeReportEmployeeKppMasterRepo freezeReportEmployeeKppMasterRepo;
+    private OverallEmployeeKppFeedbackMasterRepo freezeReportEmployeeKppMasterRepo;
 
     //shpw only 2 decimal value
     private static final DecimalFormat decfor = new DecimalFormat("0.00");

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.time.Instant;
 
 @Repository
-public interface FreezeReportEmployeeKppDetailsRepo extends JpaRepository<OverallEmployeeKppFeedbackDetailsEntity, Integer> {
+public interface OverallEmployeeKppFeedbackDetailsRepo extends JpaRepository<OverallEmployeeKppFeedbackDetailsEntity, Integer> {
 
     @Modifying
     @Query(value = "update freeze_report_employee_kpp_details set emp_id =:empId, ekpp_month =:ekppMonth, ekpp_emp_achived_weight =:ekppAchivedWeight,ekpp_emp_overall_achieve =:ekppOverallAchieve,ekpp_emp_overall_task_comp = :ekppOverallTaskComp, avg_overall_rating=:overallRatings,avg_overall_achivement_per=:overallPercentage where kpp_id = :kppId and emp_eid =:empEId and role_id =:roleId 	and dept_id =:deptId and desig_id =:desigId", nativeQuery = true)
