@@ -18,5 +18,5 @@ public interface OverallEmployeeKppFeedbackService {
 
     public List<KppFinancialYearDDResponse> ddAllFinancialYear();
 
-    public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId,String finYear,Integer reportingEmpId,Integer gmEmpId,Pageable pageable);
+    public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId,Integer roleId,String finYear,Integer reportingEmpId,Integer gmEmpId,String empKppStatus,String hodKppStatus,String gmKppStatus,Pageable pageable);
 }

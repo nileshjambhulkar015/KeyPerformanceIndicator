@@ -64,8 +64,12 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     private static final DecimalFormat decfor = new DecimalFormat("0.00");
 
     @Override
-    public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId, String finYear, Integer reportingEmpId,Integer gmEmpId, Pageable pageable) {
+    public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId,Integer roleId, String finYear, Integer reportingEmpId,Integer gmEmpId, String empKppStatus,String hodKppStatus,String gmKppStatus,Pageable pageable) {
         KPIResponse kpiResponse = new KPIResponse();
+        //for all records
+        if ("All".equalsIgnoreCase(empKppStatus)) {
+            empKppStatus = null;
+        }
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = pageable.getPageSize();
@@ -77,8 +81,8 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
             //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPPCount(empId, finYear,reportingEmpId,gmEmpId);
-        List<Object[]> employeeDetail = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPP(empId, finYear, reportingEmpId,gmEmpId, sortName, pageSize, pageOffset);
+        Integer totalCount = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPPCount(empId,roleId, finYear,reportingEmpId,gmEmpId,empKppStatus,hodKppStatus,gmKppStatus);
+        List<Object[]> employeeDetail = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPP(empId,roleId, finYear, reportingEmpId,gmEmpId,empKppStatus,hodKppStatus,gmKppStatus, sortName, pageSize, pageOffset);
         if (employeeDetail.size() > 0) {
             List<OverallEmpDetailsKppFeedbackResponse> employeeResponses = employeeDetail.stream().map(OverallEmpDetailsKppFeedbackResponse::new).collect(Collectors.toList());
             kpiResponse.setSuccess(true);
@@ -165,7 +169,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
         reportEmployeeKppMasterEntity.setTotalHodOverallAchieve(freezeEmpKPPMasterRequest.getTotalHodOverallAchieve());
         reportEmployeeKppMasterEntity.setTotalHodOverallTaskComp(freezeEmpKPPMasterRequest.getTotalHodOverallTaskComp());
         reportEmployeeKppMasterEntity.setHodKppAppliedDate(freezeEmpKPPMasterRequest.getHodKppAppliedDate());
-        reportEmployeeKppMasterEntity.setHodKppStatus(freezeEmpKPPMasterRequest.getHodKppStatus());
+        reportEmployeeKppMasterEntity.setHodKppStatus("Pending");
         reportEmployeeKppMasterEntity.setHodRemark(freezeEmpKPPMasterRequest.getHodRemark());
 
         reportEmployeeKppMasterEntity.setGmEmpId(freezeEmpKPPMasterRequest.getGmEmpId());
@@ -173,7 +177,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
         reportEmployeeKppMasterEntity.setTotalGmAchivedWeight(freezeEmpKPPMasterRequest.getTotalGmAchivedWeight());
         reportEmployeeKppMasterEntity.setTotalGmOverallTaskComp(freezeEmpKPPMasterRequest.getTotalGmOverallTaskComp());
         reportEmployeeKppMasterEntity.setGmKppAppliedDate(freezeEmpKPPMasterRequest.getGmKppAppliedDate());
-        reportEmployeeKppMasterEntity.setGmKppStatus(freezeEmpKPPMasterRequest.getGmKppStatus());
+        reportEmployeeKppMasterEntity.setGmKppStatus("Pending");
         reportEmployeeKppMasterEntity.setGmRemark(freezeEmpKPPMasterRequest.getGmRemark());
 
         reportEmployeeKppMasterEntity.setAvgTotalOverallRating(freezeEmpKPPMasterRequest.getAvgTotalOverallRating());

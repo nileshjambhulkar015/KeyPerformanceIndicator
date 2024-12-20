@@ -24,15 +24,17 @@ public class OverallEmpDetailsKppFeedbackResponse {
     private String totalEmpAchivedWeight;
     private String totalEmpOverallAchieve;
     private String totalEmpOverallTaskComp;
+    private String empKppStatus;
     private Integer hodEmpId;
     private String totalHodAchivedWeight;
     private String totalHodOverallAchieve;
     private String totalHodOverallTaskComp;
+    private String hodKppStatus;
     private Integer gmEmpId;
     private String totalGmAchivedWeight;
     private String totalGmOverallAchieve;
     private String totalGmOverallTaskComp;
-
+    private String gmKppStatus;
     public OverallEmpDetailsKppFeedbackResponse(Object[] objects) {
         empId = Integer.parseInt(String.valueOf(objects[0]));
         empEId = String.valueOf(objects[1]);
@@ -47,14 +49,16 @@ public class OverallEmpDetailsKppFeedbackResponse {
         totalEmpAchivedWeight = String.valueOf(objects[10]);
         totalEmpOverallAchieve = String.valueOf(objects[11]);
         totalEmpOverallTaskComp = String.valueOf(objects[12]);
-        hodEmpId = Integer.parseInt(String.valueOf(objects[13]));
-        totalHodAchivedWeight = String.valueOf(objects[14]);
-        totalHodOverallAchieve = String.valueOf(objects[15]);
-        totalHodOverallTaskComp = String.valueOf(objects[16]);
-        gmEmpId = Integer.parseInt(String.valueOf(objects[17]));
-        totalGmAchivedWeight = String.valueOf(objects[18]);
-        totalGmOverallAchieve = String.valueOf(objects[19]);
-        totalGmOverallTaskComp = String.valueOf(objects[20]);
-
+        empKppStatus= String.valueOf(objects[13]);
+        hodEmpId = Integer.parseInt(String.valueOf(objects[14]));
+        totalHodAchivedWeight = String.valueOf(objects[15]);
+        totalHodOverallAchieve = String.valueOf(objects[16]);
+        totalHodOverallTaskComp = String.valueOf(objects[17]);
+        hodKppStatus= String.valueOf(objects[18]);
+        gmEmpId = Integer.parseInt(String.valueOf(objects[19]));
+        totalGmAchivedWeight = String.valueOf(objects[20]);
+        totalGmOverallAchieve = String.valueOf(objects[21]);
+        totalGmOverallTaskComp = String.valueOf(objects[22]);
+        gmKppStatus= String.valueOf(objects[23]);
     }
 }

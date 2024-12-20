@@ -32,17 +32,16 @@ public class OverallEmployeeKppFeedbackController {
     OverallEmployeeKppFeedbackService overallEmployeeKppFeedbackService;
 
 
-
     @GetMapping(value = "/yearly-kpp")
     public ResponseEntity<KPIResponse> getEmployeeKppDataYearly(@RequestParam(required = false) Integer empId, @RequestParam(required = false) String finYear) {
-        KPIResponse response = overallEmployeeKppFeedbackService.getEmployeeKppDataYearly(empId,finYear);
+        KPIResponse response = overallEmployeeKppFeedbackService.getEmployeeKppDataYearly(empId, finYear);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
     @PostMapping(value = "/employee-kpp-feedback")
     public ResponseEntity<KPIResponse> saveEmployeeKPPFeedbackDetails(@RequestBody FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
-        System.out.println("freezeEmpKPPMasterRequest : "+freezeEmpKPPMasterRequest);
+        System.out.println("freezeEmpKPPMasterRequest : " + freezeEmpKPPMasterRequest);
         KPIResponse response = overallEmployeeKppFeedbackService.saveEmployeeKPPFeedbackDetails(freezeEmpKPPMasterRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -57,13 +56,16 @@ public class OverallEmployeeKppFeedbackController {
     @GetMapping(value = "/employee")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> getAllEmployeeKppFeedbackDetails(@RequestParam(required = false) Integer empId,
+                                                                        @RequestParam(required = false) Integer roleId,
+                                                                        @RequestParam(required = false) String finYear,
+                                                                        @RequestParam(required = false) Integer reportingEmpId,
+                                                                        @RequestParam(required = false) Integer gmEmpId,
+                                                                        @RequestParam(required = false) String empKppStatus,
+                                                                        @RequestParam(required = false) String hodKppStatus,
+                                                                        @RequestParam(required = false) String gmKppStatus,
+                                                                        @Parameter(hidden = true) Pageable pageable) {
 
-                                                      @RequestParam(required = false) String finYear,
-                                                      @RequestParam(required = false)  Integer reportingEmpId,
-                                                                        @RequestParam(required = false)  Integer gmEmpId,
-                                                      @Parameter(hidden = true) Pageable pageable) {
-
-        KPIResponse response = overallEmployeeKppFeedbackService.getAllEmployeeKppFeedbackDetails(empId, finYear,reportingEmpId,gmEmpId, pageable);
+        KPIResponse response = overallEmployeeKppFeedbackService.getAllEmployeeKppFeedbackDetails(empId, roleId, finYear, reportingEmpId, gmEmpId,empKppStatus,hodKppStatus,gmKppStatus, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

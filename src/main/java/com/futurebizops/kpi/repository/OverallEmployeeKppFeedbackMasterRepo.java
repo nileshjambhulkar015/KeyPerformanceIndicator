@@ -34,9 +34,9 @@ public interface OverallEmployeeKppFeedbackMasterRepo extends JpaRepository<Over
     public List<Object[]> ddAllFinancialYear();
 
     @Query(value = SQLQueryConstants.EMPLOYEE_DETAILS_FOR_KPP, nativeQuery = true)
-    List<Object[]> getEmployeeDetailForKPP(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
+    List<Object[]> getEmployeeDetailForKPP(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("finYear") String finYear,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId,@Param("empKppStatus") String empKppStatus,@Param("hodKppStatus") String hodKppStatus,@Param("gmKppStatus") String gmKppStatus, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_DETAILS_FOR_KPP_COUNT, nativeQuery = true)
-    Integer getEmployeeDetailForKPPCount(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId);
+    Integer getEmployeeDetailForKPPCount(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("finYear") String finYear,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId,@Param("empKppStatus") String empKppStatus,@Param("hodKppStatus") String hodKppStatus,@Param("gmKppStatus") String gmKppStatus);
 
 }
