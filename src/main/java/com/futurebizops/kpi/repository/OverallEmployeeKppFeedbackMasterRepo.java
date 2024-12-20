@@ -39,4 +39,7 @@ public interface OverallEmployeeKppFeedbackMasterRepo extends JpaRepository<Over
     @Query(value = SQLQueryConstants.EMPLOYEE_DETAILS_FOR_KPP_COUNT, nativeQuery = true)
     Integer getEmployeeDetailForKPPCount(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("finYear") String finYear,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId,@Param("empKppStatus") String empKppStatus,@Param("hodKppStatus") String hodKppStatus,@Param("gmKppStatus") String gmKppStatus);
 
+    @Modifying
+    @Query(value = "update freeze_report_employee_kpp_master set key_strength =:empKeyStrength,are_of_improvement=:empAreaOfImprovement,training_dev_needs=:empTrainginDevelopmentNeeds where emp_id =:empId and fin_year = :finYear", nativeQuery = true)
+    public int updateGMKeyStrengthOfEmployee(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("empKeyStrength") String empKeyStrength,@Param("empAreaOfImprovement") String empAreaOfImprovement,@Param("empTrainginDevelopmentNeeds") String empTrainginDevelopmentNeeds);
 }

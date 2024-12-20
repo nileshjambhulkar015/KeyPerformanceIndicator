@@ -46,6 +46,13 @@ public class OverallEmployeeKppFeedbackController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/gm-kpp-feedback")
+    public ResponseEntity<KPIResponse> updateGMKPPFeedbackForEmployee(@RequestBody FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
+        System.out.println("freezeEmpKPPMasterRequest : " + freezeEmpKPPMasterRequest);
+        KPIResponse response = overallEmployeeKppFeedbackService.updateGMKPPFeedbackForEmployee(freezeEmpKPPMasterRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/dd-overall-fin-year")
     public ResponseEntity<List<KppFinancialYearDDResponse>> ddAllFinancialYear() {
         List<KppFinancialYearDDResponse> response = overallEmployeeKppFeedbackService.ddAllFinancialYear();

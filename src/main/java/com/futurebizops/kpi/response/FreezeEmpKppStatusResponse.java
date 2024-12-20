@@ -59,6 +59,7 @@ public class FreezeEmpKppStatusResponse {
     private String reportKppMonth;
 
     List<OverallEmployeeKppFeedbackDetailsDto> kppStatusDetails;
+
     private String empKeyStrength;
     private String empAreaOfImprovement;
     private String empTrainginDevelopmentNeeds;

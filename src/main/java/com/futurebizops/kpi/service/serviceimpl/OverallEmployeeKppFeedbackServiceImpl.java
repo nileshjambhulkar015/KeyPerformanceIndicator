@@ -106,7 +106,29 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
         return financialYearDDResponses;
     }
 
+    @Transactional
+    @Override
+    public KPIResponse updateGMKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
 
+        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+        if (freezeReportAvailable.size() > 0) {
+            System.out.println("Record is alreaddy present");
+            for (FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
+                System.out.println(freezeEmpKPPDetailsRequest);
+
+                freezeReportEmployeeKppDetailsRepo.updateGMKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getGmKppFeedback());
+            }
+            freezeReportEmployeeKppMasterRepo.updateGMKeyStrengthOfEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds());
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage("Updated KPP feedback successfully")
+                    .build();
+        }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record Not found")
+                .build();
+    }
 
     @Transactional
     @Override
@@ -120,9 +142,10 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
                 log.info("Emp Id : {},Kpp Id : {},fin Year : {}, Feedback : {}",freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPDetailsRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPDetailsRequest.getEmpKppFeedback());
                 freezeReportEmployeeKppDetailsRepo.updateHODFeedbackKppDetails(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPDetailsRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPDetailsRequest.getEmpKppFeedback());
             }
+
             return KPIResponse.builder()
                     .isSuccess(true)
-                    .responseMessage("Updated KPP feedback successfully")
+                    .responseMessage("Updated KPP Feedback successfully")
                     .build();
         }else {
 
@@ -457,6 +480,9 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
                 statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
                 statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
                 statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
+                statusResponse.setEmpKeyStrength(masterDtoListEntry.getKey().getEmpKeyStrength());
+                statusResponse.setEmpAreaOfImprovement(masterDtoListEntry.getKey().getEmpAreaOfImprovement());
+                statusResponse.setEmpTrainginDevelopmentNeeds(masterDtoListEntry.getKey().getEmpTrainginDevelopmentNeeds());
 
                 // statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
 
