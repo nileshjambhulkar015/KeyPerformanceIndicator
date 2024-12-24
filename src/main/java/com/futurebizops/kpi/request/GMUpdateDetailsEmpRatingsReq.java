@@ -10,6 +10,9 @@ public class GMUpdateDetailsEmpRatingsReq {
     @Schema(example = "1", description = "This field is used for Employee Key Performance Id")
     private Integer kppId;
 
+    @Schema(example = "2024-25", description = "This field is used for Employee Key Performance month")
+    private String finYear;
+
     @Schema(example = "1", description = "This field is used for Employee E Id")
     private Integer empId;
 

@@ -40,7 +40,4 @@ public class GMApprovalController {
         KPIResponse response = keyPerfParamService.generateEmployeeKppReport(empId,finYear, statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-
-
 }

@@ -15,6 +15,9 @@ public class GMUpdateMasterEmployeeRatingReq {
 
     List<GMUpdateDetailsEmpRatingsReq> kppUpdateRequests;
 
+    @Schema(example = "2024-25", description = "This field is used for Employee Key Performance month")
+    private String finYear;
+
     @Schema(example = "2023-10-01", description = "This field is used for Employee Key Performance month")
     private String ekppMonth;
 
