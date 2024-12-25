@@ -9,7 +9,7 @@ public class FinancialYearUpdateRequest {
     private Integer finYearId;
 
     @Schema(example = "2024-25", description = "This field is used for department name")
-    private String finYearName;
+    private String finYear;
 
     @Schema(example = "This is remark", description = "This field is used for department remark")
     private String remark;

@@ -54,6 +54,13 @@ public class OverallEmployeeKppFeedbackController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/hod-kpp-feedback-employee")
+    public ResponseEntity<KPIResponse> updateHODKPPFeedbackForEmployee(@RequestBody FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
+        System.out.println("freezeEmpKPPMasterRequest : " + freezeEmpKPPMasterRequest);
+        KPIResponse response = overallEmployeeKppFeedbackService.updateHODKPPFeedbackForEmployee(freezeEmpKPPMasterRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/dd-overall-fin-year")
     public ResponseEntity<List<KppFinancialYearDDResponse>> ddAllFinancialYear() {
         List<KppFinancialYearDDResponse> response = overallEmployeeKppFeedbackService.ddAllFinancialYear();

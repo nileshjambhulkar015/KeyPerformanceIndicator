@@ -80,7 +80,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
         try {
             if(financialYearEntity.isPresent()){
                 FinancialYearEntity financialYear = financialYearEntity.get();
-                financialYear.setFinYear(financialYearUpdateRequest.getFinYearName());
+                financialYear.setFinYear(financialYearUpdateRequest.getFinYear());
                 financialYear.setRemark(financialYearUpdateRequest.getRemark());
                 financialYearRepo.save(financialYear);
                 return KPIResponse.builder()
@@ -105,10 +105,10 @@ public class FinancialYearServiceImpl implements FinancialYearService {
         FinancialYearDDResponse financialYearDDResponse = null;
         List<FinancialYearDDResponse> financialYearDDResponses =new ArrayList<>();
 
-        for(FinancialYearEntity departmentEntity : financialYearEntities){
+        for(FinancialYearEntity financialYearEntity : financialYearEntities){
             financialYearDDResponse = new FinancialYearDDResponse();
-            financialYearDDResponse.setFinYearId(departmentEntity.getFinYearId());
-            financialYearDDResponse.setFinYear(departmentEntity.getFinYear());
+            financialYearDDResponse.setFinYearId(financialYearEntity.getFinYearId());
+            financialYearDDResponse.setFinYear(financialYearEntity.getFinYear());
             financialYearDDResponses.add(financialYearDDResponse);
         }
         return financialYearDDResponses;

@@ -110,7 +110,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     @Override
     public KPIResponse updateGMKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
 
-        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
         if (freezeReportAvailable.size() > 0) {
             System.out.println("Record is alreaddy present");
             for (FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
@@ -118,7 +118,31 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
                 freezeReportEmployeeKppDetailsRepo.updateGMKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getGmKppFeedback());
             }
-            freezeReportEmployeeKppMasterRepo.updateGMKeyStrengthOfEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds());
+            freezeReportEmployeeKppMasterRepo.updateGMKeyStrengthOfEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(),freezeEmpKPPMasterRequest.getRemark());
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage("Updated KPP feedback successfully")
+                    .build();
+        }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record Not found")
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse updateHODKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
+
+        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+        if (freezeReportAvailable.size() > 0) {
+            System.out.println("Record is alreaddy present");
+            for (FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
+                System.out.println(freezeEmpKPPDetailsRequest);
+
+                freezeReportEmployeeKppDetailsRepo.updateHODKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getHodKppFeedback());
+            }
+            freezeReportEmployeeKppMasterRepo.updateHODKeyStrengthForEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(),freezeEmpKPPMasterRequest.getHodRemark());
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage("Updated KPP feedback successfully")
@@ -134,7 +158,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     @Override
     public KPIResponse saveEmployeeKPPFeedbackDetails(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
 
-        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getKppUpdateRequests().get(0).getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
         if(freezeReportAvailable.size()>0){
             System.out.println("Record is alreaddy present");
             for(FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()){

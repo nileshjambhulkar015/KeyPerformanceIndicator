@@ -24,4 +24,8 @@ public interface OverallEmployeeKppFeedbackDetailsRepo extends JpaRepository<Ove
     @Query(value = "update freeze_report_employee_kpp_details set gm_kpp_feedback =:gmKppFeedback where emp_id =:empId and kpp_id = :kppId and fin_year = :finYear", nativeQuery = true)
     public int updateGMKPPFeedbackForEmployee(@Param("empId") Integer empId,  @Param("kppId") Integer kppId,@Param("finYear") String finYear,@Param("gmKppFeedback") String gmKppFeedback);
 
+    @Modifying
+    @Query(value = "update freeze_report_employee_kpp_details set hod_kpp_feedback =:hodKppFeedback where emp_id =:empId and kpp_id = :kppId and fin_year = :finYear", nativeQuery = true)
+    public int updateHODKPPFeedbackForEmployee(@Param("empId") Integer empId,  @Param("kppId") Integer kppId,@Param("finYear") String finYear,@Param("hodKppFeedback") String hodKppFeedback);
+
 }

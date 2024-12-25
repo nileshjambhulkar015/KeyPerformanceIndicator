@@ -86,5 +86,5 @@ public class FreezeEmpKPPMasterRequest {
     private String empKeyStrength;
     private String empAreaOfImprovement;
     private String empTrainginDevelopmentNeeds;
-
+    private String remark;
 }
