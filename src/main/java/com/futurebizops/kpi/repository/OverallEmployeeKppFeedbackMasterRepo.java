@@ -40,11 +40,11 @@ public interface OverallEmployeeKppFeedbackMasterRepo extends JpaRepository<Over
     Integer getEmployeeDetailForKPPCount(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("finYear") String finYear,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId,@Param("empKppStatus") String empKppStatus,@Param("hodKppStatus") String hodKppStatus,@Param("gmKppStatus") String gmKppStatus);
 
     @Modifying
-    @Query(value = "update freeze_report_employee_kpp_master set key_strength =:empKeyStrength,are_of_improvement=:empAreaOfImprovement,training_dev_needs=:empTrainginDevelopmentNeeds, remark=:remark where emp_id =:empId and fin_year = :finYear", nativeQuery = true)
-    public int updateGMKeyStrengthOfEmployee(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("empKeyStrength") String empKeyStrength,@Param("empAreaOfImprovement") String empAreaOfImprovement,@Param("empTrainginDevelopmentNeeds") String empTrainginDevelopmentNeeds,@Param("remark") String remark);
+    @Query(value = "update freeze_report_employee_kpp_master set key_strength =:empKeyStrength,are_of_improvement=:empAreaOfImprovement,training_dev_needs=:empTrainginDevelopmentNeeds,gm_remark=:gmRemark,gm_ekpp_status=:gmKppStatus where emp_id =:empId and fin_year = :finYear", nativeQuery = true)
+    public int updateGMKeyStrengthOfEmployee(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("empKeyStrength") String empKeyStrength,@Param("empAreaOfImprovement") String empAreaOfImprovement,@Param("empTrainginDevelopmentNeeds") String empTrainginDevelopmentNeeds,@Param("gmRemark") String gmRemark,@Param("gmKppStatus") String gmKppStatus);
 
     @Modifying
-    @Query(value = "update freeze_report_employee_kpp_master set key_strength =:empKeyStrength,are_of_improvement=:empAreaOfImprovement,training_dev_needs=:empTrainginDevelopmentNeeds, hod_remark=:hodRemark where emp_id =:empId and fin_year = :finYear", nativeQuery = true)
-    public int updateHODKeyStrengthForEmployee(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("empKeyStrength") String empKeyStrength,@Param("empAreaOfImprovement") String empAreaOfImprovement,@Param("empTrainginDevelopmentNeeds") String empTrainginDevelopmentNeeds,@Param("hodRemark") String hodRemark);
+    @Query(value = "update freeze_report_employee_kpp_master set key_strength =:empKeyStrength,are_of_improvement=:empAreaOfImprovement,training_dev_needs=:empTrainginDevelopmentNeeds, hod_remark=:hodRemark,hod_ekpp_status=:hodKppStatus where emp_id =:empId and fin_year = :finYear", nativeQuery = true)
+    public int updateHODKeyStrengthForEmployee(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("empKeyStrength") String empKeyStrength,@Param("empAreaOfImprovement") String empAreaOfImprovement,@Param("empTrainginDevelopmentNeeds") String empTrainginDevelopmentNeeds,@Param("hodRemark") String hodRemark,@Param("hodKppStatus") String hodKppStatus);
 
 }

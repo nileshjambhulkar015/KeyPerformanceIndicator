@@ -118,7 +118,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
                 freezeReportEmployeeKppDetailsRepo.updateGMKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getGmKppFeedback());
             }
-            freezeReportEmployeeKppMasterRepo.updateGMKeyStrengthOfEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(),freezeEmpKPPMasterRequest.getRemark());
+            freezeReportEmployeeKppMasterRepo.updateGMKeyStrengthOfEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(),freezeEmpKPPMasterRequest.getGmRemark(), freezeEmpKPPMasterRequest.getGmKppStatus());
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage("Updated KPP feedback successfully")
@@ -142,7 +142,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
                 freezeReportEmployeeKppDetailsRepo.updateHODKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getHodKppFeedback());
             }
-            freezeReportEmployeeKppMasterRepo.updateHODKeyStrengthForEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(),freezeEmpKPPMasterRequest.getHodRemark());
+            freezeReportEmployeeKppMasterRepo.updateHODKeyStrengthForEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(),freezeEmpKPPMasterRequest.getHodRemark(),freezeEmpKPPMasterRequest.getHodKppStatus());
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage("Updated KPP feedback successfully")
