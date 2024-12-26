@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.controller;
 
+import com.futurebizops.kpi.request.yearlykpprequest.FinishKppFeedbackRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 
@@ -51,6 +52,13 @@ public class OverallEmployeeKppFeedbackController {
     public ResponseEntity<KPIResponse> updateGMKPPFeedbackForEmployee(@RequestBody FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
         System.out.println("freezeEmpKPPMasterRequest : " + freezeEmpKPPMasterRequest);
         KPIResponse response = overallEmployeeKppFeedbackService.updateGMKPPFeedbackForEmployee(freezeEmpKPPMasterRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/gm-kpp-feedback-finish")
+    public ResponseEntity<KPIResponse> finishByGMKppFeedback(@RequestBody FinishKppFeedbackRequest finishKppFeedbackRequest) {
+        System.out.println("freezeEmpKPPMasterRequest : " + finishKppFeedbackRequest);
+        KPIResponse response = overallEmployeeKppFeedbackService.finishByGMKppFeedback(finishKppFeedbackRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

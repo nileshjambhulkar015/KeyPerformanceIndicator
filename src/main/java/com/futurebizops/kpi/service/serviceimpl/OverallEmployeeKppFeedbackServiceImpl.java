@@ -16,6 +16,7 @@ import com.futurebizops.kpi.repository.FinancialYearRepo;
 import com.futurebizops.kpi.repository.OverallEmployeeKppFeedbackDetailsRepo;
 import com.futurebizops.kpi.repository.OverallEmployeeKppFeedbackMasterRepo;
 import com.futurebizops.kpi.repository.ReportEmployeeKppMasterRepo;
+import com.futurebizops.kpi.request.yearlykpprequest.FinishKppFeedbackRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPDetailsRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
@@ -122,6 +123,24 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage("Updated KPP feedback successfully")
+                    .build();
+        }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseMessage("Record Not found")
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public KPIResponse finishByGMKppFeedback(FinishKppFeedbackRequest finishKppFeedbackRequest) {
+
+        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(finishKppFeedbackRequest.getEmpId(), finishKppFeedbackRequest.getFinYear());
+        if (freezeReportAvailable.size() > 0) {
+            freezeReportEmployeeKppMasterRepo.finishByGMKppFeedback(finishKppFeedbackRequest.getEmpId(),finishKppFeedbackRequest.getFinYear(),finishKppFeedbackRequest.getEmpKppStatus(),finishKppFeedbackRequest.getHodKppStatus(),finishKppFeedbackRequest.getGmKppStatus(), finishKppFeedbackRequest.getEmployeeId());
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage("Finish KPP feedback successfully")
                     .build();
         }
         return KPIResponse.builder()

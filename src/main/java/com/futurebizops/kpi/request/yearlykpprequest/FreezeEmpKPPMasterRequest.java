@@ -87,4 +87,7 @@ public class FreezeEmpKPPMasterRequest {
     private String empAreaOfImprovement;
     private String empTrainginDevelopmentNeeds;
     private String remark;
+
+    @Schema(example = "PM", description = "This field is used for Created User Id")
+    private String employeeId;
 }

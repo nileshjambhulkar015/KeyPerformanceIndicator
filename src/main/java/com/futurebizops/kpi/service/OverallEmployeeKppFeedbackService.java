@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.service;
 
+import com.futurebizops.kpi.request.yearlykpprequest.FinishKppFeedbackRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 
@@ -17,6 +18,8 @@ public interface OverallEmployeeKppFeedbackService {
     public KPIResponse saveEmployeeKPPFeedbackDetails(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest);
     
     public KPIResponse updateGMKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest);
+
+    public KPIResponse finishByGMKppFeedback(FinishKppFeedbackRequest finishKppFeedbackRequest);
 
     public KPIResponse updateHODKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest);
     public List<KppFinancialYearDDResponse> ddAllFinancialYear();

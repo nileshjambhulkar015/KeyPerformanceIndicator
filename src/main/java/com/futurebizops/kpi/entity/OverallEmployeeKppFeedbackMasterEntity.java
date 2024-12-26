@@ -19,7 +19,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class OverallEmployeeKppFeedbackMasterEntity {
+public class OverallEmployeeKppFeedbackMasterEntity extends AuditEnabledEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

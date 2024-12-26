@@ -47,4 +47,9 @@ public interface OverallEmployeeKppFeedbackMasterRepo extends JpaRepository<Over
     @Query(value = "update freeze_report_employee_kpp_master set key_strength =:empKeyStrength,are_of_improvement=:empAreaOfImprovement,training_dev_needs=:empTrainginDevelopmentNeeds, hod_remark=:hodRemark,hod_ekpp_status=:hodKppStatus where emp_id =:empId and fin_year = :finYear", nativeQuery = true)
     public int updateHODKeyStrengthForEmployee(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("empKeyStrength") String empKeyStrength,@Param("empAreaOfImprovement") String empAreaOfImprovement,@Param("empTrainginDevelopmentNeeds") String empTrainginDevelopmentNeeds,@Param("hodRemark") String hodRemark,@Param("hodKppStatus") String hodKppStatus);
 
+
+    @Modifying
+    @Query(value = "update freeze_report_employee_kpp_master set emp_ekpp_status =:empKppStatus,hod_ekpp_status=:hodKppStatus,gm_ekpp_status=:gmKppStatus,lst_updt_user_id=:employeeId where emp_id =:empId and fin_year = :finYear", nativeQuery = true)
+    public int finishByGMKppFeedback(@Param("empId") Integer empId,@Param("finYear") String finYear,@Param("empKppStatus") String empKppStatus,@Param("hodKppStatus") String hodKppStatus,@Param("gmKppStatus") String gmKppStatus, @Param("employeeId") String employeeId);
+
 }
