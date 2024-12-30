@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -39,6 +40,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     ComplaintTypeAuditRepo complaintTypeAuditRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveComplaintType(ComplaintTypeCreateRequest complaintCreateRequest) {
         Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findByDeptIdAndCompTypeNameEqualsIgnoreCase(complaintCreateRequest.getDeptId(), complaintCreateRequest.getCompTypeName() );
         if(optionalComplaintType.isPresent()){
@@ -64,6 +66,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteComplaintTypeDetails(Integer compTypeId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -81,6 +84,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findComplaintTypeDetails(Integer compTypeId, String compTypeName,Integer deptId, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
@@ -116,6 +120,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public ComplaintTypeReponse findAllComplaintTypeById(Integer compTypeId) {
         List<Object[]> complaintTypeData = complaintTypeRepo.getComplaintTypeByIdDetail(compTypeId);
         List<ComplaintTypeReponse> designationReponses = complaintTypeData.stream().map(ComplaintTypeReponse::new).collect(Collectors.toList());
@@ -123,6 +128,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateComplaintType(ComplaintTypeUpdateRequest complaintTypeUpdateRequest) {
         try {
         Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findById(complaintTypeUpdateRequest.getCompTypeId());
@@ -150,6 +156,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentDDResponse> findAllDepartmentFromComplaintType() {
         List<Object[]> complaintData = complaintTypeRepo.findAllDepartmentFromComplaintType();
         List<DepartmentDDResponse> departmentDDResponses = new ArrayList<>();
@@ -160,6 +167,7 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<ComplaintTypeDDResponse> findAllComplaintTypeByDeptId(Integer deptId) {
         List<Object[]> complaintData = complaintTypeRepo.findAllComplaintTypeByDeptId(deptId);
         List<ComplaintTypeDDResponse> departmentDDResponses = new ArrayList<>();

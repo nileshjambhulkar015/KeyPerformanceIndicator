@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -44,7 +45,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Autowired
     AnnouncementTypeRepo announcementTypeRepo;
 
+
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveAnnouncement(AnnouncementCreateRequest announcementCreateRequest) {
         System.out.println(announcementCreateRequest);
         AnnouncementEntity announcementEntity = convertAnnouncementCreateRequestToEntity(announcementCreateRequest);
@@ -64,9 +67,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse cancelAnnouncement(AnnouncementUpdateRequest announcementUpdateRequest) {
         try {
-            announcementRepo.cancelAnnouncement(announcementUpdateRequest.getAnnounId(),announcementUpdateRequest.getAnnounStatus(), announcementUpdateRequest.getStatusCd());
+            announcementRepo.cancelAnnouncement(announcementUpdateRequest.getAnnounId(), announcementUpdateRequest.getAnnounStatus(), announcementUpdateRequest.getStatusCd());
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
@@ -78,12 +82,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public KPIResponse findAllAnnouncements(String announFromDate, String announToDate,Integer announTypeId,String statusCd,Pageable requestPageable) {
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
+    public KPIResponse findAllAnnouncements(String announFromDate, String announToDate, Integer announTypeId, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
 
         announFromDate = StringUtils.isNotEmpty(announFromDate) ? announFromDate : null;
-        announTypeId = (null!=announTypeId)?announTypeId:null;
+        announTypeId = (null != announTypeId) ? announTypeId : null;
 
         announToDate = StringUtils.isNotEmpty(announToDate) ? announToDate : null;
         Integer pageSize = requestPageable.getPageSize();
@@ -95,10 +100,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = announcementRepo.getAnnouncementCount(announFromDate,announToDate,announTypeId,statusCd);
-        List<Object[]> announcementDetail = announcementRepo.getAnnouncementDetail(announFromDate,announToDate,announTypeId,statusCd,pageSize, pageOffset);
+        Integer totalCount = announcementRepo.getAnnouncementCount(announFromDate, announToDate, announTypeId, statusCd);
+        List<Object[]> announcementDetail = announcementRepo.getAnnouncementDetail(announFromDate, announToDate, announTypeId, statusCd, pageSize, pageOffset);
 
-        if(announcementDetail!=null && announcementDetail.size()>0) {
+        if (announcementDetail != null && announcementDetail.size() > 0) {
             List<AnnouncementReponse> announcementReponses = announcementDetail.stream().map(AnnouncementReponse::new).collect(Collectors.toList());
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -113,20 +118,21 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse advSearchAnnouncementDetails(AnnouncementAdvSearch announcementAdvSearch, Pageable requestPageable) {
-        String statusCd=null;
+        String statusCd = null;
         String announFromDate = StringUtils.isNotEmpty(announcementAdvSearch.getAsAnnounFromDate()) ? announcementAdvSearch.getAsAnnounFromDate() : null;
 
-        System.out.println("announFromDate : "+announFromDate);
+        System.out.println("announFromDate : " + announFromDate);
 
         String announToDate = StringUtils.isNotEmpty(announcementAdvSearch.getAsAnnounToDate()) ? announcementAdvSearch.getAsAnnounToDate() : null;
 
-        System.out.println("announToDate : "+announToDate);
+        System.out.println("announToDate : " + announToDate);
         String asAnnounStatus = StringUtils.isNotEmpty(announcementAdvSearch.getAsAnnounStatus()) ? announcementAdvSearch.getAsAnnounStatus() : null;
 
         Integer asAnnounTypeId = (null != announcementAdvSearch.getAsAnnounTypeId() ? announcementAdvSearch.getAsAnnounTypeId() : null);
 
-        if(null != asAnnounStatus && asAnnounStatus.equalsIgnoreCase("Cancel")){
+        if (null != asAnnounStatus && asAnnounStatus.equalsIgnoreCase("Cancel")) {
             statusCd = "I";
         } else {
             statusCd = "A";
@@ -143,16 +149,16 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = announcementRepo.getAdvanceSearcheAnnouncementCount(announFromDate,announToDate, asAnnounStatus,asAnnounTypeId,statusCd);
-        List<Object[]> complaintData = announcementRepo.getAdvanceSearchAnnouncementDetail(announFromDate,announToDate, asAnnounStatus,asAnnounTypeId,statusCd,+ pageSize, pageOffset);
+        Integer totalCount = announcementRepo.getAdvanceSearcheAnnouncementCount(announFromDate, announToDate, asAnnounStatus, asAnnounTypeId, statusCd);
+        List<Object[]> complaintData = announcementRepo.getAdvanceSearchAnnouncementDetail(announFromDate, announToDate, asAnnounStatus, asAnnounTypeId, statusCd, +pageSize, pageOffset);
 
         List<AnnouncementReponse> announcementReponses = complaintData.stream().map(AnnouncementReponse::new).collect(Collectors.toList());
         announcementReponses = announcementReponses.stream()
                 // .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
-                .sorted((o1, o2)->o2.getAnnounStartDate().
+                .sorted((o1, o2) -> o2.getAnnounStartDate().
                         compareTo(o1.getAnnounStartDate()))
                 .collect(Collectors.toList());
-        if(announcementReponses.size()>0) {
+        if (announcementReponses.size() > 0) {
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseData(new PageImpl<>(announcementReponses, requestPageable, totalCount))
@@ -167,6 +173,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public AnnouncementReponse findAnnouncementById(Integer announId, String statusCd) {
         List<Object[]> announcementData = announcementRepo.getAnnouncementByAnnounId(announId, statusCd);
         if (announcementData.size() > 0) {
@@ -177,9 +184,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public KPIResponse findAllAnnouncement(Integer announId, Integer announTypeId,String statusCd) {
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
+    public KPIResponse findAllAnnouncement(Integer announId, Integer announTypeId, String statusCd) {
         KPIResponse kpiResponse = new KPIResponse();
-        List<Object[]> announcementData = announcementRepo.getAnnouncementByAnnounId(announId, announTypeId,statusCd);
+        List<Object[]> announcementData = announcementRepo.getAnnouncementByAnnounId(announId, announTypeId, statusCd);
         if (announcementData.size() > 0) {
             List<AnnouncementReponse> announcementReponses = announcementData.stream().map(AnnouncementReponse::new).collect(Collectors.toList());
             kpiResponse.setSuccess(true);
@@ -192,6 +200,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<AnnouncementTypeResponse> ddAllAnnouncementType(String statusCd) {
 
         List<Object[]> announcementData = announcementRepo.getDDAnnouncementByAnnounId(statusCd);
@@ -207,22 +216,22 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
 
-    private String getAnnounceTypeName(Integer announTypeId){
+    private String getAnnounceTypeName(Integer announTypeId) {
         Optional<AnnouncementTypeEntity> optionalAnnouncementTypeEntity = announcementTypeRepo.findById(announTypeId);
-        if(optionalAnnouncementTypeEntity.isPresent()){
+        if (optionalAnnouncementTypeEntity.isPresent()) {
             return optionalAnnouncementTypeEntity.get().getAnnounTypeName();
         }
         return null;
     }
 
     private AnnouncementEntity convertAnnouncementCreateRequestToEntity(AnnouncementCreateRequest announcementCreateRequest) {
-        Instant annountartDateTime = StringUtils.isNotEmpty(announcementCreateRequest.getAnnounStartDate())? DateTimeUtils.convertResolveDateStringToInstant(announcementCreateRequest.getAnnounStartDate()):null;
-        Instant announEndDateTime = StringUtils.isNotEmpty(announcementCreateRequest.getAnnounEndDate())? DateTimeUtils.convertResolveDateStringToInstant(announcementCreateRequest.getAnnounEndDate()):null;
+        Instant annountartDateTime = StringUtils.isNotEmpty(announcementCreateRequest.getAnnounStartDate()) ? DateTimeUtils.convertResolveDateStringToInstant(announcementCreateRequest.getAnnounStartDate()) : null;
+        Instant announEndDateTime = StringUtils.isNotEmpty(announcementCreateRequest.getAnnounEndDate()) ? DateTimeUtils.convertResolveDateStringToInstant(announcementCreateRequest.getAnnounEndDate()) : null;
 
 
         AnnouncementEntity announcementEntity = new AnnouncementEntity();
-announcementEntity.setAnnounTypeId(announcementCreateRequest.getAnnounTypeId());
-      announcementEntity.setAnnounTypeName(getAnnounceTypeName(announcementCreateRequest.getAnnounTypeId()));
+        announcementEntity.setAnnounTypeId(announcementCreateRequest.getAnnounTypeId());
+        announcementEntity.setAnnounTypeName(getAnnounceTypeName(announcementCreateRequest.getAnnounTypeId()));
         announcementEntity.setAnnounStartDate(annountartDateTime);
         announcementEntity.setAnnounEndDate(announEndDateTime);
         announcementEntity.setAnnounCreatedByEmpId(announcementCreateRequest.getAnnounCreatedByEmpId());

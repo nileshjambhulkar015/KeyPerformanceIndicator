@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class RoleServiceImpl implements RoleService {
     private RoleAuditRepo roleAuditRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveRole(RoleCreateRequest roleCreateRequest) {
         Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleCreateRequest.getRoleName());
         if(optionalRoleEntity.isPresent()){
@@ -61,6 +63,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateRole(RoleUpdateRequest roleUpdateRequest) {
         RoleEntity roleEntity = convertRoleUpdateRequestToEntity(roleUpdateRequest);
         try {
@@ -78,6 +81,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findRoleDetails(RoleSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
         Page<RoleEntity> roleEntities = null;
         Pageable pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
@@ -103,6 +107,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RoleResponse> findAllRolesDetails() {
         List<RoleEntity> roleEntities =  roleRepo.findAllRolesDetails();
         List<RoleResponse> roleResponses = new ArrayList<>();
@@ -119,6 +124,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public RoleResponse findAllRoleById(Integer roleId) {
         Optional<RoleEntity> optionalRoleEntity = roleRepo.findById(roleId);
         if(optionalRoleEntity.isPresent()){
@@ -155,6 +161,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RoleDDResponse> ddEmployeeRoleExceptGM() {
         List<Object[]> roleData = roleRepo.ddEmployeeRoleExceptGM();
         return roleData.stream().map(RoleDDResponse::new).collect(Collectors.toList());

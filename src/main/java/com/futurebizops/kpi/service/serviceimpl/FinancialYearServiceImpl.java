@@ -15,6 +15,7 @@ import com.futurebizops.kpi.response.dropdown.FinancialYearDDResponse;
 import com.futurebizops.kpi.service.FinancialYearService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,6 +34,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
     //EmployeeTypeAuditRepo employeeTypeAuditRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveFinancialYear(FinancialYearCreateRequest financialYearCreateRequest) {
         Optional<FinancialYearEntity> optionalDepartmentEntity = financialYearRepo.findByFinYearEqualsIgnoreCase(financialYearCreateRequest.getFinYearName() );
         if(optionalDepartmentEntity.isPresent()){
@@ -58,6 +60,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteFinancialYear(Integer finYearId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -75,6 +78,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateFinancialYear(FinancialYearUpdateRequest financialYearUpdateRequest) {
         Optional<FinancialYearEntity> financialYearEntity = financialYearRepo.findById(financialYearUpdateRequest.getFinYearId());
         try {
@@ -100,6 +104,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<FinancialYearDDResponse> ddAllFinancialYear() {
         List<FinancialYearEntity> financialYearEntities = financialYearRepo.ddAllFinancialYear();
         FinancialYearDDResponse financialYearDDResponse = null;
@@ -115,6 +120,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findFinancialYear(Integer finYearId, String empTypeName, String statusCd) {
 
         List<FinancialYearEntity> financialYearEntities = financialYearRepo.findAll();

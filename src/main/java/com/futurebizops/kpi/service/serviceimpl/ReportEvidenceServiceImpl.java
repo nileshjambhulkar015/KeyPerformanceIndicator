@@ -9,6 +9,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.ReportEvidenceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +20,7 @@ public class ReportEvidenceServiceImpl implements ReportEvidenceService {
     ReportEvidenceRepo evidenceRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveReportEvidence(ReportEvidenceCreateRequest reportEvidenceCreateRequest) {
 
         KPIResponse kpiResponse = new KPIResponse();
@@ -42,6 +44,7 @@ public class ReportEvidenceServiceImpl implements ReportEvidenceService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public byte[] findReportEvidenceByEmpIdAndMonth(Integer empId, String evMonth) {
         return null;
     }

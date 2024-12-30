@@ -76,6 +76,13 @@ public class OverallEmployeeKppFeedbackController {
 
     }
 
+    @GetMapping(value = "/dd-overall-completed-fin-year")
+    public ResponseEntity<List<KppFinancialYearDDResponse>> ddCompletedAllFinancialYear() {
+        List<KppFinancialYearDDResponse> response = overallEmployeeKppFeedbackService.ddCompletedAllFinancialYear();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
     @GetMapping(value = "/employee")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> getAllEmployeeKppFeedbackDetails(@RequestParam(required = false) Integer empId,

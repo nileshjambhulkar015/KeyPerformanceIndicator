@@ -2,6 +2,7 @@ package com.futurebizops.kpi.service.serviceimpl;
 
 
 import com.futurebizops.kpi.constants.KPIConstants;
+import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EmployeeRepo;
 import com.futurebizops.kpi.response.EmployeeBirthdayResponse;
 import com.futurebizops.kpi.response.KPIResponse;
@@ -9,6 +10,7 @@ import com.futurebizops.kpi.service.BirthdayEmailService;
 import com.futurebizops.kpi.utils.EmailUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -26,6 +28,7 @@ public class BirthdayEmailServiceImpl implements BirthdayEmailService {
     EmailUtils emailUtils;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getBirthdays() throws MessagingException {
 
         List<Object[]> todaysBirthDays = employeeRepo.getTodaysBirthDaysList();

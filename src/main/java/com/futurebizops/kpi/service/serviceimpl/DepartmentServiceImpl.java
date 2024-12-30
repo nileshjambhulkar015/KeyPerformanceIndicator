@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,6 +53,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     RoleRepo roleRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveDepartment(DepartmentCreateRequest departmentCreateRequest) {
 
         Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDeptName());
@@ -81,6 +83,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteDepartmentDetails(Integer deptId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -98,6 +101,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateDepartment(DepartmentUpdateRequest departmentUpdateRequest) {
         try {
             Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findById(departmentUpdateRequest.getDeptId());
@@ -127,6 +131,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findDepartmentDetails(Integer deptId, String deptName, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
@@ -161,6 +166,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentDDResponse> findAllDepartmentExceptGM() {
         List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         DepartmentDDResponse departmentDDResponse = null;
@@ -179,6 +185,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentDDResponse> ddAllDepartment() {
         List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         DepartmentDDResponse departmentDDResponse = null;
@@ -194,6 +201,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentReponse> findAllDepartmentDetails() {
         List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         List<DepartmentReponse> departmentReponses = new ArrayList<>();
@@ -211,6 +219,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public DepartmentReponse findAllDepartmentById(Integer deptId) {
         try {
             List<Object[]> designationData = departmentRepo.getDepartmentByIdDetail(deptId);
@@ -226,6 +235,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public void uploadDeptExcelFile(MultipartFile file) throws IOException {
 
         Integer currentRow = 0;

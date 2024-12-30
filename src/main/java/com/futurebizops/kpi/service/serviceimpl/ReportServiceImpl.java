@@ -3,6 +3,7 @@ package com.futurebizops.kpi.service.serviceimpl;
 import com.futurebizops.kpi.dto.EmployeeKppDetailsDto;
 import com.futurebizops.kpi.excel.EmployeeCompletedKPPReport;
 import com.futurebizops.kpi.excel.HODCompletedKPPReport;
+import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.service.EmployeeKppStatusService;
 import com.futurebizops.kpi.service.ReportService;
@@ -26,6 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -44,13 +46,16 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     HODCompletedKPPReport hodCompletedKPPReport;
+
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public void getInProgressEmployeeKppStatusReport(HttpServletResponse httpServletResponse, Integer empId) {
         EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getInPrgressEmployeeKppStatus(empId);
         employeeCompletedKPPReport.getEmployeeKppStatusExport(empKppStatusResponse,httpServletResponse);
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public void getCompletedEmployeeKppStatusReport(HttpServletResponse httpServletResponse, Integer empId,String ekppMonth) {
         EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getCompletedEmployeeKppStatus(empId,ekppMonth);
         //for file name
@@ -59,12 +64,14 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public void getHodKppStatusReport(HttpServletResponse httpServletResponse, Integer empId) {
         EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getInPrgressEmployeeKppStatus(empId);
         hodCompletedKPPReport.getHodKppStatusExport(empKppStatusResponse,httpServletResponse);
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public void getCompletedHODKppStatusReport(HttpServletResponse httpServletResponse, Integer empId, String ekppMonth) {
         EmpKppStatusResponse empKppStatusResponse = employeeKppStatusService.getCompletedEmployeeKppStatus(empId,ekppMonth);
         //for file name

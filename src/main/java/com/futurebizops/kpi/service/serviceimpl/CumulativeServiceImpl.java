@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -43,6 +44,7 @@ public class CumulativeServiceImpl implements CumulativeService {
     private static final DecimalFormat decfor = new DecimalFormat("0.00");
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getAllEmployeeKPPStatusReport(String fromDate, String toDate,  Integer empId, Integer roleId, String statusCd, Pageable pageable) {
         String sortName = null;
         String startDate = StringUtils.isNotEmpty(fromDate) ? DateTimeUtils.addOneDayToInstant(fromDate).toString() : DateTimeUtils.getFirstDateOfYear();
@@ -131,6 +133,7 @@ public class CumulativeServiceImpl implements CumulativeService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse allEmployeeKppDetails(String fromDate, String toDate, Integer roleId,Integer deptId,Integer desigId,Integer reportingEmpId,Integer gmEmpId,Pageable requestPageable) {
 
 
@@ -210,6 +213,7 @@ public class CumulativeServiceImpl implements CumulativeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateOverallEmployeeKppReportRemark(CumulativeUpdateRequest cumulativeUpdateRequest) {
         try {
             reportEmployeeKppMasterRepo.updateOverallEmployeeKppReportRemark(cumulativeUpdateRequest.getFinYear(),cumulativeUpdateRequest.getEmpKeyStrength(),cumulativeUpdateRequest.getEmpAreaOfImprovement(),cumulativeUpdateRequest.getEmpTrainginDevelopmentNeeds(),cumulativeUpdateRequest.getEmployeeId(),cumulativeUpdateRequest.getEmpId());
@@ -224,6 +228,7 @@ public class CumulativeServiceImpl implements CumulativeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<KppFinancialYearDDResponse> ddAllFinancialYear() {
         List<Object[]> financialYearData = reportEmployeeKppMasterRepo.ddAllFinancialYear();
         List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();

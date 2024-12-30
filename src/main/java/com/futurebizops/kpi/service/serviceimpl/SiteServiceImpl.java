@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,6 +42,7 @@ public class SiteServiceImpl implements SiteService {
     private SiteAuditRepo siteAuditRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveSite(SiteCreateRequest siteCreateRequest) {
         Optional<SiteEntity> designationEntities = siteRepo.findByRegionIdAndSiteNameEqualsIgnoreCase(siteCreateRequest.getRegionId(), siteCreateRequest.getSiteName());
         if (designationEntities.isPresent()) {
@@ -65,6 +67,7 @@ public class SiteServiceImpl implements SiteService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteSiteDetails(Integer siteId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -82,6 +85,7 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateSite(SiteUpdateRequest siteUpdateRequest) {
         try {
         Optional<SiteEntity> optionalSiteEntity = siteRepo.findById(siteUpdateRequest.getSiteId());
@@ -110,6 +114,7 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findSiteDetails(Integer siteId, Integer regionId, String siteName, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
@@ -139,12 +144,14 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<SiteDDResponse> ddSearchSites(Integer regionId, Integer siteId) {
         List<Object[]> regionData = siteRepo.ddSiteDetails(regionId, siteId);
         return regionData.stream().map(SiteDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public SiteResponse getSitesById(Integer siteId) {
         List<Object[]> regionData = siteRepo.SiteByIdDetails(siteId);
         List<SiteResponse> siteResponses = regionData.stream().map(SiteResponse::new).collect(Collectors.toList());
@@ -152,6 +159,7 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RegionDDResponse> getDDRegionFromSite() {
         List<Object[]> regionData = siteRepo.getDDRegionFromSite();
         return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
@@ -169,6 +177,7 @@ public class SiteServiceImpl implements SiteService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public  List<SiteDDResponse> getDDAllSite(){
         List<SiteEntity> siteEntities = siteRepo.findAll();
         List<SiteDDResponse> siteDDResponses = new ArrayList<>();

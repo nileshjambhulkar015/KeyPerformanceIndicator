@@ -55,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -104,6 +105,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     private ReportEvidenceRepo reportEvidenceRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getAllEmployeeKPPDetails(Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Integer empTypeId, Integer companyId, Integer reportingEmpId, Pageable pageable) {
         KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
@@ -156,6 +158,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveEmployeeKeyPerfParamDetails(EmployeeKeyPerfParamCreateRequest keyPerfParamCreateRequest) {
 
 
@@ -241,6 +244,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Override
     @Transactional
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteEmployeeKeyPerfParamDetails(Integer empId, Integer kppId, String kppOverallTarget, String kppOverallWeightage) {
         try {
             log.debug("empId={}, kppId={}", empId, kppId);
@@ -280,6 +284,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployeeKeyPerfParamDetails(EmpKPPMasterUpdateRequest empKPPMasterUpdateRequest) {
 
         List<Object[]> reportData = reportKppMasterRepo.getEmpIdAndDates(empKPPMasterUpdateRequest.getKppUpdateRequests().get(0).getEmpId());
@@ -327,6 +332,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     //when employee fill kpp then coming for hod approval
     @Override
     @Transactional
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateHoDApprovalRequest(HODUpdateMasterEmployeeRatingReq empKPPMasterUpdateRequest) {
         String empKppStatus = "In-Progress";
         try {
@@ -352,6 +358,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateGMApprovalRequest(GMUpdateMasterEmployeeRatingReq empKPPMasterUpdateRequest) {
 
         String empKppStatus = "In-Progress";
@@ -377,6 +384,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<KPPResponse> getKeyPerfomanceParameter(Integer roleId, Integer deptId, Integer desigId, String statusCd) {
        /* try {
             List<KeyPerfParamEntity> keyPerfParamEntities = keyPerfParameterRepo.findByRoleIdAndDeptIdAndDesigIdAndStatusCd(roleId, deptId, desigId, statusCd);
@@ -395,6 +403,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<HodEmploeeKppResponse> getEmployeeForHodRatings(Integer empId, String empEId, String statusCd) {
         List<Object[]> employeeKppData = keyPerfParameterRepo.getEmployeeKeyPerfParameterDetail(empId, empEId, statusCd);
         List<HodEmploeeKppResponse> hodEmployeeResponses = employeeKppData.stream().map(HodEmploeeKppResponse::new).collect(Collectors.toList());
@@ -409,6 +418,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse generateEmployeeKppReport(Integer empId,String finYear, String statusCd) {
         Optional<EmployeeKppMasterEntity> employeeKppMasterEntity = employeeKppMasterRepo.findByEmpIdAndStatusCd(empId, statusCd);
         ReportEmployeeKppMasterEntity kppMaster = new ReportEmployeeKppMasterEntity();
@@ -511,6 +521,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse assignEmployeeKppSearch(Integer empId, Pageable pageable
     ) {
         List<AssignKPPResponseSearch> kppResponses = null;
@@ -550,6 +561,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse assignEmployeeKppAdvanceSearch(Integer empId, KppAdvanceSearchModel employeeAdvSearchModel, Pageable pageable) {
         List<AssignKPPResponseSearch> kppResponses = null;
         KPIResponse response = new KPIResponse();
@@ -590,6 +602,7 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse viewEmployeeKpp(Integer empId, Integer roleId, Integer deptId, Integer desigId, Pageable pageable) {
         List<AssignKPPResponse> assignKPPResponses = null;
         EmployeeAssignKppResponse assignKppResponse = new EmployeeAssignKppResponse();
@@ -638,36 +651,42 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RegionDDResponse> getDDRegionFromEmployee() {
         List<Object[]> regionData = employeeRepo.getDDRegionFromCompany();
         return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<SiteDDResponse> getDDSitesFromEmployee(Integer regionId) {
         List<Object[]> siteData = employeeRepo.getDDSiteFromCompany(regionId);
         return siteData.stream().map(SiteDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<CompanyDDResponse> getDDCompanyFromEmployee(Integer regionId, Integer siteId) {
         List<Object[]> siteData = employeeRepo.getDDCompanyFromCompany(regionId, siteId);
         return siteData.stream().map(CompanyDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RoleDDResponse> getDDRolesFromEmployee(Integer regionId, Integer siteId, Integer companyId) {
         List<Object[]> siteData = employeeRepo.getDDRolesFromCompany(regionId, siteId, companyId);
         return siteData.stream().map(RoleDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentDDResponse> getDDDeptFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId) {
         List<Object[]> siteData = employeeRepo.getDDDeptFromCompany(regionId, siteId, companyId, roleId);
         return siteData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DesignationDDResponse> getDDDesigFromEmployee(Integer regionId, Integer siteId, Integer companyId, Integer roleId, Integer deptId) {
         List<Object[]> siteData = employeeRepo.getDDDesigFromCompany(regionId, siteId, companyId, roleId, deptId);
         return siteData.stream().map(DesignationDDResponse::new).collect(Collectors.toList());

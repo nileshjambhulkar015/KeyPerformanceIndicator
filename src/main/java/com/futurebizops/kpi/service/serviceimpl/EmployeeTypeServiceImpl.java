@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -42,6 +43,7 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
     EmployeeTypeAuditRepo employeeTypeAuditRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveEmployeeType(EmployeeTypeCreateRequest employeeTypeCreateRequest) {
         Optional<EmployeeTypeEntity> optionalDepartmentEntity = employeeTypeRepo.findByEmpTypeNameEqualsIgnoreCase(employeeTypeCreateRequest.getEmpTypeName() );
         if(optionalDepartmentEntity.isPresent()){
@@ -67,6 +69,7 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteEmployeeTypeDetails(Integer empTypeId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -84,6 +87,7 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployeeType(EmployeeTypeUpdateRequest employeeTypeUpdateRequest) {
         try {
             Optional<EmployeeTypeEntity> optionalEmployeeTypeEntity = employeeTypeRepo.findById(employeeTypeUpdateRequest.getEmpTypeId());
@@ -109,6 +113,7 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findEmployeeTypeDetails(Integer empTypeId, String empTypeName, String statusCd) {
 
         List<Object[]> employeeTypeData = employeeTypeRepo.getEmployeeTypeDetail(empTypeId, empTypeName, statusCd);
@@ -123,6 +128,7 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmployeeTypeResponse findEmployeeTypeDetailsByEmpTypeId(Integer empTypeId) {
         try {
             List<Object[]> employeeTypeData = employeeTypeRepo.findEmployeeTypeDetailsByEmpTypeId(empTypeId);

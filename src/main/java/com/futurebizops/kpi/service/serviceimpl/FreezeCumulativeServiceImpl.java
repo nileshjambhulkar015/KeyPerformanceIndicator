@@ -15,6 +15,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.FreezeCumulativeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -42,6 +43,7 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveFreezeCumulativeService(CumulativeUpdateRequest freezeCumulativeCreateRequest) {
 
         List<OverallEmployeeKppFeedbackMasterEntity> freezeReportEmployeeKppMasterEntities = new ArrayList<>();

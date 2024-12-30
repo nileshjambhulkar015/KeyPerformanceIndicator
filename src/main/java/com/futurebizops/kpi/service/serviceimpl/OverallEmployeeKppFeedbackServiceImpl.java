@@ -7,8 +7,6 @@ import com.futurebizops.kpi.dto.EmployeeKppStatusDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackDetailsDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackMasterDto;
 import com.futurebizops.kpi.dto.OverallEmployeeKppFeedbackStatusDto;
-import com.futurebizops.kpi.entity.EmployeeEntity;
-import com.futurebizops.kpi.entity.EmployeeKppMasterEntity;
 import com.futurebizops.kpi.entity.OverallEmployeeKppFeedbackDetailsEntity;
 import com.futurebizops.kpi.entity.OverallEmployeeKppFeedbackMasterEntity;
 import com.futurebizops.kpi.exception.KPIException;
@@ -20,10 +18,8 @@ import com.futurebizops.kpi.request.yearlykpprequest.FinishKppFeedbackRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPDetailsRequest;
 import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
-import com.futurebizops.kpi.response.EmployeeResponse;
 import com.futurebizops.kpi.response.FreezeEmpKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
-
 import com.futurebizops.kpi.response.OverallEmpDetailsKppFeedbackResponse;
 import com.futurebizops.kpi.response.dropdown.KppFinancialYearDDResponse;
 import com.futurebizops.kpi.service.OverallEmployeeKppFeedbackService;
@@ -33,13 +29,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,6 +61,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     private static final DecimalFormat decfor = new DecimalFormat("0.00");
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId,Integer roleId, String finYear, Integer reportingEmpId,Integer gmEmpId, String empKppStatus,String hodKppStatus,String gmKppStatus,Pageable pageable) {
         KPIResponse kpiResponse = new KPIResponse();
         //for all records
@@ -98,6 +95,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<KppFinancialYearDDResponse> ddAllFinancialYear() {
         List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddAllFinancialYear();
         List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
@@ -107,8 +105,20 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
         return financialYearDDResponses;
     }
 
+    @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
+    public List<KppFinancialYearDDResponse> ddCompletedAllFinancialYear() {
+        List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddCompletedAllFinancialYear();
+        List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
+        if (financialYearData.size() > 0) {
+            financialYearDDResponses = financialYearData.stream().map(KppFinancialYearDDResponse::new).collect(Collectors.toList());
+        }
+        return financialYearDDResponses;
+    }
+
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateGMKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
 
         List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
@@ -133,6 +143,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse finishByGMKppFeedback(FinishKppFeedbackRequest finishKppFeedbackRequest) {
 
         List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(finishKppFeedbackRequest.getEmpId(), finishKppFeedbackRequest.getFinYear());
@@ -151,6 +162,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateHODKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
 
         List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
@@ -175,6 +187,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveEmployeeKPPFeedbackDetails(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
 
         List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
@@ -184,6 +197,9 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
                 System.out.println(freezeEmpKPPDetailsRequest);
                 log.info("Emp Id : {},Kpp Id : {},fin Year : {}, Feedback : {}",freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPDetailsRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPDetailsRequest.getEmpKppFeedback());
                 freezeReportEmployeeKppDetailsRepo.updateHODFeedbackKppDetails(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPDetailsRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPDetailsRequest.getEmpKppFeedback());
+
+
+
             }
 
             return KPIResponse.builder()
@@ -199,6 +215,9 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
                 OverallEmployeeKppFeedbackMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
                 freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);
+
+                //update column emp_feedback_added true by default it is false
+                reportEmployeeKppMasterRepo.updateEmployeeKPPFeedbackAddedField(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPMasterRequest.getEmployeeId());
 
                 return KPIResponse.builder()
                         .isSuccess(true)
@@ -294,6 +313,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getEmployeeKppDataYearly(Integer empId, String finYear) {
 
         KPIResponse kpiResponse = new KPIResponse();
@@ -559,8 +579,6 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
             //  throw new KPIException("DepartmentServiceImpl", false, "No record found");
             return null;
         }
-
-
         statusResponse.setTotalEmpAchivedWeight(totalEmpAchivedWeight.toString());
         statusResponse.setTotalEmpOverallAchieve(totalEmpOverallAchieve.toString());
         statusResponse.setTotalEmpOverallTaskComp(totalEmpOverallTaskComp.toString());
@@ -575,6 +593,4 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
         kpiResponse.setResponseData(statusResponse);
         return kpiResponse;
     }
-
-
 }

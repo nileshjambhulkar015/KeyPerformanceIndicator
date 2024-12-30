@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -36,6 +37,7 @@ public class RegionServiceImpl implements RegionService {
     private RegionAuditRepo regionAuditRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveRegion(RegionCreateRequest regionCreateRequest) {
         Optional<RegionEntity> optionalRegionEntity = regionRepo.findByRegionNameEqualsIgnoreCase(regionCreateRequest.getRegionName());
         if (optionalRegionEntity.isPresent()) {
@@ -60,6 +62,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteRegionDetails(Integer regionId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -78,6 +81,7 @@ public class RegionServiceImpl implements RegionService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateRegion(RegionUpdateRequest regionUpdateRequest) {
         try {
         Optional<RegionEntity> optionalRegionEntity = regionRepo.findById(regionUpdateRequest.getRegionId());
@@ -105,6 +109,7 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findRegionDetails(Integer regionId, String regionName, String statusCd, Pageable requestPageable) {
         String sortName = null;
         // String sortDirection = null;
@@ -130,6 +135,7 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findRegionDetails(Integer regionId) {
         RegionResponse regionResponse = null;
         KPIResponse kpiResponse = null;
@@ -157,6 +163,7 @@ public class RegionServiceImpl implements RegionService {
 
     //for dropdown list
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RegionDDResponse> ddRegionDetails(Integer regionId) {
         List<Object[]> regionData = regionRepo.ddRegionDetails(regionId);
         return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());

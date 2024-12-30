@@ -34,6 +34,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,6 +71,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     UoMRepo uoMRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveKeyPerfomanceParameter(KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
         KPIResponse response = new KPIResponse();
        Optional<KeyPerfParamEntity> optionalKeyPerfParamEntity = keyPerfParameterRepo.findByKppObjectiveNoEqualsIgnoreCaseAndStatusCd(keyPerfParamCreateRequest.getKppObjectiveNo(), "A");
@@ -94,6 +96,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteKeyPerfomanceParamDetails(Integer kppId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -111,6 +114,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateKeyPerfomanceParameter(KeyPerfParamUpdateRequest keyPerfParamUpdateRequest) {
         KeyPerfParamEntity keyPerfParamEntity = convertKeyPerfParamUpdateRequestToEntity(keyPerfParamUpdateRequest);
         try {
@@ -122,12 +126,13 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside KeyPerfParameterServiceImpl >> updateKeyPerfomanceParameter()");
+            log.error("Inside KeyPerfParameterServiceImpl >> updateKeyPerfomanceParameter() : {}", ex);
             throw new KPIException("KeyPerfParameterServiceImpl", false, ex.getMessage());
         }
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findKeyPerfomanceParameterDetails(Integer kppId, String kppObjectiveNo, String kppObjective, String statusCd, Pageable pageable) {
         String sortName = null;
         KPIResponse kpiResponse = new KPIResponse();
@@ -169,6 +174,7 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPPResponse findKeyPerfomanceParameterDetailById(Integer kppId) {
         try {
             List<Object[]> designationData = keyPerfParameterRepo.getKeyPerfParameterDetailById(kppId);
@@ -177,11 +183,12 @@ public class KeyPerfParameterServiceImpl implements KeyPerfParameterService {
 
             return kppResponses.get(0);
         } catch (Exception ex) {
-            log.error("Inside KeyPerfParameterServiceImpl >> findKeyPerfomanceParameterDetailById()");
+            log.error("Inside KeyPerfParameterServiceImpl >> findKeyPerfomanceParameterDetailById() :{}",ex);
             throw new KPIException("KeyPerfParameterServiceImpl class", false, ex.getMessage());
         }
     }
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public void uploadKppExcelFile(MultipartFile file) throws IOException {
 
         Integer currentRow = 0;

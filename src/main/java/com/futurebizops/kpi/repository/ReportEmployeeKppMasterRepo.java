@@ -46,4 +46,9 @@ public interface ReportEmployeeKppMasterRepo extends JpaRepository<ReportEmploye
     public List<Object[]> ddAllFinancialYear();
 
     List<ReportEmployeeKppMasterEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd);
+
+    @Modifying
+    @Query(value = "update report_employee_kpp_master set emp_feedback_added=true,lst_updt_user_id=:employeeId where emp_id =:empId and fin_year=:finYear", nativeQuery = true)
+    public int updateEmployeeKPPFeedbackAddedField(@Param("empId") Integer empId, @Param("finYear") String finYear,@Param("employeeId") String employeeId);
+
 }

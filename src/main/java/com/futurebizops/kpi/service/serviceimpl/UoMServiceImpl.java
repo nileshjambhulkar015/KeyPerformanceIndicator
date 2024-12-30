@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,6 +42,7 @@ public class UoMServiceImpl implements UoMService {
     UoMAuditRepo uoMAuditRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveUoM(UoMCreateRequest uoMCreateRequest) {
         Optional<UoMEntity> optionalUoMEntity = uoMRepo.findByUomNameEqualsIgnoreCase(uoMCreateRequest.getUomName());
         if(optionalUoMEntity.isPresent()){
@@ -68,6 +70,7 @@ public class UoMServiceImpl implements UoMService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateUoM(UoMUpdateRequest uoMUpdateRequest) {
         try {
         Optional<UoMEntity> optionalUoMEntity = uoMRepo.findById(uoMUpdateRequest.getUomId());
@@ -97,6 +100,7 @@ public class UoMServiceImpl implements UoMService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteUOMDetails(Integer uomId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -114,6 +118,7 @@ public class UoMServiceImpl implements UoMService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findUoMDetails(Integer uomId, String uomName, String statusCd, Pageable requestPageable) {
         String sortName = null;
         // String sortDirection = null;
@@ -139,6 +144,7 @@ public class UoMServiceImpl implements UoMService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findUoMDetails(Integer uomId) {
         UoMResponse uoMResponse = null;
         KPIResponse kpiResponse = null;
@@ -165,6 +171,7 @@ public class UoMServiceImpl implements UoMService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<UoMEntity> findAllUoMDetails() {
         try {
             List<UoMEntity> uoMEntities = uoMRepo.findAll();
@@ -180,6 +187,7 @@ public class UoMServiceImpl implements UoMService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public RoleResponse findUoMById(Integer roleId) {
         return null;
     }

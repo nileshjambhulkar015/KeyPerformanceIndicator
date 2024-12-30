@@ -1137,4 +1137,6 @@ insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values
 insert  into announcement_type(announ_type_ID,announ_type_name,STATUS_CD) values(4, 'Announcement', 'A');
 
 alter table report_employee_kpp_details add column fin_year VARCHAR(20);
+
+alter table report_employee_kpp_master  add column emp_feedback_added boolean default false;
 */

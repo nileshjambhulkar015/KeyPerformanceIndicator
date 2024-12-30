@@ -11,6 +11,7 @@ import com.futurebizops.kpi.response.LoginResponse;
 import com.futurebizops.kpi.service.EmployeeLoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,6 +33,7 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
     EmployeeKppMasterRepo employeeKppMasterRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse employeeLogin(String userName, String userPassword) {
         List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(userName, userPassword);
         List<LoginResponse> loginResponses = employeeLogin.stream().map(LoginResponse::new).collect(Collectors.toList());
@@ -65,6 +67,7 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateLoginPassword(String userName, String userPassword) {
         int result = employeeLoginRepo.updatePassword(userName, userPassword);
         if (result > 0) {

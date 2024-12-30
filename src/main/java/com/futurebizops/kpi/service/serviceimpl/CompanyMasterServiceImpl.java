@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -45,6 +46,7 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveCompanyDetails(CompanyMasterCreateRequest companyMasterRequest) {
 
         Optional<CompanyMasterEntity> companyMasterOptional = companyMasterRepo.findByCompanyNameEqualsIgnoreCaseAndRegionIdAndSiteId(companyMasterRequest.getCompanyName(),companyMasterRequest.getRegionId(), companyMasterRequest.getSiteId() );
@@ -70,6 +72,7 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteCompanyDetails(Integer companyId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -122,6 +125,7 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateCompanyDetails(CompanyMasterUpdateRequest companyMasterUpdateRequest) {
         try {
         Optional<CompanyMasterEntity> optionalCompanyMasterEntity = companyMasterRepo.findById(companyMasterUpdateRequest.getCompanyId());
@@ -153,6 +157,7 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findCompanyDetails(Integer regionId, Integer siteId, String companyName, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //String sortDirection = null;
@@ -182,6 +187,7 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public CompanyMasterResponse findCompanyById(Integer companyId) {
         List<Object[]> companyData = companyMasterRepo.getAllCompanyByCompId(companyId);
 
@@ -190,6 +196,7 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<CompanyMasterResponse> findAllCompanyByRegionaIdAndSiteId(Integer regionId, Integer siteId) {
         List<Object[]> designationData = companyMasterRepo.getAllCompanyByRegionIdAndSiteId(regionId, siteId);
 
@@ -197,29 +204,34 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RegionDDResponse> getDDRegionFromCompany() {
         List<Object[]> regionData = companyMasterRepo.getDDRegionFromCompany();
         return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<SiteDDResponse> getDDSitesFromComany(Integer regionId) {
         List<Object[]> siteData = companyMasterRepo.getDDSiteFromCompany(regionId);
         return siteData.stream().map(SiteDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<CompanyDDResponse> getDDCompanyFromComany(Integer regionId, Integer siteId) {
         List<Object[]> siteData = companyMasterRepo.getDDCompanyFromCompany(regionId, siteId);
         return siteData.stream().map(CompanyDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<CompanyMasterResponse> getAllCompanyByCompanyId(Integer companyId) {
         return null;
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public  List<CompanyDDResponse> getDDAllCompany(){
         List<CompanyMasterEntity> companyMasterEntities = companyMasterRepo.findAll();
         List<CompanyDDResponse> companyDDResponses = new ArrayList<>();

@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,6 +41,7 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
     EmployeeMeetingAuditRepo employeeMeetingAuditRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveEmployeeMeeting(EmployeeMeetingCreateRequest employeeMeetingCreateRequest) {
         System.out.println(employeeMeetingCreateRequest);
         EmployeeMeetingEntity employeeMeetingEntity = convertMeetingCreateRequestToEntity(employeeMeetingCreateRequest);
@@ -59,6 +61,7 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse cancelEmployeeMeeting(EmployeeMeetingUpdateRequest employeeMeetingUpdateRequest) {
         try {
             employeeMeetingRepo.cancelMeeting(employeeMeetingUpdateRequest.getMeetId(),employeeMeetingUpdateRequest.getMeetStatus());
@@ -73,6 +76,7 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findAllMeetings(String meetFromDate, String meetToDate,Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
@@ -103,6 +107,7 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse advSearchMeetingDetails(MeetingAdvSearch meetingAdvSearch, Pageable requestPageable) {
         String meetFromDate = StringUtils.isNotEmpty(meetingAdvSearch.getMeetFromDate()) ? meetingAdvSearch.getMeetFromDate() : null;
 
@@ -146,6 +151,7 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmployeeMeetingReponse findMeetingById(Integer meetingId, String statusCd) {
         List<Object[]> meetingData = employeeMeetingRepo.getMeetingByMeetingId(meetingId, statusCd);
         if (meetingData.size() > 0) {
@@ -156,6 +162,7 @@ public class EmployeeMeetingServiceImpl implements EmployeeMeetingService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findAllMeeting(Integer meetingId, String statusCd) {
         KPIResponse kpiResponse = new KPIResponse();
         List<Object[]> meetingData = employeeMeetingRepo.getMeetingByMeetingId(meetingId, statusCd);

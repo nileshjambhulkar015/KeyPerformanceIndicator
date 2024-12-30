@@ -33,6 +33,9 @@ public interface OverallEmployeeKppFeedbackMasterRepo extends JpaRepository<Over
     @Query(value = "select distinct fin_year from freeze_report_employee_kpp_master", nativeQuery = true)
     public List<Object[]> ddAllFinancialYear();
 
+    @Query(value = "select distinct fin_year from freeze_report_employee_kpp_master where emp_ekpp_status='Completed' and gm_ekpp_status='Completed' and status_cd='A'", nativeQuery = true)
+    public List<Object[]> ddCompletedAllFinancialYear();
+
     @Query(value = SQLQueryConstants.EMPLOYEE_DETAILS_FOR_KPP, nativeQuery = true)
     List<Object[]> getEmployeeDetailForKPP(@Param("empId") Integer empId,@Param("roleId") Integer roleId,@Param("finYear") String finYear,@Param("reportingEmpId") Integer reportingEmpId,@Param("gmEmpId") Integer gmEmpId,@Param("empKppStatus") String empKppStatus,@Param("hodKppStatus") String hodKppStatus,@Param("gmKppStatus") String gmKppStatus, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
 

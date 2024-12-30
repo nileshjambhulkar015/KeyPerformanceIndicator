@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,6 +62,7 @@ public class DesignationServiceImp implements DesignationService {
     RoleRepo roleRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveDesignation(DesignationCreateRequest designationCreateRequest) {
         Optional<DesignationEntity> designationEntities = designationRepo.findByDeptIdAndDesigNameEqualsIgnoreCase(designationCreateRequest.getDeptId(), designationCreateRequest.getDesigName());
         if (designationEntities.isPresent()) {
@@ -85,6 +87,7 @@ public class DesignationServiceImp implements DesignationService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteDesignationDetails(Integer desigId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -102,6 +105,7 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateDesignation(DesignationUpdateRequest departmentUpdateRequest) {
         DesignationEntity designationEntity = convertDesignationUpdateRequestToEntity(departmentUpdateRequest);
         try {
@@ -119,6 +123,7 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findDesignationDetails(Integer deptId, String desigName, String statusCd, Pageable requestPageable) {
 
         String sortName = null;
@@ -154,6 +159,7 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public DesignationReponse findDesignationById(Integer desigId) {
         List<Object[]> designationData = designationRepo.getDesignationByDesigId(desigId);
         List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
@@ -161,6 +167,7 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId) {
 
         List<Object[]> designationData = designationRepo.getAllDesigByDeptId(deptId);
@@ -168,12 +175,14 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentReponse> getAllDepartmentFromDesig(Integer deptId) {
         List<Object[]> designationData = designationRepo.getDeptInDesigById(deptId);
         return designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public  void uploadDesigExcelFile(MultipartFile file) throws IOException {
 
         Integer currentRow = 0;

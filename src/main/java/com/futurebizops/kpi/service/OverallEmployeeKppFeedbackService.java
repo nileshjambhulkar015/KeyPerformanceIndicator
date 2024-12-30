@@ -24,5 +24,8 @@ public interface OverallEmployeeKppFeedbackService {
     public KPIResponse updateHODKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest);
     public List<KppFinancialYearDDResponse> ddAllFinancialYear();
 
+    public List<KppFinancialYearDDResponse> ddCompletedAllFinancialYear();
+
+
     public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId,Integer roleId,String finYear,Integer reportingEmpId,Integer gmEmpId,String empKppStatus,String hodKppStatus,String gmKppStatus,Pageable pageable);
 }

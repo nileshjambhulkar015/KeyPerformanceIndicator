@@ -18,8 +18,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class ReportEmployeeKppMasterEntity {
+public class ReportEmployeeKppMasterEntity extends AuditEnabledEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -109,7 +108,6 @@ public class ReportEmployeeKppMasterEntity {
 
     @Column(name = "gm_remark")
     private String gmRemark;
-
 
     @Column(name = "avg_total_overall_rating")
     private String avgTotalOverallRating;

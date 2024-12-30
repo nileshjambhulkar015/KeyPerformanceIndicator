@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,6 +42,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveAnnouncementTypeDetails(AnnouncementTypeCreateRequest announcementTypeCreateRequest) {
         Optional<AnnouncementTypeEntity> announcementTypeEntity = announcementTypeRepo.findByAnnounTypeNameEqualsIgnoreCase(announcementTypeCreateRequest.getAnnounTypeName() );
         if(announcementTypeEntity.isPresent()){
@@ -69,6 +71,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteAnnouncementTypeDetails(Integer announTypeId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -86,6 +89,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateAnnouncementTypeDetails(AnnouncementTypeUpdateRequest announcementTypeUpdateRequest) {
         AnnouncementTypeEntity announcementTypeEntity = convertAnnouncementTypeUpdateRequestToEntity(announcementTypeUpdateRequest);
         try {
@@ -104,6 +108,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findAnnouncementTypeSearch(Integer announTypeId, String announTypeName, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
@@ -133,6 +138,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<AnnouncementTypeResponse> getAllAnnouncementType() {
         List<AnnouncementTypeEntity> announcementTypeEntities =  announcementTypeRepo.findAll();
         List<AnnouncementTypeResponse> announcementTypeResponses = new ArrayList<>();
@@ -151,6 +157,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public AnnouncementTypeResponse findAnnouncementTypeById(Integer annonTypeId) {
         AnnouncementTypeResponse  announcementTypeResponse = null;
         try {

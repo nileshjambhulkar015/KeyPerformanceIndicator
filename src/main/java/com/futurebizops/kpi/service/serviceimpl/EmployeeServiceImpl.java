@@ -58,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -127,6 +128,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
 
         KPIResponse kpiResponse = new KPIResponse();
@@ -193,6 +195,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteEmployeeDetails(Integer empId) {
         KPIResponse busPassResponse = new KPIResponse();
         try {
@@ -210,6 +213,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployee(EmployeeUpdateRequest employeeUpdateRequest) {
         if (employeeUpdateRequest.getRoleId() == 2 && employeeUpdateRequest.getStatusCd().equalsIgnoreCase("I")) {
             List<EmployeeEntity> employeeEntity = employeeRepo.findByReportingEmpId(employeeUpdateRequest.getEmpId());
@@ -253,6 +257,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployeeDeptOrDesignation(EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest) {
         Boolean isEmployeePresent = employeeRepo.existsById(employeeUpdateDeptDesigRequest.getEmpId());
         if(isEmployeePresent){
@@ -281,6 +286,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployeeRole(EmployeeUpdateRoleRequest employeeUpdateRoleRequest){
         Boolean isEmployeePresent = employeeRepo.existsById(employeeUpdateRoleRequest.getEmpId());
         if(isEmployeePresent){
@@ -308,6 +314,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployeeReportingName(EmployeeUpdateReportingRequest employeeUpdateReportingRequest){
         Boolean isEmployeePresent = employeeRepo.existsById(employeeUpdateReportingRequest.getEmpId());
         if(isEmployeePresent){
@@ -332,6 +339,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployeeDOB(Integer empId, String empDob) {
         try {
             Instant empoyeeDob = null != empDob ? DateTimeUtils.convertStringToInstant(empDob) : null;
@@ -349,6 +357,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getAllEmployeeDetails(Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String empFirstName, String empMiddleName, String empLastName, String empMobileNo, String emailId, String statusCd, Integer empTypeId, Integer companyId, Integer reportingEmpId, Pageable pageable) {
         KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
@@ -390,6 +399,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getAllEmployeeAdvanceSearch(Integer roleId, Integer deptId, Integer desigId, Integer regionId, Integer siteId, Integer companyId, Integer empTypeId, Pageable pageable) {
         String sortName = null;
         //  String sortDirection = null;
@@ -428,6 +438,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmployeeResponse getAllEmployeeById(Integer empId) {
         List<Object[]> employeeDetail = employeeRepo.getEmployeeById(empId);
         List<EmployeeResponse> employeeResponses = employeeDetail.stream().map(EmployeeResponse::new).collect(Collectors.toList());
@@ -436,6 +447,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmployeeSearchResponse getEmployeeSearchById(Integer empId) {
         EmployeeSearchResponse employeeSearchResponse =null;
         List<Object[]> employeeDetail = employeeRepo.getEmployeeSearchById(empId);
@@ -452,6 +464,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<EmployeeSearchResponse> getEmployeeSuggestByName(Integer roleId, Integer deptId, Integer desigId) {
         //  List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleIdAndDeptIdAndDesigId(roleId,deptId,desigId);
         List<EmployeeEntity> employeeEntities = employeeRepo.findByRoleIdOrDeptIdOrDesigId(roleId, deptId, desigId);
@@ -481,6 +494,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     //get details for employee, HOD and GM to approve or reject kpp details
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getAllEmployeeKPPStatus(Integer reportingEmployee, Integer gmEmpId, Integer empId, String empEId, Integer roleId, Integer deptId, Integer desigId, String statusCd, String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable) {
         String sortName = null;
 
@@ -749,24 +763,28 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RoleDDResponse> getRolesExceptEmployee(Integer roleId, String roleName) {
         List<Object[]> roleData = employeeRepo.getRolesExceptEmployee(roleId, roleName);
         return roleData.stream().map(RoleDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentDDResponse> getDepartmentFromEmployee(Integer roleId, Integer deptId) {
         List<Object[]> roleData = employeeRepo.getDepartmentFromEmployee(roleId, deptId);
         return roleData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DesignationDDResponse> getDesignationFromEmployee(Integer roleId, Integer deptId, Integer desigId) {
         List<Object[]> roleData = employeeRepo.getDesignationFromEmployee(roleId, deptId, desigId);
         return roleData.stream().map(DesignationDDResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<EmployeeDDResponse> getDDEmpName(Integer roleId, Integer deptId, Integer desigId) {
         List<Object[]> roleData = employeeRepo.getDDEmpName(roleId, deptId, desigId);
         return roleData.stream().map(EmployeeDDResponse::new).collect(Collectors.toList());
@@ -774,6 +792,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 //Save employee from excel
 
     @Transactional
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveEmployeeFromExcel(EmployeeCreateRequest employeeCreateRequest) {
 
         KPIResponse kpiResponse = new KPIResponse();

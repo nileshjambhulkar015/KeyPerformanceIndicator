@@ -13,6 +13,7 @@ import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -39,6 +40,7 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
     private static final DecimalFormat decfor = new DecimalFormat("0.00");
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmpKppStatusResponse getInPrgressEmployeeKppStatus(Integer empId) {
         List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
         EmpKppStatusResponse statusResponse = null;
@@ -107,6 +109,7 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmpKppStatusResponse getCompletedEmployeeKppStatus(Integer empId, String ekppMonth) {
 
         String ekkStatusMonth = StringUtils.isNotEmpty(ekppMonth) ? DateTimeUtils.addOneDayToInstant(ekppMonth).toString() : Instant.now().toString();

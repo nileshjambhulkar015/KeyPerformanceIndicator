@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +32,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     EvidenceRepo evidenceRepo;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse uploadFile(MultipartFile multipartFile, Integer empId, String evMonth) {
         KPIResponse kpiResponse = new KPIResponse();
 
@@ -63,6 +65,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteEvidenceFile(Integer empId) {
         KPIResponse kpiResponse = new KPIResponse();
 
@@ -81,6 +84,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getEmpoyeeEvidenceDetails(Integer empId) {
         KPIResponse kpiResponse = new KPIResponse();
       /*  if(evMonth==null){
@@ -115,6 +119,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getEmpoyeeEvidenceDetailsByEmpId(Integer empId) {
         KPIResponse kpiResponse = new KPIResponse();
         try {

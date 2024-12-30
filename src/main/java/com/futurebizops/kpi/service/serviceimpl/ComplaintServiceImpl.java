@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -68,6 +69,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     ComplaintExcel complaintExcel;
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveComplaint(ComplaintCreateRequest complaintCreateRequest) {
         System.out.println("complaintCreateRequest :"+complaintCreateRequest.getDeptId());
         String complaintId = "COMP00" + getRandomNumber();
@@ -114,6 +116,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployeeComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
         //ComplaintEntity complaintEntity = convertEmployeeComplaintUpdateRequestToEntity(complaintUpdateRequest);
         try {
@@ -130,6 +133,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateAdminHandleComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
         try {
             Instant complaintResolveDate = null != complaintUpdateRequest.getCompResolveDateTime()? DateTimeUtils.convertResolveDateStringToInstant(complaintUpdateRequest.getCompResolveDateTime()):null;
@@ -147,6 +151,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmpAssignComplaintHimself(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
         try {
             complaintRepo.updateEmpAssignComplaintHimself(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompStatus(), complaintUpdateRequest.getCompResolveEmpId(),complaintUpdateRequest.getCompResolveEmpName(), complaintUpdateRequest.getCompResolveEmpEId() );
@@ -160,6 +165,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         }
     }
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse advSearchEmployeeComplaintDetails(ComplaintAdvSearch complaintAdvSearch, Pageable requestPageable) {
 
         String compFromDate = StringUtils.isNotEmpty(complaintAdvSearch.getCompFromDate()) ? complaintAdvSearch.getCompFromDate() : null;
@@ -221,6 +227,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse downloadEmployeeComplaints(HttpServletResponse httpServletResponse, String compFromDate,String compToDate,Integer empId,String empCompDeptId,Integer asCompTypeDeptId,String empCompId,String asCompStatus,Integer asCompResolveEmpId) {
         compFromDate = StringUtils.isNotEmpty(compFromDate) ? compFromDate : null;
 
@@ -316,6 +323,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmployeeComplaintResponse findAllEmployeeCompById(Integer empCompId) {
         try {
             List<Object[]> comlaintData = complaintRepo.getEmployeeComplaintByIdDetail(empCompId);
@@ -331,6 +339,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findComplaintDetails(Integer empId, String compId, Integer roleId, Integer deptId, String compDesc, String compStatus, Integer compTypeDeptId,Integer resolveEmpId, String statusCd, Pageable requestPageable) {
         String sortName = null;
         //  String sortDirection = null;
@@ -383,6 +392,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Transactional
     @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteEmployeeComplaint(Integer empCompId) {
         KPIResponse kpiResponse = new KPIResponse();
         try {
