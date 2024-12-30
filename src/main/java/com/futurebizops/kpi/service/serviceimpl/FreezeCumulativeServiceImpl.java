@@ -97,7 +97,11 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
                         }
 
                 );
-                freezeReportEmployeeKppMasterRepo.saveAll(freezeReportEmployeeKppMasterEntities);
+                // freezeReportEmployeeKppMasterRepo.saveAll(freezeReportEmployeeKppMasterEntities);
+                freezeReportEmployeeKppMasterEntities.stream().forEach(data->{
+                    freezeReportEmployeeKppMasterRepo.save(data);
+                });
+
             }
 
 
@@ -142,7 +146,11 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
 
                     freezeReportEmployeeKppDetailsEntities.add(freezeReportEmployeeKppDetailsEntity);
                 });
-                freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
+               // freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
+                freezeReportEmployeeKppDetailsEntities.stream().forEach(data->{
+                    freezeReportEmployeeKppDetailsRepo.save(data);
+                });
+
 
                 return KPIResponse.builder()
                         .isSuccess(true)

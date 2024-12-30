@@ -211,7 +211,10 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
             Instant ekppMonth = DateTimeUtils.convertStringToInstant(freezeEmpKPPMasterRequest.getEkppMonth());
             try {
                 List<OverallEmployeeKppFeedbackDetailsEntity> freezeReportEmployeeKppDetailsEntities = freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
-                freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
+               // freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
+                freezeReportEmployeeKppDetailsEntities.stream().forEach(data->{
+                    freezeReportEmployeeKppDetailsRepo.save(data);
+                });
 
                 OverallEmployeeKppFeedbackMasterEntity freezeReportEmployeeKppMasterEntity = freezeReportEmployeeKppMasterEntities(freezeEmpKPPMasterRequest, ekppMonth);
                 freezeReportEmployeeKppMasterRepo.save(freezeReportEmployeeKppMasterEntity);

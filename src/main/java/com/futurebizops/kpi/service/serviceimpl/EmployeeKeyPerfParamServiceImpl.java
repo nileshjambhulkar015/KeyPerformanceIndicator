@@ -1,5 +1,6 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
+import org.springframework.transaction.annotation.Transactional;
 import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.dto.EmployeeMasterReportDTO;
 import com.futurebizops.kpi.entity.EmployeeEntity;
@@ -57,8 +58,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 
-import javax.transaction.Transactional;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -416,108 +418,121 @@ public class EmployeeKeyPerfParamServiceImpl implements EmployeeKeyPerfParamServ
     @Autowired
     ReportEvidenceService evidenceService;
 
-    @Transactional
+    static  int a=1;
+   @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
-    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
+    @Retryable(include = {Exception.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse generateEmployeeKppReport(Integer empId,String finYear, String statusCd) {
-        Optional<EmployeeKppMasterEntity> employeeKppMasterEntity = employeeKppMasterRepo.findByEmpIdAndStatusCd(empId, statusCd);
-        ReportEmployeeKppMasterEntity kppMaster = new ReportEmployeeKppMasterEntity();
-        if (employeeKppMasterEntity.isPresent()) {
-            EmployeeKppMasterEntity kppMasterEntity = employeeKppMasterEntity.get();
-            kppMaster.setFinYear(finYear);
-            kppMaster.setEkppMonth(kppMasterEntity.getEkppMonth());
-            kppMaster.setEmpId(kppMasterEntity.getEmpId());
-            kppMaster.setEmpEId(kppMasterEntity.getEmpEId());
-            kppMaster.setRoleId(kppMasterEntity.getRoleId());
-            kppMaster.setDeptId(kppMasterEntity.getRoleId());
-            kppMaster.setDesigId(kppMasterEntity.getDesigId());
-            kppMaster.setTotalAchivedWeight(kppMasterEntity.getEmpTotalAchivedWeight());
-            kppMaster.setTotalOverallAchieve(kppMasterEntity.getEmpTotalOverallAchieve());
-            kppMaster.setTotalOverallTaskComp(kppMasterEntity.getEmpTotalOverallTaskComp());
-            kppMaster.setEmpKppAppliedDate(kppMasterEntity.getEmpKppAppliedDate());
-            kppMaster.setEmpKppStatus(kppMasterEntity.getEmpKppStatus());
-            kppMaster.setEmpRemark(kppMasterEntity.getEmpRemark());
-            kppMaster.setEmpEvidence(kppMasterEntity.getEmpEvidence());
-            kppMaster.setHodEmpId(kppMasterEntity.getHodEmpId());
-            kppMaster.setHodAchivedWeight(kppMasterEntity.getHodTotalAchivedWeight());
-            kppMaster.setHodOverallAchieve(kppMasterEntity.getHodTotalOverallAchieve());
-            kppMaster.setHodOverallTaskComp(kppMasterEntity.getHodTotalOverallTaskComp());
-            kppMaster.setHodKppAppliedDate(kppMasterEntity.getHodKppAppliedDate());
-            kppMaster.setHodKppStatus(kppMasterEntity.getHodKppStatus());
-            kppMaster.setHodRemark(kppMasterEntity.getHodRemark());
-            kppMaster.setGmEmpId(kppMasterEntity.getGmEmpId());
-            kppMaster.setGmAchivedWeight(kppMasterEntity.getGmTotalAchivedWeight());
-            kppMaster.setGmOverallAchieve(kppMasterEntity.getGmTotalOverallAchieve());
-            kppMaster.setGmOverallTaskComp(kppMasterEntity.getGmTotalOverallTaskComp());
-            kppMaster.setAvgTotalOverallRating(kppMasterEntity.getAvgTotalOverallRating());
-            kppMaster.setAvgTotalOverallPer(kppMasterEntity.getAvgTotalOverallPer());
+       try {
 
-            kppMaster.setGmKppAppliedDate(kppMasterEntity.getGmKppAppliedDate());
-            kppMaster.setGmKppStatus(kppMasterEntity.getGmKppStatus());
-            kppMaster.setGmRemark(kppMasterEntity.getGmRemark());
-            kppMaster.setRemark(kppMasterEntity.getRemark());
-            kppMaster.setStatusCd(kppMasterEntity.getStatusCd());
+           Optional<EmployeeKppMasterEntity> employeeKppMasterEntity = employeeKppMasterRepo.findByEmpIdAndStatusCd(empId, statusCd);
+           ReportEmployeeKppMasterEntity kppMaster = new ReportEmployeeKppMasterEntity();
+           if (employeeKppMasterEntity.isPresent()) {
+               EmployeeKppMasterEntity kppMasterEntity = employeeKppMasterEntity.get();
+               kppMaster.setFinYear(finYear);
+               kppMaster.setEkppMonth(kppMasterEntity.getEkppMonth());
+               kppMaster.setEmpId(kppMasterEntity.getEmpId());
+               kppMaster.setEmpEId(kppMasterEntity.getEmpEId());
+               kppMaster.setRoleId(kppMasterEntity.getRoleId());
+               kppMaster.setDeptId(kppMasterEntity.getRoleId());
+               kppMaster.setDesigId(kppMasterEntity.getDesigId());
+               kppMaster.setTotalAchivedWeight(kppMasterEntity.getEmpTotalAchivedWeight());
+               kppMaster.setTotalOverallAchieve(kppMasterEntity.getEmpTotalOverallAchieve());
+               kppMaster.setTotalOverallTaskComp(kppMasterEntity.getEmpTotalOverallTaskComp());
+               kppMaster.setEmpKppAppliedDate(kppMasterEntity.getEmpKppAppliedDate());
+               kppMaster.setEmpKppStatus(kppMasterEntity.getEmpKppStatus());
+               kppMaster.setEmpRemark(kppMasterEntity.getEmpRemark());
+               kppMaster.setEmpEvidence(kppMasterEntity.getEmpEvidence());
+               kppMaster.setHodEmpId(kppMasterEntity.getHodEmpId());
+               kppMaster.setHodAchivedWeight(kppMasterEntity.getHodTotalAchivedWeight());
+               kppMaster.setHodOverallAchieve(kppMasterEntity.getHodTotalOverallAchieve());
+               kppMaster.setHodOverallTaskComp(kppMasterEntity.getHodTotalOverallTaskComp());
+               kppMaster.setHodKppAppliedDate(kppMasterEntity.getHodKppAppliedDate());
+               kppMaster.setHodKppStatus(kppMasterEntity.getHodKppStatus());
+               kppMaster.setHodRemark(kppMasterEntity.getHodRemark());
+               kppMaster.setGmEmpId(kppMasterEntity.getGmEmpId());
+               kppMaster.setGmAchivedWeight(kppMasterEntity.getGmTotalAchivedWeight());
+               kppMaster.setGmOverallAchieve(kppMasterEntity.getGmTotalOverallAchieve());
+               kppMaster.setGmOverallTaskComp(kppMasterEntity.getGmTotalOverallTaskComp());
+               kppMaster.setAvgTotalOverallRating(kppMasterEntity.getAvgTotalOverallRating());
+               kppMaster.setAvgTotalOverallPer(kppMasterEntity.getAvgTotalOverallPer());
 
-            reportKppMasterRepo.save(kppMaster);
-            employeeKppMasterRepo.resetEmployeeKppByGM(empId, statusCd);
-        }
+               kppMaster.setGmKppAppliedDate(kppMasterEntity.getGmKppAppliedDate());
+               kppMaster.setGmKppStatus(kppMasterEntity.getGmKppStatus());
+               kppMaster.setGmRemark(kppMasterEntity.getGmRemark());
+               kppMaster.setRemark(kppMasterEntity.getRemark());
+               kppMaster.setStatusCd(kppMasterEntity.getStatusCd());
 
-        List<EmployeeKppDetailsEntity> employeeKppDetailsEntities = employeeKppDetailsRepo.findByEmpIdAndStatusCd(empId, statusCd);
-        List<ReportEmployeeKppDetailsEntity> kppDetailsEntities = new ArrayList<>();
+               reportKppMasterRepo.save(kppMaster);
+               employeeKppMasterRepo.resetEmployeeKppByGM(empId, statusCd);
 
-        ReportEmployeeKppDetailsEntity detailsEntity = null;
-        if (employeeKppDetailsEntities.size() > 0) {
-            for (EmployeeKppDetailsEntity employeeKppDetailsEntity : employeeKppDetailsEntities) {
-                detailsEntity = new ReportEmployeeKppDetailsEntity();
-                detailsEntity.setFinYear(finYear);
-                detailsEntity.setEkppMonth(employeeKppDetailsEntity.getEkppMonth());
-                detailsEntity.setEmpId(employeeKppDetailsEntity.getEmpId());
-                detailsEntity.setEmpEId(employeeKppDetailsEntity.getEmpEId());
-                detailsEntity.setRoleId(employeeKppDetailsEntity.getRoleId());
-                detailsEntity.setDeptId(employeeKppDetailsEntity.getRoleId());
-                detailsEntity.setDesigId(employeeKppDetailsEntity.getDesigId());
-                detailsEntity.setKppId(employeeKppDetailsEntity.getKppId());
-                detailsEntity.setEmpAchivedWeight(employeeKppDetailsEntity.getEmpAchivedWeight());
-                detailsEntity.setEmpOverallAchieve(employeeKppDetailsEntity.getEmpOverallAchieve());
-                detailsEntity.setEmpOverallTaskComp(employeeKppDetailsEntity.getEmpOverallTaskComp());
-                detailsEntity.setHodEmpId(employeeKppDetailsEntity.getHodEmpId());
-                detailsEntity.setHodAchivedWeight(employeeKppDetailsEntity.getHodAchivedWeight());
-                detailsEntity.setHodOverallAchieve(employeeKppDetailsEntity.getHodOverallAchieve());
-                detailsEntity.setHodOverallTaskComp(employeeKppDetailsEntity.getHodOverallTaskComp());
-                detailsEntity.setGmEmpId(employeeKppDetailsEntity.getGmEmpId());
-                detailsEntity.setGmAchivedWeight(employeeKppDetailsEntity.getGmAchivedWeight());
-                detailsEntity.setGmOverallAchieve(employeeKppDetailsEntity.getGmOverallAchieve());
-                detailsEntity.setGmOverallTaskComp(employeeKppDetailsEntity.getGmOverallTaskComp());
-                detailsEntity.setAvgOverallRating(employeeKppDetailsEntity.getAvgOverallRating());
-                detailsEntity.setAvgOverallPer(employeeKppDetailsEntity.getAvgOverallPer());
-                detailsEntity.setStatusCd(employeeKppDetailsEntity.getStatusCd());
-                detailsEntity.setKppOverallTarget(employeeKppDetailsEntity.getKppOverallTarget());
-                detailsEntity.setKppOverallWeightage(employeeKppDetailsEntity.getKppOverallWeightage());
+           }
 
-                kppDetailsEntities.add(detailsEntity);
-                //reportEmployeeKppDetailsRepo.save(detailsEntity);
-            }
-            reportEmployeeKppDetailsRepo.saveAll(kppDetailsEntities);
-            employeeKppDetailsRepo.resetEmployeeKpp(empId, statusCd);
+           List<EmployeeKppDetailsEntity> employeeKppDetailsEntities = employeeKppDetailsRepo.findByEmpIdAndStatusCd(empId, statusCd);
+           List<ReportEmployeeKppDetailsEntity> kppDetailsEntities = new ArrayList<>();
 
-            Optional<EvidenceEntity> optionalEvidenceEntity = evidenceRepo.findById(empId);
+           ReportEmployeeKppDetailsEntity detailsEntity = null;
+           if (employeeKppDetailsEntities.size() > 0) {
+               for (EmployeeKppDetailsEntity employeeKppDetailsEntity : employeeKppDetailsEntities) {
+                   detailsEntity = new ReportEmployeeKppDetailsEntity();
+                   detailsEntity.setFinYear(finYear);
+                   detailsEntity.setEkppMonth(employeeKppDetailsEntity.getEkppMonth());
+                   detailsEntity.setEmpId(employeeKppDetailsEntity.getEmpId());
+                   detailsEntity.setEmpEId(employeeKppDetailsEntity.getEmpEId());
+                   detailsEntity.setRoleId(employeeKppDetailsEntity.getRoleId());
+                   detailsEntity.setDeptId(employeeKppDetailsEntity.getRoleId());
+                   detailsEntity.setDesigId(employeeKppDetailsEntity.getDesigId());
+                   detailsEntity.setKppId(employeeKppDetailsEntity.getKppId());
+                   detailsEntity.setEmpAchivedWeight(employeeKppDetailsEntity.getEmpAchivedWeight());
+                   detailsEntity.setEmpOverallAchieve(employeeKppDetailsEntity.getEmpOverallAchieve());
+                   detailsEntity.setEmpOverallTaskComp(employeeKppDetailsEntity.getEmpOverallTaskComp());
+                   detailsEntity.setHodEmpId(employeeKppDetailsEntity.getHodEmpId());
+                   detailsEntity.setHodAchivedWeight(employeeKppDetailsEntity.getHodAchivedWeight());
+                   detailsEntity.setHodOverallAchieve(employeeKppDetailsEntity.getHodOverallAchieve());
+                   detailsEntity.setHodOverallTaskComp(employeeKppDetailsEntity.getHodOverallTaskComp());
+                   detailsEntity.setGmEmpId(employeeKppDetailsEntity.getGmEmpId());
+                   detailsEntity.setGmAchivedWeight(employeeKppDetailsEntity.getGmAchivedWeight());
+                   detailsEntity.setGmOverallAchieve(employeeKppDetailsEntity.getGmOverallAchieve());
+                   detailsEntity.setGmOverallTaskComp(employeeKppDetailsEntity.getGmOverallTaskComp());
+                   detailsEntity.setAvgOverallRating(employeeKppDetailsEntity.getAvgOverallRating());
+                   detailsEntity.setAvgOverallPer(employeeKppDetailsEntity.getAvgOverallPer());
+                   detailsEntity.setStatusCd(employeeKppDetailsEntity.getStatusCd());
+                   detailsEntity.setKppOverallTarget(employeeKppDetailsEntity.getKppOverallTarget());
+                   detailsEntity.setKppOverallWeightage(employeeKppDetailsEntity.getKppOverallWeightage());
 
-            ReportEvidenceCreateRequest reportEvidenceCreateRequest = new ReportEvidenceCreateRequest();
-            if (optionalEvidenceEntity.isPresent()) {
-                EvidenceEntity evidenceEntity = optionalEvidenceEntity.get();
-                reportEvidenceCreateRequest.setEmpId(evidenceEntity.getEmpId());
-                reportEvidenceCreateRequest.setEvMonth(evidenceEntity.getEvMonth());
-                reportEvidenceCreateRequest.setEvContentType(evidenceEntity.getEvContentType());
-                reportEvidenceCreateRequest.setEvFile(evidenceEntity.getEvFile());
-                reportEvidenceCreateRequest.setRemark(evidenceEntity.getRemark());
-                reportEvidenceCreateRequest.setStatusCd(evidenceEntity.getStatusCd());
-                reportEvidenceCreateRequest.setEvFileName(evidenceEntity.getEvFileName());
-            }
-            evidenceService.saveReportEvidence(reportEvidenceCreateRequest);
+                   kppDetailsEntities.add(detailsEntity);
+                   //reportEmployeeKppDetailsRepo.save(detailsEntity);
+               }
+              // reportEmployeeKppDetailsRepo.saveAll(kppDetailsEntities);
+               kppDetailsEntities.stream().forEach(data->{
+                   reportEmployeeKppDetailsRepo.save(data);
+               });
+               employeeKppDetailsRepo.resetEmployeeKpp(empId, statusCd);
 
-            evidenceRepo.deleteByEmpId(empId);
-        }
-        return null;
+               Optional<EvidenceEntity> optionalEvidenceEntity = evidenceRepo.findById(empId);
+
+               ReportEvidenceCreateRequest reportEvidenceCreateRequest = new ReportEvidenceCreateRequest();
+               if (optionalEvidenceEntity.isPresent()) {
+                   EvidenceEntity evidenceEntity = optionalEvidenceEntity.get();
+                   reportEvidenceCreateRequest.setEmpId(evidenceEntity.getEmpId());
+                   reportEvidenceCreateRequest.setEvMonth(evidenceEntity.getEvMonth());
+                   reportEvidenceCreateRequest.setEvContentType(evidenceEntity.getEvContentType());
+                   reportEvidenceCreateRequest.setEvFile(evidenceEntity.getEvFile());
+                   reportEvidenceCreateRequest.setRemark(evidenceEntity.getRemark());
+                   reportEvidenceCreateRequest.setStatusCd(evidenceEntity.getStatusCd());
+                   reportEvidenceCreateRequest.setEvFileName(evidenceEntity.getEvFileName());
+               }
+               evidenceService.saveReportEvidence(reportEvidenceCreateRequest);
+
+               evidenceRepo.deleteByEmpId(empId);
+           }
+       }catch (Exception ex) {
+           a+=1;
+               log.error("EmployeeKeyPerfParamServiceImpl >>generateEmployeeKppReport :{}", ex);
+
+               throw new KPIException("EmployeeKeyPerfParamServiceImpl >> generateEmployeeKppReport()", false, ex.getMessage());
+           }
+       return null;
     }
 
     @Override
