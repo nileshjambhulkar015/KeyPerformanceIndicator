@@ -431,23 +431,39 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
                 List<EmployeeKppDetailsDto> employeeKppDetailsDtos = new ArrayList<>();
 
+
                 employeeKppDetailsDtos = masterDtoListEntry.getValue().stream().collect(Collectors.groupingBy(EmployeeKppDetailsDto::getKppId,
                         Collectors.collectingAndThen(Collectors.toList(),
                                 data -> {
-                                    double empAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpAchivedWeight())).sum();
+
+                                    Integer totalMonth=data.size();
+                                 //   double empAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpAchivedWeight())).sum();
                                     double empOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallAchieve())).sum();
-                                    double empOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallTaskComp())).sum();
+                                   // double empOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallTaskComp())).sum();
 
-                                    double hodAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodAchivedWeight())).sum();
+//empAchivedWeight calculation remain
+                                    empOverallAchieve=empOverallAchieve/totalMonth;
+                                    double empAchivedWeight= ((Double.parseDouble(data.iterator().next().getKppOverallWeightage()))*(empOverallAchieve/5*100))/100;
+                                    double empOverallTaskComp=(empOverallAchieve/5)*100;
+
+                                   // double hodAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodAchivedWeight())).sum();
                                     double hodOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallAchieve())).sum();
-                                    double hodOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallTaskComp())).sum();
+                                    //double hodOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallTaskComp())).sum();
 
-                                    double gmAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmAchivedWeight())).sum();
+                                    hodOverallAchieve=hodOverallAchieve/totalMonth;
+                                    double hodAchivedWeight=((Double.parseDouble(data.iterator().next().getKppOverallWeightage()))*(hodOverallAchieve/5*100))/100;
+                                    double hodOverallTaskComp=(hodOverallAchieve/5)*100;
+
+                                    //double gmAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmAchivedWeight())).sum();
                                     double gmOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallAchieve())).sum();
-                                    double gmOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallTaskComp())).sum();
+                                    //double gmOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallTaskComp())).sum();
 
-                                    return new EmployeeKppDetailsDto(data.iterator().next().getEkppId(),finYear,  data.iterator().next().getKppId(), String.valueOf(empAchivedWeight), String.valueOf(empOverallAchieve), String.valueOf(empOverallTaskComp), data.iterator().next().getHodEmpId(), String.valueOf(hodAchivedWeight), String.valueOf(hodOverallAchieve), String.valueOf(hodOverallTaskComp),
-                                            data.iterator().next().getGmEmployeeId(), String.valueOf(gmAchivedWeight), String.valueOf(gmOverallAchieve), String.valueOf(gmOverallTaskComp), data.iterator().next().getOverallRatings(), data.iterator().next().getOverallPercentage(), data.iterator().next().getKppObjective(), data.iterator().next().getKppPerformanceIndi(), data.iterator().next().getKppOverallTarget(), data.iterator().next().getKppTargetPeriod(), data.iterator().next().getUomId(), data.iterator().next().getUomName(),
+                                    gmOverallAchieve=gmOverallAchieve/totalMonth;
+                                    double gmAchivedWeight =((Double.parseDouble(data.iterator().next().getKppOverallWeightage()))*(gmOverallAchieve/5*100))/100;
+                                    double gmOverallTaskComp=(gmOverallAchieve/5)*100;
+
+                                    return new EmployeeKppDetailsDto(data.iterator().next().getEkppId(),finYear,  data.iterator().next().getKppId(), String.valueOf(decfor.format(empAchivedWeight)), String.valueOf(decfor.format(empOverallAchieve)), String.valueOf(decfor.format(empOverallTaskComp)), data.iterator().next().getHodEmpId(), String.valueOf(decfor.format(hodAchivedWeight)), String.valueOf(decfor.format(hodOverallAchieve)), String.valueOf(decfor.format(hodOverallTaskComp)),
+                                            data.iterator().next().getGmEmployeeId(), String.valueOf(decfor.format(gmAchivedWeight)), String.valueOf(decfor.format(gmOverallAchieve)), String.valueOf(decfor.format(gmOverallTaskComp)), data.iterator().next().getOverallRatings(), data.iterator().next().getOverallPercentage(), data.iterator().next().getKppObjective(), data.iterator().next().getKppPerformanceIndi(), data.iterator().next().getKppOverallTarget(), data.iterator().next().getKppTargetPeriod(), data.iterator().next().getUomId(), data.iterator().next().getUomName(),
                                             data.iterator().next().getKppOverallWeightage(), data.iterator().next().getKppRating1(), data.iterator().next().getKppRating2(), data.iterator().next().getKppRating3(), data.iterator().next().getKppRating4(), data.iterator().next().getKppRating5(), data.iterator().next().getEkppStatus());
                                 })
                 )).values().stream().collect(Collectors.toList());
