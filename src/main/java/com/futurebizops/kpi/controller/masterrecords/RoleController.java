@@ -49,13 +49,12 @@ public class RoleController {
 
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> findRoleDetails(@RequestParam(required = false) RoleSearchEnum searchEnum,
-                                                      @RequestParam(required = false) String searchString,
-                                                      @RequestParam(required = false) StatusCdEnum statusCdEnum,
+    public ResponseEntity<KPIResponse> findRoleDetails(@RequestParam(required = false) Integer roleId,
+                                                      @RequestParam(required = false) String roleName,
                                                       @Parameter(hidden = true) Pageable pageable,
                                                       @Parameter(hidden = true) PageDirection pageDirection,
                                                       @Parameter(hidden = true) String sortParam) {
-        KPIResponse response = roleService.findRoleDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, KPIUtils.getDirection(pageDirection));
+        KPIResponse response = roleService.findRoleDetails(roleId, roleName, pageable, sortParam, KPIUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

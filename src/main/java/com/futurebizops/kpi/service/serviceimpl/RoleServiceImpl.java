@@ -12,6 +12,7 @@ import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.RegionResponse;
 import com.futurebizops.kpi.response.RoleResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.RoleService;
@@ -19,7 +20,9 @@ import com.futurebizops.kpi.utils.KPIUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
@@ -82,26 +85,26 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public KPIResponse findRoleDetails(RoleSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
-        Page<RoleEntity> roleEntities = null;
-        Pageable pageable = KPIUtils.sort(requestPageable, sortParam, pageDirection);
-        switch (searchEnum.getSearchType()) {
-            case "BY_ID":
-                roleEntities = roleRepo.findByRoleIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
-                break;
-            case "BY_NAME":
-                roleEntities = roleRepo.findByRoleNameContainingIgnoreCaseAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
-                break;
-            case "BY_STATUS":
-                roleEntities = roleRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
-                break;
-            case "ALL":
-            default:
-                roleEntities = roleRepo.findAll(pageable);
+    public KPIResponse findRoleDetails(Integer roleId, String roleName, Pageable requestPageable, String sortParam, String pageDirection) {
+        String sortName = null;
+        // String sortDirection = null;
+        Integer pageSize = requestPageable.getPageSize();
+        Integer pageOffset = (int) requestPageable.getOffset();
+
+        Optional<Sort.Order> order = requestPageable.getSort().get().findFirst();
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  //order by this field
+            // sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+
+        Integer totalCount = roleRepo.getRoleDetailsCount(roleId, roleName);
+        List<Object[]> regionData = roleRepo.getRoleDetails(roleId, roleName, sortName, pageSize, pageOffset);
+
+        List<RoleResponse> roleResponses = regionData.stream().map(RoleResponse::new).collect(Collectors.toList());
+
         return KPIResponse.builder()
                 .isSuccess(true)
-                .responseData(roleEntities)
+                .responseData(new PageImpl(roleResponses, requestPageable, totalCount))
                 .responseMessage(KPIConstants.RECORD_FETCH)
                 .build();
     }
@@ -115,9 +118,9 @@ public class RoleServiceImpl implements RoleService {
         for(RoleEntity departmentEntity : roleEntities){
             roleResponse = new RoleResponse();
 
-            roleResponse.setRoleId(departmentEntity.getRoleId());
+
             roleResponse.setRoleName(departmentEntity.getRoleName());
-            roleResponse.setStatusCd(departmentEntity.getStatusCd());
+            //roleResponse.setStatusCd(departmentEntity.getStatusCd());
             roleResponses.add(roleResponse);
         }
         return roleResponses;
@@ -129,10 +132,10 @@ public class RoleServiceImpl implements RoleService {
         Optional<RoleEntity> optionalRoleEntity = roleRepo.findById(roleId);
         if(optionalRoleEntity.isPresent()){
             return RoleResponse.builder()
-                    .roleId(optionalRoleEntity.get().getRoleId())
+
                     .roleName(optionalRoleEntity.get().getRoleName())
                     .remark(optionalRoleEntity.get().getRemark())
-                    .statusCd(optionalRoleEntity.get().getStatusCd())
+                 //   .statusCd(optionalRoleEntity.get().getStatusCd())
                     .build();
         }
         return null;

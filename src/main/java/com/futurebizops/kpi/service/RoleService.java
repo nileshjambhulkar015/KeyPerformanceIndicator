@@ -18,7 +18,7 @@ public interface RoleService {
 
     public KPIResponse updateRole(RoleUpdateRequest roleUpdateRequest);
 
-    public KPIResponse findRoleDetails(RoleSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection);
+    public KPIResponse findRoleDetails( Integer roleId, String roleName, Pageable pageable, String sortParam, String pageDirection);
 
     public List<RoleResponse> findAllRolesDetails();
 

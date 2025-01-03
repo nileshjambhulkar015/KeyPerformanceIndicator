@@ -11,16 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RoleResponse {
 
-    private Integer roleId;
+   // private Integer roleId;
     private String roleName;
     private String remark;
-    private String statusCd;
+  //  private String statusCd;
 
 
     public RoleResponse(Object[] objects) {
-        roleId = Integer.parseInt(String.valueOf(objects[0]));
-        roleName = String.valueOf(objects[1]);
-        remark = String.valueOf(objects[2]);
-        statusCd = String.valueOf(objects[3]);
+       // roleId = Integer.parseInt(String.valueOf(objects[0]));
+        roleName = String.valueOf(objects[0]);
+        remark = String.valueOf(objects[1]);
     }
 }
