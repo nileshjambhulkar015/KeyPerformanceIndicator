@@ -2,11 +2,13 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import java.time.Instant;
 
 @Data
+@ToString
 public class EmployeeKeyPerfParamCreateRequest {
 
 

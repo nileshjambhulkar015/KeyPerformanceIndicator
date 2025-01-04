@@ -85,7 +85,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public KPIResponse findRoleDetails(Integer roleId, String roleName, Pageable requestPageable, String sortParam, String pageDirection) {
+    public KPIResponse findRoleDetails(Integer roleId, String roleName, Pageable requestPageable) {
         String sortName = null;
         // String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();

@@ -48,32 +48,38 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<KPIResponse> saveEmployee(@RequestBody EmployeeCreateRequest employeeRequest) {
+        log.info("Inside EmployeeController >> saveEmployee() employeeRequest : {}", employeeRequest);
         return ResponseEntity.ok(employeeService.saveEmployee(employeeRequest));
     }
 
     @DeleteMapping
     public ResponseEntity<KPIResponse> deleteEmployeeDetails(@RequestParam(required = false) Integer empId) {
+        log.info("Inside EmployeeController >> deleteEmployeeDetails() empId :{}", empId);
         KPIResponse response = employeeService.deleteEmployeeDetails(empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<KPIResponse> updateEmployee(@RequestBody EmployeeUpdateRequest employeeUpdateRequest) {
+        log.info("Inside EmployeeController >> updateEmployee() employeeRequest : {}", employeeUpdateRequest);
         return ResponseEntity.ok(employeeService.updateEmployee(employeeUpdateRequest));
     }
 
     @PutMapping(value = "/change-dept-or-desig")
     public ResponseEntity<KPIResponse> updateEmployeeDeptOrDesignation(@RequestBody EmployeeUpdateDeptDesigRequest employeeUpdateDeptDesigRequest) {
+        log.info("Inside EmployeeController >> updateEmployeeDeptOrDesignation() employeeRequest : {}", employeeUpdateDeptDesigRequest);
         return ResponseEntity.ok(employeeService.updateEmployeeDeptOrDesignation(employeeUpdateDeptDesigRequest));
     }
 
     @PutMapping(value = "/change-role")
     public ResponseEntity<KPIResponse> updateEmployeeRole(@RequestBody EmployeeUpdateRoleRequest employeeUpdateRoleRequest) {
+        log.info("Inside EmployeeController >> updateEmployeeRole() employeeUpdateRoleRequest : {}", employeeUpdateRoleRequest);
         return ResponseEntity.ok(employeeService.updateEmployeeRole(employeeUpdateRoleRequest));
     }
 
     @PutMapping(value = "/change-reporting")
     public ResponseEntity<KPIResponse> updateEmployeeReportingName(@RequestBody EmployeeUpdateReportingRequest employeeUpdateReportingRequest) {
+        log.info("Inside EmployeeController >> updateEmployeeReportingName() employeeUpdateReportingRequest : {}", employeeUpdateReportingRequest);
         return ResponseEntity.ok(employeeService.updateEmployeeReportingName(employeeUpdateReportingRequest));
     }
 
@@ -81,15 +87,15 @@ public class EmployeeController {
     @PutMapping(value = "/update-dob")
     public ResponseEntity<KPIResponse> updateEmployeeDOB(@RequestParam(required = false) Integer empId,
                                                          @RequestParam(required = false) String empDob) {
-        return ResponseEntity.ok(employeeService.updateEmployeeDOB(empId,empDob));
+        log.info("Inside EmployeeController >> updateEmployeeDOB() empId : {}, empDob : {}", empId,empDob);
+        return ResponseEntity.ok(employeeService.updateEmployeeDOB(empId, empDob));
     }
-
 
 
     //for employee master page to get details of employee
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> getAllEmployee(@RequestParam(required = false) Integer empId,
+    public ResponseEntity<KPIResponse> getAllEmployeeDetails(@RequestParam(required = false) Integer empId,
                                                       @RequestParam(required = false) String empEId,
                                                       @RequestParam(required = false) Integer roleId,
                                                       @RequestParam(required = false) Integer deptId,
@@ -102,17 +108,17 @@ public class EmployeeController {
                                                       @RequestParam(required = false) String statusCd,
                                                       @RequestParam(required = false) Integer empTypeId,
                                                       @RequestParam(required = false) Integer companyId,
-                                                      @RequestParam(required = false)  Integer reportingEmpId,
+                                                      @RequestParam(required = false) Integer reportingEmpId,
                                                       @Parameter(hidden = true) Pageable pageable) {
-        log.info("reqiuest for Employee search");
-        KPIResponse response = employeeService.getAllEmployeeDetails(empId, empEId,roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd,empTypeId,companyId,reportingEmpId, pageable);
+        log.info("Inside EmployeeController >> getAllEmployeeDetails() empId : {}, empEId : {}, roleId : {}, deptId : {}, desigId: {}, reportingEmpId : {}", empId,empEId, roleId, deptId, desigId, reportingEmpId);
+        KPIResponse response = employeeService.getAllEmployeeDetails(empId, empEId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, empTypeId, companyId, reportingEmpId, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(value = "/adv-search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse>  empAdvanceSearch(@RequestBody EmployeeAdvSearchRequest employeeAdvSearchRequest, @Parameter(hidden = true) Pageable pageable) {
-        log.info("reqiuest for Employee search");
+    public ResponseEntity<KPIResponse> empAdvanceSearch(@RequestBody EmployeeAdvSearchRequest employeeAdvSearchRequest, @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside EmployeeController >> updateEmployeeDOB() employeeAdvSearchRequest : {}", employeeAdvSearchRequest);
         EmployeeAdvSearchModel employeeAdvSearchModel = EmployeeAdvSearchModel.builder()
                 .roleId(employeeAdvSearchRequest.getRoleId())
                 .deptId(employeeAdvSearchRequest.getDeptId())
@@ -124,16 +130,14 @@ public class EmployeeController {
                 .pageable(pageable)
                 .build();
 
-        log.info("reqiuest for Employee search");
-        KPIResponse response = employeeService.getAllEmployeeAdvanceSearch(employeeAdvSearchModel.getRoleId(), employeeAdvSearchModel.getDeptId(),employeeAdvSearchModel.getDesigId(),employeeAdvSearchModel.getRegionId(),employeeAdvSearchModel.getSiteId(),employeeAdvSearchModel.getCompanyId(),employeeAdvSearchModel.getEmpTypeId(), employeeAdvSearchModel.getPageable());
-        return new ResponseEntity<>(response, HttpStatus.OK);
 
-        //KPIResponse response = employeeService.getAllEmployeeDetails(empId, roleId, deptId, desigId, empFirstName, empMiddleName, empLastName, empMobileNo, emailId, statusCd, pageable);
-        //return new ResponseEntity<>(response, HttpStatus.OK);
+        KPIResponse response = employeeService.getAllEmployeeAdvanceSearch(employeeAdvSearchModel.getRoleId(), employeeAdvSearchModel.getDeptId(), employeeAdvSearchModel.getDesigId(), employeeAdvSearchModel.getRegionId(), employeeAdvSearchModel.getSiteId(), employeeAdvSearchModel.getCompanyId(), employeeAdvSearchModel.getEmpTypeId(), employeeAdvSearchModel.getPageable());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/byEmpId")
-    public ResponseEntity<EmployeeResponse> getAllEmployee(@RequestParam(required = false) Integer empId) {
+    public ResponseEntity<EmployeeResponse> getAllEmployeeById(@RequestParam(required = false) Integer empId) {
+        log.info("Inside EmployeeController >> getAllEmployeeById() empId : {}", empId);
         EmployeeResponse response = employeeService.getAllEmployeeById(empId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -145,9 +149,10 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/reportToEmpName")
-    public ResponseEntity<List<EmployeeSearchResponse>> getEmployeeSuggest(@RequestParam(required = false) Integer roleId,
+    public ResponseEntity<List<EmployeeSearchResponse>> getEmployeeSuggestByName(@RequestParam(required = false) Integer roleId,
                                                                            @RequestParam(required = false) Integer deptId,
                                                                            @RequestParam(required = false) Integer desigId) {
+        log.info("Inside EmployeeController >> getEmployeeSuggestByName() roleId : {}, deptId : {}, desigId :{}", roleId, deptId,desigId);
         List<EmployeeSearchResponse> response = employeeService.getEmployeeSuggestByName(roleId, deptId, desigId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -167,41 +172,44 @@ public class EmployeeController {
                                                                            @RequestParam(required = false) String hodKppStatus,
                                                                            @RequestParam(required = false) String gmKppStatus,
                                                                            @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside EmployeeController >> getEmployeeSuggestByName() reportingEmployee : {},gmEmployeedId : {},empId : {}, roleId : {}, deptId : {}, desigId :{}", reportingEmployee,gmEmployeedId,empId, roleId, deptId,desigId);
         KPIResponse response = employeeService.getAllEmployeeKPPStatus(reportingEmployee, gmEmployeedId, empId, empEId, roleId, deptId, desigId, statusCd, empKppStatus, hodKppStatus, gmKppStatus, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
-
-    @PostMapping (value = "/upload-employee")
-    public ResponseEntity<KPIResponse> getEmpFromExcel(@RequestPart("file") MultipartFile file) {
-
+    @PostMapping(value = "/upload-employee")
+    public ResponseEntity<KPIResponse> processExcelFile(@RequestPart("file") MultipartFile file) {
+        log.info("Inside EmployeeController >> processExcelFile()");
         KPIResponse response = employeeService.processExcelFile(file);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //for roles except Employee
     @GetMapping(value = "/dd-role-except-emp-role")
-    public ResponseEntity<List<RoleDDResponse>> getRolesExceptEmployee( @RequestParam(required = false) Integer roleId,
-                                                                        @RequestParam(required = false) String roleName) {
-        List<RoleDDResponse>   response = employeeService.getRolesExceptEmployee(roleId,roleName);
+    public ResponseEntity<List<RoleDDResponse>> getRolesExceptEmployee(@RequestParam(required = false) Integer roleId,
+                                                                       @RequestParam(required = false) String roleName) {
+        log.info("Inside EmployeeController >> getRolesExceptEmployee() roleId : {}, roleName: {}", roleId, roleName);
+        List<RoleDDResponse> response = employeeService.getRolesExceptEmployee(roleId, roleName);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //for roles except Employee
     @GetMapping(value = "/dd-dept-emp")
     public ResponseEntity<List<DepartmentDDResponse>> getDepartmentFromEmployee(@RequestParam(required = false) Integer roleId,
-                                                                          @RequestParam(required = false) Integer deptId) {
-        List<DepartmentDDResponse>   response = employeeService.getDepartmentFromEmployee(roleId,deptId);
+                                                                                @RequestParam(required = false) Integer deptId) {
+        log.info("Inside EmployeeController >> getDepartmentFromEmployee() roleId : {}, deptId: {}", roleId, deptId);
+        List<DepartmentDDResponse> response = employeeService.getDepartmentFromEmployee(roleId, deptId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //for roles except Employee
     @GetMapping(value = "/dd-desig-emp")
     public ResponseEntity<List<DesignationDDResponse>> getDesignationFromEmployee(@RequestParam(required = false) Integer roleId,
-                                                                                 @RequestParam(required = false) Integer deptId,
+                                                                                  @RequestParam(required = false) Integer deptId,
                                                                                   @RequestParam(required = false) Integer desigId) {
-        List<DesignationDDResponse>   response = employeeService.getDesignationFromEmployee(roleId,deptId,desigId);
+        log.info("Inside EmployeeController >> getDepartmentFromEmployee() roleId : {}, deptId: {}, desigId: {}", roleId, deptId,desigId);
+        List<DesignationDDResponse> response = employeeService.getDesignationFromEmployee(roleId, deptId, desigId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -209,6 +217,7 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeDDResponse>> getDDEmpName(@RequestParam(required = false) Integer roleId,
                                                                  @RequestParam(required = false) Integer deptId,
                                                                  @RequestParam(required = false) Integer desigId) {
+        log.info("Inside EmployeeController >> getDDEmpName() roleId : {}, deptId: {}, desigId: {}", roleId, deptId,desigId);
         List<EmployeeDDResponse> response = employeeService.getDDEmpName(roleId, deptId, desigId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

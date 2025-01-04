@@ -33,44 +33,44 @@ public class OverallEmployeeKppFeedbackController {
     @Autowired
     OverallEmployeeKppFeedbackService overallEmployeeKppFeedbackService;
 
-
     @GetMapping(value = "/yearly-kpp")
     public ResponseEntity<KPIResponse> getEmployeeKppDataYearly(@RequestParam(required = false) Integer empId, @RequestParam(required = false) String finYear) {
+        log.info("Inside OverallEmployeeKppFeedbackController >> getEmployeeKppDataYearly() empId : {}, finYear : {}", empId, finYear);
         KPIResponse response = overallEmployeeKppFeedbackService.getEmployeeKppDataYearly(empId, finYear);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
     @PostMapping(value = "/employee-kpp-feedback")
     public ResponseEntity<KPIResponse> saveEmployeeKPPFeedbackDetails(@RequestBody FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
-        System.out.println("freezeEmpKPPMasterRequest : " + freezeEmpKPPMasterRequest);
+        log.info("Inside OverallEmployeeKppFeedbackController >> saveEmployeeKPPFeedbackDetails() freezeEmpKPPMasterRequest : {}", freezeEmpKPPMasterRequest);
         KPIResponse response = overallEmployeeKppFeedbackService.saveEmployeeKPPFeedbackDetails(freezeEmpKPPMasterRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping(value = "/gm-kpp-feedback")
     public ResponseEntity<KPIResponse> updateGMKPPFeedbackForEmployee(@RequestBody FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
-        System.out.println("freezeEmpKPPMasterRequest : " + freezeEmpKPPMasterRequest);
+        log.info("Inside OverallEmployeeKppFeedbackController >> updateGMKPPFeedbackForEmployee() freezeEmpKPPMasterRequest : {}", freezeEmpKPPMasterRequest);
         KPIResponse response = overallEmployeeKppFeedbackService.updateGMKPPFeedbackForEmployee(freezeEmpKPPMasterRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping(value = "/gm-kpp-feedback-finish")
     public ResponseEntity<KPIResponse> finishByGMKppFeedback(@RequestBody FinishKppFeedbackRequest finishKppFeedbackRequest) {
-        System.out.println("freezeEmpKPPMasterRequest : " + finishKppFeedbackRequest);
+        log.info("Inside OverallEmployeeKppFeedbackController >> finishByGMKppFeedback() finishKppFeedbackRequest : {}", finishKppFeedbackRequest);
         KPIResponse response = overallEmployeeKppFeedbackService.finishByGMKppFeedback(finishKppFeedbackRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping(value = "/hod-kpp-feedback-employee")
     public ResponseEntity<KPIResponse> updateHODKPPFeedbackForEmployee(@RequestBody FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
-        System.out.println("freezeEmpKPPMasterRequest : " + freezeEmpKPPMasterRequest);
+        log.info("Inside OverallEmployeeKppFeedbackController >> updateHODKPPFeedbackForEmployee() freezeEmpKPPMasterRequest : {}", freezeEmpKPPMasterRequest);
         KPIResponse response = overallEmployeeKppFeedbackService.updateHODKPPFeedbackForEmployee(freezeEmpKPPMasterRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/dd-overall-fin-year")
     public ResponseEntity<List<KppFinancialYearDDResponse>> ddAllFinancialYear() {
+        log.info("Inside OverallEmployeeKppFeedbackController >> ddAllFinancialYear()");
         List<KppFinancialYearDDResponse> response = overallEmployeeKppFeedbackService.ddAllFinancialYear();
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -78,6 +78,7 @@ public class OverallEmployeeKppFeedbackController {
 
     @GetMapping(value = "/dd-overall-completed-fin-year")
     public ResponseEntity<List<KppFinancialYearDDResponse>> ddCompletedAllFinancialYear() {
+        log.info("Inside OverallEmployeeKppFeedbackController >> ddCompletedAllFinancialYear()");
         List<KppFinancialYearDDResponse> response = overallEmployeeKppFeedbackService.ddCompletedAllFinancialYear();
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -94,9 +95,9 @@ public class OverallEmployeeKppFeedbackController {
                                                                         @RequestParam(required = false) String hodKppStatus,
                                                                         @RequestParam(required = false) String gmKppStatus,
                                                                         @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside OverallEmployeeKppFeedbackController >> getAllEmployeeKppFeedbackDetails() empId : {}, roleId : {}, finYear : {}, reportingEmpId : {}, gmEmpId : {}, empKppStatus : {}, hodKppStatus : {}, gmKppStatus : {}", empId, roleId, finYear, reportingEmpId, gmEmpId, empKppStatus, hodKppStatus, gmKppStatus);
 
         KPIResponse response = overallEmployeeKppFeedbackService.getAllEmployeeKppFeedbackDetails(empId, roleId, finYear, reportingEmpId, gmEmpId,empKppStatus,hodKppStatus,gmKppStatus, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 }

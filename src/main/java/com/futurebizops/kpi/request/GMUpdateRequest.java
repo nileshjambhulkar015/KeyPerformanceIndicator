@@ -2,10 +2,12 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.Instant;
 
 @Data
+@ToString
 public class GMUpdateRequest {
 
     @Schema(example = "1", description = "This field is used for Employee Key Performance Id")

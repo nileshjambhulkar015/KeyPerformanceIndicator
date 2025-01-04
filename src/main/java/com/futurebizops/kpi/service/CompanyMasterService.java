@@ -33,7 +33,6 @@ public interface CompanyMasterService {
     public List<SiteDDResponse> getDDSitesFromComany(Integer regionId);
 
     public List<CompanyDDResponse> getDDCompanyFromComany(Integer regionId, Integer siteId);
-    public List<CompanyMasterResponse> getAllCompanyByCompanyId(Integer companyId);
 
    public  List<CompanyDDResponse> getDDAllCompany();
 

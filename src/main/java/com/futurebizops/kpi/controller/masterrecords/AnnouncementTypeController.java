@@ -9,6 +9,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.AnnouncementTypeService;
 import com.futurebizops.kpi.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/announcement-type")
+@Slf4j
 public class AnnouncementTypeController {
 
     @Autowired
@@ -36,18 +38,21 @@ public class AnnouncementTypeController {
 
     @PostMapping
     public ResponseEntity<KPIResponse> saveAnnouncementTypeDetails(@RequestBody AnnouncementTypeCreateRequest announcementTypeCreateRequest) {
+        log.info("Inside AnnouncementTypeController >> saveAnnouncementTypeDetails() request : {}", announcementTypeCreateRequest);
         KPIResponse response = announcementTypeService.saveAnnouncementTypeDetails(announcementTypeCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<KPIResponse> deleteAnnouncementTypeDetails(@RequestParam(required = false) Integer announTypeId) {
+        log.info("Inside AnnouncementTypeController >> deleteAnnouncementTypeDetails() announTypeId : {}", announTypeId);
         KPIResponse response = announcementTypeService.deleteAnnouncementTypeDetails(announTypeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<KPIResponse> updateAnnouncementTypeDetails(@RequestBody AnnouncementTypeUpdateRequest announcementTypeUpdateRequest) {
+        log.info("Inside AnnouncementTypeController >> updateAnnouncementTypeDetails() announcementTypeUpdateRequest : {}", announcementTypeUpdateRequest);
         KPIResponse response = announcementTypeService.updateAnnouncementTypeDetails(announcementTypeUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -59,6 +64,7 @@ public class AnnouncementTypeController {
             @RequestParam(required = false) String announTypeName,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside AnnouncementTypeController >> findAnnouncementTypeSearch() announTypeId : {}, announTypeName : {}, statusCd :{}", announTypeId, announTypeName,statusCd);
         KPIResponse response = announcementTypeService.findAnnouncementTypeSearch(announTypeId, announTypeName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -66,12 +72,14 @@ public class AnnouncementTypeController {
 
     @GetMapping
     public ResponseEntity<List<AnnouncementTypeResponse>> getAllAnnouncementType() {
+        log.info("Inside AnnouncementTypeController >> getAllAnnouncementType()");
         List<AnnouncementTypeResponse> response = announcementTypeService.getAllAnnouncementType();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/by-announcement-type-id")
     public ResponseEntity<AnnouncementTypeResponse> findAllDepartmentById(@RequestParam(required = false) Integer announTypeId) {
+        log.info("Inside AnnouncementTypeController >> findAllDepartmentById() announTypeId : {}",announTypeId);
         return new ResponseEntity<>(announcementTypeService.findAnnouncementTypeById(announTypeId), HttpStatus.OK);
     }
 

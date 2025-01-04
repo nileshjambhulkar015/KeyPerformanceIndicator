@@ -4,6 +4,7 @@ import com.futurebizops.kpi.request.HODUpdateMasterEmployeeRatingReq;
 import com.futurebizops.kpi.response.HodEmploeeKppResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EmployeeKeyPerfParamService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,14 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/hod-approval")
+@Slf4j
 public class HoDApprovalController {
     @Autowired
     private EmployeeKeyPerfParamService keyPerfParamService;
 
     @PutMapping
-    public ResponseEntity<KPIResponse> updateEmployeeKeyPerfomanceDetails(@RequestBody HODUpdateMasterEmployeeRatingReq empKPPMasterUpdateRequest) {
-        System.out.println("empKPPMasterUpdateRequest : "+empKPPMasterUpdateRequest);
+    public ResponseEntity<KPIResponse> updateHoDApprovalRequest(@RequestBody HODUpdateMasterEmployeeRatingReq empKPPMasterUpdateRequest) {
+        log.info("Inside HoDApprovalController >> updateHoDApprovalRequest() empKPPMasterUpdateRequest : {}", empKPPMasterUpdateRequest);
         KPIResponse response = keyPerfParamService.updateHoDApprovalRequest(empKPPMasterUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -36,6 +38,7 @@ public class HoDApprovalController {
     @GetMapping(value = "/employee-kpp")
     public ResponseEntity<List<HodEmploeeKppResponse>> getEmployeeForHodRatings(@RequestParam(required = false) Integer empId, @RequestParam(required = false) String empEId,
                                                                                 @RequestParam(required = false) String statusCd) {
+        log.info("Inside HoDApprovalController >> updateHoDApprovalRequest() empId : {}, empEId : {}", empId, empEId);
         List<HodEmploeeKppResponse> response = keyPerfParamService.getEmployeeForHodRatings(empId, empEId, statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
 

@@ -9,7 +9,6 @@ import java.util.List;
 
 @Data
 @ToString
-@EqualsAndHashCode
 public class HODUpdateMasterEmployeeRatingReq {
 
     List<HODUpdateDetailsEmpRatingsReq> kppUpdateRequests;

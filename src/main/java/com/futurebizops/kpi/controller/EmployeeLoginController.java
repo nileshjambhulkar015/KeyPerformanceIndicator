@@ -23,23 +23,24 @@ public class EmployeeLoginController {
     private EmployeeLoginService employeeLoginService;
 
     @GetMapping
-    public ResponseEntity<KPIResponse> validateLogin(@RequestParam(required = false) String userName,
+    public ResponseEntity<KPIResponse> employeeLogin(@RequestParam(required = false) String userName,
                                                        @RequestParam(required = false) String userPassword) {
-        log.info("User name : {}", userName);
+        log.info("Inside EmployeeLoginController >> employeeLogin() userName : {}, userPassword : {}", userName, userPassword);
         KPIResponse response = employeeLoginService.employeeLogin(userName, userPassword);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping(value = "/change-password")
-    public ResponseEntity<KPIResponse> changePasswords(@RequestParam(required = false) String userName,
+    public ResponseEntity<KPIResponse> updateLoginPassword(@RequestParam(required = false) String userName,
                                                              @RequestParam(required = false) String userPassword) {
+        log.info("Inside EmployeeLoginController >> updateLoginPassword() userName : {}, userPassword : {}", userName, userPassword);
         KPIResponse response = employeeLoginService.updateLoginPassword(userName, userPassword);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "validate-user-name")
     public ResponseEntity<KPIResponse> validateUserName(@RequestParam(required = false) String userName) {
-        log.info("User name : {}", userName);
+        log.info("Inside EmployeeLoginController >> updateLoginPassword() userName : {}", userName);
         KPIResponse response = employeeLoginService.validateUserName(userName);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

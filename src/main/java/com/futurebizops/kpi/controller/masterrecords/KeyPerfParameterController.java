@@ -43,48 +43,51 @@ public class KeyPerfParameterController {
     private KeyPerfParameterService keyPerfParameterService;
 
     @PostMapping
-    public ResponseEntity<KPIResponse> saveKeyPerfomanceParamDetails(@RequestBody KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
+    public ResponseEntity<KPIResponse> saveKeyPerfomanceParameter(@RequestBody KeyPerfParamCreateRequest keyPerfParamCreateRequest) {
+        log.info("Inside KeyPerfParameterController >> saveKeyPerfomanceParameter() keyPerfParamCreateRequest : {}", keyPerfParamCreateRequest);
         KPIResponse response = keyPerfParameterService.saveKeyPerfomanceParameter(keyPerfParamCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<KPIResponse> updateKeyPerfomanceParamDetails(@RequestBody KeyPerfParamUpdateRequest keyPerfParamUpdateRequest) {
+        log.info("Inside KeyPerfParameterController >> updateKeyPerfomanceParamDetails() keyPerfParamUpdateRequest : {}", keyPerfParamUpdateRequest);
         KPIResponse response = keyPerfParameterService.updateKeyPerfomanceParameter(keyPerfParamUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<KPIResponse> deleteKeyPerfomanceParamDetails(@RequestParam(required = false) Integer kppId) {
+        log.info("Inside KeyPerfParameterController >> deleteKeyPerfomanceParamDetails() kppId : {}", kppId);
         KPIResponse response = keyPerfParameterService.deleteKeyPerfomanceParamDetails(kppId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> findKeyPerfomanceParam(@RequestParam(required = false) Integer kppId,
-                                                              @RequestParam(required = false) String kppObjectiveNo,
-                                                              @RequestParam(required = false) String kppObjective,
-                                                              @RequestParam(required = false) String statusCd,
-                                                              @Parameter(hidden = true) Pageable pageable) {
-        log.info("reqiuest for Employee KPP search");
-        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, kppObjectiveNo,kppObjective, statusCd, pageable);
+    public ResponseEntity<KPIResponse> findKeyPerfomanceParameterDetails(@RequestParam(required = false) Integer kppId,
+                                                                         @RequestParam(required = false) String kppObjectiveNo,
+                                                                         @RequestParam(required = false) String kppObjective,
+                                                                         @RequestParam(required = false) String statusCd,
+                                                                         @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside KeyPerfParameterController >> findKeyPerfomanceParameterDetails() kppId : {}, kppObjectiveNo : {}", kppId, kppObjectiveNo);
+        KPIResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetails(kppId, kppObjectiveNo, kppObjective, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
 
-
-
     @GetMapping(value = "/kppId")
-    public ResponseEntity<KPPResponse> findKeyPerfomanceParamById(@RequestParam(required = false) Integer kppId) {
+    public ResponseEntity<KPPResponse> findKeyPerfomanceParameterDetailById(@RequestParam(required = false) Integer kppId) {
+        log.info("Inside KeyPerfParameterController >> findKeyPerfomanceParameterDetailById() kppId : {}", kppId);
         KPPResponse response = keyPerfParameterService.findKeyPerfomanceParameterDetailById(kppId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //upload excel
-        @PostMapping (value = "/upload-kpp")
+    @PostMapping(value = "/upload-kpp")
     public void uploadKppExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
+        log.info("Inside KeyPerfParameterController >> uploadKppExcelFile()");
         keyPerfParameterService.uploadKppExcelFile(file);
     }
 

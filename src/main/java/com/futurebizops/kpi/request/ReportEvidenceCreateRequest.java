@@ -1,6 +1,7 @@
 package com.futurebizops.kpi.request;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -9,8 +10,8 @@ import javax.persistence.Id;
 import java.time.Instant;
 
 @Data
+@ToString
 public class ReportEvidenceCreateRequest {
-
     private Integer empId;
     private String evFileName;
     private  byte[] evFile;

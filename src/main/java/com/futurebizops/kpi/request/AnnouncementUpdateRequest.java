@@ -2,10 +2,12 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Column;
 
 @Data
+@ToString
 public class AnnouncementUpdateRequest {
     @Schema(example = "1", description = "This field is used for meeting id")
     private Integer announId;

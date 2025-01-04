@@ -2,10 +2,12 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Column;
 
 @Data
+@ToString
 public class EmployeeExcelReadData {
 
     @Schema(example = "Permenent / Contigent", description = "This field is used for employee Type name")

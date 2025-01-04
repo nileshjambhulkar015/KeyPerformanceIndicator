@@ -12,6 +12,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.UoMService;
 import com.futurebizops.kpi.utils.KPIUtils;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/uom")
+@Slf4j
 public class UoMController {
 
     @Autowired
@@ -39,11 +41,11 @@ public class UoMController {
 
     @GetMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> findDepartmentDetails(@RequestParam(required = false) Integer uomId,
-
+    public ResponseEntity<KPIResponse> findUoMDetails(@RequestParam(required = false) Integer uomId,
                                                              @RequestParam(required = false) String uomName,
                                                              @RequestParam(required = false) String statusCd,
                                                              @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside SiteController >> findUoMDetails() uomId : {},uomName : {}", uomId, uomName);
         KPIResponse response = uoMService.findUoMDetails(uomId, uomName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -51,30 +53,35 @@ public class UoMController {
 
     @DeleteMapping
     public ResponseEntity<KPIResponse> deleteUOMDetails(@RequestParam(required = false) Integer uomId) {
+        log.info("Inside SiteController >> deleteUOMDetails() uomId : {}", uomId);
         KPIResponse response = uoMService.deleteUOMDetails(uomId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<KPIResponse> saveUoMDetails(@RequestBody UoMCreateRequest uoMCreateRequest) {
+    public ResponseEntity<KPIResponse> saveUoM(@RequestBody UoMCreateRequest uoMCreateRequest) {
+        log.info("Inside SiteController >> saveUoM() uoMCreateRequest : {}", uoMCreateRequest);
         KPIResponse response = uoMService.saveUoM(uoMCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<KPIResponse> updateUoMDetails(@RequestBody UoMUpdateRequest uoMUpdateRequest) {
+    public ResponseEntity<KPIResponse> updateUoM(@RequestBody UoMUpdateRequest uoMUpdateRequest) {
+        log.info("Inside SiteController >> updateUoM() uoMUpdateRequest : {}", uoMUpdateRequest);
         KPIResponse response = uoMService.updateUoM(uoMUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<KPIResponse> getUoMDetails(Integer uomId) {
+    public ResponseEntity<KPIResponse> findUoMDetails(Integer uomId) {
+        log.info("Inside SiteController >> findUoMDetails() uomId : {}", uomId);
         KPIResponse response = uoMService.findUoMDetails(uomId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/all-uom")
-    public ResponseEntity<List<UoMEntity>> getAllUoMDetails() {
+    public ResponseEntity<List<UoMEntity>> findAllUoMDetails() {
+        log.info("Inside SiteController >> findAllUoMDetails()");
         List<UoMEntity> uoMEntities = uoMService.findAllUoMDetails();
         return new ResponseEntity<>(uoMEntities, HttpStatus.OK);
     }

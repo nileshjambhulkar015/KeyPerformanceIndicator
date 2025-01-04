@@ -8,6 +8,7 @@ import com.futurebizops.kpi.response.dropdown.ComplaintTypeDDResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.ComplaintTypeService;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -28,19 +29,22 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/complaint-type")
+@Slf4j
 public class ComplaintTypeController {
 
     @Autowired
     private ComplaintTypeService complaintTypeService;
 
     @PostMapping
-    public ResponseEntity<KPIResponse> saveDepartmentDetails(@RequestBody ComplaintTypeCreateRequest complaintTypeCreateRequest) {
+    public ResponseEntity<KPIResponse> saveComplaintType(@RequestBody ComplaintTypeCreateRequest complaintTypeCreateRequest) {
+        log.info("Inside ComplaintTypeController >> saveComplaintType() complaintTypeCreateRequest : {}", complaintTypeCreateRequest);
         KPIResponse response = complaintTypeService.saveComplaintType(complaintTypeCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<KPIResponse> deleteComplaintTypeDetails(@RequestParam(required = false) Integer compTypeId) {
+        log.info("Inside ComplaintTypeController >> deleteComplaintTypeDetails() compTypeId : {}", compTypeId);
         KPIResponse response = complaintTypeService.deleteComplaintTypeDetails(compTypeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -53,6 +57,7 @@ public class ComplaintTypeController {
             @RequestParam(required = false) Integer deptId,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside ComplaintTypeController >> findComplaintTypeDetails() compTypeId : {}, compTypeName :{}, deptId : {}", compTypeId,compTypeName, deptId);
         KPIResponse response = complaintTypeService.findComplaintTypeDetails(compTypeId, compTypeName,deptId, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -60,25 +65,28 @@ public class ComplaintTypeController {
     // show department details when click on view button of department ui table
     @GetMapping(value = "/by-complaint-type-id")
     public ResponseEntity<Object> findAllDepartmentById(@RequestParam(required = false) Integer compTypeId) {
+        log.info("Inside ComplaintTypeController >> findAllDepartmentById() compTypeId : {}", compTypeId);
         return new ResponseEntity<>(complaintTypeService.findAllComplaintTypeById(compTypeId), HttpStatus.OK);
     }
 
 
     @PutMapping
     public ResponseEntity<KPIResponse> updateComplaintTypeDetails(@RequestBody ComplaintTypeUpdateRequest complaintTypeUpdateRequest) {
+        log.info("Inside ComplaintTypeController >> updateComplaintTypeDetails() complaintTypeUpdateRequest : {}", complaintTypeUpdateRequest);
         KPIResponse response = complaintTypeService.updateComplaintType(complaintTypeUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping (value = "/comp-type-dd-dept")
     public ResponseEntity<List<DepartmentDDResponse>> findAllDepartmentFromComplaintType() {
-
+        log.info("Inside ComplaintTypeController >> findAllDepartmentFromComplaintType()");
         List<DepartmentDDResponse> response = complaintTypeService.findAllDepartmentFromComplaintType();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping (value = "/dd-comp-type-by-dept-id")
     public ResponseEntity<List<ComplaintTypeDDResponse>> findAllComlaintTypeByDeptId(@RequestParam(required = false) Integer compTypeDeptId) {
+        log.info("Inside ComplaintTypeController >> findAllComlaintTypeByDeptId() compTypeDeptId : {}", compTypeDeptId);
         List<ComplaintTypeDDResponse> response = complaintTypeService.findAllComplaintTypeByDeptId(compTypeDeptId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

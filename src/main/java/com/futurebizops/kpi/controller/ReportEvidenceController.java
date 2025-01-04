@@ -35,20 +35,21 @@ public class ReportEvidenceController {
     public ResponseEntity<byte[]> findReportEvidenceByEmpIdAndMonth(
             @RequestParam(required = false) Integer empId,
             @RequestParam(required = false) String evMonth) {
-        Optional<ReportEvidenceEntity> optionalEvidenceEntity = reportEvidenceRepo.findByEmpIdAndEvMonth(empId, DateTimeUtils.convertStringToInstant(evMonth));
+        log.info("Inside ReportEvidenceController >> findReportEvidenceByEmpIdAndMonth() empId : {}, evMonth : {}", empId, evMonth);
 
+        Optional<ReportEvidenceEntity> optionalEvidenceEntity = reportEvidenceRepo.findByEmpIdAndEvMonth(empId, DateTimeUtils.convertStringToInstant(evMonth));
+        log.info("Inside ReportEvidenceController >> findReportEvidenceByEmpIdAndMonth() optionalEvidenceEntity : {}", optionalEvidenceEntity.isPresent());
         if (optionalEvidenceEntity.isPresent()) {
+
             ReportEvidenceEntity fileEntity = optionalEvidenceEntity.get();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(MediaType.valueOf(fileEntity.getEvContentType()));
             header.setContentLength(fileEntity.getEvFile().length);
             header.set("Content-Disposition", "attachment; filename=" + fileEntity.getEvFileName());
-
             return new ResponseEntity<>(fileEntity.getEvFile(), header, HttpStatus.OK);
         } else {
-            log.error("Inside ReportEvidenceServiceImpl >> saveReportEvidence()");
-            throw new KPIException("ReportEvidenceServiceImpl", false, "File not found");
+            log.error("Inside ReportEvidenceController >> findReportEvidenceByEmpIdAndMonth()");
+            throw new KPIException("ReportEvidenceController >> findReportEvidenceByEmpIdAndMonth()", false, "File not found");
         }
-
     }
 }

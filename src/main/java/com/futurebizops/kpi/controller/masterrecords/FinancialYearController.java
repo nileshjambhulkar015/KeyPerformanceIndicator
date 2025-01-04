@@ -2,16 +2,12 @@ package com.futurebizops.kpi.controller.masterrecords;
 
 import com.futurebizops.kpi.entity.FinancialYearEntity;
 import com.futurebizops.kpi.repository.FinancialYearRepo;
-import com.futurebizops.kpi.request.EmployeeTypeCreateRequest;
-import com.futurebizops.kpi.request.EmployeeTypeUpdateRequest;
 import com.futurebizops.kpi.request.FinancialYearCreateRequest;
 import com.futurebizops.kpi.request.FinancialYearUpdateRequest;
-import com.futurebizops.kpi.response.DesignationReponse;
-import com.futurebizops.kpi.response.EmployeeTypeResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.FinancialYearDDResponse;
-import com.futurebizops.kpi.service.EmployeeTypeService;
 import com.futurebizops.kpi.service.FinancialYearService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +27,8 @@ import java.util.Optional;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/financial-year")
-public class FinacialYearController {
+@Slf4j
+public class FinancialYearController {
 
     @Autowired
     private FinancialYearService financialYearService;
@@ -41,6 +38,7 @@ public class FinacialYearController {
 
     @PostMapping
     public ResponseEntity<KPIResponse> saveFinancialYear(@RequestBody FinancialYearCreateRequest financialYearCreateRequest) {
+        log.info("Inside FinancialYearController >> saveFinancialYear() financialYearCreateRequest : {}", financialYearCreateRequest);
         KPIResponse response = financialYearService.saveFinancialYear(financialYearCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -48,6 +46,7 @@ public class FinacialYearController {
     @GetMapping(value = "/by-finyear")
     public ResponseEntity<FinancialYearEntity> findFinancialYearById(
             @RequestParam(required = false) Integer finYearId) {
+        log.info("Inside FinancialYearController >> findFinancialYearById() finYearId : {}", finYearId);
         Optional<FinancialYearEntity> response = financialYearRepo.findById(finYearId);
         return new ResponseEntity<>(response.get(), HttpStatus.OK);
 
@@ -55,6 +54,7 @@ public class FinacialYearController {
 
     @PutMapping
     public ResponseEntity<KPIResponse> updateFinancialYear(@RequestBody FinancialYearUpdateRequest financialYearUpdateRequest) {
+        log.info("Inside FinancialYearController >> updateFinancialYear() financialYearUpdateRequest : {}", financialYearUpdateRequest);
         KPIResponse response = financialYearService.updateFinancialYear(financialYearUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -64,6 +64,7 @@ public class FinacialYearController {
             @RequestParam(required = false) Integer finYearId,
             @RequestParam(required = false) String finYearName,
             @RequestParam(required = false) String statusCd) {
+        log.info("Inside FinancialYearController >> findFinancialYear() finYearId : {}, finYearName : {}", finYearId, finYearName);
         KPIResponse response = financialYearService.findFinancialYear(finYearId, finYearName, statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -72,12 +73,14 @@ public class FinacialYearController {
 
     @DeleteMapping
     public ResponseEntity<KPIResponse> deleteFinancialYear(@RequestParam(required = false) Integer finYearId) {
+        log.info("Inside FinancialYearController >> deleteFinancialYear() finYearId : {}", finYearId);
         KPIResponse response = financialYearService.deleteFinancialYear(finYearId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/dd-fin-year")
     public ResponseEntity<List<FinancialYearDDResponse>> ddAllFinancialYear() {
+        log.info("Inside FinancialYearController >> ddAllFinancialYear()");
         List<FinancialYearDDResponse> response = financialYearService.ddAllFinancialYear();
         return new ResponseEntity<>(response, HttpStatus.OK);
 

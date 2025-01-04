@@ -8,6 +8,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/department")
+@Slf4j
 public class DepartmentController {
 
     @Autowired
@@ -39,12 +41,14 @@ public class DepartmentController {
 
     @PostMapping
     public ResponseEntity<KPIResponse> saveDepartmentDetails(@RequestBody DepartmentCreateRequest departmentCreateRequest) {
+        log.info("Inside DepartmentController >> saveDepartmentDetails() departmentCreateRequest : {}", departmentCreateRequest);
         KPIResponse response = departmentService.saveDepartment(departmentCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<KPIResponse> updateDepartmentDetails(@RequestBody DepartmentUpdateRequest departmentUpdateRequest) {
+        log.info("Inside DepartmentController >> updateDepartmentDetails() departmentUpdateRequest : {}", departmentUpdateRequest);
         KPIResponse response = departmentService.updateDepartment(departmentUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -56,13 +60,15 @@ public class DepartmentController {
                                                              @RequestParam(required = false) String deptName,
                                                              @RequestParam(required = false) String statusCd,
                                                              @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside DepartmentController >> findDepartmentDetails() deptId : {}, deptName : {}", deptId, deptName);
         KPIResponse response = departmentService.findDepartmentDetails(deptId, deptName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
     @GetMapping
-    public ResponseEntity<List<DepartmentReponse>> getAllDepartmentDetails() {
+    public ResponseEntity<List<DepartmentReponse>> findAllDepartmentDetails() {
+        log.info("Inside DepartmentController >> findAllDepartmentDetails()");
         List<DepartmentReponse> response = departmentService.findAllDepartmentDetails();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -70,29 +76,34 @@ public class DepartmentController {
     // show department details when click on view button of department ui table
     @GetMapping(value = "/by-dept-id")
     public ResponseEntity<Object> findAllDepartmentById(@RequestParam(required = false) Integer deptId) {
+        log.info("Inside DepartmentController >> findAllDepartmentById() deptId : {}", deptId);
         return new ResponseEntity<>(departmentService.findAllDepartmentById(deptId), HttpStatus.OK);
     }
 
     //upload excel
     @PostMapping (value = "/upload-department")
     public void uploadDeptExcelFile(@RequestParam("file") MultipartFile file) throws IOException {
+        log.info("Inside DepartmentController >> uploadDeptExcelFile()");
         departmentService.uploadDeptExcelFile(file);
     }
 
     @GetMapping (value = "/all-dd-dept-except-gm")
     public ResponseEntity<List<DepartmentDDResponse>> findAllDepartmentExceptGM() {
+        log.info("Inside DepartmentController >> findAllDepartmentExceptGM()");
         List<DepartmentDDResponse> response = departmentService.findAllDepartmentExceptGM();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping (value = "/all-dd-dept")
     public ResponseEntity<List<DepartmentDDResponse>> ddAllDepartmentExceptGM() {
+        log.info("Inside DepartmentController >> ddAllDepartmentExceptGM()");
         List<DepartmentDDResponse> response = departmentService.findAllDepartmentExceptGM();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<KPIResponse> deleteDepartmentDetails(@RequestParam(required = false) Integer deptId) {
+        log.info("Inside DepartmentController >> deleteDepartmentDetails() deptId : {}", deptId);
         KPIResponse response = departmentService.deleteDepartmentDetails(deptId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

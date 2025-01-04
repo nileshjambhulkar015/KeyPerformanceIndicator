@@ -3,10 +3,10 @@ package com.futurebizops.kpi.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
 public class CompanyMasterResponse {
 
     private Integer companyId;
@@ -21,6 +21,7 @@ public class CompanyMasterResponse {
     private String remark;
     private String statusCd;
 
+    public CompanyMasterResponse(){};
     public CompanyMasterResponse(Object[] objects){
         this.companyId=Integer.parseInt(String.valueOf(objects[0]));
         this.regionId=Integer.parseInt(String.valueOf(objects[1]));

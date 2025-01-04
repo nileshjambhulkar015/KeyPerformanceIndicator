@@ -3,11 +3,13 @@ package com.futurebizops.kpi.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import java.time.Instant;
 
 @Data
+@ToString
 public class HODApprovalUpdateRequest {
     @Schema(example = "1", description = "This field is used for Employee Key Performance Id")
     private Integer ekppId;

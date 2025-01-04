@@ -37,17 +37,12 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
     @Autowired
     private AnnouncementTypeAuditRepo announcementTypeAuditRepo;
 
-    @Autowired
-    RoleRepo roleRepo;
-
-
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveAnnouncementTypeDetails(AnnouncementTypeCreateRequest announcementTypeCreateRequest) {
-        Optional<AnnouncementTypeEntity> announcementTypeEntity = announcementTypeRepo.findByAnnounTypeNameEqualsIgnoreCase(announcementTypeCreateRequest.getAnnounTypeName() );
-        if(announcementTypeEntity.isPresent()){
-            log.error("Inside AnnouncementTypeServiceImpl >> saveAnnouncementTypeDetails()");
-
+        log.info("Inside AnnouncementTypeServiceImpl >> saveAnnouncementTypeDetails()");
+        Optional<AnnouncementTypeEntity> announcementTypeEntity = announcementTypeRepo.findByAnnounTypeNameEqualsIgnoreCase(announcementTypeCreateRequest.getAnnounTypeName());
+        if (announcementTypeEntity.isPresent()) {
             return KPIResponse.builder()
                     .isSuccess(false)
                     .responseMessage("Announcement Type name already exist")
@@ -59,11 +54,12 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
             announcementTypeRepo.save(announcementType);
             AnnouncementTypeAudit announcementTypeAudit = new AnnouncementTypeAudit(announcementType);
             announcementTypeAuditRepo.save(announcementTypeAudit);
+            log.info("Announcement Type save successfully");
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
-            } catch (Exception ex) {
+        } catch (Exception ex) {
             log.error("Inside AnnouncementTypeServiceImpl >> saveAnnouncementTypeDetails() : {}", ex);
             throw new KPIException("AnnouncementTypeServiceImpl", false, ex.getMessage());
         }
@@ -73,43 +69,59 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteAnnouncementTypeDetails(Integer announTypeId) {
-        KPIResponse busPassResponse = new KPIResponse();
+        log.debug("Inside deleteAnnouncementTypeDetails() announTypeId : {}", announTypeId);
+        KPIResponse kpiResponse = new KPIResponse();
         try {
             announcementTypeRepo.deleteAnnouncementTypeDetails(announTypeId);
-            busPassResponse.setSuccess(true);
-            busPassResponse.setResponseMessage("Announcement Type details deleted Successfully");
-            return busPassResponse;
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseMessage("Announcement Type details deleted Successfully");
+            log.info("Announcement Type details deleted Successfully");
+            return kpiResponse;
         } catch (Exception ex) {
-            log.error("Inside AnnouncementTypeServiceImpl >> deleteAnnouncementTypeDetails() : {}",ex);
+            log.error("Inside AnnouncementTypeServiceImpl >> deleteAnnouncementTypeDetails() : {}", ex);
             return KPIResponse.builder()
                     .isSuccess(false)
                     .build();
         }
-
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateAnnouncementTypeDetails(AnnouncementTypeUpdateRequest announcementTypeUpdateRequest) {
-        AnnouncementTypeEntity announcementTypeEntity = convertAnnouncementTypeUpdateRequestToEntity(announcementTypeUpdateRequest);
+        log.debug("Inside AnnouncementTypeServiceImpl >> updateAnnouncementTypeDetails() : {}", announcementTypeUpdateRequest);
+        Optional<AnnouncementTypeEntity> optionalAnnouncementTypeEntity = announcementTypeRepo.findById(announcementTypeUpdateRequest.getAnnounTypeId());
         try {
-            announcementTypeRepo.save(announcementTypeEntity);
-            AnnouncementTypeAudit departmentAudit = new AnnouncementTypeAudit(announcementTypeEntity);
-            announcementTypeAuditRepo.save(departmentAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_UPDATE)
-                    .build();
-        } catch (Exception ex) {
-            log.error("Inside AnnouncementTypeServiceImpl >> updateAnnouncementTypeDetails()");
-            throw new KPIException("AnnouncementTypeServiceImpl", false, ex.getMessage());
-        }
+            if (optionalAnnouncementTypeEntity.isPresent()) {
+                AnnouncementTypeEntity announcementTypeEntity = optionalAnnouncementTypeEntity.get();
+                announcementTypeEntity.setAnnounTypeName(announcementTypeUpdateRequest.getAnnounTypeName());
+                announcementTypeEntity.setRemark(announcementTypeUpdateRequest.getRemark());
+                announcementTypeRepo.save(announcementTypeEntity);
+                AnnouncementTypeAudit announcementTypeAudit = new AnnouncementTypeAudit(announcementTypeEntity);
+                announcementTypeAuditRepo.save(announcementTypeAudit);
 
+                log.info("Announcement Type updated successfully");
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage(KPIConstants.RECORD_UPDATE)
+                        .build();
+            } else {
+                log.info("Announcement type id: {} is not present", announcementTypeUpdateRequest.getAnnounTypeId());
+            }
+        } catch (Exception ex) {
+            log.error("Inside AnnouncementTypeServiceImpl >> updateAnnouncementTypeDetails() : {}", ex);
+            throw new KPIException("AnnouncementTypeServiceImpl >> updateAnnouncementTypeDetails()", false, ex.getMessage());
+        }
+        return KPIResponse.builder()
+                .isSuccess(true)
+                .responseMessage("Announcement type id : " + announcementTypeUpdateRequest.getAnnounTypeId() + " is not present")
+                .build();
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findAnnouncementTypeSearch(Integer announTypeId, String announTypeName, String statusCd, Pageable requestPageable) {
+        log.debug("Inside AnnouncementTypeServiceImpl >> findAnnouncementTypeSearch() : announTypeId : {}, announTypeName : {}", announTypeId, announTypeName);
+
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -120,32 +132,40 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
             sortName = order.get().getProperty();  //order by this field
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+        try {
+            Integer totalCount = announcementTypeRepo.getAnnouncementTypeCount(announTypeId, announTypeName, statusCd);
+            List<Object[]> announcementTypeData = announcementTypeRepo.getAnnouncementTypeDetail(announTypeId, announTypeName, statusCd, sortName, pageSize, pageOffset);
 
-        Integer totalCount = announcementTypeRepo.getAnnouncementTypeCount(announTypeId, announTypeName, statusCd);
-        List<Object[]> departmentData = announcementTypeRepo.getAnnouncementTypeDetail(announTypeId, announTypeName, statusCd, sortName, pageSize, pageOffset);
+            List<AnnouncementTypeResponse> announcementTypeResponses = announcementTypeData.stream().map(AnnouncementTypeResponse::new).collect(Collectors.toList());
+            log.info("Total Annoncement type size : {}", announcementTypeResponses.size());
+            announcementTypeResponses = announcementTypeResponses.stream()
+                    .sorted(Comparator.comparing(AnnouncementTypeResponse::getAnnounTypeName))
+                    .collect(Collectors.toList());
 
-        List<AnnouncementTypeResponse> announcementTypeResponses = departmentData.stream().map(AnnouncementTypeResponse::new).collect(Collectors.toList());
-
-        announcementTypeResponses= announcementTypeResponses.stream()
-                .sorted(Comparator.comparing(AnnouncementTypeResponse::getAnnounTypeName))
-                .collect(Collectors.toList());
-
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl<>(announcementTypeResponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+            log.info("Inside findAnnouncementTypeSearch() record fetch successfully");
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl<>(announcementTypeResponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside AnnouncementTypeServiceImpl >> findAnnouncementTypeSearch() : {}", ex);
+            throw new KPIException("AnnouncementTypeServiceImpl >> findAnnouncementTypeSearch()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<AnnouncementTypeResponse> getAllAnnouncementType() {
-        List<AnnouncementTypeEntity> announcementTypeEntities =  announcementTypeRepo.findAll();
+        log.debug("Inside AnnouncementTypeServiceImpl >> getAllAnnouncementType()");
+
+        List<AnnouncementTypeEntity> announcementTypeEntities = announcementTypeRepo.findAll();
+        log.info("Inside AnnouncementTypeServiceImpl >> getAllAnnouncementType() announcementTypeEntities size:{}", announcementTypeEntities.size());
         List<AnnouncementTypeResponse> announcementTypeResponses = new ArrayList<>();
         AnnouncementTypeResponse announcementTypeResponse = null;
-        for(AnnouncementTypeEntity announcementTypeEntity : announcementTypeEntities){
+        for (AnnouncementTypeEntity announcementTypeEntity : announcementTypeEntities) {
             announcementTypeResponse = new AnnouncementTypeResponse();
-            if("A".equalsIgnoreCase(announcementTypeEntity.getStatusCd())) {
+            if ("A".equalsIgnoreCase(announcementTypeEntity.getStatusCd())) {
                 announcementTypeResponse.setAnnounTypeId(announcementTypeEntity.getAnnounTypeId());
                 announcementTypeResponse.setAnnounTypeName(announcementTypeEntity.getAnnounTypeName());
                 announcementTypeResponse.setRemark(announcementTypeEntity.getRemark());
@@ -153,52 +173,47 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
                 announcementTypeResponses.add(announcementTypeResponse);
             }
         }
+        log.info("Inside getAllAnnouncementType() fetch record successfully");
         return announcementTypeResponses;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public AnnouncementTypeResponse findAnnouncementTypeById(Integer annonTypeId) {
-        AnnouncementTypeResponse  announcementTypeResponse = null;
+        log.debug("Inside AnnouncementTypeServiceImpl >> findAnnouncementTypeById() annonTypeId : {}", annonTypeId);
+
+        AnnouncementTypeResponse announcementTypeResponse = null;
         try {
             Optional<AnnouncementTypeEntity> optionalAnnouncementTypeEntity = announcementTypeRepo.findById(annonTypeId);
-            if(optionalAnnouncementTypeEntity.isPresent()){
+
+            log.info("Inside findAnnouncementTypeById : {}", optionalAnnouncementTypeEntity.isPresent());
+            if (optionalAnnouncementTypeEntity.isPresent()) {
                 AnnouncementTypeEntity announcementType = optionalAnnouncementTypeEntity.get();
 
-                 announcementTypeResponse = new AnnouncementTypeResponse();
+                announcementTypeResponse = new AnnouncementTypeResponse();
                 announcementTypeResponse.setAnnounTypeId(announcementType.getAnnounTypeId());
                 announcementTypeResponse.setAnnounTypeName(announcementType.getAnnounTypeName());
                 announcementTypeResponse.setRemark(announcementType.getRemark());
                 announcementTypeResponse.setStatusCd(announcementType.getStatusCd());
             }
 
+            log.info("Inside findAnnouncementTypeById() fetch record successfully");
             return announcementTypeResponse;
         } catch (Exception ex) {
-            log.error("AnnouncementTypeServiceImpl >>findAnnouncementTypeById :{}", ex);
-            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+            log.error("Inside AnnouncementTypeServiceImpl >> findAnnouncementTypeById() :{}", ex);
+            throw new KPIException("DepartmentServiceImpl >> findAnnouncementTypeById()", false, ex.getMessage());
         }
     }
 
 
-
-
     private AnnouncementTypeEntity convertAnnouncementTypeCreateRequestToEntity(AnnouncementTypeCreateRequest announcementTypeCreateRequest) {
+        log.info("Inside convertAnnouncementTypeCreateRequestToEntity()");
         AnnouncementTypeEntity announcementTypeEntity = new AnnouncementTypeEntity();
 
         announcementTypeEntity.setAnnounTypeName(announcementTypeCreateRequest.getAnnounTypeName());
         announcementTypeEntity.setRemark(announcementTypeCreateRequest.getRemark());
         announcementTypeEntity.setStatusCd(announcementTypeCreateRequest.getStatusCd());
         announcementTypeEntity.setCreatedUserId(announcementTypeCreateRequest.getEmployeeId());
-        return  announcementTypeEntity;
-    }
-
-    private AnnouncementTypeEntity convertAnnouncementTypeUpdateRequestToEntity(AnnouncementTypeUpdateRequest announcementTypeUpdateRequest) {
-        AnnouncementTypeEntity announcementType = new AnnouncementTypeEntity();
-        announcementType.setAnnounTypeId(announcementTypeUpdateRequest.getAnnounTypeId());
-        announcementType.setAnnounTypeName(announcementTypeUpdateRequest.getAnnounTypeName());
-        announcementType.setRemark(announcementTypeUpdateRequest.getRemark());
-        announcementType.setStatusCd(announcementTypeUpdateRequest.getStatusCd());
-        announcementType.setCreatedUserId(announcementTypeUpdateRequest.getEmployeeId());
-        return  announcementType;
+        return announcementTypeEntity;
     }
 }

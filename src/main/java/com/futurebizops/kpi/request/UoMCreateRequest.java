@@ -2,8 +2,10 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class UoMCreateRequest {
 
     @Schema(example = "KG", description = "This field is used for role name")

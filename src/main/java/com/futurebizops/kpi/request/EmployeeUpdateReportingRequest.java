@@ -2,8 +2,10 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class EmployeeUpdateReportingRequest {
 
     @Schema(example = "1", description = "This field is used for employee id")
@@ -15,7 +17,7 @@ public class EmployeeUpdateReportingRequest {
     @Schema(example = "1", description = "This field is used for employee role id")
     private Integer roleId;
 
-       @Schema(example = "1", description = "This field is used for employee role id")
+    @Schema(example = "1", description = "This field is used for employee role id")
     private Integer reportingEmpId;
 
     @Schema(example = "PM", description = "This field is used for Created User Id")

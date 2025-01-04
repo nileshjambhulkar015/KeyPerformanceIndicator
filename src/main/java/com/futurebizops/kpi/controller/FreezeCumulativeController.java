@@ -24,6 +24,7 @@ public class FreezeCumulativeController {
     FreezeCumulativeService freezeCumulativeService;
     @PostMapping
     public ResponseEntity<KPIResponse> saveFreezeCumulativeService(@RequestBody CumulativeUpdateRequest freezeCumulativeCreateRequest) {
+        log.info("Inside FreezeCumulativeController >> saveFreezeCumulativeService() freezeCumulativeCreateRequest : {}", freezeCumulativeCreateRequest);
         KPIResponse response = freezeCumulativeService.saveFreezeCumulativeService(freezeCumulativeCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

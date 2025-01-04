@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
 public class CumulativeUpdateRequest {
 
     @Schema(example = "2024-25", description = "This field is used for remark")

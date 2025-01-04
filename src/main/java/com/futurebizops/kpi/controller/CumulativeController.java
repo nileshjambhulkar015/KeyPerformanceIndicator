@@ -45,7 +45,7 @@ public class CumulativeController {
             @RequestParam(required = false) Integer roleId,
             @RequestParam(required = false) String statusCd,
             @Parameter(hidden = true) Pageable pageable) {
-        log.info("Request for kpp ");
+        log.info("Inside CumulativeController >> getAllEmployeeKPPStatusReport() fromDate : {}, toDate : {}, empId : {}, roleId : {}", fromDate, toDate,empId, roleId);
         KPIResponse response = cumulativeService.getAllEmployeeKPPStatusReport(fromDate, toDate,  empId, roleId,  statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ public class CumulativeController {
 
     @GetMapping("/hod-cummulatve")
     // @PageableAsQueryParam
-    public ResponseEntity<KPIResponse> getHODKppStatusCummulative(@RequestParam(required = false) String fromDate,
+    public ResponseEntity<KPIResponse> allEmployeeKppDetails(@RequestParam(required = false) String fromDate,
                                                                   @RequestParam(required = false) String toDate,
                                                                   @RequestParam(required = false) Integer roleId,
                                                                   @RequestParam(required = false) Integer deptId,
@@ -61,26 +61,22 @@ public class CumulativeController {
                                                                   @RequestParam(required = false) Integer reportingEmpId,
                                                                   @RequestParam(required = false) Integer gmEmpId,
                                                                   @Parameter(hidden = true) Pageable pageable) {
+        log.info("Inside CumulativeController >> getAllEmployeeKPPStatusReport() fromDate : {}, toDate : {}, deptId : {}, roleId : {},desigId : {}", fromDate, toDate,deptId, roleId,desigId);
         KPIResponse response = cumulativeService.allEmployeeKppDetails(fromDate, toDate,roleId,deptId,desigId, reportingEmpId,gmEmpId,pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
-
-    @PostMapping(value = "/freeze")
-    public ResponseEntity<KPIResponse> freezeCumulative(@RequestBody CompanyMasterCreateRequest masterCreateRequest) {
-        KPIResponse response =null; //companyMasterService.saveCompanyDetails(masterCreateRequest);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @PutMapping(value = "/add-employee-remark")
     public ResponseEntity<KPIResponse> updateOverallEmployeeKppReportRemark(@RequestBody CumulativeUpdateRequest cumulativeUpdateRequest) {
+        log.info("Inside CumulativeController >> updateOverallEmployeeKppReportRemark() cumulativeUpdateRequest : {}", cumulativeUpdateRequest);
         KPIResponse response = cumulativeService.updateOverallEmployeeKppReportRemark(cumulativeUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/dd-report-fin-year")
     public ResponseEntity<List<KppFinancialYearDDResponse>> ddAllFinancialYear() {
+        log.info("Inside CumulativeController >> ddAllFinancialYear()");
         List<KppFinancialYearDDResponse> response = cumulativeService.ddAllFinancialYear();
         return new ResponseEntity<>(response, HttpStatus.OK);
 

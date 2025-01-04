@@ -41,22 +41,25 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public KPIResponse saveComplaintType(ComplaintTypeCreateRequest complaintCreateRequest) {
-        Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findByDeptIdAndCompTypeNameEqualsIgnoreCase(complaintCreateRequest.getDeptId(), complaintCreateRequest.getCompTypeName() );
-        if(optionalComplaintType.isPresent()){
-            log.error("Inside ComplaintTypeServiceImpl >> saveDepartment()");
-            throw new KPIException("ComplaintTypeServiceImpl Class", false, "Complaint Type name already exist");
+    public KPIResponse saveComplaintType(ComplaintTypeCreateRequest complaintTypeCreateRequest) {
+        log.debug("Inside ComplaintTypeServiceImpl >> saveComplaintType() complaintTypeCreateRequest : {}", complaintTypeCreateRequest);
+
+        KPIResponse kpiResponse = new KPIResponse();
+        Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findByDeptIdAndCompTypeNameEqualsIgnoreCase(complaintTypeCreateRequest.getDeptId(), complaintTypeCreateRequest.getCompTypeName());
+        if (optionalComplaintType.isPresent()) {
+            log.error("Inside ComplaintTypeServiceImpl >> saveComplaintType()");
+            throw new KPIException("ComplaintTypeServiceImpl >> saveComplaintType()", false, "Complaint Type name already exist");
         }
 
-        ComplaintTypeEntity complaintTypeEntity = convertComplaintTypeCreateRequestToEntity(complaintCreateRequest);
+        ComplaintTypeEntity complaintTypeEntity = convertComplaintTypeCreateRequestToEntity(complaintTypeCreateRequest);
         try {
             complaintTypeRepo.save(complaintTypeEntity);
             ComplaintTypeAudit complaintTypeAudit = new ComplaintTypeAudit(complaintTypeEntity);
             complaintTypeAuditRepo.save(complaintTypeAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_SUCCESS)
-                    .build();
+            log.info("Complaint type added successfully");
+            kpiResponse.setResponseMessage("Complaint type added successfully");
+            kpiResponse.setSuccess(true);
+            return kpiResponse;
         } catch (Exception ex) {
             log.error("Inside ComplaintTypeServiceImpl >> saveComplaintType() : {}", ex);
             throw new KPIException("ComplaintTypeServiceImpl", false, ex.getMessage());
@@ -68,24 +71,28 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteComplaintTypeDetails(Integer compTypeId) {
-        KPIResponse busPassResponse = new KPIResponse();
+        log.debug("Inside ComplaintTypeServiceImpl >> deleteComplaintTypeDetails() compTypeId :{}", compTypeId);
+
+        KPIResponse kpiResponse = new KPIResponse();
         try {
             complaintTypeRepo.deleteComplaintTypeDetails(compTypeId);
-            busPassResponse.setSuccess(true);
-            busPassResponse.setResponseMessage("Department details deleted Successfully");
-            return busPassResponse;
-        } catch (Exception ex) {
-            log.error("Inside DepartmentServiceImpl >> deleteDepartmentDetails() : {}",ex);
-            return KPIResponse.builder()
-                    .isSuccess(false)
-                    .build();
-        }
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseMessage("Complaint Type details deleted Successfully");
 
+            log.info("Complaint Type details deleted Successfully : {}", compTypeId);
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("Inside ComplaintTypeServiceImpl >> deleteComplaintTypeDetails() : {}", ex);
+            throw new KPIException("ComplaintTypeServiceImpl >> deleteComplaintTypeDetails()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public KPIResponse findComplaintTypeDetails(Integer compTypeId, String compTypeName,Integer deptId, String statusCd, Pageable requestPageable) {
+    public KPIResponse findComplaintTypeDetails(Integer compTypeId, String compTypeName, Integer deptId, String statusCd, Pageable requestPageable) {
+        log.debug("Inside ComplaintTypeServiceImpl >> findComplaintTypeDetails() compTypeId :{}, compTypeName : {}, deptId : {}", compTypeId, compTypeName, deptId);
+
+        KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -96,88 +103,115 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
             sortName = order.get().getProperty();  //order by this field
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+        log.info("Inside findComplaintTypeDetails() pageSize : {}, pageOffset : {}, sortName : {}", pageSize, pageOffset, sortName);
+        try {
+            Integer totalCount = complaintTypeRepo.getComplaintTypeCount(compTypeId, compTypeName, deptId, statusCd);
+            List<Object[]> complaintTypeData = complaintTypeRepo.getComplaintTypeDetail(compTypeId, compTypeName, deptId, statusCd, sortName, pageSize, pageOffset);
 
-        Integer totalCount = complaintTypeRepo.getComplaintTypeCount(compTypeId, compTypeName,deptId, statusCd);
-        List<Object[]> departmentData = complaintTypeRepo.getComplaintTypeDetail(compTypeId, compTypeName,deptId, statusCd, sortName, pageSize, pageOffset);
+            List<ComplaintTypeReponse> complaintTypeReponses = complaintTypeData.stream().map(ComplaintTypeReponse::new).collect(Collectors.toList());
+            log.info("Inside findComplaintTypeDetails() total : {}", complaintTypeReponses.size());
 
-        List<ComplaintTypeReponse> complaintTypeReponses = departmentData.stream().map(ComplaintTypeReponse::new).collect(Collectors.toList());
-
-        complaintTypeReponses= complaintTypeReponses.stream()
-                .sorted(Comparator.comparing(ComplaintTypeReponse::getCompTypeName))
-                .collect(Collectors.toList());
-
-        if(complaintTypeReponses.size()>0) {
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(new PageImpl<>(complaintTypeReponses, requestPageable, totalCount))
-                    .responseMessage(KPIConstants.RECORD_FETCH)
-                    .build();
+            if (complaintTypeReponses.size() > 0) {
+                complaintTypeReponses = complaintTypeReponses.stream()
+                        .sorted(Comparator.comparing(ComplaintTypeReponse::getCompTypeName))
+                        .collect(Collectors.toList());
+                kpiResponse.setResponseData(new PageImpl<>(complaintTypeReponses, requestPageable, totalCount));
+                kpiResponse.setResponseMessage("Complaint type fetch successfully");
+                kpiResponse.setSuccess(true);
+                return kpiResponse;
+            }
+        } catch (Exception ex) {
+            log.error("Inside ComplaintTypeServiceImpl >> findComplaintTypeDetails() : {}", ex);
+            throw new KPIException("ComplaintTypeServiceImpl >> findComplaintTypeDetails()", false, ex.getMessage());
         }
-        return KPIResponse.builder()
-                .responseMessage("Complaint type not found")
-                .isSuccess(false)
-                .build();
+        log.info("Inside findComplaintTypeDetails() Complaint type not found");
+        kpiResponse.setSuccess(false);
+        kpiResponse.setResponseMessage("Complaint type details not found");
+        return kpiResponse;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public ComplaintTypeReponse findAllComplaintTypeById(Integer compTypeId) {
+        log.debug("Inside ComplaintTypeServiceImpl >> findAllComplaintTypeById() compTypeId : {}", compTypeId);
+        try{
         List<Object[]> complaintTypeData = complaintTypeRepo.getComplaintTypeByIdDetail(compTypeId);
         List<ComplaintTypeReponse> designationReponses = complaintTypeData.stream().map(ComplaintTypeReponse::new).collect(Collectors.toList());
-        return  designationReponses.get(0);
+        return designationReponses.get(0);
+        } catch (Exception ex) {
+            log.error("Inside ComplaintTypeServiceImpl >> findAllComplaintTypeById() : {}", ex);
+            throw new KPIException("ComplaintTypeServiceImpl >> findAllComplaintTypeById()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateComplaintType(ComplaintTypeUpdateRequest complaintTypeUpdateRequest) {
+        log.debug("Inside ComplaintTypeServiceImpl >> updateComplaintType() complaintTypeUpdateRequest : {}", complaintTypeUpdateRequest);
+
+        KPIResponse kpiResponse = new KPIResponse();
         try {
-        Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findById(complaintTypeUpdateRequest.getCompTypeId());
-        if(optionalComplaintType.isPresent()) {
-            ComplaintTypeEntity complaintTypeEntity = optionalComplaintType.get();
-            complaintTypeEntity.setCompTypeName(complaintTypeUpdateRequest.getCompTypeName());
-            complaintTypeEntity.setRemark(complaintTypeUpdateRequest.getRemark());
-            complaintTypeEntity.setUpdatedUserId(complaintTypeUpdateRequest.getEmployeeId());
-            complaintTypeRepo.save(complaintTypeEntity);
-            ComplaintTypeAudit departmentAudit = new ComplaintTypeAudit(complaintTypeEntity);
-            complaintTypeAuditRepo.save(departmentAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_UPDATE)
-                    .build();
-        }
+            Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findById(complaintTypeUpdateRequest.getCompTypeId());
+            if (optionalComplaintType.isPresent()) {
+                ComplaintTypeEntity complaintTypeEntity = optionalComplaintType.get();
+                complaintTypeEntity.setCompTypeName(complaintTypeUpdateRequest.getCompTypeName());
+                complaintTypeEntity.setRemark(complaintTypeUpdateRequest.getRemark());
+                complaintTypeEntity.setUpdatedUserId(complaintTypeUpdateRequest.getEmployeeId());
+                complaintTypeRepo.save(complaintTypeEntity);
+                ComplaintTypeAudit departmentAudit = new ComplaintTypeAudit(complaintTypeEntity);
+                complaintTypeAuditRepo.save(departmentAudit);
+                kpiResponse.setResponseMessage("Complaint type updated successfully");
+                kpiResponse.setSuccess(true);
+                return kpiResponse;
+            }
         } catch (Exception ex) {
             log.error("Inside ComplaintTypeServiceImpl >> updateComplaintType() : {}", ex);
-            throw new KPIException("ComplaintTypeServiceImpl", false, ex.getMessage());
+            throw new KPIException("Inside ComplaintTypeServiceImpl >> updateComplaintType()", false, ex.getMessage());
         }
-        return KPIResponse.builder()
-                .isSuccess(false)
-                .responseMessage("Record not found")
-                .build();
+        log.info("Inside  updateComplaintType() Complaint type details not found");
+        kpiResponse.setSuccess(false);
+        kpiResponse.setResponseMessage("Complaint type details not found");
+        return kpiResponse;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentDDResponse> findAllDepartmentFromComplaintType() {
-        List<Object[]> complaintData = complaintTypeRepo.findAllDepartmentFromComplaintType();
+        log.debug("Inside ComplaintTypeServiceImpl >> findAllDepartmentFromComplaintType()");
+        try{
+        List<Object[]> departmentData = complaintTypeRepo.findAllDepartmentFromComplaintType();
         List<DepartmentDDResponse> departmentDDResponses = new ArrayList<>();
-        if (complaintData.size() > 0) {
-            departmentDDResponses = complaintData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
+        if (departmentData.size() > 0) {
+            departmentDDResponses = departmentData.stream().map(DepartmentDDResponse::new).collect(Collectors.toList());
         }
         return departmentDDResponses;
+        } catch (Exception ex) {
+            log.error("Inside ComplaintTypeServiceImpl >> findAllDepartmentFromComplaintType() : {}", ex);
+            throw new KPIException("Inside ComplaintTypeServiceImpl >> findAllDepartmentFromComplaintType()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<ComplaintTypeDDResponse> findAllComplaintTypeByDeptId(Integer deptId) {
+        log.debug("Inside ComplaintTypeServiceImpl >> findAllComplaintTypeByDeptId() deptId : {}", deptId);
+
+        try{
         List<Object[]> complaintData = complaintTypeRepo.findAllComplaintTypeByDeptId(deptId);
         List<ComplaintTypeDDResponse> departmentDDResponses = new ArrayList<>();
         if (complaintData.size() > 0) {
             departmentDDResponses = complaintData.stream().map(ComplaintTypeDDResponse::new).collect(Collectors.toList());
         }
         return departmentDDResponses;
+        } catch (Exception ex) {
+            log.error("Inside ComplaintTypeServiceImpl >> findAllComplaintTypeByDeptId() : {}", ex);
+            throw new KPIException("Inside ComplaintTypeServiceImpl >> findAllComplaintTypeByDeptId()", false, ex.getMessage());
+        }
     }
 
     private ComplaintTypeEntity convertComplaintTypeCreateRequestToEntity(ComplaintTypeCreateRequest compTypeCreateRequest) {
+       log.debug("Inside ComplaintTypeServiceImpl >> convertComplaintTypeCreateRequestToEntity() compTypeCreateRequest : {}", compTypeCreateRequest);
+
         ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();
         complaintTypeEntity.setDeptId(compTypeCreateRequest.getDeptId());
 
@@ -185,18 +219,6 @@ public class ComplaintTypeServiceImpl implements ComplaintTypeService {
         complaintTypeEntity.setRemark(compTypeCreateRequest.getRemark());
         complaintTypeEntity.setStatusCd(compTypeCreateRequest.getStatusCd());
         complaintTypeEntity.setCreatedUserId(compTypeCreateRequest.getEmployeeId());
-        return  complaintTypeEntity;
-    }
-
-    private ComplaintTypeEntity convertComplaintTypeUpdateRequestToEntity(ComplaintTypeUpdateRequest complaintTypeUpdateRequest) {
-        ComplaintTypeEntity complaintTypeEntity = new ComplaintTypeEntity();
-        complaintTypeEntity.setCompTypeId(complaintTypeUpdateRequest.getCompTypeId());
-        complaintTypeEntity.setDeptId(complaintTypeUpdateRequest.getDeptId());
-
-        complaintTypeEntity.setCompTypeName(complaintTypeUpdateRequest.getCompTypeName());
-        complaintTypeEntity.setRemark(complaintTypeUpdateRequest.getRemark());
-        complaintTypeEntity.setStatusCd(complaintTypeUpdateRequest.getStatusCd());
-        complaintTypeEntity.setCreatedUserId(complaintTypeUpdateRequest.getEmployeeId());
-        return  complaintTypeEntity;
+        return complaintTypeEntity;
     }
 }

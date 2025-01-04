@@ -2,8 +2,11 @@ package com.futurebizops.kpi.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@ToString
 public class RegionCreateRequest {
 
     @Schema(example = "East Region", description = "This field is used for department name")
