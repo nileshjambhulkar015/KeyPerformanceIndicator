@@ -1,25 +1,19 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
-import com.futurebizops.kpi.entity.RegionEntity;
 import com.futurebizops.kpi.entity.RoleAudit;
 import com.futurebizops.kpi.entity.RoleEntity;
-import com.futurebizops.kpi.enums.RoleSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.RoleAuditRepo;
 import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.response.RegionResponse;
 import com.futurebizops.kpi.response.RoleResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.RoleService;
-import com.futurebizops.kpi.utils.KPIUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -44,9 +38,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveRole(RoleCreateRequest roleCreateRequest) {
+        log.debug("Inside RoleServiceImpl >> saveRole() roleCreateRequest : {}", roleCreateRequest);
         Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleCreateRequest.getRoleName());
-        if(optionalRoleEntity.isPresent()){
-            log.error("Inside RoleServiceImpl >> saveRole()");
+        if (optionalRoleEntity.isPresent()) {
+            log.error("Inside RoleServiceImpl >> saveRole() Role name already exist");
             throw new KPIException("RoleServiceImpl Class", false, "Role name already exist");
         }
 
@@ -60,7 +55,7 @@ public class RoleServiceImpl implements RoleService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside RoleServiceImpl >> saveRole()");
+            log.error("Inside RoleServiceImpl >> saveRole() : {}", ex);
             throw new KPIException("RoleServiceImpl", false, ex.getMessage());
         }
     }
@@ -68,6 +63,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateRole(RoleUpdateRequest roleUpdateRequest) {
+        log.debug("Inside RoleServiceImpl >> updateRole() roleUpdateRequest : {}", roleUpdateRequest);
         RoleEntity roleEntity = convertRoleUpdateRequestToEntity(roleUpdateRequest);
         try {
             roleRepo.save(roleEntity);
@@ -78,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside RoleServiceImpl >> updateRole()");
+            log.error("Inside RoleServiceImpl >> updateRole() : {}", ex);
             throw new KPIException("RoleServiceImpl", false, ex.getMessage());
         }
     }
@@ -86,6 +82,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findRoleDetails(Integer roleId, String roleName, Pageable requestPageable) {
+        log.debug("Inside RoleServiceImpl >> findRoleDetails() roleId : {}, roleName : {}", roleId, roleName);
         String sortName = null;
         // String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -96,55 +93,70 @@ public class RoleServiceImpl implements RoleService {
             sortName = order.get().getProperty();  //order by this field
             // sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+        log.debug("Inside findRoleDetails() pageSize: {}, pageOffset: {}, sortName: {}", pageSize, pageOffset, sortName);
+        try {
+            Integer totalCount = roleRepo.getRoleDetailsCount(roleId, roleName);
+            List<Object[]> regionData = roleRepo.getRoleDetails(roleId, roleName, sortName, pageSize, pageOffset);
 
-        Integer totalCount = roleRepo.getRoleDetailsCount(roleId, roleName);
-        List<Object[]> regionData = roleRepo.getRoleDetails(roleId, roleName, sortName, pageSize, pageOffset);
+            List<RoleResponse> roleResponses = regionData.stream().map(RoleResponse::new).collect(Collectors.toList());
 
-        List<RoleResponse> roleResponses = regionData.stream().map(RoleResponse::new).collect(Collectors.toList());
-
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl(roleResponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl(roleResponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside RoleServiceImpl >> findRoleDetails() : {}", ex);
+            throw new KPIException("RoleServiceImpl >> findRoleDetails()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RoleResponse> findAllRolesDetails() {
-        List<RoleEntity> roleEntities =  roleRepo.findAllRolesDetails();
-        List<RoleResponse> roleResponses = new ArrayList<>();
-        RoleResponse roleResponse = null;
-        for(RoleEntity departmentEntity : roleEntities){
-            roleResponse = new RoleResponse();
+        log.debug("Inside RoleServiceImpl >> findAllRolesDetails()");
+
+        try {
+            List<RoleEntity> roleEntities = roleRepo.findAllRolesDetails();
+            List<RoleResponse> roleResponses = new ArrayList<>();
+            RoleResponse roleResponse = null;
+            for (RoleEntity departmentEntity : roleEntities) {
+                roleResponse = new RoleResponse();
 
 
-            roleResponse.setRoleName(departmentEntity.getRoleName());
-            //roleResponse.setStatusCd(departmentEntity.getStatusCd());
-            roleResponses.add(roleResponse);
+                roleResponse.setRoleName(departmentEntity.getRoleName());
+                //roleResponse.setStatusCd(departmentEntity.getStatusCd());
+                roleResponses.add(roleResponse);
+            }
+            return roleResponses;
+        } catch (Exception ex) {
+            log.error("Inside RoleServiceImpl >> findAllRolesDetails() : {}", ex);
+            throw new KPIException("RoleServiceImpl >> findAllRolesDetails()", false, ex.getMessage());
         }
-        return roleResponses;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public RoleResponse findAllRoleById(Integer roleId) {
-        Optional<RoleEntity> optionalRoleEntity = roleRepo.findById(roleId);
-        if(optionalRoleEntity.isPresent()){
-            return RoleResponse.builder()
-
-                    .roleName(optionalRoleEntity.get().getRoleName())
-                    .remark(optionalRoleEntity.get().getRemark())
-                 //   .statusCd(optionalRoleEntity.get().getStatusCd())
-                    .build();
+        log.debug("Inside RoleServiceImpl >> findAllRoleById() roleId: {}", roleId);
+        try {
+            Optional<RoleEntity> optionalRoleEntity = roleRepo.findById(roleId);
+            if (optionalRoleEntity.isPresent()) {
+                return RoleResponse.builder()
+                        .roleName(optionalRoleEntity.get().getRoleName())
+                        .remark(optionalRoleEntity.get().getRemark())
+                        .build();
+            }
+        } catch (Exception ex) {
+            log.error("Inside RoleServiceImpl >> findAllRoleById() : {}", ex);
+            throw new KPIException("RoleServiceImpl >> findAllRoleById()", false, ex.getMessage());
         }
         return null;
     }
 
 
-
-
     private RoleEntity convertRoleCreateRequestToEntity(RoleCreateRequest roleCreateRequest) {
+        log.debug("Inside RoleServiceImpl >> convertRoleCreateRequestToEntity() roleCreateRequest: {}", roleCreateRequest);
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName(roleCreateRequest.getRoleName());
         roleEntity.setRemark(roleCreateRequest.getRemark());
@@ -154,6 +166,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private RoleEntity convertRoleUpdateRequestToEntity(RoleUpdateRequest roleUpdateRequest) {
+        log.debug("Inside RoleServiceImpl >> convertRoleUpdateRequestToEntity() roleUpdateRequest: {}", roleUpdateRequest);
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleId(roleUpdateRequest.getRoleId());
         roleEntity.setRoleName(roleUpdateRequest.getRoleName());
@@ -166,9 +179,14 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RoleDDResponse> ddEmployeeRoleExceptGM() {
-        List<Object[]> roleData = roleRepo.ddEmployeeRoleExceptGM();
-        return roleData.stream().map(RoleDDResponse::new).collect(Collectors.toList());
+        log.debug("Inside RoleServiceImpl >> ddEmployeeRoleExceptGM()");
+
+        try {
+            List<Object[]> roleData = roleRepo.ddEmployeeRoleExceptGM();
+            return roleData.stream().map(RoleDDResponse::new).collect(Collectors.toList());
+        } catch (Exception ex) {
+            log.error("Inside RoleServiceImpl >> ddEmployeeRoleExceptGM() : {}", ex);
+            throw new KPIException("RoleServiceImpl >> ddEmployeeRoleExceptGM()", false, ex.getMessage());
+        }
     }
-
-
 }

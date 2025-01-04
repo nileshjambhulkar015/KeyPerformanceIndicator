@@ -44,13 +44,15 @@ public class UoMServiceImpl implements UoMService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveUoM(UoMCreateRequest uoMCreateRequest) {
+        log.debug("Inside UoMServiceImpl >> saveUoM() uoMCreateRequest: {}", uoMCreateRequest);
+        KPIResponse kpiResponse = new KPIResponse();
         Optional<UoMEntity> optionalUoMEntity = uoMRepo.findByUomNameEqualsIgnoreCase(uoMCreateRequest.getUomName());
-        if(optionalUoMEntity.isPresent()){
-            log.error("Inside UoMServiceImpl >> saveUoM()");
-            return KPIResponse.builder()
-                    .isSuccess(false)
-                    .responseMessage("UoM name already exist")
-                    .build();
+        log.info("Inside saveUoM() optionalUoMEntity : {}", optionalUoMEntity.isPresent());
+        if (optionalUoMEntity.isPresent()) {
+            log.error("Inside UoMServiceImpl >> saveUoM() UoM name already exist");
+            kpiResponse.setResponseMessage("UoM name already exist");
+            kpiResponse.setSuccess(false);
+            return kpiResponse;
         }
 
         UoMEntity uoMEntity = convertUoMCreateRequestToEntity(uoMCreateRequest);
@@ -58,13 +60,13 @@ public class UoMServiceImpl implements UoMService {
             uoMRepo.save(uoMEntity);
             UoMAudit uoMAudit = new UoMAudit(uoMEntity);
             uoMAuditRepo.save(uoMAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_SUCCESS)
-                    .build();
+
+            kpiResponse.setResponseMessage("UoM added successfully");
+            kpiResponse.setSuccess(true);
+            return kpiResponse;
         } catch (Exception ex) {
-            log.error("Inside UoMServiceImpl >> saveUoM()");
-            throw new KPIException("UoMServiceImpl", false, ex.getMessage());
+            log.error("Inside UoMServiceImpl >> saveUoM() : {}", ex);
+            throw new KPIException("Inside UoMServiceImpl >> saveUoM()", false, ex.getMessage());
         }
 
     }
@@ -72,54 +74,57 @@ public class UoMServiceImpl implements UoMService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateUoM(UoMUpdateRequest uoMUpdateRequest) {
+        log.debug("Inside UoMServiceImpl >> updateUoM() uoMUpdateRequest: {}", uoMUpdateRequest);
+
+        KPIResponse kpiResponse = new KPIResponse();
         try {
-        Optional<UoMEntity> optionalUoMEntity = uoMRepo.findById(uoMUpdateRequest.getUomId());
-        if(optionalUoMEntity.isPresent()){
-            UoMEntity uoMEntity = optionalUoMEntity.get();
-            uoMEntity.setUomName(uoMUpdateRequest.getUomName());
-            uoMEntity.setRemark(uoMUpdateRequest.getRemark());
-            uoMEntity.setUpdatedUserId(uoMUpdateRequest.getEmployeeId());
+            Optional<UoMEntity> optionalUoMEntity = uoMRepo.findById(uoMUpdateRequest.getUomId());
+            log.info("Inside saveUoM() optionalUoMEntity : {}", optionalUoMEntity.isPresent());
+            if (optionalUoMEntity.isPresent()) {
+                UoMEntity uoMEntity = optionalUoMEntity.get();
+                uoMEntity.setUomName(uoMUpdateRequest.getUomName());
+                uoMEntity.setRemark(uoMUpdateRequest.getRemark());
+                uoMEntity.setUpdatedUserId(uoMUpdateRequest.getEmployeeId());
 
-            uoMRepo.save(uoMEntity);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_UPDATE)
-                    .build();
-        }
-
+                uoMRepo.save(uoMEntity);
+                log.info("UoM updated successfully for id : {}", uoMUpdateRequest.getUomId());
+                kpiResponse.setResponseMessage("UoM updated successfully");
+                kpiResponse.setSuccess(true);
+                return kpiResponse;
+            }
         } catch (Exception ex) {
-            log.error("Inside UoMServiceImpl >> updateUoM()");
-            throw new KPIException("UoMServiceImpl", false, ex.getMessage());
+            log.error("Inside UoMServiceImpl >> updateUoM() : {}", ex);
+            throw new KPIException("Inside UoMServiceImpl >> updateUoM()", false, ex.getMessage());
         }
-        return KPIResponse.builder()
-                .isSuccess(false)
-                .responseMessage("Record not found")
-                .build();
-
+        kpiResponse.setResponseMessage("UoM not found");
+        kpiResponse.setSuccess(false);
+        return kpiResponse;
     }
 
     @Transactional
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteUOMDetails(Integer uomId) {
-        KPIResponse busPassResponse = new KPIResponse();
+        log.debug("Inside UoMServiceImpl >> deleteUOMDetails() uomId: {}", uomId);
+        KPIResponse kpiResponse = new KPIResponse();
         try {
             uoMRepo.deleteUOMDetails(uomId);
-            busPassResponse.setSuccess(true);
-            busPassResponse.setResponseMessage("UOM details deleted Successfully");
-            return busPassResponse;
+            log.info("UOM details deleted Successfully : {}", uomId);
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseMessage("UOM details deleted Successfully");
+            return kpiResponse;
         } catch (Exception ex) {
-            log.error("Inside UoMServiceImpl >> deleteUOMDetails() : {}",ex);
-            return KPIResponse.builder()
-                    .isSuccess(false)
-                    .build();
+            log.error("Inside UoMServiceImpl >> deleteUOMDetails() : {}", ex);
+            throw new KPIException("Inside UoMServiceImpl >> deleteUOMDetails()", false, ex.getMessage());
         }
-
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findUoMDetails(Integer uomId, String uomName, String statusCd, Pageable requestPageable) {
+        log.debug("Inside UoMServiceImpl >> findUoMDetails() uomId: {}, uomName : {}", uomId, uomName);
+
+        KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
         // String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -131,41 +136,52 @@ public class UoMServiceImpl implements UoMService {
             // sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
-        Integer totalCount = uoMRepo.getUoMCount(uomId, uomName, statusCd);
-        List<Object[]> uomData = uoMRepo.getUoMDetails(uomId, uomName, statusCd, sortName, pageSize, pageOffset);
+        log.debug("Inside findUoMDetails() pageSize : {}, pageOffset: {}, sortName : {}", pageSize, pageOffset, sortName);
+        try {
+            Integer totalCount = uoMRepo.getUoMCount(uomId, uomName, statusCd);
+            List<Object[]> uomData = uoMRepo.getUoMDetails(uomId, uomName, statusCd, sortName, pageSize, pageOffset);
 
-        List<UoMResponse> uomResponses = uomData.stream().map(UoMResponse::new).collect(Collectors.toList());
+            List<UoMResponse> uomResponses = uomData.stream().map(UoMResponse::new).collect(Collectors.toList());
 
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl(uomResponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+            log.info("Inside findUoMDetails() UOM details fetch Successfully total ; {}", uomResponses.size());
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseMessage("UOM details fetch Successfully");
+            kpiResponse.setResponseData(new PageImpl(uomResponses, requestPageable, totalCount));
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("Inside UoMServiceImpl >> findUoMDetails() : {}", ex);
+            throw new KPIException("Inside UoMServiceImpl >> findUoMDetails()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findUoMDetails(Integer uomId) {
+        log.debug("Inside UoMServiceImpl >> findUoMDetails() uomId: {}", uomId);
         UoMResponse uoMResponse = null;
-        KPIResponse kpiResponse = null;
-        Optional<UoMEntity> optionalRegionEntity = uoMRepo.findById(uomId);
-        if (optionalRegionEntity.isPresent()) {
-            UoMEntity uoMEntity = optionalRegionEntity.get();
-            uoMResponse = UoMResponse.builder()
-                    .uomId(uoMEntity.getUomId())
-                    .uomName(uoMEntity.getUomName())
-                    .remark(uoMEntity.getRemark())
-                    .build();
-            kpiResponse = KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(uoMResponse)
-                    .responseMessage(KPIConstants.RECORD_FETCH)
-                    .build();
-        } else {
-            kpiResponse = KPIResponse.builder()
-                    .isSuccess(false)
-                    .responseMessage("Record not found")
-                    .build();
+        KPIResponse kpiResponse = new KPIResponse();
+        try {
+            Optional<UoMEntity> optionalRegionEntity = uoMRepo.findById(uomId);
+            if (optionalRegionEntity.isPresent()) {
+                UoMEntity uoMEntity = optionalRegionEntity.get();
+                uoMResponse = UoMResponse.builder()
+                        .uomId(uoMEntity.getUomId())
+                        .uomName(uoMEntity.getUomName())
+                        .remark(uoMEntity.getRemark())
+                        .build();
+
+                kpiResponse.setSuccess(true);
+                kpiResponse.setResponseMessage("UOM details fetch Successfully");
+                kpiResponse.setResponseData(uoMResponse);
+                return kpiResponse;
+            } else {
+                kpiResponse.setSuccess(false);
+                kpiResponse.setResponseMessage("UOM details not found");
+                kpiResponse.setResponseData(uoMResponse);
+            }
+        } catch (Exception ex) {
+            log.error("Inside UoMServiceImpl >> findUoMDetails() : {}", ex);
+            throw new KPIException("Inside UoMServiceImpl >> findUoMDetails()", false, ex.getMessage());
         }
         return kpiResponse;
     }
@@ -173,43 +189,28 @@ public class UoMServiceImpl implements UoMService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<UoMEntity> findAllUoMDetails() {
+        log.debug("Inside UoMServiceImpl >> findUoMDetails()");
         try {
             List<UoMEntity> uoMEntities = uoMRepo.findAll();
             if (uoMEntities.size() > 0) {
                 return uoMEntities;
             }
-        } catch(Exception ex){
-        log.error("Inside UoMServiceImpl >> updateUoM():{}", ex.getMessage());
-        throw new KPIException("UoMServiceImpl", false, "UOM is not set");
+        } catch (Exception ex) {
+            log.error("Inside UoMServiceImpl >> updateUoM():{}", ex.getMessage());
+            throw new KPIException("UoMServiceImpl", false, "UOM is not set");
         }
         log.error("Inside UoMServiceImpl >> updateUoM()");
         throw new KPIException("UoMServiceImpl", false, "UOM is not set");
     }
 
-    @Override
-    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public RoleResponse findUoMById(Integer roleId) {
-        return null;
-    }
-
-
-
     private UoMEntity convertUoMCreateRequestToEntity(UoMCreateRequest uoMCreateRequest) {
+        log.debug("Inside UoMServiceImpl >> convertUoMCreateRequestToEntity() uoMCreateRequest : {}", uoMCreateRequest);
+
         UoMEntity uoMEntity = new UoMEntity();
         uoMEntity.setUomName(uoMCreateRequest.getUomName());
         uoMEntity.setRemark(uoMCreateRequest.getRemark());
         uoMEntity.setStatusCd(uoMCreateRequest.getStatusCd());
         uoMEntity.setCreatedUserId(uoMCreateRequest.getEmployeeId());
-        return uoMEntity;
-    }
-
-    private UoMEntity convertUoMUpdateRequestToEntity(UoMUpdateRequest uoMUpdateRequest) {
-        UoMEntity uoMEntity = new UoMEntity();
-        uoMEntity.setUomId(uoMUpdateRequest.getUomId());
-        uoMEntity.setUomName(uoMUpdateRequest.getUomName());
-        uoMEntity.setRemark(uoMUpdateRequest.getRemark());
-        uoMEntity.setStatusCd(uoMUpdateRequest.getStatusCd());
-        uoMEntity.setUpdatedUserId(uoMUpdateRequest.getEmployeeId());
         return uoMEntity;
     }
 }

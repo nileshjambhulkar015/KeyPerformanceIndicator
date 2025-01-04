@@ -23,15 +23,6 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
     public int updateEmpApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp,@Param("overallRatings") String overallRatings,@Param("overallPercentage") String overallPercentage, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 
     @Modifying
-    @Query(value = "update employee_kpp_details set dept_id=:deptId, desig_id=:desigId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
-    public int updateEmployeeDeptOrDesignation(@Param("empId") Integer empId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId,String employeeId);
-
-    @Modifying
-    @Query(value = "update employee_kpp_details set role_id=:roleId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
-    public int updateEmployeeRole(@Param("empId") Integer empId,@Param("roleId") Integer roleId,String employeeId);
-
-
-    @Modifying
     @Query(value = "update employee_kpp_details set ekpp_gm_achived_weight =:ekppAchivedWeight,ekpp_gm_overall_achieve =:ekppOverallAchieve,ekpp_gm_overall_task_comp = :ekppOverallTaskComp,avg_overall_rating=:overallRatings,avg_overall_achivement_per=:overallPercentage where kpp_id = :kppId and emp_id =:empId", nativeQuery = true)
     public int updateGMApproveOrRejectHod(@Param("ekppAchivedWeight") String ekppAchivedWeight,@Param("ekppOverallAchieve") String ekppOverallAchieve, @Param("ekppOverallTaskComp") String ekppOverallTaskComp,@Param("overallRatings") String overallRatings,@Param("overallPercentage") String overallPercentage, @Param("kppId") Integer kppId,@Param("empId") Integer empId);
 
@@ -53,10 +44,6 @@ public interface EmployeeKppDetailsRepo extends JpaRepository<EmployeeKppDetails
 
     @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP_COUNT_QUERY, nativeQuery = true)
     Integer assignEmployeeKppCount(@Param("empId") Integer empId);
-
-    @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP, nativeQuery = true)
-    List<Object[]> assignEmployeeKpp(@Param("empId") Integer empId,@Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
-
 
     @Query(value = SQLQueryConstants.ASSIGN_EMPLOYEE_KPP_SEARCH, nativeQuery = true)
     List<Object[]> assignEmployeeKppSearch(@Param("empId") Integer empId, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);

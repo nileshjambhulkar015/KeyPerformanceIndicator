@@ -29,14 +29,8 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     @Query(value = SQLQueryConstants.KPP_COUNT_QUERY, nativeQuery = true)
     Integer getKeyPerfParameterCount(@Param("kppId") Integer kppId, @Param("kppObjectiveNo") String kppObjectiveNo, @Param("kppObjective") String kppObjective, @Param("statusCd") String statusCd);
 
-
-
-
-
     @Query(value = SQLQueryConstants.KPP_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getKeyPerfParameterDetailById(@Param("kppId") Integer kppId);
-
-    //ArrayList<KeyPerfParamEntity> findByRoleIdAndDeptIdAndDesigId(Integer roleId, Integer deptId, Integer desigId);
 
     @Query(value = SQLQueryConstants.EMPLOYEE_KPP_STATUS_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeKppStatusDetail(@Param("reportingEmployee") Integer reportingEmployee, @Param("gmEmpId") Integer gmEmpId, @Param("empId") Integer empId, @Param("empEId") String empEId, @Param("roleId") Integer roleId, @Param("deptId") Integer deptId, @Param("desigId") Integer desigId, @Param("statusCd") String statusCd, @Param("empKppStatus") String empKppStatus, @Param("hodKppStatus") String hodKppStatus, @Param("gmKppStatus") String gmKppStatus, @Param("sortName") String sortName, @Param("pageSize") Integer pageSize, @Param("pageOffset") Integer pageOffset);
@@ -48,7 +42,5 @@ public interface KeyPerfParameterRepo extends JpaRepository<KeyPerfParamEntity, 
     @Query(value = SQLQueryConstants.EMPLOYEE_KPP_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeKeyPerfParameterDetail(@Param("empId") Integer empId, @Param("empEId") String empEId, @Param("statusCd") String statusCd);
 
-
     Optional<KeyPerfParamEntity> findByKppObjectiveNoEqualsIgnoreCaseAndStatusCd(String kppObjectiveNo,String statusCd);
-
 }

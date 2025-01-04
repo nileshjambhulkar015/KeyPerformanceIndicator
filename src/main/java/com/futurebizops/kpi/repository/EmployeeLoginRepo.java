@@ -14,8 +14,6 @@ import java.util.Optional;
 @Repository
 public interface EmployeeLoginRepo extends JpaRepository<EmployeeLoginEntity, Integer> {
 
-    public Optional<EmployeeLoginEntity> findByRoleIdAndEmpMobileNoAndEmpPasswordAndStatusCd(Integer roleId, String empMobileNo, String empPassword, String statusCd);
-
     @Modifying
     @Query(value = "update employee_login set dept_id=:deptId, desig_id=:desigId,lst_updt_user_id=:employeeId where emp_eid =:empEId", nativeQuery = true)
     public int updateEmployeeDeptOrDesignation(@Param("empEId") String empEId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId,String employeeId);

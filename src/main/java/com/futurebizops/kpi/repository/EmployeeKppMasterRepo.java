@@ -17,14 +17,6 @@ public interface EmployeeKppMasterRepo extends JpaRepository<EmployeeKppMasterEn
 
     public Optional<EmployeeKppMasterEntity> findByEmpId(Integer empId);
 
-    @Modifying
-    @Query(value = "update employee_kpp_master set dept_id=:deptId, desig_id=:desigId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
-    public int updateEmployeeDeptOrDesignation(@Param("empId") Integer empId,@Param("deptId") Integer deptId,@Param("desigId") Integer desigId,String employeeId);
-
-    @Modifying
-    @Query(value = "update employee_kpp_master set role_id=:roleId,lst_updt_user_id=:employeeId where emp_id =:empId", nativeQuery = true)
-    public int updateEmployeeRole(@Param("empId") Integer empId,@Param("roleId") Integer roleId,String employeeId);
-
     public void deleteByEmpId(Integer empId);
 
     @Modifying
@@ -34,7 +26,6 @@ public interface EmployeeKppMasterRepo extends JpaRepository<EmployeeKppMasterEn
     @Modifying
     @Query(value = "update employee_kpp_master set emp_ekpp_status=:empKppStatus,total_hod_achived_weight =:totalAchivedWeightage,total_hod_overall_achieve =:totalOverAllAchive,total_hod_overall_task_comp = :totalOverallTaskCompleted,avg_total_overall_rating=:totalOverallRatings,avg_total_overall_achivement_per=:totalOverallPercentage,hod_approved_date=:eKppAppliedDate,hod_ekpp_status=:empKppHodStatus, hod_remark = :remark ,gm_ekpp_status='In-Progress' where emp_id =:empId", nativeQuery = true)
     public int updateEmpKppApproveOrRejectByHod(@Param("empKppStatus") String empKppStatus,@Param("totalAchivedWeightage") String totalAchivedWeightage, @Param("totalOverAllAchive") String totalOverAllAchive, @Param("totalOverallTaskCompleted") String totalOverallTaskCompleted,@Param("totalOverallRatings") String totalOverallRatings,@Param("totalOverallPercentage") String totalOverallPercentage, @Param("eKppAppliedDate") Instant eKppAppliedDate,@Param("empKppHodStatus") String empKppHodStatus, @Param("remark") String remark, @Param("empId") Integer empId);
-
 
     @Modifying
     @Query(value = "update employee_kpp_master set emp_ekpp_status=:empKppStatus,total_gm_achived_weight =:totalAchivedWeightage,total_gm_overall_achieve =:totalOverAllAchive,total_gm_overall_task_comp = :totalOverallTaskCompleted,avg_total_overall_rating=:totalOverallRatings,avg_total_overall_achivement_per=:totalOverallPercentage,gm_approved_date=:eKppAppliedDate,gm_ekpp_status=:empKppHodStatus, gm_remark=:remark where emp_id =:empId", nativeQuery = true)
@@ -52,7 +43,5 @@ public interface EmployeeKppMasterRepo extends JpaRepository<EmployeeKppMasterEn
 
     @Query(value = SQLQueryConstants.COMPLETED_EMPLOYEE_KPP_STATUS_INFO_QUERY, nativeQuery = true)
     List<Object[]> getCompletedEmployeeKPPStatus(@Param("empId") Integer empId, @Param("ekkStatusMonth") String ekkStatusMonth);
-
-
 }
 

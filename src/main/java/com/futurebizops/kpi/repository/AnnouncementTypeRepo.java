@@ -28,10 +28,4 @@ public interface AnnouncementTypeRepo extends JpaRepository<AnnouncementTypeEnti
 
     @Query(value = SQLQueryConstants.ANNOUNCEMENT_TYPE_COUNT_UERY, nativeQuery = true)
     Integer getAnnouncementTypeCount(@Param("annonTypeId") Integer annonTypeId, @Param("annonTypeName") String annonTypeName, @Param("statusCd") String statusCd);
-
-    @Query(value = SQLQueryConstants.DEPARTMENT_BY_ID_QUERY, nativeQuery = true)
-    List<Object[]> getDepartmentByIdDetail(@Param("deptId") Integer deptId);
-
-
-
 }

@@ -20,7 +20,6 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
 
     public Optional<EmployeeEntity> findByEmpEIdEqualsIgnoreCase(String empEId);
-    public EmployeeEntity findByEmpMobileNoAndStatusCd(String empMobileNo, String statusCd);
 
     @Modifying
     @Query(value = "update employee set status_cd='I' where emp_id =:empId", nativeQuery = true)
@@ -63,8 +62,6 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
     @Query(value = SQLQueryConstants.EMPLOYEE_SEARCH_BY_ID_QUERY, nativeQuery = true)
     List<Object[]> getEmployeeSearchById(@Param("empId") Integer empId);
-
-   // public List<EmployeeEntity> findByRoleIdAndDeptIdAndDesigId(Integer roleId, Integer deptId, Integer desigId);
 
     public List<EmployeeEntity> findByRoleIdOrDeptIdOrDesigId(Integer roleId,Integer deptId,Integer desigId);
 

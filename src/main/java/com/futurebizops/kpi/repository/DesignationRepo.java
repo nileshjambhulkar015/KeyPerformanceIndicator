@@ -16,17 +16,6 @@ import java.util.Optional;
 @Repository
 public interface DesignationRepo extends JpaRepository<DesignationEntity, Integer> {
 
-    public Page<DesignationEntity> findByDesigIdAndStatusCd(Integer desigId, String statusCd, Pageable pageable);
-
-    public Page<DesignationEntity> findByDeptIdAndStatusCd(Integer deptId, String statusCd, Pageable pageable);
-
-    public Page<DesignationEntity> findByDesigNameStartingWithIgnoreCaseAndStatusCd(String desigName, String statusCd, Pageable pageable);
-
-    public Page<DesignationEntity> findByStatusCd(String status, Pageable pageable);
-
-    @Query(value = "select * from designation desig where desig.status_cd='A' and desig.dept_id = :deptId", nativeQuery = true)
-    public List<DesignationEntity> findAllDesignation(Integer deptId);
-
     @Modifying
     @Query(value = "update designation set status_cd='I' where desig_id =:desigId", nativeQuery = true)
     public int deleteDesignationDetails(@Param("desigId") Integer desigId);
@@ -47,19 +36,9 @@ public interface DesignationRepo extends JpaRepository<DesignationEntity, Intege
     @Query(value = SQLQueryConstants.DEPT_IN_DESIGNATION_QUERY, nativeQuery = true)
     List<Object[]> getDeptInDesigById(@Param("deptId") Integer deptId);
 
-
-    //only for deptId and name which is inside designation table
-    @Query(value = SQLQueryConstants.DEPT_IN_DESIGNATION_QUERY_EXCEPT_GM, nativeQuery = true)
-    List<Object[]> getDeptInDesigByIdExceptGM(@Param("deptId") Integer deptId);
-
-
-
     //only for desig id and desig name from desig table
     @Query(value = SQLQueryConstants.DESIGNATION_BY_DEPT_ID_QUERY, nativeQuery = true)
     List<Object[]> getAllDesigByDeptId(@Param("deptId") Integer deptId);
-
-    //for designation upload excel
-    public Optional<DesignationEntity> findByDesigNameEqualsIgnoreCase(String desigName);
 
     public Optional<DesignationEntity> findByDesigNameEqualsIgnoreCaseAndDeptId(String desigName,Integer deptId);
 }

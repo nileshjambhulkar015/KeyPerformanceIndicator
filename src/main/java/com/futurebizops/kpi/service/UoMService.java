@@ -22,7 +22,7 @@ public interface UoMService {
     public KPIResponse findUoMDetails(Integer uomId,  String uomName, String statusCd, Pageable pageable);
 
     public KPIResponse findUoMDetails(Integer uomId);
-    public RoleResponse findUoMById(Integer roleId);
+
 
     public List<UoMEntity> findAllUoMDetails();
 
