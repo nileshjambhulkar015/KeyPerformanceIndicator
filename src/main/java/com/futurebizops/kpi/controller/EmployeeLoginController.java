@@ -23,7 +23,7 @@ public class EmployeeLoginController {
     private EmployeeLoginService employeeLoginService;
 
     @GetMapping
-    public ResponseEntity<KPIResponse> findPartDetails(@RequestParam(required = false) String userName,
+    public ResponseEntity<KPIResponse> validateLogin(@RequestParam(required = false) String userName,
                                                        @RequestParam(required = false) String userPassword) {
         log.info("User name : {}", userName);
         KPIResponse response = employeeLoginService.employeeLogin(userName, userPassword);
@@ -36,4 +36,12 @@ public class EmployeeLoginController {
         KPIResponse response = employeeLoginService.updateLoginPassword(userName, userPassword);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping(value = "validate-user-name")
+    public ResponseEntity<KPIResponse> validateUserName(@RequestParam(required = false) String userName) {
+        log.info("User name : {}", userName);
+        KPIResponse response = employeeLoginService.validateUserName(userName);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

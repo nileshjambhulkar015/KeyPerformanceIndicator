@@ -10,6 +10,7 @@ import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.LoginResponse;
 import com.futurebizops.kpi.service.EmployeeLoginService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,23 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
                     .build();
         }
         return response;
+    }
+
+    @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
+    public KPIResponse validateUserName(String userName) {
+        KPIResponse kpiResponse = new KPIResponse();
+        String empUserName = employeeLoginRepo.validateUserName(userName);
+        if(StringUtils.isNotBlank(empUserName)){
+            log.info("Login successfully");
+            kpiResponse.setResponseMessage("Valid user name");
+            kpiResponse.setSuccess(true);
+        } else {
+            log.error("Inside EmployeeLoginServiceImpl >> validateUserName()");
+            kpiResponse.setResponseMessage("Invalid user name");
+            kpiResponse.setSuccess(false);
+        }
+        return kpiResponse;
     }
 
     @Transactional

@@ -7,5 +7,7 @@ public interface EmployeeLoginService {
 
     public KPIResponse employeeLogin(String userName, String userPassword);
 
+    public KPIResponse validateUserName(String userName);
+
     public KPIResponse updateLoginPassword(String userName, String userPassword);
 }
