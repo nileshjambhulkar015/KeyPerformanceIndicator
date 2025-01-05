@@ -8,7 +8,6 @@ import com.futurebizops.kpi.repository.RegionAuditRepo;
 import com.futurebizops.kpi.repository.RegionRepo;
 import com.futurebizops.kpi.request.RegionCreateRequest;
 import com.futurebizops.kpi.request.RegionUpdateRequest;
-import com.futurebizops.kpi.response.CompanyMasterResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RegionResponse;
 import com.futurebizops.kpi.response.dropdown.RegionDDResponse;
@@ -39,6 +38,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveRegion(RegionCreateRequest regionCreateRequest) {
+        log.debug("Inside RegionServiceImpl >> saveRegion() regionCreateRequest: {}", regionCreateRequest);
         Optional<RegionEntity> optionalRegionEntity = regionRepo.findByRegionNameEqualsIgnoreCase(regionCreateRequest.getRegionName());
         if (optionalRegionEntity.isPresent()) {
             log.error("Inside RegionServiceImpl >> saveRegion()");
@@ -64,17 +64,16 @@ public class RegionServiceImpl implements RegionService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteRegionDetails(Integer regionId) {
-        KPIResponse busPassResponse = new KPIResponse();
+        log.debug("Inside RegionServiceImpl >> deleteRegionDetails() regionId: {}", regionId);
+        KPIResponse kpiResponse = new KPIResponse();
         try {
             regionRepo.deleteRegionDetails(regionId);
-            busPassResponse.setSuccess(true);
-            busPassResponse.setResponseMessage("Region details deleted Successfully");
-            return busPassResponse;
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseMessage("Region details deleted Successfully");
+            return kpiResponse;
         } catch (Exception ex) {
-            log.error("Inside RegionServiceImpl >> deleteRegionDetails() : {}",ex);
-            return KPIResponse.builder()
-                    .isSuccess(false)
-                    .build();
+            log.error("Inside RegionServiceImpl >> deleteRegionDetails() : {}", ex);
+            throw new KPIException("RegionServiceImpl  >> deleteRegionDetails()", false, ex.getMessage());
         }
 
     }
@@ -83,34 +82,36 @@ public class RegionServiceImpl implements RegionService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateRegion(RegionUpdateRequest regionUpdateRequest) {
+        log.debug("Inside RegionServiceImpl >> updateRegion() regionUpdateRequest: {}", regionUpdateRequest);
         try {
-        Optional<RegionEntity> optionalRegionEntity = regionRepo.findById(regionUpdateRequest.getRegionId());
-        if(optionalRegionEntity.isPresent()){
-            RegionEntity regionEntity = optionalRegionEntity.get();
-            regionEntity.setRegionName(regionUpdateRequest.getRegionName());
-            regionEntity.setRemark(regionUpdateRequest.getRemark());
-            regionEntity.setUpdatedUserId(regionUpdateRequest.getEmployeeId());
-            regionRepo.save(regionEntity);
-            RegionAudit regionAudit = new RegionAudit(regionEntity);
-            regionAuditRepo.save(regionAudit);
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage(KPIConstants.RECORD_UPDATE)
-                    .build();
-        }
+            Optional<RegionEntity> optionalRegionEntity = regionRepo.findById(regionUpdateRequest.getRegionId());
+            if (optionalRegionEntity.isPresent()) {
+                RegionEntity regionEntity = optionalRegionEntity.get();
+                regionEntity.setRegionName(regionUpdateRequest.getRegionName());
+                regionEntity.setRemark(regionUpdateRequest.getRemark());
+                regionEntity.setUpdatedUserId(regionUpdateRequest.getEmployeeId());
+                regionRepo.save(regionEntity);
+                RegionAudit regionAudit = new RegionAudit(regionEntity);
+                regionAuditRepo.save(regionAudit);
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage(KPIConstants.RECORD_UPDATE)
+                        .build();
+            }
         } catch (Exception ex) {
             log.error("Inside RegionServiceImpl >> updateRegion() : {}", ex);
-            throw new KPIException("RegionServiceImpl", false, ex.getMessage());
+            throw new KPIException("RegionServiceImpl >> updateRegion()", false, ex.getMessage());
         }
         return KPIResponse.builder()
                 .isSuccess(false)
-                .responseMessage("Record Not Found")
+                .responseMessage("Region details Not Found")
                 .build();
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findRegionDetails(Integer regionId, String regionName, String statusCd, Pageable requestPageable) {
+        log.debug("Inside RegionServiceImpl >> findRegionDetails() regionId: {}, regionName :{}", regionId, regionName);
         String sortName = null;
         // String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -121,43 +122,52 @@ public class RegionServiceImpl implements RegionService {
             sortName = order.get().getProperty();  //order by this field
             // sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+        log.debug("Inside findRegionDetails() pageSize: {}, pageOffset: {}, sortName: {}", pageSize, pageOffset, sortName);
+        try {
+            Integer totalCount = regionRepo.getRegionCount(regionId, regionName, statusCd);
+            List<Object[]> regionData = regionRepo.getRegionDetails(regionId, regionName, statusCd, sortName, pageSize, pageOffset);
 
-        Integer totalCount = regionRepo.getRegionCount(regionId, regionName, statusCd);
-        List<Object[]> regionData = regionRepo.getRegionDetails(regionId, regionName, statusCd, sortName, pageSize, pageOffset);
+            List<RegionResponse> regionResponses = regionData.stream().map(RegionResponse::new).collect(Collectors.toList());
 
-        List<RegionResponse> regionResponses = regionData.stream().map(RegionResponse::new).collect(Collectors.toList());
-
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(new PageImpl(regionResponses, requestPageable, totalCount))
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(new PageImpl(regionResponses, requestPageable, totalCount))
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside RegionServiceImpl >> findRegionDetails() : {}", ex);
+            throw new KPIException("RegionServiceImpl >> findRegionDetails()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findRegionDetails(Integer regionId) {
+        log.debug("Inside RegionServiceImpl >> findRegionDetails() regionId: {}", regionId);
         RegionResponse regionResponse = null;
-        KPIResponse kpiResponse = null;
-        Optional<RegionEntity> optionalRegionEntity = regionRepo.findById(regionId);
-        if (optionalRegionEntity.isPresent()) {
-            RegionEntity regionEntity = optionalRegionEntity.get();
-            regionResponse = RegionResponse.builder()
-                    .regionId(regionEntity.getRegionId())
-                    .regionName(regionEntity.getRegionName())
-                    .remark(regionEntity.getRemark())
-                    .build();
-            kpiResponse = KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(regionResponse)
-                    .responseMessage(KPIConstants.RECORD_FETCH)
-                    .build();
-        } else {
-            kpiResponse = KPIResponse.builder()
-                    .isSuccess(false)
-                    .responseMessage("Record not found")
-                    .build();
+        KPIResponse kpiResponse = new KPIResponse();
+        try {
+            Optional<RegionEntity> optionalRegionEntity = regionRepo.findById(regionId);
+            if (optionalRegionEntity.isPresent()) {
+                RegionEntity regionEntity = optionalRegionEntity.get();
+                regionResponse = RegionResponse.builder()
+                        .regionId(regionEntity.getRegionId())
+                        .regionName(regionEntity.getRegionName())
+                        .remark(regionEntity.getRemark())
+                        .build();
+
+                kpiResponse.setResponseData(regionResponse);
+                kpiResponse.setSuccess(true);
+                kpiResponse.setResponseMessage("Region details fetch successfully");
+                return kpiResponse;
+            }
+        } catch (Exception ex) {
+            log.error("Inside RegionServiceImpl >> findRegionDetails() : {}", ex);
+            throw new KPIException("RegionServiceImpl >> findRegionDetails()", false, ex.getMessage());
         }
+
+        kpiResponse.setSuccess(false);
+        kpiResponse.setResponseMessage("Region details not found");
         return kpiResponse;
     }
 
@@ -165,12 +175,18 @@ public class RegionServiceImpl implements RegionService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<RegionDDResponse> ddRegionDetails(Integer regionId) {
-        List<Object[]> regionData = regionRepo.ddRegionDetails(regionId);
-        return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
+        log.debug("Inside RegionServiceImpl >> ddRegionDetails() regionId: {}", regionId);
+        try {
+            List<Object[]> regionData = regionRepo.ddRegionDetails(regionId);
+            return regionData.stream().map(RegionDDResponse::new).collect(Collectors.toList());
+        } catch (Exception ex) {
+            log.error("Inside RegionServiceImpl >> ddRegionDetails() : {}", ex);
+            throw new KPIException("RegionServiceImpl >> ddRegionDetails()", false, ex.getMessage());
+        }
     }
 
-
     private RegionEntity convertRegionCreateRequestToEntity(RegionCreateRequest regionCreateRequest) {
+        log.debug("Inside RegionServiceImpl >> convertRegionCreateRequestToEntity() regionCreateRequest: {}", regionCreateRequest);
         RegionEntity regionEntity = new RegionEntity();
         regionEntity.setRegionName(regionCreateRequest.getRegionName());
         regionEntity.setRemark(regionCreateRequest.getRemark());
@@ -178,6 +194,4 @@ public class RegionServiceImpl implements RegionService {
         regionEntity.setCreatedUserId(regionCreateRequest.getCreatedUserId());
         return regionEntity;
     }
-
-
 }

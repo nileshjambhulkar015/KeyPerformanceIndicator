@@ -1,16 +1,12 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
 import com.futurebizops.kpi.constants.KPIConstants;
-import com.futurebizops.kpi.entity.DepartmentEntity;
-import com.futurebizops.kpi.entity.EmployeeTypeEntity;
 import com.futurebizops.kpi.entity.FinancialYearEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.FinancialYearRepo;
-import com.futurebizops.kpi.request.EmployeeTypeUpdateRequest;
 import com.futurebizops.kpi.request.FinancialYearCreateRequest;
 import com.futurebizops.kpi.request.FinancialYearUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
-import com.futurebizops.kpi.response.dropdown.DepartmentDDResponse;
 import com.futurebizops.kpi.response.dropdown.FinancialYearDDResponse;
 import com.futurebizops.kpi.service.FinancialYearService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +26,12 @@ public class FinancialYearServiceImpl implements FinancialYearService {
     @Autowired
     FinancialYearRepo financialYearRepo;
 
-   // @Autowired
-    //EmployeeTypeAuditRepo employeeTypeAuditRepo;
-
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveFinancialYear(FinancialYearCreateRequest financialYearCreateRequest) {
-        Optional<FinancialYearEntity> optionalDepartmentEntity = financialYearRepo.findByFinYearEqualsIgnoreCase(financialYearCreateRequest.getFinYearName() );
-        if(optionalDepartmentEntity.isPresent()){
+        log.debug("Inside FinancialYearServiceImpl >> saveFinancialYear() financialYearCreateRequest : {}", financialYearCreateRequest);
+        Optional<FinancialYearEntity> optionalDepartmentEntity = financialYearRepo.findByFinYearEqualsIgnoreCase(financialYearCreateRequest.getFinYearName());
+        if (optionalDepartmentEntity.isPresent()) {
             log.error("Inside FinancialYearServiceImpl >> saveEmployeeType() Financial year already exist");
             throw new KPIException("FinancialYearServiceImpl Class", false, "Financial year name already exist");
         }
@@ -45,14 +39,12 @@ public class FinancialYearServiceImpl implements FinancialYearService {
         FinancialYearEntity financialYearEntity = convertFinancialYearCreateRequestToEntity(financialYearCreateRequest);
         try {
             financialYearRepo.save(financialYearEntity);
-            //EmployeeTypeAudit employeeTypeAudit = new EmployeeTypeAudit(employeeTypeEntity);
-            //employeeTypeAuditRepo.save(employeeTypeAudit);
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside FinancialYearServiceImpl >> saveFinancialYear() : {}",ex);
+            log.error("Inside FinancialYearServiceImpl >> saveFinancialYear() : {}", ex);
             throw new KPIException("FinancialYearServiceImpl", false, ex.getMessage());
         }
 
@@ -62,6 +54,7 @@ public class FinancialYearServiceImpl implements FinancialYearService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteFinancialYear(Integer finYearId) {
+        log.debug("Inside FinancialYearServiceImpl >> deleteFinancialYear() finYearId : {}", finYearId);
         KPIResponse busPassResponse = new KPIResponse();
         try {
             financialYearRepo.deleteFinancialYear(finYearId);
@@ -69,20 +62,20 @@ public class FinancialYearServiceImpl implements FinancialYearService {
             busPassResponse.setResponseMessage("Financial Year  details deleted Successfully");
             return busPassResponse;
         } catch (Exception ex) {
-            log.error("Inside FinancialYearServiceImpl >> deleteFinancialYear() : {}",ex);
+            log.error("Inside FinancialYearServiceImpl >> deleteFinancialYear() : {}", ex);
             return KPIResponse.builder()
                     .isSuccess(false)
                     .build();
         }
-
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateFinancialYear(FinancialYearUpdateRequest financialYearUpdateRequest) {
+        log.debug("Inside FinancialYearServiceImpl >> updateFinancialYear() financialYearUpdateRequest : {}", financialYearUpdateRequest);
         Optional<FinancialYearEntity> financialYearEntity = financialYearRepo.findById(financialYearUpdateRequest.getFinYearId());
         try {
-            if(financialYearEntity.isPresent()){
+            if (financialYearEntity.isPresent()) {
                 FinancialYearEntity financialYear = financialYearEntity.get();
                 financialYear.setFinYear(financialYearUpdateRequest.getFinYear());
                 financialYear.setRemark(financialYearUpdateRequest.getRemark());
@@ -92,7 +85,6 @@ public class FinancialYearServiceImpl implements FinancialYearService {
                         .responseMessage(KPIConstants.RECORD_UPDATE)
                         .build();
             }
-
         } catch (Exception ex) {
             log.error("Inside FinancialYearServiceImpl >> updateFinancialYear() : {}", ex);
             throw new KPIException("FinancialYearServiceImpl >> updateFinancialYear", false, ex.getMessage());
@@ -106,42 +98,56 @@ public class FinancialYearServiceImpl implements FinancialYearService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<FinancialYearDDResponse> ddAllFinancialYear() {
-        List<FinancialYearEntity> financialYearEntities = financialYearRepo.ddAllFinancialYear();
-        FinancialYearDDResponse financialYearDDResponse = null;
-        List<FinancialYearDDResponse> financialYearDDResponses =new ArrayList<>();
+        log.debug("Inside FinancialYearServiceImpl >> ddAllFinancialYear()");
+        try {
+            List<FinancialYearEntity> financialYearEntities = financialYearRepo.ddAllFinancialYear();
+            FinancialYearDDResponse financialYearDDResponse = null;
+            List<FinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
 
-        for(FinancialYearEntity financialYearEntity : financialYearEntities){
-            financialYearDDResponse = new FinancialYearDDResponse();
-            financialYearDDResponse.setFinYearId(financialYearEntity.getFinYearId());
-            financialYearDDResponse.setFinYear(financialYearEntity.getFinYear());
-            financialYearDDResponses.add(financialYearDDResponse);
+            for (FinancialYearEntity financialYearEntity : financialYearEntities) {
+                financialYearDDResponse = new FinancialYearDDResponse();
+                financialYearDDResponse.setFinYearId(financialYearEntity.getFinYearId());
+                financialYearDDResponse.setFinYear(financialYearEntity.getFinYear());
+                financialYearDDResponses.add(financialYearDDResponse);
+            }
+            return financialYearDDResponses;
+        } catch (Exception ex) {
+            log.error("Inside RoleServiceImpl >> ddAllFinancialYear() : {}", ex);
+            throw new KPIException("RoleServiceImpl >> ddAllFinancialYear()", false, ex.getMessage());
         }
-        return financialYearDDResponses;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findFinancialYear(Integer finYearId, String empTypeName, String statusCd) {
+        log.debug("Inside FinancialYearServiceImpl >> findFinancialYear() finYearId: {}, empTypeName : {}", finYearId, empTypeName);
+        try {
+            List<FinancialYearEntity> financialYearEntities = financialYearRepo.findAll();
 
-        List<FinancialYearEntity> financialYearEntities = financialYearRepo.findAll();
-
-        return KPIResponse.builder()
-                .isSuccess(true)
-                .responseData(financialYearEntities)
-                .responseMessage(KPIConstants.RECORD_FETCH)
-                .build();
+            return KPIResponse.builder()
+                    .isSuccess(true)
+                    .responseData(financialYearEntities)
+                    .responseMessage(KPIConstants.RECORD_FETCH)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside RoleServiceImpl >> findFinancialYear() : {}", ex);
+            throw new KPIException("RoleServiceImpl >> findFinancialYear()", false, ex.getMessage());
+        }
     }
 
 
     private FinancialYearEntity convertFinancialYearCreateRequestToEntity(FinancialYearCreateRequest financialYearCreateRequest) {
-        FinancialYearEntity financialYearEntity = new FinancialYearEntity();
-
-        financialYearEntity.setFinYear(financialYearCreateRequest.getFinYearName());
-        financialYearEntity.setRemark(financialYearCreateRequest.getRemark());
-        financialYearEntity.setStatusCd(financialYearCreateRequest.getStatusCd());
-        financialYearEntity.setCreatedUserId(financialYearCreateRequest.getEmployeeId());
-        return  financialYearEntity;
+        log.debug("Inside FinancialYearServiceImpl >> convertFinancialYearCreateRequestToEntity() financialYearCreateRequest: {}", financialYearCreateRequest);
+        try {
+            FinancialYearEntity financialYearEntity = new FinancialYearEntity();
+            financialYearEntity.setFinYear(financialYearCreateRequest.getFinYearName());
+            financialYearEntity.setRemark(financialYearCreateRequest.getRemark());
+            financialYearEntity.setStatusCd(financialYearCreateRequest.getStatusCd());
+            financialYearEntity.setCreatedUserId(financialYearCreateRequest.getEmployeeId());
+            return financialYearEntity;
+        } catch (Exception ex) {
+            log.error("Inside RoleServiceImpl >> convertFinancialYearCreateRequestToEntity() : {}", ex);
+            throw new KPIException("RoleServiceImpl >> convertFinancialYearCreateRequestToEntity()", false, ex.getMessage());
+        }
     }
-
-
 }

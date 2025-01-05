@@ -22,6 +22,7 @@ public class ReportEvidenceServiceImpl implements ReportEvidenceService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveReportEvidence(ReportEvidenceCreateRequest reportEvidenceCreateRequest) {
+        log.debug("Inside ReportEvidenceServiceImpl >> saveReportEvidence() reportEvidenceCreateRequest: {}", reportEvidenceCreateRequest);
 
         KPIResponse kpiResponse = new KPIResponse();
         try {
@@ -38,14 +39,8 @@ public class ReportEvidenceServiceImpl implements ReportEvidenceService {
             kpiResponse.setResponseMessage(KPIConstants.RECORD_SUCCESS);
             return kpiResponse;
         } catch (Exception ex) {
-            log.error("Inside ReportEvidenceServiceImpl >> saveReportEvidence()");
-            throw new KPIException("ReportEvidenceServiceImpl", false, ex.getMessage());
+            log.error("Inside ReportEvidenceServiceImpl >> saveReportEvidence() : {}", ex);
+            throw new KPIException("ReportEvidenceServiceImpl >> saveReportEvidence()", false, ex.getMessage());
         }
-    }
-
-    @Override
-    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public byte[] findReportEvidenceByEmpIdAndMonth(Integer empId, String evMonth) {
-        return null;
     }
 }

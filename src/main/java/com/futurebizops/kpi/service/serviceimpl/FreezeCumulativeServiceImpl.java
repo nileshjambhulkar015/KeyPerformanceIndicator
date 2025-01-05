@@ -40,16 +40,13 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
     @Autowired
     OverallEmployeeKppFeedbackDetailsRepo freezeReportEmployeeKppDetailsRepo;
 
-
     @Transactional
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveFreezeCumulativeService(CumulativeUpdateRequest freezeCumulativeCreateRequest) {
-
+        log.debug("Inside FreezeCumulativeServiceImpl >> saveFreezeCumulativeService() freezeCumulativeCreateRequest : {}", freezeCumulativeCreateRequest);
         List<OverallEmployeeKppFeedbackMasterEntity> freezeReportEmployeeKppMasterEntities = new ArrayList<>();
-
         List<OverallEmployeeKppFeedbackDetailsEntity> freezeReportEmployeeKppDetailsEntities = new ArrayList<>();
-
         try {
             //for report employee kpp master
             List<ReportEmployeeKppMasterEntity> reportEmployeeKppMasterEntity = reportEmployeeKppMasterRepo.findByEmpIdAndStatusCd(freezeCumulativeCreateRequest.getEmpId(), "A");
@@ -91,20 +88,13 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
                             freezeReportEmployeeKppMasterEntity.setAvgTotalOverallRating(employeeKppMasterEntity.getAvgTotalOverallRating());
                             freezeReportEmployeeKppMasterEntity.setAvgTotalOverallPer(employeeKppMasterEntity.getAvgTotalOverallPer());
                             freezeReportEmployeeKppMasterEntity.setStatusCd(employeeKppMasterEntity.getStatusCd());
-
                             freezeReportEmployeeKppMasterEntities.add(freezeReportEmployeeKppMasterEntity);
-
                         }
-
                 );
-                // freezeReportEmployeeKppMasterRepo.saveAll(freezeReportEmployeeKppMasterEntities);
                 freezeReportEmployeeKppMasterEntities.stream().forEach(data->{
                     freezeReportEmployeeKppMasterRepo.save(data);
                 });
-
             }
-
-
         } catch (Exception ex) {
             log.error("Inside FreezeCumulativeServiceImpl >> saveFreezeCumulativeService() : {}", ex);
             throw new KPIException("FreezeCumulativeServiceImpl >> saveFreezeCumulativeService()", false, ex.getMessage());
@@ -116,47 +106,37 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
             if (reportEmployeeKppDetailsEntities.size() > 0 && !CollectionUtils.isEmpty(reportEmployeeKppDetailsEntities)) {
                 reportEmployeeKppDetailsEntities.forEach(employeeKppDetails -> {
                     OverallEmployeeKppFeedbackDetailsEntity freezeReportEmployeeKppDetailsEntity = new OverallEmployeeKppFeedbackDetailsEntity();
-
                     freezeReportEmployeeKppDetailsEntity.setEkppMonth(employeeKppDetails.getEkppMonth());
-
                     freezeReportEmployeeKppDetailsEntity.setKppId(employeeKppDetails.getKppId());
                     freezeReportEmployeeKppDetailsEntity.setEmpId(employeeKppDetails.getEmpId());
                     freezeReportEmployeeKppDetailsEntity.setEmpEId(employeeKppDetails.getEmpEId());
                     freezeReportEmployeeKppDetailsEntity.setRoleId(employeeKppDetails.getRoleId());
                     freezeReportEmployeeKppDetailsEntity.setDeptId(employeeKppDetails.getDeptId());
                     freezeReportEmployeeKppDetailsEntity.setDesigId(employeeKppDetails.getDesigId());
-
                     freezeReportEmployeeKppDetailsEntity.setKppOverallTarget(employeeKppDetails.getKppOverallTarget());
                     freezeReportEmployeeKppDetailsEntity.setKppOverallWeightage(employeeKppDetails.getKppOverallWeightage());
                     freezeReportEmployeeKppDetailsEntity.setEmpAchivedWeight(employeeKppDetails.getEmpAchivedWeight());
                     freezeReportEmployeeKppDetailsEntity.setEmpOverallAchieve(employeeKppDetails.getEmpOverallAchieve());
                     freezeReportEmployeeKppDetailsEntity.setHodEmpId(employeeKppDetails.getHodEmpId());
-
                     freezeReportEmployeeKppDetailsEntity.setHodAchivedWeight(employeeKppDetails.getHodAchivedWeight());
                     freezeReportEmployeeKppDetailsEntity.setHodOverallAchieve(employeeKppDetails.getHodOverallAchieve());
                     freezeReportEmployeeKppDetailsEntity.setHodOverallTaskComp(employeeKppDetails.getHodOverallTaskComp());
                     freezeReportEmployeeKppDetailsEntity.setGmEmpId(employeeKppDetails.getGmEmpId());
                     freezeReportEmployeeKppDetailsEntity.setGmAchivedWeight(employeeKppDetails.getGmAchivedWeight());
                     freezeReportEmployeeKppDetailsEntity.setGmOverallAchieve(employeeKppDetails.getGmOverallAchieve());
-
                     freezeReportEmployeeKppDetailsEntity.setGmOverallTaskComp(employeeKppDetails.getGmOverallTaskComp());
                     freezeReportEmployeeKppDetailsEntity.setAvgOverallRating(employeeKppDetails.getAvgOverallRating());
                     freezeReportEmployeeKppDetailsEntity.setAvgOverallPer(employeeKppDetails.getAvgOverallPer());
                     freezeReportEmployeeKppDetailsEntity.setStatusCd(employeeKppDetails.getStatusCd());
-
                     freezeReportEmployeeKppDetailsEntities.add(freezeReportEmployeeKppDetailsEntity);
                 });
-               // freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
                 freezeReportEmployeeKppDetailsEntities.stream().forEach(data->{
                     freezeReportEmployeeKppDetailsRepo.save(data);
                 });
-
-
                 return KPIResponse.builder()
                         .isSuccess(true)
                         .responseMessage(KPIConstants.RECORD_SUCCESS)
                         .build();
-
             }
         } catch (Exception ex) {
             log.error("Inside FreezeCumulativeServiceImpl >> saveFreezeCumulativeService() : {}", ex);
@@ -167,8 +147,5 @@ public class FreezeCumulativeServiceImpl implements FreezeCumulativeService {
                 .isSuccess(false)
                 .responseMessage("record not tranfered")
                 .build();
-
     }
-
-
 }

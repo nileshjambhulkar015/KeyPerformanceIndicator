@@ -62,7 +62,8 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId,Integer roleId, String finYear, Integer reportingEmpId,Integer gmEmpId, String empKppStatus,String hodKppStatus,String gmKppStatus,Pageable pageable) {
+    public KPIResponse getAllEmployeeKppFeedbackDetails(Integer empId, Integer roleId, String finYear, Integer reportingEmpId, Integer gmEmpId, String empKppStatus, String hodKppStatus, String gmKppStatus, Pageable pageable) {
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> getAllEmployeeKppFeedbackDetails() empId: {}, roleId : {}, finYear : {}, reportingEmpId : {}, gmEmpId: {}, empKppStatus:{}, hodKppStatus:{}, gmKppStatus:{}", empId, roleId, finYear, reportingEmpId, gmEmpId, empKppStatus, hodKppStatus, gmKppStatus);
         KPIResponse kpiResponse = new KPIResponse();
         //for all records
         if ("All".equalsIgnoreCase(empKppStatus)) {
@@ -78,106 +79,140 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
             sortName = order.get().getProperty();  //order by this field
             //  sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+        log.debug("Inside getAllEmployeeKppFeedbackDetails() pageSize: {}, pageOffset: {}, sortName: {}", pageSize, pageOffset, sortName);
+        try {
+            Integer totalCount = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPPCount(empId, roleId, finYear, reportingEmpId, gmEmpId, empKppStatus, hodKppStatus, gmKppStatus);
+            List<Object[]> employeeDetail = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPP(empId, roleId, finYear, reportingEmpId, gmEmpId, empKppStatus, hodKppStatus, gmKppStatus, sortName, pageSize, pageOffset);
+            if (employeeDetail.size() > 0) {
+                List<OverallEmpDetailsKppFeedbackResponse> employeeResponses = employeeDetail.stream().map(OverallEmpDetailsKppFeedbackResponse::new).collect(Collectors.toList());
+                kpiResponse.setSuccess(true);
+                kpiResponse.setResponseData(new PageImpl<>(employeeResponses, pageable, totalCount));
+                kpiResponse.setResponseMessage(KPIConstants.RECORD_FETCH);
 
-        Integer totalCount = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPPCount(empId,roleId, finYear,reportingEmpId,gmEmpId,empKppStatus,hodKppStatus,gmKppStatus);
-        List<Object[]> employeeDetail = freezeReportEmployeeKppMasterRepo.getEmployeeDetailForKPP(empId,roleId, finYear, reportingEmpId,gmEmpId,empKppStatus,hodKppStatus,gmKppStatus, sortName, pageSize, pageOffset);
-        if (employeeDetail.size() > 0) {
-            List<OverallEmpDetailsKppFeedbackResponse> employeeResponses = employeeDetail.stream().map(OverallEmpDetailsKppFeedbackResponse::new).collect(Collectors.toList());
-            kpiResponse.setSuccess(true);
-            kpiResponse.setResponseData(new PageImpl<>(employeeResponses, pageable, totalCount));
-            kpiResponse.setResponseMessage(KPIConstants.RECORD_FETCH);
-
-        } else {
-            kpiResponse.setSuccess(false);
-            kpiResponse.setResponseMessage(KPIConstants.RECORD_NOT_FOUND);
+            } else {
+                kpiResponse.setSuccess(false);
+                kpiResponse.setResponseMessage(KPIConstants.RECORD_NOT_FOUND);
+            }
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("Inside OverallEmployeeKppFeedbackServiceImpl >> getAllEmployeeKppFeedbackDetails() : {}", ex);
+            throw new KPIException("OverallEmployeeKppFeedbackServiceImpl >> getAllEmployeeKppFeedbackDetails()", false, ex.getMessage());
         }
-        return kpiResponse;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<KppFinancialYearDDResponse> ddAllFinancialYear() {
-        List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddAllFinancialYear();
-        List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
-        if (financialYearData.size() > 0) {
-            financialYearDDResponses = financialYearData.stream().map(KppFinancialYearDDResponse::new).collect(Collectors.toList());
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> ddAllFinancialYear()");
+        try {
+            List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddAllFinancialYear();
+            List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
+            if (financialYearData.size() > 0) {
+                financialYearDDResponses = financialYearData.stream().map(KppFinancialYearDDResponse::new).collect(Collectors.toList());
+            }
+            return financialYearDDResponses;
+        } catch (Exception ex) {
+            log.error("Inside OverallEmployeeKppFeedbackServiceImpl >> ddAllFinancialYear() : {}", ex);
+            throw new KPIException("OverallEmployeeKppFeedbackServiceImpl >> ddAllFinancialYear()", false, ex.getMessage());
         }
-        return financialYearDDResponses;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<KppFinancialYearDDResponse> ddCompletedAllFinancialYear() {
-        List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddCompletedAllFinancialYear();
-        List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
-        if (financialYearData.size() > 0) {
-            financialYearDDResponses = financialYearData.stream().map(KppFinancialYearDDResponse::new).collect(Collectors.toList());
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> ddCompletedAllFinancialYear()");
+        try {
+            List<Object[]> financialYearData = freezeReportEmployeeKppMasterRepo.ddCompletedAllFinancialYear();
+            List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
+            if (financialYearData.size() > 0) {
+                financialYearDDResponses = financialYearData.stream().map(KppFinancialYearDDResponse::new).collect(Collectors.toList());
+            }
+            return financialYearDDResponses;
+        } catch (Exception ex) {
+            log.error("Inside OverallEmployeeKppFeedbackServiceImpl >> ddCompletedAllFinancialYear() : {}", ex);
+            throw new KPIException("OverallEmployeeKppFeedbackServiceImpl >> ddCompletedAllFinancialYear()", false, ex.getMessage());
         }
-        return financialYearDDResponses;
     }
 
     @Transactional
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateGMKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> updateGMKPPFeedbackForEmployee() freezeEmpKPPMasterRequest : {}", freezeEmpKPPMasterRequest);
+        try {
+            List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+            if (freezeReportAvailable.size() > 0) {
+                for (FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
 
-        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
-        if (freezeReportAvailable.size() > 0) {
-            System.out.println("Record is alreaddy present");
-            for (FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
-                System.out.println(freezeEmpKPPDetailsRequest);
-
-                freezeReportEmployeeKppDetailsRepo.updateGMKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getGmKppFeedback());
+                    log.debug("Inside updateGMKPPFeedbackForEmployee() freezeEmpKPPDetailsRequest :{} ", freezeEmpKPPDetailsRequest);
+                    freezeReportEmployeeKppDetailsRepo.updateGMKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getGmKppFeedback());
+                }
+                freezeReportEmployeeKppMasterRepo.updateGMKeyStrengthOfEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPMasterRequest.getEmpKeyStrength(), freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(), freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(), freezeEmpKPPMasterRequest.getGmRemark(), freezeEmpKPPMasterRequest.getGmKppStatus());
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage("Updated KPP feedback successfully")
+                        .build();
             }
-            freezeReportEmployeeKppMasterRepo.updateGMKeyStrengthOfEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(),freezeEmpKPPMasterRequest.getGmRemark(), freezeEmpKPPMasterRequest.getGmKppStatus());
+            log.info("Inside updateGMKPPFeedbackForEmployee() record is not present");
             return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage("Updated KPP feedback successfully")
+                    .isSuccess(false)
+                    .responseMessage("Record Not found")
                     .build();
+        } catch (Exception ex) {
+            log.error("Inside OverallEmployeeKppFeedbackServiceImpl >> updateGMKPPFeedbackForEmployee() : {}", ex);
+            throw new KPIException("OverallEmployeeKppFeedbackServiceImpl >> updateGMKPPFeedbackForEmployee()", false, ex.getMessage());
         }
-        return KPIResponse.builder()
-                .isSuccess(false)
-                .responseMessage("Record Not found")
-                .build();
     }
 
     @Transactional
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse finishByGMKppFeedback(FinishKppFeedbackRequest finishKppFeedbackRequest) {
-
-        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(finishKppFeedbackRequest.getEmpId(), finishKppFeedbackRequest.getFinYear());
-        if (freezeReportAvailable.size() > 0) {
-            freezeReportEmployeeKppMasterRepo.finishByGMKppFeedback(finishKppFeedbackRequest.getEmpId(),finishKppFeedbackRequest.getFinYear(),finishKppFeedbackRequest.getEmpKppStatus(),finishKppFeedbackRequest.getHodKppStatus(),finishKppFeedbackRequest.getGmKppStatus(), finishKppFeedbackRequest.getEmployeeId());
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> finishByGMKppFeedback() finishKppFeedbackRequest : {}", finishKppFeedbackRequest);
+        try {
+            List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(finishKppFeedbackRequest.getEmpId(), finishKppFeedbackRequest.getFinYear());
+            if (freezeReportAvailable.size() > 0) {
+                freezeReportEmployeeKppMasterRepo.finishByGMKppFeedback(finishKppFeedbackRequest.getEmpId(), finishKppFeedbackRequest.getFinYear(), finishKppFeedbackRequest.getEmpKppStatus(), finishKppFeedbackRequest.getHodKppStatus(), finishKppFeedbackRequest.getGmKppStatus(), finishKppFeedbackRequest.getEmployeeId());
+                log.info("Inside finishByGMKppFeedback() finish KPP feedback successfully for employee id : {}", finishKppFeedbackRequest.getEmpId());
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage("Finish KPP feedback successfully")
+                        .build();
+            }
             return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage("Finish KPP feedback successfully")
+                    .isSuccess(false)
+                    .responseMessage("Record Not found")
                     .build();
+        } catch (Exception ex) {
+            log.error("Inside OverallEmployeeKppFeedbackServiceImpl >> finishByGMKppFeedback() : {}", ex);
+            throw new KPIException("OverallEmployeeKppFeedbackServiceImpl >> finishByGMKppFeedback()", false, ex.getMessage());
         }
-        return KPIResponse.builder()
-                .isSuccess(false)
-                .responseMessage("Record Not found")
-                .build();
     }
 
     @Transactional
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateHODKPPFeedbackForEmployee(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> updateHODKPPFeedbackForEmployee() freezeEmpKPPMasterRequest : {}", freezeEmpKPPMasterRequest);
+        try {
+            List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
+            if (freezeReportAvailable.size() > 0) {
+                System.out.println("Record is alreaddy present");
+                for (FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
+                    System.out.println(freezeEmpKPPDetailsRequest);
 
-        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
-        if (freezeReportAvailable.size() > 0) {
-            System.out.println("Record is alreaddy present");
-            for (FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
-                System.out.println(freezeEmpKPPDetailsRequest);
-
-                freezeReportEmployeeKppDetailsRepo.updateHODKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getHodKppFeedback());
+                    freezeReportEmployeeKppDetailsRepo.updateHODKPPFeedbackForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getHodKppFeedback());
+                }
+                freezeReportEmployeeKppMasterRepo.updateHODKeyStrengthForEmployee(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPMasterRequest.getEmpKeyStrength(), freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(), freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(), freezeEmpKPPMasterRequest.getHodRemark(), freezeEmpKPPMasterRequest.getHodKppStatus());
+                log.info("Inside updateHODKPPFeedbackForEmployee() updated KPP feedback successfully for emp id : {}", freezeEmpKPPMasterRequest.getEmpId());
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage("Updated KPP feedback successfully")
+                        .build();
             }
-            freezeReportEmployeeKppMasterRepo.updateHODKeyStrengthForEmployee(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPMasterRequest.getEmpKeyStrength(),freezeEmpKPPMasterRequest.getEmpAreaOfImprovement(),freezeEmpKPPMasterRequest.getEmpTrainginDevelopmentNeeds(),freezeEmpKPPMasterRequest.getHodRemark(),freezeEmpKPPMasterRequest.getHodKppStatus());
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage("Updated KPP feedback successfully")
-                    .build();
+        } catch (Exception ex) {
+            log.error("Inside OverallEmployeeKppFeedbackServiceImpl >> updateHODKPPFeedbackForEmployee() : {}", ex);
+            throw new KPIException("OverallEmployeeKppFeedbackServiceImpl >> updateHODKPPFeedbackForEmployee()", false, ex.getMessage());
         }
         return KPIResponse.builder()
                 .isSuccess(false)
@@ -189,30 +224,28 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveEmployeeKPPFeedbackDetails(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest) {
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> saveEmployeeKPPFeedbackDetails() freezeEmpKPPMasterRequest : {}", freezeEmpKPPMasterRequest);
 
         List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPMasterRequest.getFinYear());
-        if(freezeReportAvailable.size()>0){
-            System.out.println("Record is alreaddy present");
-            for(FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()){
-                System.out.println(freezeEmpKPPDetailsRequest);
-                log.info("Emp Id : {},Kpp Id : {},fin Year : {}, Feedback : {}",freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPDetailsRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPDetailsRequest.getEmpKppFeedback());
-                freezeReportEmployeeKppDetailsRepo.updateHODFeedbackKppDetails(freezeEmpKPPMasterRequest.getEmpId(),freezeEmpKPPDetailsRequest.getKppId(),freezeEmpKPPMasterRequest.getFinYear(),freezeEmpKPPDetailsRequest.getEmpKppFeedback());
-
-
-
+        if (freezeReportAvailable.size() > 0) {
+            try {
+                for (FreezeEmpKPPDetailsRequest freezeEmpKPPDetailsRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
+                    log.info("Inside saveEmployeeKPPFeedbackDetails() Emp Id : {},Kpp Id : {},fin Year : {}, Feedback : {}", freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getEmpKppFeedback());
+                    freezeReportEmployeeKppDetailsRepo.updateHODFeedbackKppDetails(freezeEmpKPPMasterRequest.getEmpId(), freezeEmpKPPDetailsRequest.getKppId(), freezeEmpKPPMasterRequest.getFinYear(), freezeEmpKPPDetailsRequest.getEmpKppFeedback());
+                }
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage("Updated KPP Feedback successfully")
+                        .build();
+            } catch (Exception ex) {
+                log.error("Inside if statement  OverallEmployeeKppFeedbackServiceImpl >> saveEmployeeKPPFeedbackDetails() : {}", ex);
+                throw new KPIException("OverallEmployeeKppFeedbackServiceImpl >> saveEmployeeKPPFeedbackDetails()", false, ex.getMessage());
             }
-
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage("Updated KPP Feedback successfully")
-                    .build();
-        }else {
-
+        } else {
             Instant ekppMonth = DateTimeUtils.convertStringToInstant(freezeEmpKPPMasterRequest.getEkppMonth());
             try {
                 List<OverallEmployeeKppFeedbackDetailsEntity> freezeReportEmployeeKppDetailsEntities = freezeReportEmployeeKppDetailsToEntities(freezeEmpKPPMasterRequest, ekppMonth);
-               // freezeReportEmployeeKppDetailsRepo.saveAll(freezeReportEmployeeKppDetailsEntities);
-                freezeReportEmployeeKppDetailsEntities.stream().forEach(data->{
+                freezeReportEmployeeKppDetailsEntities.stream().forEach(data -> {
                     freezeReportEmployeeKppDetailsRepo.save(data);
                 });
 
@@ -235,381 +268,400 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
     }
 
     private OverallEmployeeKppFeedbackMasterEntity freezeReportEmployeeKppMasterEntities(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest, Instant ekppMonth) {
-        OverallEmployeeKppFeedbackMasterEntity reportEmployeeKppMasterEntity = new OverallEmployeeKppFeedbackMasterEntity();
-        reportEmployeeKppMasterEntity.setFinYear(freezeEmpKPPMasterRequest.getFinYear());
-        reportEmployeeKppMasterEntity.setEkppMonth(ekppMonth);
-        reportEmployeeKppMasterEntity.setEmpId(freezeEmpKPPMasterRequest.getEmpId());
-        reportEmployeeKppMasterEntity.setEmpEId(freezeEmpKPPMasterRequest.getEmpEId());
-        reportEmployeeKppMasterEntity.setRoleId(freezeEmpKPPMasterRequest.getRoleId());
-        reportEmployeeKppMasterEntity.setDeptId(freezeEmpKPPMasterRequest.getDeptId());
-        reportEmployeeKppMasterEntity.setDesigId(freezeEmpKPPMasterRequest.getDesigId());
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> freezeReportEmployeeKppMasterEntities() freezeEmpKPPMasterRequest : {}, ekppMonth : {}", freezeEmpKPPMasterRequest, ekppMonth);
+        try {
+            OverallEmployeeKppFeedbackMasterEntity reportEmployeeKppMasterEntity = new OverallEmployeeKppFeedbackMasterEntity();
+            reportEmployeeKppMasterEntity.setFinYear(freezeEmpKPPMasterRequest.getFinYear());
+            reportEmployeeKppMasterEntity.setEkppMonth(ekppMonth);
+            reportEmployeeKppMasterEntity.setEmpId(freezeEmpKPPMasterRequest.getEmpId());
+            reportEmployeeKppMasterEntity.setEmpEId(freezeEmpKPPMasterRequest.getEmpEId());
+            reportEmployeeKppMasterEntity.setRoleId(freezeEmpKPPMasterRequest.getRoleId());
+            reportEmployeeKppMasterEntity.setDeptId(freezeEmpKPPMasterRequest.getDeptId());
+            reportEmployeeKppMasterEntity.setDesigId(freezeEmpKPPMasterRequest.getDesigId());
 
-        reportEmployeeKppMasterEntity.setTotalEmpAchivedWeight(freezeEmpKPPMasterRequest.getTotalEmpAchivedWeight());
-        reportEmployeeKppMasterEntity.setTotalEmpOverallAchieve(freezeEmpKPPMasterRequest.getTotalEmpOverallAchieve());
-        reportEmployeeKppMasterEntity.setTotalEmpOverallTaskComp(freezeEmpKPPMasterRequest.getTotalEmpOverallTaskComp());
-        reportEmployeeKppMasterEntity.setEmpKppAppliedDate(ekppMonth);
-        reportEmployeeKppMasterEntity.setEmpKppStatus(freezeEmpKPPMasterRequest.getEmpKppStatus());
-        reportEmployeeKppMasterEntity.setEmpRemark(freezeEmpKPPMasterRequest.getEmpRemark());
-        reportEmployeeKppMasterEntity.setEmpEvidence(freezeEmpKPPMasterRequest.getEmpEvidence());
+            reportEmployeeKppMasterEntity.setTotalEmpAchivedWeight(freezeEmpKPPMasterRequest.getTotalEmpAchivedWeight());
+            reportEmployeeKppMasterEntity.setTotalEmpOverallAchieve(freezeEmpKPPMasterRequest.getTotalEmpOverallAchieve());
+            reportEmployeeKppMasterEntity.setTotalEmpOverallTaskComp(freezeEmpKPPMasterRequest.getTotalEmpOverallTaskComp());
+            reportEmployeeKppMasterEntity.setEmpKppAppliedDate(ekppMonth);
+            reportEmployeeKppMasterEntity.setEmpKppStatus(freezeEmpKPPMasterRequest.getEmpKppStatus());
+            reportEmployeeKppMasterEntity.setEmpRemark(freezeEmpKPPMasterRequest.getEmpRemark());
+            reportEmployeeKppMasterEntity.setEmpEvidence(freezeEmpKPPMasterRequest.getEmpEvidence());
 
-        reportEmployeeKppMasterEntity.setHodEmpId(freezeEmpKPPMasterRequest.getHodEmpId());
-        reportEmployeeKppMasterEntity.setTotalHodAchivedWeight(freezeEmpKPPMasterRequest.getTotalHodAchivedWeight());
-        reportEmployeeKppMasterEntity.setTotalHodOverallAchieve(freezeEmpKPPMasterRequest.getTotalHodOverallAchieve());
-        reportEmployeeKppMasterEntity.setTotalHodOverallTaskComp(freezeEmpKPPMasterRequest.getTotalHodOverallTaskComp());
-        reportEmployeeKppMasterEntity.setHodKppAppliedDate(freezeEmpKPPMasterRequest.getHodKppAppliedDate());
-        reportEmployeeKppMasterEntity.setHodKppStatus("Pending");
-        reportEmployeeKppMasterEntity.setHodRemark(freezeEmpKPPMasterRequest.getHodRemark());
+            reportEmployeeKppMasterEntity.setHodEmpId(freezeEmpKPPMasterRequest.getHodEmpId());
+            reportEmployeeKppMasterEntity.setTotalHodAchivedWeight(freezeEmpKPPMasterRequest.getTotalHodAchivedWeight());
+            reportEmployeeKppMasterEntity.setTotalHodOverallAchieve(freezeEmpKPPMasterRequest.getTotalHodOverallAchieve());
+            reportEmployeeKppMasterEntity.setTotalHodOverallTaskComp(freezeEmpKPPMasterRequest.getTotalHodOverallTaskComp());
+            reportEmployeeKppMasterEntity.setHodKppAppliedDate(freezeEmpKPPMasterRequest.getHodKppAppliedDate());
+            reportEmployeeKppMasterEntity.setHodKppStatus("Pending");
+            reportEmployeeKppMasterEntity.setHodRemark(freezeEmpKPPMasterRequest.getHodRemark());
 
-        reportEmployeeKppMasterEntity.setGmEmpId(freezeEmpKPPMasterRequest.getGmEmpId());
-        reportEmployeeKppMasterEntity.setTotalGmOverallAchieve(freezeEmpKPPMasterRequest.getTotalGmOverallAchieve());
-        reportEmployeeKppMasterEntity.setTotalGmAchivedWeight(freezeEmpKPPMasterRequest.getTotalGmAchivedWeight());
-        reportEmployeeKppMasterEntity.setTotalGmOverallTaskComp(freezeEmpKPPMasterRequest.getTotalGmOverallTaskComp());
-        reportEmployeeKppMasterEntity.setGmKppAppliedDate(freezeEmpKPPMasterRequest.getGmKppAppliedDate());
-        reportEmployeeKppMasterEntity.setGmKppStatus("Pending");
-        reportEmployeeKppMasterEntity.setGmRemark(freezeEmpKPPMasterRequest.getGmRemark());
+            reportEmployeeKppMasterEntity.setGmEmpId(freezeEmpKPPMasterRequest.getGmEmpId());
+            reportEmployeeKppMasterEntity.setTotalGmOverallAchieve(freezeEmpKPPMasterRequest.getTotalGmOverallAchieve());
+            reportEmployeeKppMasterEntity.setTotalGmAchivedWeight(freezeEmpKPPMasterRequest.getTotalGmAchivedWeight());
+            reportEmployeeKppMasterEntity.setTotalGmOverallTaskComp(freezeEmpKPPMasterRequest.getTotalGmOverallTaskComp());
+            reportEmployeeKppMasterEntity.setGmKppAppliedDate(freezeEmpKPPMasterRequest.getGmKppAppliedDate());
+            reportEmployeeKppMasterEntity.setGmKppStatus("Pending");
+            reportEmployeeKppMasterEntity.setGmRemark(freezeEmpKPPMasterRequest.getGmRemark());
 
-        reportEmployeeKppMasterEntity.setAvgTotalOverallRating(freezeEmpKPPMasterRequest.getAvgTotalOverallRating());
-        reportEmployeeKppMasterEntity.setAvgTotalOverallPer(freezeEmpKPPMasterRequest.getAvgTotalOverallPer());
-        reportEmployeeKppMasterEntity.setStatusCd(freezeEmpKPPMasterRequest.getStatusCd());
-
-
-        return reportEmployeeKppMasterEntity;
+            reportEmployeeKppMasterEntity.setAvgTotalOverallRating(freezeEmpKPPMasterRequest.getAvgTotalOverallRating());
+            reportEmployeeKppMasterEntity.setAvgTotalOverallPer(freezeEmpKPPMasterRequest.getAvgTotalOverallPer());
+            reportEmployeeKppMasterEntity.setStatusCd(freezeEmpKPPMasterRequest.getStatusCd());
+            return reportEmployeeKppMasterEntity;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> freezeReportEmployeeKppMasterEntities()", ex);
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl >> freezeReportEmployeeKppMasterEntities() Class", false, ex.getMessage());
+        }
     }
 
     private List<OverallEmployeeKppFeedbackDetailsEntity> freezeReportEmployeeKppDetailsToEntities(FreezeEmpKPPMasterRequest freezeEmpKPPMasterRequest, Instant ekppMonth) {
-        List<OverallEmployeeKppFeedbackDetailsEntity> freezeReportEmployeeKppDetailsEntities = new ArrayList<>();
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> freezeReportEmployeeKppDetailsToEntities() freezeEmpKPPMasterRequest : {}, ekppMonth : {}", freezeEmpKPPMasterRequest, ekppMonth);
+        try {
+            List<OverallEmployeeKppFeedbackDetailsEntity> freezeReportEmployeeKppDetailsEntities = new ArrayList<>();
 
-        for (FreezeEmpKPPDetailsRequest empKPPUpdateRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
-            OverallEmployeeKppFeedbackDetailsEntity reportEmployeeKppDetails = new OverallEmployeeKppFeedbackDetailsEntity();
-            reportEmployeeKppDetails.setFinYear(freezeEmpKPPMasterRequest.getFinYear());
-            reportEmployeeKppDetails.setEkppMonth(ekppMonth);
-            reportEmployeeKppDetails.setKppId(empKPPUpdateRequest.getKppId());
-            reportEmployeeKppDetails.setEmpId(freezeEmpKPPMasterRequest.getEmpId());
-            reportEmployeeKppDetails.setEmpEId(freezeEmpKPPMasterRequest.getEmpEId());
-            reportEmployeeKppDetails.setRoleId(freezeEmpKPPMasterRequest.getRoleId());
-            reportEmployeeKppDetails.setDeptId(freezeEmpKPPMasterRequest.getDeptId());
-            reportEmployeeKppDetails.setDesigId(freezeEmpKPPMasterRequest.getDesigId());
-            reportEmployeeKppDetails.setKppOverallTarget(empKPPUpdateRequest.getKppOverallTarget());
-            reportEmployeeKppDetails.setKppOverallWeightage(empKPPUpdateRequest.getKppOverallWeightage());
-            reportEmployeeKppDetails.setEmpAchivedWeight(empKPPUpdateRequest.getEmpAchivedWeight());
-            reportEmployeeKppDetails.setEmpOverallAchieve(empKPPUpdateRequest.getEmpOverallAchieve());
-            reportEmployeeKppDetails.setEmpOverallTaskComp(empKPPUpdateRequest.getEmpOverallTaskComp());
-            reportEmployeeKppDetails.setHodEmpId(empKPPUpdateRequest.getHodEmpId());
-            reportEmployeeKppDetails.setHodAchivedWeight(empKPPUpdateRequest.getHodAchivedWeight());
-            reportEmployeeKppDetails.setHodOverallAchieve(empKPPUpdateRequest.getHodOverallAchieve());
-            reportEmployeeKppDetails.setHodOverallTaskComp(empKPPUpdateRequest.getHodOverallTaskComp());
-            reportEmployeeKppDetails.setGmEmpId(empKPPUpdateRequest.getGmEmployeeId());
-            reportEmployeeKppDetails.setGmAchivedWeight(empKPPUpdateRequest.getGmAchivedWeight());
-            reportEmployeeKppDetails.setGmAchivedWeight(empKPPUpdateRequest.getGmAchivedWeight());
-            reportEmployeeKppDetails.setGmOverallAchieve(empKPPUpdateRequest.getGmOverallAchieve());
-            reportEmployeeKppDetails.setGmOverallTaskComp(empKPPUpdateRequest.getGmOverallTaskComp());
-            reportEmployeeKppDetails.setAvgOverallRating(empKPPUpdateRequest.getOverallRatings());
-            reportEmployeeKppDetails.setAvgOverallPer(empKPPUpdateRequest.getOverallPercentage());
-            reportEmployeeKppDetails.setStatusCd(empKPPUpdateRequest.getStatusCd());
-            reportEmployeeKppDetails.setEmpKppFeedback(empKPPUpdateRequest.getEmpKppFeedback());
-            reportEmployeeKppDetails.setHodKppFeedback(empKPPUpdateRequest.getHodKppFeedback());
-            reportEmployeeKppDetails.setGmKppFeedback(empKPPUpdateRequest.getGmKppFeedback());
-            freezeReportEmployeeKppDetailsEntities.add(reportEmployeeKppDetails);
+            for (FreezeEmpKPPDetailsRequest empKPPUpdateRequest : freezeEmpKPPMasterRequest.getKppUpdateRequests()) {
+                OverallEmployeeKppFeedbackDetailsEntity reportEmployeeKppDetails = new OverallEmployeeKppFeedbackDetailsEntity();
+                reportEmployeeKppDetails.setFinYear(freezeEmpKPPMasterRequest.getFinYear());
+                reportEmployeeKppDetails.setEkppMonth(ekppMonth);
+                reportEmployeeKppDetails.setKppId(empKPPUpdateRequest.getKppId());
+                reportEmployeeKppDetails.setEmpId(freezeEmpKPPMasterRequest.getEmpId());
+                reportEmployeeKppDetails.setEmpEId(freezeEmpKPPMasterRequest.getEmpEId());
+                reportEmployeeKppDetails.setRoleId(freezeEmpKPPMasterRequest.getRoleId());
+                reportEmployeeKppDetails.setDeptId(freezeEmpKPPMasterRequest.getDeptId());
+                reportEmployeeKppDetails.setDesigId(freezeEmpKPPMasterRequest.getDesigId());
+                reportEmployeeKppDetails.setKppOverallTarget(empKPPUpdateRequest.getKppOverallTarget());
+                reportEmployeeKppDetails.setKppOverallWeightage(empKPPUpdateRequest.getKppOverallWeightage());
+                reportEmployeeKppDetails.setEmpAchivedWeight(empKPPUpdateRequest.getEmpAchivedWeight());
+                reportEmployeeKppDetails.setEmpOverallAchieve(empKPPUpdateRequest.getEmpOverallAchieve());
+                reportEmployeeKppDetails.setEmpOverallTaskComp(empKPPUpdateRequest.getEmpOverallTaskComp());
+                reportEmployeeKppDetails.setHodEmpId(empKPPUpdateRequest.getHodEmpId());
+                reportEmployeeKppDetails.setHodAchivedWeight(empKPPUpdateRequest.getHodAchivedWeight());
+                reportEmployeeKppDetails.setHodOverallAchieve(empKPPUpdateRequest.getHodOverallAchieve());
+                reportEmployeeKppDetails.setHodOverallTaskComp(empKPPUpdateRequest.getHodOverallTaskComp());
+                reportEmployeeKppDetails.setGmEmpId(empKPPUpdateRequest.getGmEmployeeId());
+                reportEmployeeKppDetails.setGmAchivedWeight(empKPPUpdateRequest.getGmAchivedWeight());
+                reportEmployeeKppDetails.setGmAchivedWeight(empKPPUpdateRequest.getGmAchivedWeight());
+                reportEmployeeKppDetails.setGmOverallAchieve(empKPPUpdateRequest.getGmOverallAchieve());
+                reportEmployeeKppDetails.setGmOverallTaskComp(empKPPUpdateRequest.getGmOverallTaskComp());
+                reportEmployeeKppDetails.setAvgOverallRating(empKPPUpdateRequest.getOverallRatings());
+                reportEmployeeKppDetails.setAvgOverallPer(empKPPUpdateRequest.getOverallPercentage());
+                reportEmployeeKppDetails.setStatusCd(empKPPUpdateRequest.getStatusCd());
+                reportEmployeeKppDetails.setEmpKppFeedback(empKPPUpdateRequest.getEmpKppFeedback());
+                reportEmployeeKppDetails.setHodKppFeedback(empKPPUpdateRequest.getHodKppFeedback());
+                reportEmployeeKppDetails.setGmKppFeedback(empKPPUpdateRequest.getGmKppFeedback());
+                freezeReportEmployeeKppDetailsEntities.add(reportEmployeeKppDetails);
+            }
+            return freezeReportEmployeeKppDetailsEntities;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> freezeReportEmployeeKppDetailsToEntities()", ex);
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl >> freezeReportEmployeeKppDetailsToEntities() Class", false, ex.getMessage());
         }
-        return freezeReportEmployeeKppDetailsEntities;
     }
 
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getEmployeeKppDataYearly(Integer empId, String finYear) {
-
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> getEmployeeKppDataYearly() empId : {}, finYear : {}", empId, finYear);
         KPIResponse kpiResponse = new KPIResponse();
         List<Object[]> employeeKppData = null;
 
+        try {
+            List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(empId, finYear);
+            if (freezeReportAvailable.size() > 0) {
 
-        List<Object[]> freezeReportAvailable = freezeReportEmployeeKppMasterRepo.checkKppReportAdded(empId, finYear);
-        if(freezeReportAvailable.size()>0){
+                employeeKppData = freezeReportEmployeeKppMasterRepo.getEmployeeKppDataYearlyFromFreezeTable(empId, finYear);
+                List<OverallEmployeeKppFeedbackStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(OverallEmployeeKppFeedbackStatusDto::new).collect(Collectors.toList());
+                Map<OverallEmployeeKppFeedbackMasterDto, List<OverallEmployeeKppFeedbackDetailsDto>> employeeKppMasterDtoListMap =
+                        employeeKppStatusDtos.stream().collect(Collectors.groupingBy(OverallEmployeeKppFeedbackStatusDto::getEmployeeKppMasterDto, Collectors.mapping(OverallEmployeeKppFeedbackStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
 
-            employeeKppData = freezeReportEmployeeKppMasterRepo.getEmployeeKppDataYearlyFromFreezeTable(empId, finYear);
-            List<OverallEmployeeKppFeedbackStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(OverallEmployeeKppFeedbackStatusDto::new).collect(Collectors.toList());
-            Map<OverallEmployeeKppFeedbackMasterDto, List<OverallEmployeeKppFeedbackDetailsDto>> employeeKppMasterDtoListMap =
-                    employeeKppStatusDtos.stream().collect(Collectors.groupingBy(OverallEmployeeKppFeedbackStatusDto::getEmployeeKppMasterDto, Collectors.mapping(OverallEmployeeKppFeedbackStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
+                kpiResponse = existingEmployeeKppFeedback(employeeKppMasterDtoListMap);
+            } else {
+                //if yearly kpp employee feedback not added
+                employeeKppData = reportEmployeeKppMasterRepo.getEmployeeKppDataYearly(empId, finYear);
+                if (employeeKppData.size() > 0) {
+                    List<EmployeeKppStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(EmployeeKppStatusDto::new).collect(Collectors.toList());
+                    Map<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> employeeKppMasterDtoListMap =
+                            employeeKppStatusDtos.stream().collect(Collectors.groupingBy(EmployeeKppStatusDto::getEmployeeKppMasterDto, Collectors.mapping(EmployeeKppStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
 
-            kpiResponse = existingEmployeeKppFeedback(employeeKppMasterDtoListMap);
-        } else {
-            //if finanical year is empty then read it from financial year table of current year
-           /* Optional<FinancialYearEntity> financialYearEntity = financialYearRepo.findById(1);
-            if(financialYearEntity.isPresent()){
-                finYear=financialYearEntity.get().getFinYear();
-            }*/
-            System.out.println("finYear : "+finYear);
-            //if yearly kpp employee feedback not added
-            employeeKppData = reportEmployeeKppMasterRepo.getEmployeeKppDataYearly(empId, finYear);
-            if (employeeKppData.size() > 0) {
-                List<EmployeeKppStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(EmployeeKppStatusDto::new).collect(Collectors.toList());
-                Map<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> employeeKppMasterDtoListMap =
-                        employeeKppStatusDtos.stream().collect(Collectors.groupingBy(EmployeeKppStatusDto::getEmployeeKppMasterDto, Collectors.mapping(EmployeeKppStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
+                    kpiResponse = newEmployeeKppFeedback(employeeKppMasterDtoListMap, finYear);
+                }
 
-                kpiResponse = newEmployeeKppFeedback(employeeKppMasterDtoListMap,finYear);
             }
 
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> getEmployeeKppDataYearly()", ex);
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl >> getEmployeeKppDataYearly() Class", false, ex.getMessage());
         }
-
-        return kpiResponse;
     }
 
 
     private KPIResponse newEmployeeKppFeedback(Map<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> employeeKppMasterDtoListMap, String finYear) {
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> newEmployeeKppFeedback() employeeKppMasterDtoListMap : {}, finYear : {}", employeeKppMasterDtoListMap, finYear);
         KPIResponse kpiResponse = new KPIResponse();
         // List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
         EmpKppStatusResponse statusResponse = null;
 
-        Double totalEmpAchivedWeight = 0.0;
-        Double totalEmpOverallAchieve = 0.0;
-        Double totalEmpOverallTaskComp = 0.0;
+        try {
+            Double totalEmpAchivedWeight = 0.0;
+            Double totalEmpOverallAchieve = 0.0;
+            Double totalEmpOverallTaskComp = 0.0;
 
-        Double totalHodAchivedWeight = 0.0;
-        Double totalHodOverallAchieve = 0.0;
-        Double totalHodOverallTaskComp = 0.0;
+            Double totalHodAchivedWeight = 0.0;
+            Double totalHodOverallAchieve = 0.0;
+            Double totalHodOverallTaskComp = 0.0;
 
-        Double totalGmAchivedWeight = 0.0;
-        Double totalGmOverallAchieve = 0.0;
-        Double totalGmOverallTaskComp = 0.0;
+            Double totalGmAchivedWeight = 0.0;
+            Double totalGmOverallAchieve = 0.0;
+            Double totalGmOverallTaskComp = 0.0;
 
-        if (null !=employeeKppMasterDtoListMap) {
+            if (null != employeeKppMasterDtoListMap) {
 
-            for (Map.Entry<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
-                statusResponse = new EmpKppStatusResponse();
-                statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-                statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
+                for (Map.Entry<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
+                    statusResponse = new EmpKppStatusResponse();
+                    statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
+                    statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
 
-                statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-                statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
-                statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
-                statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
-                statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
-                statusResponse.setRoleId(masterDtoListEntry.getKey().getRoleId());
-                statusResponse.setRoleName(masterDtoListEntry.getKey().getRoleName());
-                statusResponse.setDeptId(masterDtoListEntry.getKey().getDeptId());
-                statusResponse.setDeptName(masterDtoListEntry.getKey().getDeptName());
-                statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
-                statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
+                    statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
+                    statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
+                    statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
+                    statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
+                    statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
+                    statusResponse.setRoleId(masterDtoListEntry.getKey().getRoleId());
+                    statusResponse.setRoleName(masterDtoListEntry.getKey().getRoleName());
+                    statusResponse.setDeptId(masterDtoListEntry.getKey().getDeptId());
+                    statusResponse.setDeptName(masterDtoListEntry.getKey().getDeptName());
+                    statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
+                    statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
 
-                totalEmpAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
-                totalEmpOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
-                totalEmpOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
+                    totalEmpAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
+                    totalEmpOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
+                    totalEmpOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
 
-                statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
-                statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
-                //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
-                statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
-                statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
-                statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
+                    statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
+                    statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
+                    //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
+                    statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
+                    statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
+                    statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
 
-                totalHodAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
-                totalHodOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
+                    totalHodAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
+                    totalHodOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
 
-                totalHodOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
-
-
-                //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
-                statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
-                statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
-                statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
-
-                totalGmAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
-                totalGmOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
-                totalGmOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
-
-                // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
-                statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
-                statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
-                statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
-                statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
-                statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
-                statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
-                statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
-                statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
-                statusResponse.setFinYear(finYear);
-                // statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
-
-                List<EmployeeKppDetailsDto> employeeKppDetailsDtos = new ArrayList<>();
+                    totalHodOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
 
 
-                employeeKppDetailsDtos = masterDtoListEntry.getValue().stream().collect(Collectors.groupingBy(EmployeeKppDetailsDto::getKppId,
-                        Collectors.collectingAndThen(Collectors.toList(),
-                                data -> {
+                    //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
+                    statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
+                    statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
+                    statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
 
-                                    Integer totalMonth=data.size();
-                                 //   double empAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpAchivedWeight())).sum();
-                                    double empOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallAchieve())).sum();
-                                   // double empOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallTaskComp())).sum();
+                    totalGmAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
+                    totalGmOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
+                    totalGmOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
+
+                    // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
+                    statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
+                    statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
+                    statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
+                    statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
+                    statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
+                    statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
+                    statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
+                    statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
+                    statusResponse.setFinYear(finYear);
+                    // statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
+
+                    List<EmployeeKppDetailsDto> employeeKppDetailsDtos = new ArrayList<>();
+
+
+                    employeeKppDetailsDtos = masterDtoListEntry.getValue().stream().collect(Collectors.groupingBy(EmployeeKppDetailsDto::getKppId,
+                            Collectors.collectingAndThen(Collectors.toList(),
+                                    data -> {
+
+                                        Integer totalMonth = data.size();
+                                        //   double empAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpAchivedWeight())).sum();
+                                        double empOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallAchieve())).sum();
+                                        // double empOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallTaskComp())).sum();
 
 //empAchivedWeight calculation remain
-                                    empOverallAchieve=empOverallAchieve/totalMonth;
-                                    double empAchivedWeight= ((Double.parseDouble(data.iterator().next().getKppOverallWeightage()))*(empOverallAchieve/5*100))/100;
-                                    double empOverallTaskComp=(empOverallAchieve/5)*100;
+                                        empOverallAchieve = empOverallAchieve / totalMonth;
+                                        double empAchivedWeight = ((Double.parseDouble(data.iterator().next().getKppOverallWeightage())) * (empOverallAchieve / 5 * 100)) / 100;
+                                        double empOverallTaskComp = (empOverallAchieve / 5) * 100;
 
-                                   // double hodAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodAchivedWeight())).sum();
-                                    double hodOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallAchieve())).sum();
-                                    //double hodOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallTaskComp())).sum();
+                                        // double hodAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodAchivedWeight())).sum();
+                                        double hodOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallAchieve())).sum();
+                                        //double hodOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallTaskComp())).sum();
 
-                                    hodOverallAchieve=hodOverallAchieve/totalMonth;
-                                    double hodAchivedWeight=((Double.parseDouble(data.iterator().next().getKppOverallWeightage()))*(hodOverallAchieve/5*100))/100;
-                                    double hodOverallTaskComp=(hodOverallAchieve/5)*100;
+                                        hodOverallAchieve = hodOverallAchieve / totalMonth;
+                                        double hodAchivedWeight = ((Double.parseDouble(data.iterator().next().getKppOverallWeightage())) * (hodOverallAchieve / 5 * 100)) / 100;
+                                        double hodOverallTaskComp = (hodOverallAchieve / 5) * 100;
 
-                                    //double gmAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmAchivedWeight())).sum();
-                                    double gmOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallAchieve())).sum();
-                                    //double gmOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallTaskComp())).sum();
+                                        //double gmAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmAchivedWeight())).sum();
+                                        double gmOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallAchieve())).sum();
+                                        //double gmOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallTaskComp())).sum();
 
-                                    gmOverallAchieve=gmOverallAchieve/totalMonth;
-                                    double gmAchivedWeight =((Double.parseDouble(data.iterator().next().getKppOverallWeightage()))*(gmOverallAchieve/5*100))/100;
-                                    double gmOverallTaskComp=(gmOverallAchieve/5)*100;
+                                        gmOverallAchieve = gmOverallAchieve / totalMonth;
+                                        double gmAchivedWeight = ((Double.parseDouble(data.iterator().next().getKppOverallWeightage())) * (gmOverallAchieve / 5 * 100)) / 100;
+                                        double gmOverallTaskComp = (gmOverallAchieve / 5) * 100;
 
-                                    return new EmployeeKppDetailsDto(data.iterator().next().getEkppId(),finYear,  data.iterator().next().getKppId(), String.valueOf(decfor.format(empAchivedWeight)), String.valueOf(decfor.format(empOverallAchieve)), String.valueOf(decfor.format(empOverallTaskComp)), data.iterator().next().getHodEmpId(), String.valueOf(decfor.format(hodAchivedWeight)), String.valueOf(decfor.format(hodOverallAchieve)), String.valueOf(decfor.format(hodOverallTaskComp)),
-                                            data.iterator().next().getGmEmployeeId(), String.valueOf(decfor.format(gmAchivedWeight)), String.valueOf(decfor.format(gmOverallAchieve)), String.valueOf(decfor.format(gmOverallTaskComp)), data.iterator().next().getOverallRatings(), data.iterator().next().getOverallPercentage(), data.iterator().next().getKppObjective(), data.iterator().next().getKppPerformanceIndi(), data.iterator().next().getKppOverallTarget(), data.iterator().next().getKppTargetPeriod(), data.iterator().next().getUomId(), data.iterator().next().getUomName(),
-                                            data.iterator().next().getKppOverallWeightage(), data.iterator().next().getKppRating1(), data.iterator().next().getKppRating2(), data.iterator().next().getKppRating3(), data.iterator().next().getKppRating4(), data.iterator().next().getKppRating5(), data.iterator().next().getEkppStatus());
-                                })
-                )).values().stream().collect(Collectors.toList());
+                                        return new EmployeeKppDetailsDto(data.iterator().next().getEkppId(), finYear, data.iterator().next().getKppId(), String.valueOf(decfor.format(empAchivedWeight)), String.valueOf(decfor.format(empOverallAchieve)), String.valueOf(decfor.format(empOverallTaskComp)), data.iterator().next().getHodEmpId(), String.valueOf(decfor.format(hodAchivedWeight)), String.valueOf(decfor.format(hodOverallAchieve)), String.valueOf(decfor.format(hodOverallTaskComp)),
+                                                data.iterator().next().getGmEmployeeId(), String.valueOf(decfor.format(gmAchivedWeight)), String.valueOf(decfor.format(gmOverallAchieve)), String.valueOf(decfor.format(gmOverallTaskComp)), data.iterator().next().getOverallRatings(), data.iterator().next().getOverallPercentage(), data.iterator().next().getKppObjective(), data.iterator().next().getKppPerformanceIndi(), data.iterator().next().getKppOverallTarget(), data.iterator().next().getKppTargetPeriod(), data.iterator().next().getUomId(), data.iterator().next().getUomName(),
+                                                data.iterator().next().getKppOverallWeightage(), data.iterator().next().getKppRating1(), data.iterator().next().getKppRating2(), data.iterator().next().getKppRating3(), data.iterator().next().getKppRating4(), data.iterator().next().getKppRating5(), data.iterator().next().getEkppStatus());
+                                    })
+                    )).values().stream().collect(Collectors.toList());
 
-                statusResponse.setKppStatusDetails(employeeKppDetailsDtos);
+                    statusResponse.setKppStatusDetails(employeeKppDetailsDtos);
+                }
+            } else {
+                //  log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
+                //  throw new KPIException("DepartmentServiceImpl", false, "No record found");
+                return null;
             }
-        } else {
-            //  log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
-            //  throw new KPIException("DepartmentServiceImpl", false, "No record found");
-            return null;
+
+
+            statusResponse.setTotalEmpAchivedWeight(totalEmpAchivedWeight.toString());
+            statusResponse.setTotalEmpOverallAchieve(totalEmpOverallAchieve.toString());
+            statusResponse.setTotalEmpOverallTaskComp(totalEmpOverallTaskComp.toString());
+
+            statusResponse.setTotalHodAchivedWeight(totalHodAchivedWeight.toString());
+            statusResponse.setTotalHodOverallAchieve(totalHodOverallAchieve.toString());
+            statusResponse.setTotalHodOverallTaskComp(totalHodOverallTaskComp.toString());
+
+            statusResponse.setTotalGmAchivedWeight(decfor.format(totalGmAchivedWeight));
+            statusResponse.setTotalGmOverallAchieve(totalGmOverallAchieve.toString());
+            statusResponse.setTotalGmOverallTaskComp(totalGmOverallTaskComp.toString());
+            kpiResponse.setResponseData(statusResponse);
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> newEmployeeKppFeedback()", ex);
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl >> newEmployeeKppFeedback() Class", false, ex.getMessage());
         }
-
-
-        statusResponse.setTotalEmpAchivedWeight(totalEmpAchivedWeight.toString());
-        statusResponse.setTotalEmpOverallAchieve(totalEmpOverallAchieve.toString());
-        statusResponse.setTotalEmpOverallTaskComp(totalEmpOverallTaskComp.toString());
-
-        statusResponse.setTotalHodAchivedWeight(totalHodAchivedWeight.toString());
-        statusResponse.setTotalHodOverallAchieve(totalHodOverallAchieve.toString());
-        statusResponse.setTotalHodOverallTaskComp(totalHodOverallTaskComp.toString());
-
-        statusResponse.setTotalGmAchivedWeight(decfor.format(totalGmAchivedWeight));
-        statusResponse.setTotalGmOverallAchieve(totalGmOverallAchieve.toString());
-        statusResponse.setTotalGmOverallTaskComp(totalGmOverallTaskComp.toString());
-        kpiResponse.setResponseData(statusResponse);
-        return kpiResponse;
     }
+
     private KPIResponse existingEmployeeKppFeedback(Map<OverallEmployeeKppFeedbackMasterDto, List<OverallEmployeeKppFeedbackDetailsDto>> employeeKppMasterDtoListMap) {
+        log.debug("Inside OverallEmployeeKppFeedbackServiceImpl >> existingEmployeeKppFeedback() employeeKppMasterDtoListMap : {}", employeeKppMasterDtoListMap);
         KPIResponse kpiResponse = new KPIResponse();
         // List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
         FreezeEmpKppStatusResponse statusResponse = null;
         List<Object[]> employeeKppData = null;
-        Double totalEmpAchivedWeight = 0.0;
-        Double totalEmpOverallAchieve = 0.0;
-        Double totalEmpOverallTaskComp = 0.0;
+        try {
+            Double totalEmpAchivedWeight = 0.0;
+            Double totalEmpOverallAchieve = 0.0;
+            Double totalEmpOverallTaskComp = 0.0;
 
-        Double totalHodAchivedWeight = 0.0;
-        Double totalHodOverallAchieve = 0.0;
-        Double totalHodOverallTaskComp = 0.0;
+            Double totalHodAchivedWeight = 0.0;
+            Double totalHodOverallAchieve = 0.0;
+            Double totalHodOverallTaskComp = 0.0;
 
-        Double totalGmAchivedWeight = 0.0;
-        Double totalGmOverallAchieve = 0.0;
-        Double totalGmOverallTaskComp = 0.0;
+            Double totalGmAchivedWeight = 0.0;
+            Double totalGmOverallAchieve = 0.0;
+            Double totalGmOverallTaskComp = 0.0;
 
-        if (null!=employeeKppMasterDtoListMap) {
+            if (null != employeeKppMasterDtoListMap) {
+                for (Map.Entry<OverallEmployeeKppFeedbackMasterDto, List<OverallEmployeeKppFeedbackDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
+                    statusResponse = new FreezeEmpKppStatusResponse();
+                    statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
+                    statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
 
-            for (Map.Entry<OverallEmployeeKppFeedbackMasterDto, List<OverallEmployeeKppFeedbackDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
-                statusResponse = new FreezeEmpKppStatusResponse();
-                statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-                statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
+                    statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
+                    statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
+                    statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
+                    statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
+                    statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
+                    statusResponse.setRoleId(masterDtoListEntry.getKey().getRoleId());
+                    statusResponse.setRoleName(masterDtoListEntry.getKey().getRoleName());
+                    statusResponse.setDeptId(masterDtoListEntry.getKey().getDeptId());
+                    statusResponse.setDeptName(masterDtoListEntry.getKey().getDeptName());
+                    statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
+                    statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
 
-                statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-                statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
-                statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
-                statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
-                statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
-                statusResponse.setRoleId(masterDtoListEntry.getKey().getRoleId());
-                statusResponse.setRoleName(masterDtoListEntry.getKey().getRoleName());
-                statusResponse.setDeptId(masterDtoListEntry.getKey().getDeptId());
-                statusResponse.setDeptName(masterDtoListEntry.getKey().getDeptName());
-                statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
-                statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
+                    totalEmpAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
+                    totalEmpOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
+                    totalEmpOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
 
-                totalEmpAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
-                totalEmpOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
-                totalEmpOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
+                    statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
+                    statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
+                    //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
+                    statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
+                    statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
+                    statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
 
-                statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
-                statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
-                //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
-                statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
-                statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
-                statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
+                    totalHodAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
+                    totalHodOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
 
-                totalHodAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
-                totalHodOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
-
-                totalHodOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
+                    totalHodOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
 
 
-                //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
-                statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
-                statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
-                statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
+                    //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
+                    statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
+                    statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
+                    statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
 
-                totalGmAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
-                totalGmOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
-                totalGmOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
+                    totalGmAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
+                    totalGmOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
+                    totalGmOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
 
-                // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
-                statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
-                statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
-                statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
-                statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
-                statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
-                statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
-                statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
-                statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
-                statusResponse.setEmpKeyStrength(masterDtoListEntry.getKey().getEmpKeyStrength());
-                statusResponse.setEmpAreaOfImprovement(masterDtoListEntry.getKey().getEmpAreaOfImprovement());
-                statusResponse.setEmpTrainginDevelopmentNeeds(masterDtoListEntry.getKey().getEmpTrainginDevelopmentNeeds());
+                    // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
+                    statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
+                    statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
+                    statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
+                    statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
+                    statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
+                    statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
+                    statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
+                    statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
+                    statusResponse.setEmpKeyStrength(masterDtoListEntry.getKey().getEmpKeyStrength());
+                    statusResponse.setEmpAreaOfImprovement(masterDtoListEntry.getKey().getEmpAreaOfImprovement());
+                    statusResponse.setEmpTrainginDevelopmentNeeds(masterDtoListEntry.getKey().getEmpTrainginDevelopmentNeeds());
 
-                // statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
+                    // statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
 
-                List<OverallEmployeeKppFeedbackDetailsDto> employeeKppDetailsDtos = new ArrayList<>();
+                    List<OverallEmployeeKppFeedbackDetailsDto> employeeKppDetailsDtos = new ArrayList<>();
 
-                employeeKppDetailsDtos = masterDtoListEntry.getValue().stream().collect(Collectors.groupingBy(OverallEmployeeKppFeedbackDetailsDto::getKppId,
-                        Collectors.collectingAndThen(Collectors.toList(),
-                                data -> {
-                                    double empAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpAchivedWeight())).sum();
-                                    double empOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallAchieve())).sum();
-                                    double empOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallTaskComp())).sum();
+                    employeeKppDetailsDtos = masterDtoListEntry.getValue().stream().collect(Collectors.groupingBy(OverallEmployeeKppFeedbackDetailsDto::getKppId,
+                            Collectors.collectingAndThen(Collectors.toList(),
+                                    data -> {
+                                        double empAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpAchivedWeight())).sum();
+                                        double empOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallAchieve())).sum();
+                                        double empOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallTaskComp())).sum();
 
-                                    double hodAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodAchivedWeight())).sum();
-                                    double hodOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallAchieve())).sum();
-                                    double hodOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallTaskComp())).sum();
+                                        double hodAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodAchivedWeight())).sum();
+                                        double hodOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallAchieve())).sum();
+                                        double hodOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallTaskComp())).sum();
 
-                                    double gmAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmAchivedWeight())).sum();
-                                    double gmOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallAchieve())).sum();
-                                    double gmOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallTaskComp())).sum();
+                                        double gmAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmAchivedWeight())).sum();
+                                        double gmOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallAchieve())).sum();
+                                        double gmOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallTaskComp())).sum();
 
-                                    return new OverallEmployeeKppFeedbackDetailsDto(data.iterator().next().getEkppId(), data.iterator().next().getKppId(), String.valueOf(empAchivedWeight), String.valueOf(empOverallAchieve), String.valueOf(empOverallTaskComp), data.iterator().next().getHodEmpId(), String.valueOf(hodAchivedWeight), String.valueOf(hodOverallAchieve), String.valueOf(hodOverallTaskComp),
-                                            data.iterator().next().getGmEmployeeId(), String.valueOf(gmAchivedWeight), String.valueOf(gmOverallAchieve), String.valueOf(gmOverallTaskComp), data.iterator().next().getOverallRatings(), data.iterator().next().getOverallPercentage(), data.iterator().next().getKppObjective(), data.iterator().next().getKppPerformanceIndi(), data.iterator().next().getKppOverallTarget(), data.iterator().next().getKppTargetPeriod(), data.iterator().next().getUomId(), data.iterator().next().getUomName(),
-                                            data.iterator().next().getKppOverallWeightage(), data.iterator().next().getKppRating1(), data.iterator().next().getKppRating2(), data.iterator().next().getKppRating3(), data.iterator().next().getKppRating4(), data.iterator().next().getKppRating5(), data.iterator().next().getEkppStatus(),data.iterator().next().getEmpKppFeedback(),data.iterator().next().getHodKppFeedback(),data.iterator().next().getGmKppFeedback());
-                                })
-                )).values().stream().collect(Collectors.toList());
+                                        return new OverallEmployeeKppFeedbackDetailsDto(data.iterator().next().getEkppId(), data.iterator().next().getKppId(), String.valueOf(empAchivedWeight), String.valueOf(empOverallAchieve), String.valueOf(empOverallTaskComp), data.iterator().next().getHodEmpId(), String.valueOf(hodAchivedWeight), String.valueOf(hodOverallAchieve), String.valueOf(hodOverallTaskComp),
+                                                data.iterator().next().getGmEmployeeId(), String.valueOf(gmAchivedWeight), String.valueOf(gmOverallAchieve), String.valueOf(gmOverallTaskComp), data.iterator().next().getOverallRatings(), data.iterator().next().getOverallPercentage(), data.iterator().next().getKppObjective(), data.iterator().next().getKppPerformanceIndi(), data.iterator().next().getKppOverallTarget(), data.iterator().next().getKppTargetPeriod(), data.iterator().next().getUomId(), data.iterator().next().getUomName(),
+                                                data.iterator().next().getKppOverallWeightage(), data.iterator().next().getKppRating1(), data.iterator().next().getKppRating2(), data.iterator().next().getKppRating3(), data.iterator().next().getKppRating4(), data.iterator().next().getKppRating5(), data.iterator().next().getEkppStatus(), data.iterator().next().getEmpKppFeedback(), data.iterator().next().getHodKppFeedback(), data.iterator().next().getGmKppFeedback());
+                                    })
+                    )).values().stream().collect(Collectors.toList());
 
-                statusResponse.setKppStatusDetails(employeeKppDetailsDtos);
+                    statusResponse.setKppStatusDetails(employeeKppDetailsDtos);
+                }
+            } else {
+                 log.info("Inside existingEmployeeKppFeedback() No record found");
+                return null;
             }
-        } else {
-            //  log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
-            //  throw new KPIException("DepartmentServiceImpl", false, "No record found");
-            return null;
+            statusResponse.setTotalEmpAchivedWeight(totalEmpAchivedWeight.toString());
+            statusResponse.setTotalEmpOverallAchieve(totalEmpOverallAchieve.toString());
+            statusResponse.setTotalEmpOverallTaskComp(totalEmpOverallTaskComp.toString());
+
+            statusResponse.setTotalHodAchivedWeight(totalHodAchivedWeight.toString());
+            statusResponse.setTotalHodOverallAchieve(totalHodOverallAchieve.toString());
+            statusResponse.setTotalHodOverallTaskComp(totalHodOverallTaskComp.toString());
+
+            statusResponse.setTotalGmAchivedWeight(decfor.format(totalGmAchivedWeight));
+            statusResponse.setTotalGmOverallAchieve(totalGmOverallAchieve.toString());
+            statusResponse.setTotalGmOverallTaskComp(totalGmOverallTaskComp.toString());
+            kpiResponse.setResponseData(statusResponse);
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKeyPerfParamServiceImpl >> existingEmployeeKppFeedback()", ex);
+            throw new KPIException("EmployeeKeyPerfParamServiceImpl >> existingEmployeeKppFeedback() Class", false, ex.getMessage());
         }
-        statusResponse.setTotalEmpAchivedWeight(totalEmpAchivedWeight.toString());
-        statusResponse.setTotalEmpOverallAchieve(totalEmpOverallAchieve.toString());
-        statusResponse.setTotalEmpOverallTaskComp(totalEmpOverallTaskComp.toString());
-
-        statusResponse.setTotalHodAchivedWeight(totalHodAchivedWeight.toString());
-        statusResponse.setTotalHodOverallAchieve(totalHodOverallAchieve.toString());
-        statusResponse.setTotalHodOverallTaskComp(totalHodOverallTaskComp.toString());
-
-        statusResponse.setTotalGmAchivedWeight(decfor.format(totalGmAchivedWeight));
-        statusResponse.setTotalGmOverallAchieve(totalGmOverallAchieve.toString());
-        statusResponse.setTotalGmOverallTaskComp(totalGmOverallTaskComp.toString());
-        kpiResponse.setResponseData(statusResponse);
-        return kpiResponse;
     }
 }

@@ -1,27 +1,21 @@
 package com.futurebizops.kpi.service.serviceimpl;
 
-import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.EvidenceEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EvidenceRepo;
-import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.EvidenceResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.EvidenceService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,14 +28,10 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse uploadFile(MultipartFile multipartFile, Integer empId, String evMonth) {
-        KPIResponse kpiResponse = new KPIResponse();
+        log.debug("Inside EvidenceServiceImpl >> uploadFile() empId :{}, evMonth : {}", empId, evMonth);
 
-       /* if(evMonth==null){
-            kpiResponse.setResponseMessage("Please select date once again");
-            kpiResponse.setSuccess(false);
-            return kpiResponse;
-        }*/
-        Instant evDate = null!=evMonth?DateTimeUtils.convertStringToInstant(evMonth):Instant.now();
+        KPIResponse kpiResponse = new KPIResponse();
+        Instant evDate = null != evMonth ? DateTimeUtils.convertStringToInstant(evMonth) : Instant.now();
         try {
             EvidenceEntity evidenceEntity = new EvidenceEntity();
             evidenceEntity.setEvFileName(multipartFile.getOriginalFilename());
@@ -55,67 +45,51 @@ public class EvidenceServiceImpl implements EvidenceService {
                     .responseMessage("File Uploaded Successfully")
                     .isSuccess(true)
                     .build();
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             log.error("Inside EvidenceServiceImpl >> uploadFile()");
             throw new KPIException("EvidenceServiceImpl", false, ex.getMessage());
         }
-        return  kpiResponse;
+        return kpiResponse;
     }
 
     @Transactional
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteEvidenceFile(Integer empId) {
+        log.debug("Inside EvidenceServiceImpl >> deleteEvidenceFile() empId :{}", empId);
         KPIResponse kpiResponse = new KPIResponse();
-
         try {
             evidenceRepo.deleteByEmpId(empId);
-            kpiResponse = KPIResponse.builder()
-                    .responseMessage("Delete Uploaded file successfully")
-                    .isSuccess(true)
-                    .build();
+            kpiResponse.setResponseMessage("Delete Uploaded file successfully");
+            kpiResponse.setSuccess(true);
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("Inside EvidenceServiceImpl >> deleteEvidenceFile()");
+            throw new KPIException("EvidenceServiceImpl >> deleteEvidenceFile", false, ex.getMessage());
         }
-        catch (Exception ex){
-            log.error("Inside EvidenceServiceImpl >> uploadFile()");
-            throw new KPIException("EvidenceServiceImpl", false, ex.getMessage());
-        }
-        return  kpiResponse;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getEmpoyeeEvidenceDetails(Integer empId) {
         KPIResponse kpiResponse = new KPIResponse();
-      /*  if(evMonth==null){
-            kpiResponse.setResponseMessage("Please select date once again");
-            kpiResponse.setSuccess(false);
-            return kpiResponse;
-        }*/
         try {
+            List<Object[]> evidenceData = evidenceRepo.getEvidenceDetails(empId, "A");
 
-            List<Object[]> evidenceData =  evidenceRepo.getEvidenceDetails(empId,"A");
-
-            if(evidenceData.size()>0) {
+            if (evidenceData.size() > 0) {
                 List<EvidenceResponse> evidenceResponses = evidenceData.stream().map(EvidenceResponse::new).collect(Collectors.toList());
-                kpiResponse = KPIResponse.builder()
-                        .responseMessage("Data fetch successfully")
-                        .responseData(evidenceResponses.get(0))
-                        .isSuccess(true)
-                        .build();
-            } else {
-                kpiResponse = KPIResponse.builder()
-                        .responseMessage(KPIConstants.RECORD_NOT_FOUND)
-                        .responseData(new EvidenceResponse())
-                        .isSuccess(false)
-                        .build();
+                kpiResponse.setResponseMessage("Data fetch successfully");
+                kpiResponse.setResponseData(evidenceResponses.get(0));
+                kpiResponse.setSuccess(true);
+                return kpiResponse;
             }
+        } catch (Exception ex) {
+            log.error("Inside EvidenceServiceImpl >> getEmpoyeeEvidenceDetails()");
+            throw new KPIException("EvidenceServiceImpl >>getEmpoyeeEvidenceDetails()", false, ex.getMessage());
         }
-        catch (Exception ex){
-            log.error("Inside EvidenceServiceImpl >> uploadFile()");
-            throw new KPIException("EvidenceServiceImpl", false, ex.getMessage());
-        }
-        return  kpiResponse;
+        kpiResponse.setResponseMessage("Data not found");
+        kpiResponse.setSuccess(false);
+        return kpiResponse;
     }
 
     @Override
@@ -123,31 +97,20 @@ public class EvidenceServiceImpl implements EvidenceService {
     public KPIResponse getEmpoyeeEvidenceDetailsByEmpId(Integer empId) {
         KPIResponse kpiResponse = new KPIResponse();
         try {
-
-            List<Object[]> evidenceData =  evidenceRepo.getEvidenceDetailsByEmpId(empId,"A");
-
-
-            if(evidenceData.size()>0) {
-
-               List<EvidenceResponse> evidenceResponses = evidenceData.stream().map(EvidenceResponse::new).collect(Collectors.toList());
-                kpiResponse = KPIResponse.builder()
-                        .responseMessage("Data fetch successfully")
-                        .responseData(evidenceResponses.get(0))
-                        .isSuccess(true)
-                        .build();
-            } else {
-                kpiResponse = KPIResponse.builder()
-                        .responseMessage(KPIConstants.RECORD_NOT_FOUND)
-                        .responseData(new EvidenceResponse())
-                        .isSuccess(false)
-                        .build();
+            List<Object[]> evidenceData = evidenceRepo.getEvidenceDetailsByEmpId(empId, "A");
+            if (evidenceData.size() > 0) {
+                List<EvidenceResponse> evidenceResponses = evidenceData.stream().map(EvidenceResponse::new).collect(Collectors.toList());
+                kpiResponse.setSuccess(true);
+                kpiResponse.setResponseMessage("Evidence Data fetch successfully");
+                kpiResponse.setResponseData(evidenceResponses.get(0));
+                return kpiResponse;
             }
+        } catch (Exception ex) {
+            log.error("Inside EvidenceServiceImpl >> getEmpoyeeEvidenceDetailsByEmpId()");
+            throw new KPIException("EvidenceServiceImpl >> getEmpoyeeEvidenceDetailsByEmpId()", false, ex.getMessage());
         }
-        catch (Exception ex){
-            log.error("Inside EvidenceServiceImpl >> uploadFile()");
-            throw new KPIException("EvidenceServiceImpl", false, ex.getMessage());
-        }
-        return  kpiResponse;
+        kpiResponse.setResponseMessage("Data not found");
+        kpiResponse.setSuccess(false);
+        return kpiResponse;
     }
-
 }

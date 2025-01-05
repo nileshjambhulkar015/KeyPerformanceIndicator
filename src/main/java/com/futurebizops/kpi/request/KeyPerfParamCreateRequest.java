@@ -4,8 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.Column;
-
 @Data
 @ToString
 public class KeyPerfParamCreateRequest {
