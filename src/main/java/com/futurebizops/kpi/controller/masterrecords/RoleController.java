@@ -1,14 +1,10 @@
 package com.futurebizops.kpi.controller.masterrecords;
 
-import com.futurebizops.kpi.enums.PageDirection;
-import com.futurebizops.kpi.enums.RoleSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
 import com.futurebizops.kpi.service.RoleService;
-import com.futurebizops.kpi.utils.KPIUtils;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -54,8 +50,8 @@ public class RoleController {
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> findRoleDetails(@RequestParam(required = false) Integer roleId,
-                                                      @RequestParam(required = false) String roleName,
-                                                      @Parameter(hidden = true) Pageable pageable) {
+                                                       @RequestParam(required = false) String roleName,
+                                                       @Parameter(hidden = true) Pageable pageable) {
         log.info("Inside RoleController >> findRoleDetails() roleId : {}, roleName : {}", roleId, roleName);
         KPIResponse response = roleService.findRoleDetails(roleId, roleName, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -79,7 +75,7 @@ public class RoleController {
     @GetMapping(value = "/dd-role-except-gm-role")
     public ResponseEntity<List<RoleDDResponse>> ddEmployeeRoleExceptGM() {
         log.info("Inside RoleController >> ddEmployeeRoleExceptGM()");
-        List<RoleDDResponse>   response = roleService.ddEmployeeRoleExceptGM();
+        List<RoleDDResponse> response = roleService.ddEmployeeRoleExceptGM();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

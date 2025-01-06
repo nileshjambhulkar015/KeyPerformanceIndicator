@@ -1,16 +1,10 @@
 package com.futurebizops.kpi.controller.masterrecords;
 
 import com.futurebizops.kpi.entity.UoMEntity;
-import com.futurebizops.kpi.enums.PageDirection;
-import com.futurebizops.kpi.enums.RoleSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
-import com.futurebizops.kpi.request.RoleCreateRequest;
-import com.futurebizops.kpi.request.RoleUpdateRequest;
 import com.futurebizops.kpi.request.UoMCreateRequest;
 import com.futurebizops.kpi.request.UoMUpdateRequest;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.UoMService;
-import com.futurebizops.kpi.utils.KPIUtils;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -42,9 +36,9 @@ public class UoMController {
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<KPIResponse> findUoMDetails(@RequestParam(required = false) Integer uomId,
-                                                             @RequestParam(required = false) String uomName,
-                                                             @RequestParam(required = false) String statusCd,
-                                                             @Parameter(hidden = true) Pageable pageable) {
+                                                      @RequestParam(required = false) String uomName,
+                                                      @RequestParam(required = false) String statusCd,
+                                                      @Parameter(hidden = true) Pageable pageable) {
         log.info("Inside SiteController >> findUoMDetails() uomId : {},uomName : {}", uomId, uomName);
         KPIResponse response = uoMService.findUoMDetails(uomId, uomName, statusCd, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);

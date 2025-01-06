@@ -1,10 +1,7 @@
 package com.futurebizops.kpi.service;
 
-import com.futurebizops.kpi.enums.RoleSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.RoleCreateRequest;
 import com.futurebizops.kpi.request.RoleUpdateRequest;
-import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.RoleResponse;
 import com.futurebizops.kpi.response.dropdown.RoleDDResponse;
@@ -18,7 +15,7 @@ public interface RoleService {
 
     public KPIResponse updateRole(RoleUpdateRequest roleUpdateRequest);
 
-    public KPIResponse findRoleDetails( Integer roleId, String roleName, Pageable pageable);
+    public KPIResponse findRoleDetails(Integer roleId, String roleName, Pageable pageable);
 
     public List<RoleResponse> findAllRolesDetails();
 

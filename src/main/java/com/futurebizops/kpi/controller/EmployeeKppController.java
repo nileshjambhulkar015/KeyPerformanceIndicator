@@ -1,6 +1,5 @@
 package com.futurebizops.kpi.controller;
 
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.model.KppAdvanceSearchModel;
 import com.futurebizops.kpi.request.EmpKPPMasterUpdateRequest;
 import com.futurebizops.kpi.request.EmployeeKeyPerfParamCreateRequest;
@@ -91,17 +90,17 @@ public class EmployeeKppController {
 
 
     //load kpp details as per role , dept and designation of employee
-    @GetMapping(value = "/kpp")
+    /*@GetMapping(value = "/kpp")
     public ResponseEntity<List<KPPResponse>> getKeyPerfomanceParameter(@RequestParam(required = false) Integer roleId,
                                                                        @RequestParam(required = false) Integer deptId,
                                                                        @RequestParam(required = false) Integer desigId,
-                                                                       @RequestParam(required = false) StatusCdEnum statusCdEnum
+                                                                       @RequestParam(required = false) String  statusCd
     ) {
         log.info("Inside EmployeeKppController >> getKeyPerfomanceParameter() roleId : {}, deptId: {}, desigId : {}", roleId, deptId, desigId);
-        List<KPPResponse> response = employeeKeyPerfParamService.getKeyPerfomanceParameter(roleId, deptId, desigId, statusCdEnum.getSearchType());
+        List<KPPResponse> response = employeeKeyPerfParamService.getKeyPerfomanceParameter(roleId, deptId, desigId, statusCd);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
-    }
+    }*/
 
     //for region save
     @GetMapping(value = "/dd-regions-employee")

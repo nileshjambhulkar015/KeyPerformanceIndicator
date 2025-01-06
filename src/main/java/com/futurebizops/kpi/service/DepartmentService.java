@@ -1,7 +1,5 @@
 package com.futurebizops.kpi.service;
 
-import com.futurebizops.kpi.enums.DepartmentSearchEnum;
-import com.futurebizops.kpi.enums.StatusCdEnum;
 import com.futurebizops.kpi.request.DepartmentCreateRequest;
 import com.futurebizops.kpi.request.DepartmentUpdateRequest;
 import com.futurebizops.kpi.response.DepartmentReponse;
