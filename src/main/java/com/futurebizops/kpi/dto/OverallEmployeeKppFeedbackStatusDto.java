@@ -4,10 +4,12 @@ import com.futurebizops.kpi.utils.DateTimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class OverallEmployeeKppFeedbackStatusDto {
 
     OverallEmployeeKppFeedbackMasterDto employeeKppMasterDto = new OverallEmployeeKppFeedbackMasterDto();

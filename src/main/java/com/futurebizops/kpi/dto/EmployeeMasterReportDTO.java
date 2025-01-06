@@ -1,8 +1,10 @@
 package com.futurebizops.kpi.dto;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class EmployeeMasterReportDTO {
 
     private Integer empId;
