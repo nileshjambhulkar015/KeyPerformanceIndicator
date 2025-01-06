@@ -46,6 +46,7 @@ public class CumulativeServiceImpl implements CumulativeService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse getAllEmployeeKPPStatusReport(String fromDate, String toDate,  Integer empId, Integer roleId, String statusCd, Pageable pageable) {
+        log.debug("Inside CumulativeServiceImpl >> getAllEmployeeKPPStatusReport() fromDate : {}, toDate : {}, roleId : {}", fromDate, toDate, roleId);
         String sortName = null;
         String startDate = StringUtils.isNotEmpty(fromDate) ? DateTimeUtils.addOneDayToInstant(fromDate).toString() : DateTimeUtils.getFirstDateOfYear();
         String endDate = StringUtils.isNotEmpty(toDate) ? DateTimeUtils.addOneDayToInstant(toDate).toString() : Instant.now().toString();
@@ -62,7 +63,6 @@ public class CumulativeServiceImpl implements CumulativeService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
         try {
-
             Integer totalCount = reportEmployeeKppMasterRepo.getEmployeeKppStatusReportCount(startDate, endDate, empId, roleId,  statusCd);
             List<Object[]> employeeDetail = reportEmployeeKppMasterRepo.getEmployeeKppStatusReportDetail(startDate, endDate, empId, roleId,  statusCd,  sortName, pageSize, pageOffset);
             if(employeeDetail.size()>0) {
@@ -99,16 +99,12 @@ public class CumulativeServiceImpl implements CumulativeService {
                 cummalitiveEmployeeResponse.setDeptName(employeeKppStatusResponses.get(0).getDeptName());
                 cummalitiveEmployeeResponse.setDesigId(employeeKppStatusResponses.get(0).getDesigId());
                 cummalitiveEmployeeResponse.setDesigName(employeeKppStatusResponses.get(0).getDesigName());
-
               //  cummalitiveEmployeeResponse.setFinYear(employeeKppStatusResponses.get(0).getFinYear());
-
 
                 cummalitiveEmployeeResponse.setEmployeeKppStatusResponses(new PageImpl<>(employeeKppStatusResponses, pageable, totalCount));
                 cummalitiveEmployeeResponse.setSumOfEmployeeRatings(sumOfEmployeeRatings);
                 cummalitiveEmployeeResponse.setSumOfHodRatings(sumOfHodRatings);
                 cummalitiveEmployeeResponse.setSumOfGMRatings(sumOfGMRatings);
-
-
 
                 cummalitiveEmployeeResponse.setCummulativeRatings(cummulativeRatings);
                 cummalitiveEmployeeResponse.setAvgCummulativeRatings(Double.valueOf(decfor.format(avgCummulativeRatings)));
@@ -126,8 +122,8 @@ public class CumulativeServiceImpl implements CumulativeService {
                     .responseMessage(KPIConstants.RECORD_FETCH)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside CumulativeServiceImpl >> getAllEmployeeDetailsForHod()");
-            throw new KPIException("CumulativeServiceImpl", false, ex.getMessage());
+            log.error("Inside CumulativeServiceImpl >> getAllEmployeeKPPStatusReport() : {}", ex);
+            throw new KPIException("CumulativeServiceImpl >> getAllEmployeeKPPStatusReport()", false, ex.getMessage());
         }
     }
 
@@ -135,7 +131,7 @@ public class CumulativeServiceImpl implements CumulativeService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse allEmployeeKppDetails(String fromDate, String toDate, Integer roleId,Integer deptId,Integer desigId,Integer reportingEmpId,Integer gmEmpId,Pageable requestPageable) {
-
+        log.debug("Inside CumulativeServiceImpl >> allEmployeeKppDetails() fromDate : {}, toDate : {}, roleId : {}, deptId : {}, desigId : {}, reportingEmpId : {}, gmEmpId : {}", fromDate, toDate, roleId, deptId, desigId, reportingEmpId, gmEmpId);
 
         KPIResponse kpiResponse = new KPIResponse();
         String sortName = null;
@@ -204,9 +200,10 @@ public class CumulativeServiceImpl implements CumulativeService {
                kpiResponse.setSuccess(false);
            }
         }
-        catch (Exception ex){
-
-        }
+     catch (Exception ex) {
+        log.error("Inside CumulativeServiceImpl >> allEmployeeKppDetails() : {}", ex);
+        throw new KPIException("CumulativeServiceImpl >> allEmployeeKppDetails()", false, ex.getMessage());
+    }
         return kpiResponse;
 
     }
@@ -215,6 +212,7 @@ public class CumulativeServiceImpl implements CumulativeService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateOverallEmployeeKppReportRemark(CumulativeUpdateRequest cumulativeUpdateRequest) {
+        log.debug("Inside CumulativeServiceImpl >> getAllEmployeeKPPStatusReport() cumulativeUpdateRequest : {}",cumulativeUpdateRequest) ;
         try {
             reportEmployeeKppMasterRepo.updateOverallEmployeeKppReportRemark(cumulativeUpdateRequest.getFinYear(),cumulativeUpdateRequest.getEmpKeyStrength(),cumulativeUpdateRequest.getEmpAreaOfImprovement(),cumulativeUpdateRequest.getEmpTrainginDevelopmentNeeds(),cumulativeUpdateRequest.getEmployeeId(),cumulativeUpdateRequest.getEmpId());
             return KPIResponse.builder()
@@ -230,12 +228,17 @@ public class CumulativeServiceImpl implements CumulativeService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<KppFinancialYearDDResponse> ddAllFinancialYear() {
+        log.debug("Inside CumulativeServiceImpl >> ddAllFinancialYear()") ;
+        try{
         List<Object[]> financialYearData = reportEmployeeKppMasterRepo.ddAllFinancialYear();
         List<KppFinancialYearDDResponse> financialYearDDResponses = new ArrayList<>();
         if (financialYearData.size() > 0) {
             financialYearDDResponses = financialYearData.stream().map(KppFinancialYearDDResponse::new).collect(Collectors.toList());
         }
         return financialYearDDResponses;
-
+        } catch (Exception ex) {
+            log.error("Inside CumulativeServiceImpl >> ddAllFinancialYear() : {}", ex);
+            throw new KPIException("CumulativeServiceImpl >> ddAllFinancialYear()", false, ex.getMessage());
+        }
     }
 }

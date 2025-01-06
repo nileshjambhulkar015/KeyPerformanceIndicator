@@ -4,15 +4,14 @@ import com.futurebizops.kpi.constants.KPIConstants;
 import com.futurebizops.kpi.entity.DepartmentEntity;
 import com.futurebizops.kpi.entity.DesignationAudit;
 import com.futurebizops.kpi.entity.DesignationEntity;
-import com.futurebizops.kpi.entity.RoleEntity;
 import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.DepartmentRepo;
 import com.futurebizops.kpi.repository.DesignationAuditRepo;
 import com.futurebizops.kpi.repository.DesignationRepo;
 import com.futurebizops.kpi.repository.RoleRepo;
 import com.futurebizops.kpi.request.DesignationCreateRequest;
-import com.futurebizops.kpi.request.uploadexcel.DesignationExcelReadData;
 import com.futurebizops.kpi.request.DesignationUpdateRequest;
+import com.futurebizops.kpi.request.uploadexcel.DesignationExcelReadData;
 import com.futurebizops.kpi.response.DepartmentReponse;
 import com.futurebizops.kpi.response.DesignationReponse;
 import com.futurebizops.kpi.response.KPIResponse;
@@ -64,9 +63,10 @@ public class DesignationServiceImp implements DesignationService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveDesignation(DesignationCreateRequest designationCreateRequest) {
+        log.debug("Inside DesignationServiceImp >> saveDesignation() designationCreateRequest: {}", designationCreateRequest);
         Optional<DesignationEntity> designationEntities = designationRepo.findByDeptIdAndDesigNameEqualsIgnoreCase(designationCreateRequest.getDeptId(), designationCreateRequest.getDesigName());
         if (designationEntities.isPresent()) {
-            log.error("Inside DesignationServiceImp >> saveDesignation()");
+            log.error("Inside DesignationServiceImp >> saveDesignation() With Department name Designation name already exist");
             throw new KPIException("DesignationServiceImp class", false, "With Department name Designation name already exist");
         }
 
@@ -80,8 +80,8 @@ public class DesignationServiceImp implements DesignationService {
                     .responseMessage(KPIConstants.RECORD_SUCCESS)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside DesignationServiceImp >> saveDesignation()");
-            throw new KPIException("DesignationServiceImp", false, ex.getMessage());
+            log.error("Inside DesignationServiceImp >> saveDesignation() : {}", ex);
+            throw new KPIException("DesignationServiceImp >> saveDesignation()", false, ex.getMessage());
         }
     }
 
@@ -89,6 +89,7 @@ public class DesignationServiceImp implements DesignationService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteDesignationDetails(Integer desigId) {
+        log.debug("Inside DesignationServiceImp >> deleteDesignationDetails() desigId: {}", desigId);
         KPIResponse busPassResponse = new KPIResponse();
         try {
             designationRepo.deleteDesignationDetails(desigId);
@@ -97,17 +98,15 @@ public class DesignationServiceImp implements DesignationService {
             return busPassResponse;
         } catch (Exception ex) {
             log.error("Inside DesignationServiceImp >> deleteDesignationDetails() : {}",ex);
-            return KPIResponse.builder()
-                    .isSuccess(false)
-                    .build();
+            throw new KPIException("DesignationServiceImp >> deleteDesignationDetails()", false, ex.getMessage());
         }
-
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public KPIResponse updateDesignation(DesignationUpdateRequest departmentUpdateRequest) {
-        DesignationEntity designationEntity = convertDesignationUpdateRequestToEntity(departmentUpdateRequest);
+    public KPIResponse updateDesignation(DesignationUpdateRequest designationUpdateRequest) {
+        log.debug("Inside DesignationServiceImp >> updateDesignation() designationUpdateRequest: {}", designationUpdateRequest);
+        DesignationEntity designationEntity = convertDesignationUpdateRequestToEntity(designationUpdateRequest);
         try {
             designationRepo.save(designationEntity);
             DesignationAudit designationAudit = new DesignationAudit(designationEntity);
@@ -118,14 +117,14 @@ public class DesignationServiceImp implements DesignationService {
                     .build();
         } catch (Exception ex) {
             log.error("Inside DesignationServiceImp >> updateDesignation() : {}", ex);
-            throw new KPIException("DesignationServiceImp", false, ex.getMessage());
+            throw new KPIException("DesignationServiceImp >> updateDesignation()", false, ex.getMessage());
         }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findDesignationDetails(Integer deptId, String desigName, String statusCd, Pageable requestPageable) {
-
+        log.debug("Inside DesignationServiceImp >> findDesignationDetails() deptId: {}, desigName : {}", deptId, desigName);
         String sortName = null;
         //String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -137,6 +136,7 @@ public class DesignationServiceImp implements DesignationService {
             // sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
+        try{
         Integer totalCount = designationRepo.getDesignationCount(deptId, desigName, statusCd);
         List<Object[]> designationData = designationRepo.getDesignationDetail(deptId, desigName, statusCd, sortName, pageSize, pageOffset);
 
@@ -152,6 +152,10 @@ public class DesignationServiceImp implements DesignationService {
                     .responseMessage(KPIConstants.RECORD_FETCH)
                     .build();
         }
+        } catch (Exception ex) {
+            log.error("Inside DesignationServiceImp >> findDesignationDetails() : {}", ex);
+            throw new KPIException("DesignationServiceImp >> findDesignationDetails()", false, ex.getMessage());
+        }
         return KPIResponse.builder()
                 .responseMessage("Designation name is not available")
                 .isSuccess(false)
@@ -161,30 +165,47 @@ public class DesignationServiceImp implements DesignationService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public DesignationReponse findDesignationById(Integer desigId) {
+        log.debug("Inside DesignationServiceImp >> findDesignationById() desigId: {}", desigId);
+        try{
         List<Object[]> designationData = designationRepo.getDesignationByDesigId(desigId);
         List<DesignationReponse> designationReponses = designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
         return designationReponses.get(0);
+        } catch (Exception ex) {
+            log.error("Inside DesignationServiceImp >> findDesignationById() : {}", ex);
+            throw new KPIException("DesignationServiceImp >> findDesignationById()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DesignationReponse> findAllDesignationByDeptId(Integer deptId) {
-
+        log.debug("Inside DesignationServiceImp >> findAllDesignationByDeptId() deptId: {}", deptId);
+        try{
         List<Object[]> designationData = designationRepo.getAllDesigByDeptId(deptId);
         return designationData.stream().map(DesignationReponse::new).collect(Collectors.toList());
+        } catch (Exception ex) {
+            log.error("Inside DesignationServiceImp >> findAllDesignationByDeptId() : {}", ex);
+            throw new KPIException("DesignationServiceImp >> findAllDesignationByDeptId()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentReponse> getAllDepartmentFromDesig(Integer deptId) {
+        log.debug("Inside DesignationServiceImp >> getAllDepartmentFromDesig() deptId: {}", deptId);
+        try{
         List<Object[]> designationData = designationRepo.getDeptInDesigById(deptId);
         return designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
+    } catch (Exception ex) {
+        log.error("Inside DesignationServiceImp >> getAllDepartmentFromDesig() : {}", ex);
+        throw new KPIException("DesignationServiceImp >> getAllDepartmentFromDesig()", false, ex.getMessage());
+    }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public  void uploadDesigExcelFile(MultipartFile file) throws IOException {
-
+        log.debug("Inside DesignationServiceImp >> uploadDesigExcelFile()");
         Integer currentRow = 0;
         List<DesignationCreateRequest> designationCreateRequests = new ArrayList<>();
         List<DesignationCreateRequest> designationNotSavedRecords = new ArrayList<>();
@@ -224,7 +245,7 @@ public class DesignationServiceImp implements DesignationService {
             workbook.close();
         } catch (Exception ex) {
             log.error("Inside DesignationServiceImpl >> designationServiceImpl()");
-            throw new KPIException("DesignationServiceImpl", false, "Issue in row no: " + currentRow);
+            throw new KPIException("DesignationServiceImpl designationServiceImpl : designationServiceImpl()", false, "Issue in row no: " + currentRow);
         }
 
         Integer currentExcelRow = 0;
@@ -241,10 +262,9 @@ public class DesignationServiceImp implements DesignationService {
                     designationCreateRequests.add(designationCreateRequest);//final request
                 }
             } catch (Exception ex) {
-                throw new KPIException("DesignationServiceImpl", false, "Issue in row no: " + currentExcelRow);
+                log.error("DesignationCreateRequest >> designationServiceImpl() Issue in row no: {}", currentExcelRow);
+                throw new KPIException("DesignationServiceImpl >> designationServiceImpl()", false, "Issue in row no: " + currentExcelRow);
 
-            } finally {
-               // System.out.println("employeeCreateRequests::" + designationCreateRequests);
             }
         }
         for (DesignationCreateRequest request : designationCreateRequests) {
@@ -261,25 +281,10 @@ public class DesignationServiceImp implements DesignationService {
         }
     }
 
-    private Integer getRoleId(String roleName) {
-        Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleName);
-        if (optionalRoleEntity.isPresent()) {
-            return optionalRoleEntity.get().getRoleId();
-        }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Role Name is not exist");
-    }
-    private Integer getDeptId(Integer roleId,String deptName) {
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
-        if (optionalDepartmentEntity.isPresent()) {
-            return optionalDepartmentEntity.get().getDeptId();
-        }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
-        throw new KPIException("EmployeeServiceImpl", false, "Department Name is not exist");
-    }
-
-    private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {
-        DesignationEntity designationEntity = new DesignationEntity();
+     private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {
+         log.debug("Inside DesignationServiceImp >> convertDesignationCreateRequestToEntity() designationCreateRequest: {}", designationCreateRequest);
+      try{
+          DesignationEntity designationEntity = new DesignationEntity();
 
         designationEntity.setDeptId(designationCreateRequest.getDeptId());
         designationEntity.setDesigName(designationCreateRequest.getDesigName());
@@ -287,10 +292,16 @@ public class DesignationServiceImp implements DesignationService {
         designationEntity.setStatusCd(designationCreateRequest.getStatusCd());
         designationEntity.setCreatedUserId(designationCreateRequest.getEmployeeId());
         return designationEntity;
+     } catch (Exception ex) {
+        log.error("Inside DesignationServiceImp >> convertDesignationCreateRequestToEntity() : {}", ex);
+        throw new KPIException("DesignationServiceImp >> convertDesignationCreateRequestToEntity()", false, ex.getMessage());
+    }
     }
 
     private DesignationEntity convertDesignationUpdateRequestToEntity(DesignationUpdateRequest designationUpdateRequest) {
-        DesignationEntity designationEntity = new DesignationEntity();
+        log.debug("Inside DesignationServiceImp >> convertDesignationUpdateRequestToEntity() designationUpdateRequest: {}", designationUpdateRequest);
+       try{
+           DesignationEntity designationEntity = new DesignationEntity();
         designationEntity.setDesigId(designationUpdateRequest.getDesigId());
 
         designationEntity.setDeptId(designationUpdateRequest.getDeptId());
@@ -299,14 +310,24 @@ public class DesignationServiceImp implements DesignationService {
         designationEntity.setStatusCd(designationUpdateRequest.getStatusCd());
         designationEntity.setUpdatedUserId(designationUpdateRequest.getEmployeeId());
         return designationEntity;
+    } catch (Exception ex) {
+        log.error("Inside DesignationServiceImp >> convertDesignationUpdateRequestToEntity() : {}", ex);
+        throw new KPIException("DesignationServiceImp >> convertDesignationUpdateRequestToEntity()", false, ex.getMessage());
+    }
     }
 
     private Integer getDeptIdByDeptName(String deptName) {
+        log.debug("Inside DesignationServiceImp >> getDeptIdByDeptName() deptName: {}", deptName);
+
+        try{
         Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(deptName);
         if (optionalDepartmentEntity.isPresent()) {
             return optionalDepartmentEntity.get().getDeptId();
         }
-        log.error("Inside EmployeeServiceImpl >> getRoleId");
       return null;
+        } catch (Exception ex) {
+            log.error("Inside DesignationServiceImp >> getDeptIdByDeptName() : {}", ex);
+            throw new KPIException("DesignationServiceImp >> getDeptIdByDeptName()", false, ex.getMessage());
+        }
     }
 }

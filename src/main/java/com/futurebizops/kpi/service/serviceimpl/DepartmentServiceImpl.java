@@ -55,15 +55,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveDepartment(DepartmentCreateRequest departmentCreateRequest) {
-
+        log.debug("Inside DepartmentServiceImpl >> saveDepartment() departmentCreateRequest : {}", departmentCreateRequest);
         Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDeptName());
         if (optionalDepartmentEntity.isPresent()) {
-            log.error("Inside DepartmentServiceImpl >> saveDepartment()");
+            log.error("Inside DepartmentServiceImpl >> saveDepartment() Department name already exist");
             return KPIResponse.builder()
                     .isSuccess(false)
                     .responseMessage("Department name already exist")
                     .build();
-
         }
 
         DepartmentEntity departmentEntity = convertDepartmentCreateRequestToEntity(departmentCreateRequest);
@@ -77,7 +76,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                     .build();
         } catch (Exception ex) {
             log.error("Inside DepartmentServiceImpl >> saveDepartment() : {}", ex);
-            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+            throw new KPIException("DepartmentServiceImpl >> saveDepartment()", false, ex.getMessage());
         }
     }
 
@@ -85,24 +84,23 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteDepartmentDetails(Integer deptId) {
-        KPIResponse busPassResponse = new KPIResponse();
+        log.debug("Inside DepartmentServiceImpl >> deleteDepartmentDetails() deptId : {}", deptId);
+        KPIResponse kpiResponse = new KPIResponse();
         try {
             departmentRepo.deleteDepartmentDetails(deptId);
-            busPassResponse.setSuccess(true);
-            busPassResponse.setResponseMessage("Department details deleted Successfully");
-            return busPassResponse;
+            kpiResponse.setSuccess(true);
+            kpiResponse.setResponseMessage("Department details deleted Successfully");
+            return kpiResponse;
         } catch (Exception ex) {
             log.error("Inside DepartmentServiceImpl >> deleteDepartmentDetails() : {}", ex);
-            return KPIResponse.builder()
-                    .isSuccess(false)
-                    .build();
+            throw new KPIException("DepartmentServiceImpl >> deleteDepartmentDetails()", false, ex.getMessage());
         }
-
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateDepartment(DepartmentUpdateRequest departmentUpdateRequest) {
+        log.debug("Inside DepartmentServiceImpl >> updateDepartment() departmentUpdateRequest : {}", departmentUpdateRequest);
         try {
             Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findById(departmentUpdateRequest.getDeptId());
             DepartmentEntity departmentEntity = null;
@@ -126,13 +124,14 @@ public class DepartmentServiceImpl implements DepartmentService {
             }
         } catch (Exception ex) {
             log.error("Inside DepartmentServiceImpl >> updateDepartment() : {}", ex);
-            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+            throw new KPIException("DepartmentServiceImpl >> updateDepartment()", false, ex.getMessage());
         }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse findDepartmentDetails(Integer deptId, String deptName, String statusCd, Pageable requestPageable) {
+        log.debug("Inside DepartmentServiceImpl >> findDepartmentDetails() deptId : {}, deptName : {}", deptId, deptName);
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -144,6 +143,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
 
+        try{
         Integer totalCount = departmentRepo.getDepartmentCount(deptId, deptName, statusCd);
         List<Object[]> departmentData = departmentRepo.getDepartmentDetail(deptId, deptName, statusCd, sortName, pageSize, pageOffset);
 
@@ -160,6 +160,10 @@ public class DepartmentServiceImpl implements DepartmentService {
                     .responseMessage(KPIConstants.RECORD_FETCH)
                     .build();
         }
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> findDepartmentDetails() : {}", ex);
+            throw new KPIException("DepartmentServiceImpl >> findDepartmentDetails()", false, ex.getMessage());
+        }
         return KPIResponse.builder()
                 .isSuccess(false)
                 .build();
@@ -168,10 +172,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentDDResponse> findAllDepartmentExceptGM() {
+        log.debug("Inside DepartmentServiceImpl >> findAllDepartmentExceptGM()");
+
+        try{
         List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         DepartmentDDResponse departmentDDResponse = null;
         List<DepartmentDDResponse> departmentDDResponses = new ArrayList<>();
-
         for (DepartmentEntity departmentEntity : departmentEntities) {
             if (departmentEntity.getDeptId() != 1) {
                 departmentDDResponse = new DepartmentDDResponse();
@@ -179,14 +185,19 @@ public class DepartmentServiceImpl implements DepartmentService {
                 departmentDDResponse.setDeptName(departmentEntity.getDeptName());
                 departmentDDResponses.add(departmentDDResponse);
             }
-
         }
         return departmentDDResponses;
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> findAllDepartmentExceptGM() : {}", ex);
+            throw new KPIException("DepartmentServiceImpl >> findAllDepartmentExceptGM()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentDDResponse> ddAllDepartment() {
+        log.debug("Inside DepartmentServiceImpl >> ddAllDepartment()");
+        try{
         List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         DepartmentDDResponse departmentDDResponse = null;
         List<DepartmentDDResponse> departmentDDResponses = new ArrayList<>();
@@ -198,11 +209,18 @@ public class DepartmentServiceImpl implements DepartmentService {
             departmentDDResponses.add(departmentDDResponse);
         }
         return departmentDDResponses;
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> ddAllDepartment() : {}", ex);
+            throw new KPIException("DepartmentServiceImpl >> ddAllDepartment()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public List<DepartmentReponse> findAllDepartmentDetails() {
+        log.debug("Inside DepartmentServiceImpl >> findAllDepartmentDetails()");
+
+        try{
         List<DepartmentEntity> departmentEntities = departmentRepo.findAllDepartmentDetailsForEmployee();
         List<DepartmentReponse> departmentReponses = new ArrayList<>();
         DepartmentReponse departmentReponse = null;
@@ -216,28 +234,33 @@ public class DepartmentServiceImpl implements DepartmentService {
             departmentReponses.add(departmentReponse);
         }
         return departmentReponses;
+        } catch (Exception ex) {
+            log.error("Inside DepartmentServiceImpl >> findAllDepartmentDetails() : {}", ex);
+            throw new KPIException("DepartmentServiceImpl >> findAllDepartmentDetails()", false, ex.getMessage());
+        }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public DepartmentReponse findAllDepartmentById(Integer deptId) {
+        log.debug("Inside DepartmentServiceImpl >> findAllDepartmentById() deptId : {}", deptId);
         try {
             List<Object[]> designationData = departmentRepo.getDepartmentByIdDetail(deptId);
             List<DepartmentReponse> departmentReponses = designationData.stream().map(DepartmentReponse::new).collect(Collectors.toList());
             if (departmentReponses.size() > 0) {
                 return departmentReponses.get(0);
             }
-            return null;
         } catch (Exception ex) {
             log.error("DepartmentServiceImpl >>findAllDepartmentById :{}", ex);
-            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+            throw new KPIException("DepartmentServiceImpl >> findAllDepartmentById()", false, ex.getMessage());
         }
+        return null;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public void uploadDeptExcelFile(MultipartFile file) throws IOException {
-
+        log.debug("Inside DepartmentServiceImpl >> uploadDeptExcelFile()");
         Integer currentRow = 0;
         List<DepartmentCreateRequest> createRequests = new ArrayList<>();
         List<DepartmentCreateRequest> departmentNotSavedRecords = new ArrayList<>();
@@ -245,14 +268,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         byte[] excelBytes = null;
         if (file.isEmpty()) {
-            throw new KPIException("DepartmentServiceImpl", false, "File not uploaded");
+            throw new KPIException("DepartmentServiceImpl >> uploadDeptExcelFile()", false, "File not uploaded");
         }
 
         try {
             excelBytes = file.getBytes();
 
         } catch (Exception ex) {
-            log.error("DepartmentServiceImpl >>departmentProcessExcel :{}", ex);
+            log.error("DepartmentServiceImpl >> uploadDeptExcelFile :{}", ex);
             //   throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
         }
         try (InputStream inputStream = new ByteArrayInputStream(excelBytes)) {
@@ -275,7 +298,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             }
             workbook.close();
         } catch (Exception ex) {
-            log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile() :", ex);
+            log.error("Inside DepartmentServiceImpl >> uploadDeptExcelFile() :", ex);
             // throw new KPIException("DepartmentServiceImpl", false, "Issue in row no: " + currentRow);
         }
 
@@ -294,7 +317,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 }
             } catch (Exception ex) {
                 //   throw new KPIException("EmployeeServiceImpl", false, "Issue in row no: " + currentExcelRow);
-                log.error("Inside DepartmentServiceImpl >> DepartmentprocessExcelFile() :{}", ex);
+                log.error("Inside DepartmentServiceImpl >> uploadDeptExcelFile() :{}", ex);
             }
         }
         for (DepartmentCreateRequest request : createRequests) {
@@ -302,38 +325,27 @@ public class DepartmentServiceImpl implements DepartmentService {
                 if (request.getDeptName() != null) {
                     saveDepartment(request);
                 }
-                {
-                    log.info("Not saved department  : {}", request.getDeptName());
-                }
-
             } catch (Exception ex) {
                 departmentNotSavedRecords.add(request);
-                log.error("Inside DepartmentServiceImpl >> {}", ex);
+                log.error("Inside DepartmentServiceImpl >> uploadDeptExcelFile() :{}", ex);
             }
         }
-
     }
 
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest departmentCreateRequest) {
-        DepartmentEntity departmentEntity = new DepartmentEntity();
-
-        departmentEntity.setDeptName(departmentCreateRequest.getDeptName());
-        departmentEntity.setDeptMailId(departmentCreateRequest.getDeptMailId());
-        departmentEntity.setRemark(departmentCreateRequest.getRemark());
-        departmentEntity.setStatusCd(departmentCreateRequest.getStatusCd());
-        departmentEntity.setCreatedUserId(departmentCreateRequest.getEmployeeId());
-        return departmentEntity;
-    }
-
-    private DepartmentEntity convertDepartmentUpdateRequestToEntity(DepartmentUpdateRequest departmentUpdateRequest) {
-        DepartmentEntity departmentEntity = new DepartmentEntity();
-        departmentEntity.setDeptId(departmentUpdateRequest.getDeptId());
-        departmentEntity.setDeptName(departmentUpdateRequest.getDeptName());
-        departmentEntity.setDeptMailId(departmentUpdateRequest.getDeptMailId());
-        departmentEntity.setRemark(departmentUpdateRequest.getRemark());
-        departmentEntity.setStatusCd(departmentUpdateRequest.getStatusCd());
-        departmentEntity.setCreatedUserId(departmentUpdateRequest.getEmployeeId());
-        return departmentEntity;
+        log.debug("Inside DepartmentServiceImpl >> convertDepartmentCreateRequestToEntity() : {}", departmentCreateRequest);
+        try {
+            DepartmentEntity departmentEntity = new DepartmentEntity();
+            departmentEntity.setDeptName(departmentCreateRequest.getDeptName());
+            departmentEntity.setDeptMailId(departmentCreateRequest.getDeptMailId());
+            departmentEntity.setRemark(departmentCreateRequest.getRemark());
+            departmentEntity.setStatusCd(departmentCreateRequest.getStatusCd());
+            departmentEntity.setCreatedUserId(departmentCreateRequest.getEmployeeId());
+            return departmentEntity;
+        } catch (Exception ex) {
+            log.error("DepartmentServiceImpl >>convertDepartmentCreateRequestToEntity :{}", ex);
+            throw new KPIException("DepartmentServiceImpl >> convertDepartmentCreateRequestToEntity()", false, ex.getMessage());
+        }
     }
 }

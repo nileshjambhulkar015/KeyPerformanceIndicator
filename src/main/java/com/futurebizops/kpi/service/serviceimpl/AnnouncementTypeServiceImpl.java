@@ -40,7 +40,7 @@ public class AnnouncementTypeServiceImpl implements AnnouncementTypeService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveAnnouncementTypeDetails(AnnouncementTypeCreateRequest announcementTypeCreateRequest) {
-        log.info("Inside AnnouncementTypeServiceImpl >> saveAnnouncementTypeDetails()");
+        log.debug("Inside AnnouncementTypeServiceImpl >> saveAnnouncementTypeDetails() announcementTypeCreateRequest : {}", announcementTypeCreateRequest);
         Optional<AnnouncementTypeEntity> announcementTypeEntity = announcementTypeRepo.findByAnnounTypeNameEqualsIgnoreCase(announcementTypeCreateRequest.getAnnounTypeName());
         if (announcementTypeEntity.isPresent()) {
             return KPIResponse.builder()

@@ -42,141 +42,151 @@ public class EmployeeKppStatusServiceImpl implements EmployeeKppStatusService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmpKppStatusResponse getInPrgressEmployeeKppStatus(Integer empId) {
+        log.debug("Inside EmployeeKppStatusServiceImpl >> getInPrgressEmployeeKppStatus() empId: {}", empId);
+
         List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
         EmpKppStatusResponse statusResponse = null;
-        List<Object[]> employeeKppData = keyPerfParameterRepo.getInProgressEmployeeKPPStatus(empId);
-        if (employeeKppData.size() > 0) {
-            List<EmployeeKppStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(EmployeeKppStatusDto::new).collect(Collectors.toList());
+        try {
+            List<Object[]> employeeKppData = keyPerfParameterRepo.getInProgressEmployeeKPPStatus(empId);
+            if (employeeKppData.size() > 0) {
+                List<EmployeeKppStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(EmployeeKppStatusDto::new).collect(Collectors.toList());
 
-            Map<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> employeeKppMasterDtoListMap =
-                    employeeKppStatusDtos.stream().collect(Collectors.groupingBy(EmployeeKppStatusDto::getEmployeeKppMasterDto, Collectors.mapping(EmployeeKppStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
+                Map<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> employeeKppMasterDtoListMap =
+                        employeeKppStatusDtos.stream().collect(Collectors.groupingBy(EmployeeKppStatusDto::getEmployeeKppMasterDto, Collectors.mapping(EmployeeKppStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
 
-            for (Map.Entry<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
-                statusResponse = new EmpKppStatusResponse();
-                statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-                statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
+                for (Map.Entry<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
+                    statusResponse = new EmpKppStatusResponse();
+                    statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
+                    statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
 
-                statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-                statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
-                statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
-                statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
-                statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
-                statusResponse.setRoleId(masterDtoListEntry.getKey().getRoleId());
-                statusResponse.setRoleName(masterDtoListEntry.getKey().getRoleName());
-                statusResponse.setDeptId(masterDtoListEntry.getKey().getDeptId());
-                statusResponse.setDeptName(masterDtoListEntry.getKey().getDeptName());
-                statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
-                statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
-                statusResponse.setTotalEmpAchivedWeight(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
-                statusResponse.setTotalEmpOverallAchieve(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
-                statusResponse.setTotalEmpOverallTaskComp(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
-                statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
-                statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
-                //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
-                statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
-                statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
-                statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
-                statusResponse.setTotalHodAchivedWeight(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
-                statusResponse.setTotalHodOverallAchieve(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
-                statusResponse.setTotalHodOverallTaskComp(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
+                    statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
+                    statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
+                    statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
+                    statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
+                    statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
+                    statusResponse.setRoleId(masterDtoListEntry.getKey().getRoleId());
+                    statusResponse.setRoleName(masterDtoListEntry.getKey().getRoleName());
+                    statusResponse.setDeptId(masterDtoListEntry.getKey().getDeptId());
+                    statusResponse.setDeptName(masterDtoListEntry.getKey().getDeptName());
+                    statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
+                    statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
+                    statusResponse.setTotalEmpAchivedWeight(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
+                    statusResponse.setTotalEmpOverallAchieve(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
+                    statusResponse.setTotalEmpOverallTaskComp(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
+                    statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
+                    statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
+                    //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
+                    statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
+                    statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
+                    statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
+                    statusResponse.setTotalHodAchivedWeight(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
+                    statusResponse.setTotalHodOverallAchieve(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
+                    statusResponse.setTotalHodOverallTaskComp(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
 
-                //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
-                statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
-                statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
-                statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
-                statusResponse.setTotalGmAchivedWeight(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
-                statusResponse.setTotalGmOverallAchieve(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
-                statusResponse.setTotalGmOverallTaskComp(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
-                // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
-                statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
-                statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
-                statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
-                statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
-                statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
-                statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
-                statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
-                statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
+                    //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
+                    statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
+                    statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
+                    statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
+                    statusResponse.setTotalGmAchivedWeight(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
+                    statusResponse.setTotalGmOverallAchieve(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
+                    statusResponse.setTotalGmOverallTaskComp(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
+                    // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
+                    statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
+                    statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
+                    statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
+                    statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
+                    statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
+                    statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
+                    statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
+                    statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
 
-                statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
-                empKppStatusResponses.add(statusResponse);
+                    statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
+                    empKppStatusResponses.add(statusResponse);
+                }
+            } else {
+                log.error("EmployeeKppStatusServiceImpl >> getInPrgressEmployeeKppStatus() Record not found");
             }
-        } else {
-            log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
-            throw new KPIException("DepartmentServiceImpl", false, "No record found");
+            return statusResponse;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKppStatusServiceImpl >> getInPrgressEmployeeKppStatus() : {}", ex);
+            throw new KPIException("EmployeeKppStatusServiceImpl >> getInPrgressEmployeeKppStatus()", false, ex.getMessage());
         }
-        return statusResponse;
     }
 
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmpKppStatusResponse getCompletedEmployeeKppStatus(Integer empId, String ekppMonth) {
+        log.debug("Inside EmployeeKppStatusServiceImpl >> getCompletedEmployeeKppStatus() empId: {}, ekppMonth : {}", empId, ekppMonth);
+        try {
+            String ekkStatusMonth = StringUtils.isNotEmpty(ekppMonth) ? DateTimeUtils.addOneDayToInstant(ekppMonth).toString() : Instant.now().toString();
+            List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
+            EmpKppStatusResponse statusResponse = null;
+            List<Object[]> employeeKppData = keyPerfParameterRepo.getCompletedEmployeeKPPStatus(empId, ekkStatusMonth);
+            if (employeeKppData.size() > 0) {
+                List<EmployeeKppStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(EmployeeKppStatusDto::new).collect(Collectors.toList());
 
-        String ekkStatusMonth = StringUtils.isNotEmpty(ekppMonth) ? DateTimeUtils.addOneDayToInstant(ekppMonth).toString() : Instant.now().toString();
-        List<EmpKppStatusResponse> empKppStatusResponses = new ArrayList<>();
-        EmpKppStatusResponse statusResponse = null;
-        List<Object[]> employeeKppData = keyPerfParameterRepo.getCompletedEmployeeKPPStatus(empId, ekkStatusMonth);
-        if (employeeKppData.size() > 0) {
-            List<EmployeeKppStatusDto> employeeKppStatusDtos = employeeKppData.stream().map(EmployeeKppStatusDto::new).collect(Collectors.toList());
+                Map<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> employeeKppMasterDtoListMap =
+                        employeeKppStatusDtos.stream().collect(Collectors.groupingBy(EmployeeKppStatusDto::getEmployeeKppMasterDto, Collectors.mapping(EmployeeKppStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
 
-            Map<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> employeeKppMasterDtoListMap =
-                    employeeKppStatusDtos.stream().collect(Collectors.groupingBy(EmployeeKppStatusDto::getEmployeeKppMasterDto, Collectors.mapping(EmployeeKppStatusDto::getEmployeeKppDetailsDto, Collectors.toList())));
+                for (Map.Entry<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
+                    statusResponse = new EmpKppStatusResponse();
+                    statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
+                    statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
 
-            for (Map.Entry<EmployeeKppMasterDto, List<EmployeeKppDetailsDto>> masterDtoListEntry : employeeKppMasterDtoListMap.entrySet()) {
-                statusResponse = new EmpKppStatusResponse();
-                statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-                statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
+                    statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
+                    statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
+                    statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
+                    statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
+                    statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
+                    statusResponse.setRoleId(masterDtoListEntry.getKey().getRoleId());
+                    statusResponse.setRoleName(masterDtoListEntry.getKey().getRoleName());
+                    statusResponse.setDeptId(masterDtoListEntry.getKey().getDeptId());
+                    statusResponse.setDeptName(masterDtoListEntry.getKey().getDeptName());
+                    statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
+                    statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
+                    statusResponse.setTotalEmpAchivedWeight(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
+                    statusResponse.setTotalEmpOverallAchieve(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
+                    statusResponse.setTotalEmpOverallTaskComp(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
+                    //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
+                    statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
+                    statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
+                    statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
+                    statusResponse.setTotalHodAchivedWeight(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
+                    statusResponse.setTotalHodOverallAchieve(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
+                    statusResponse.setTotalHodOverallTaskComp(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
+                    //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
+                    statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
+                    statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
+                    statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
+                    statusResponse.setTotalGmAchivedWeight(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
+                    statusResponse.setTotalGmOverallAchieve(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
+                    statusResponse.setTotalGmOverallTaskComp(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
 
-                statusResponse.setEKppMId(masterDtoListEntry.getKey().getEKppMId());
-                statusResponse.setEkppMonth(masterDtoListEntry.getKey().getEkppMonth());
-                statusResponse.setEmpId(masterDtoListEntry.getKey().getEmpId());
-                statusResponse.setEmpName(masterDtoListEntry.getKey().getEmpName());
-                statusResponse.setEmpEId(masterDtoListEntry.getKey().getEmpEId());
-                statusResponse.setRoleId(masterDtoListEntry.getKey().getRoleId());
-                statusResponse.setRoleName(masterDtoListEntry.getKey().getRoleName());
-                statusResponse.setDeptId(masterDtoListEntry.getKey().getDeptId());
-                statusResponse.setDeptName(masterDtoListEntry.getKey().getDeptName());
-                statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
-                statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
-                statusResponse.setTotalEmpAchivedWeight(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
-                statusResponse.setTotalEmpOverallAchieve(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
-                statusResponse.setTotalEmpOverallTaskComp(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
-                //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
-                statusResponse.setEmpKppStatus(masterDtoListEntry.getKey().getEmpKppStatus());
-                statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
-                statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
-                statusResponse.setTotalHodAchivedWeight(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
-                statusResponse.setTotalHodOverallAchieve(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
-                statusResponse.setTotalHodOverallTaskComp(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
-                //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
-                statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
-                statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
-                statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
-                statusResponse.setTotalGmAchivedWeight(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
-                statusResponse.setTotalGmOverallAchieve(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
-                statusResponse.setTotalGmOverallTaskComp(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
+                    statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
+                    statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
 
-                statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
-                statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
+                    // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
+                    statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
+                    statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
+                    statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
+                    statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
+                    statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
+                    statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
+                    statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
+                    statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
 
-                // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
-                statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
-                statusResponse.setGmRemark(masterDtoListEntry.getKey().getGmRemark());
-                statusResponse.setRemark(masterDtoListEntry.getKey().getRemark());
-                statusResponse.setCompanyId(masterDtoListEntry.getKey().getCompanyId());
-                statusResponse.setCompanyName(masterDtoListEntry.getKey().getCompanyName());
-                statusResponse.setCompanyAddress(masterDtoListEntry.getKey().getCompanyAddress());
-                statusResponse.setCompanyMbNo(masterDtoListEntry.getKey().getCompanyMbNo());
-                statusResponse.setCompanyFinYear(masterDtoListEntry.getKey().getCompanyFinYear());
+                    statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
+                    empKppStatusResponses.add(statusResponse);
+                }
+            } else {
 
-                statusResponse.setKppStatusDetails(masterDtoListEntry.getValue());
-                empKppStatusResponses.add(statusResponse);
+                return null;
             }
-        } else {
-            //log.error("EmployeeKppStatusServiceImpl >> getEmployeeKppStatus()  ");
-            //throw new KPIException("DepartmentServiceImpl", false, "No record found");
-            return null;
+            return statusResponse;
+        } catch (Exception ex) {
+            log.error("Inside EmployeeKppStatusServiceImpl >> getCompletedEmployeeKppStatus() : {}", ex);
+            throw new KPIException("EmployeeKppStatusServiceImpl >> getCompletedEmployeeKppStatus()", false, ex.getMessage());
         }
-        return statusResponse;
     }
 }

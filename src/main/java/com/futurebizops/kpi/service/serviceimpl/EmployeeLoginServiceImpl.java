@@ -5,7 +5,6 @@ import com.futurebizops.kpi.exception.KPIException;
 import com.futurebizops.kpi.repository.EmployeeKppMasterRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginAuditRepo;
 import com.futurebizops.kpi.repository.EmployeeLoginRepo;
-import com.futurebizops.kpi.repository.EmployeeRepo;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.response.LoginResponse;
 import com.futurebizops.kpi.service.EmployeeLoginService;
@@ -36,67 +35,85 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse employeeLogin(String userName, String userPassword) {
-        List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(userName, userPassword);
-        List<LoginResponse> loginResponses = employeeLogin.stream().map(LoginResponse::new).collect(Collectors.toList());
-        KPIResponse response = new KPIResponse();
-        if (!loginResponses.isEmpty()) {
-            Optional<EmployeeKppMasterEntity> entityOptional = employeeKppMasterRepo.findByEmpId(loginResponses.get(0).getEmpId());
-            if(entityOptional.isPresent()) {
-                log.info("Login successfully");
-                response= KPIResponse.builder()
-                        .isSuccess(true)
-                        .responseData(loginResponses.get(0))
-                        .responseMessage("Login successfully")
-                        .build();
-            } else {
-                log.info("Please contact GM. Kpp is not set for you");
-                response= KPIResponse.builder()
-                        .isSuccess(false)
-                        .responseMessage("Please contact GM. Kpp is not set for you")
-                        .build();
+        log.debug("Inside EmployeeLoginServiceImpl >> employeeLogin() userName : {}, userPassword : {}", userName, userPassword);
+        try {
+            List<Object[]> employeeLogin = employeeLoginRepo.employeeLogin(userName, userPassword);
+            List<LoginResponse> loginResponses = employeeLogin.stream().map(LoginResponse::new).collect(Collectors.toList());
+            KPIResponse response = new KPIResponse();
+            if (!loginResponses.isEmpty()) {
+                Optional<EmployeeKppMasterEntity> entityOptional = employeeKppMasterRepo.findByEmpId(loginResponses.get(0).getEmpId());
+                if (entityOptional.isPresent()) {
+                    log.info("Login successfully");
+                    response = KPIResponse.builder()
+                            .isSuccess(true)
+                            .responseData(loginResponses.get(0))
+                            .responseMessage("Login successfully")
+                            .build();
+                } else {
+                    log.info("Please contact GM. Kpp is not set for you");
+                    response = KPIResponse.builder()
+                            .isSuccess(false)
+                            .responseMessage("Please contact GM. Kpp is not set for you")
+                            .build();
 
+                }
+            } else {
+                log.error("Inside EmployeeLoginServiceImpl >> employeeLogin()");
+                response = KPIResponse.builder()
+                        .isSuccess(false)
+                        .responseMessage("User name or Password is not correct. Please try again")
+                        .build();
             }
-        } else {
-            log.error("Inside EmployeeLoginServiceImpl >> employeeLogin()");
-            response= KPIResponse.builder()
-                    .isSuccess(false)
-                    .responseMessage("User name or Password is not correct. Please try again")
-                    .build();
+            return response;
+        } catch (Exception ex) {
+            log.error("Inside SiteServiceImpl >> employeeLogin() : {}", ex);
+            throw new KPIException("SiteServiceImpl >> employeeLogin()", false, ex.getMessage());
         }
-        return response;
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse validateUserName(String userName) {
+        log.debug("Inside EmployeeLoginServiceImpl >> validateUserName() userName : {}", userName);
         KPIResponse kpiResponse = new KPIResponse();
-        String empUserName = employeeLoginRepo.validateUserName(userName);
-        if(StringUtils.isNotBlank(empUserName)){
-            log.info("Login successfully");
-            kpiResponse.setResponseMessage("Valid user name");
-            kpiResponse.setSuccess(true);
-        } else {
-            log.error("Inside EmployeeLoginServiceImpl >> validateUserName()");
-            kpiResponse.setResponseMessage("Invalid user name");
-            kpiResponse.setSuccess(false);
+        try {
+            String empUserName = employeeLoginRepo.validateUserName(userName);
+            if (StringUtils.isNotBlank(empUserName)) {
+                log.info("Login successfully");
+                kpiResponse.setResponseMessage("Valid user name");
+                kpiResponse.setSuccess(true);
+            } else {
+                log.error("Inside EmployeeLoginServiceImpl >> validateUserName()");
+                kpiResponse.setResponseMessage("Invalid user name");
+                kpiResponse.setSuccess(false);
+            }
+            return kpiResponse;
+        } catch (Exception ex) {
+            log.error("Inside SiteServiceImpl >> validateUserName() : {}", ex);
+            throw new KPIException("SiteServiceImpl >> validateUserName()", false, ex.getMessage());
         }
-        return kpiResponse;
     }
 
     @Transactional
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateLoginPassword(String userName, String userPassword) {
-        int result = employeeLoginRepo.updatePassword(userName, userPassword);
-        if (result > 0) {
+        log.debug("Inside EmployeeLoginServiceImpl >> updateLoginPassword() userName : {}, userPassword :{}", userName, userPassword);
+        try {
+            int result = employeeLoginRepo.updatePassword(userName, userPassword);
+            if (result > 0) {
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseMessage("Password changed successfully")
+                        .build();
+            }
             return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseMessage("Password changed successfully")
+                    .isSuccess(false)
+                    .responseMessage("Try again..")
                     .build();
+        } catch (Exception ex) {
+            log.error("Inside SiteServiceImpl >> updateLoginPassword() : {}", ex);
+            throw new KPIException("SiteServiceImpl >> updateLoginPassword()", false, ex.getMessage());
         }
-        return KPIResponse.builder()
-                .isSuccess(false)
-                .responseMessage("Try again..")
-                .build();
     }
 }

@@ -14,16 +14,11 @@ import com.futurebizops.kpi.repository.DepartmentRepo;
 import com.futurebizops.kpi.request.ComplaintCreateRequest;
 import com.futurebizops.kpi.request.EmployeeComplaintUpdateRequest;
 import com.futurebizops.kpi.request.advsearch.ComplaintAdvSearch;
-import com.futurebizops.kpi.response.ComplaintTypeReponse;
-import com.futurebizops.kpi.response.DepartmentReponse;
-import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.response.EmployeeComplaintResponse;
 import com.futurebizops.kpi.response.KPIResponse;
 import com.futurebizops.kpi.service.ComplaintService;
-import com.futurebizops.kpi.service.DepartmentService;
 import com.futurebizops.kpi.utils.DateTimeUtils;
 import com.futurebizops.kpi.utils.EmailUtils;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +32,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,7 +65,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse saveComplaint(ComplaintCreateRequest complaintCreateRequest) {
-        System.out.println("complaintCreateRequest :"+complaintCreateRequest.getDeptId());
+        log.debug("Inside ComplaintServiceImpl >> saveComplaint() : {}", complaintCreateRequest);
+
         String complaintId = "COMP00" + getRandomNumber();
         Optional<ComplaintEntity> complaintEntityOptional = complaintRepo.findByCompIdAndCompStatusEqualsIgnoreCase(complaintId, "Pending");
         if (complaintEntityOptional.isPresent()) {
@@ -87,20 +82,20 @@ public class ComplaintServiceImpl implements ComplaintService {
             ComplaintAudit complaintAudit = new ComplaintAudit(complaintEntity);
             complaintAuditRepo.save(complaintAudit);
 
-            Optional<ComplaintTypeEntity>  optionalComplaintType =complaintTypeRepo.findByDeptId(complaintEntity.getCompTypeDeptId());
+            Optional<ComplaintTypeEntity> optionalComplaintType = complaintTypeRepo.findByDeptId(complaintEntity.getCompTypeDeptId());
 
 
-            Optional<DepartmentEntity>  optionalDepartmentEntity =departmentRepo.findById(complaintEntity.getDeptId());
+            Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findById(complaintEntity.getDeptId());
 
-            String messageBody = "<html><body>  Complaint is register with complaint id :"+complaintId+" <br><br>" +
-                    "Complaint details : "+complaintEntity.getCompDesc()+ "</body></html>";
+            String messageBody = "<html><body>  Complaint is register with complaint id :" + complaintId + " <br><br>" +
+                    "Complaint details : " + complaintEntity.getCompDesc() + "</body></html>";
 
             //Send mail
-            emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
+            emailUtils.sendEmail(complaintCreateRequest.getEmpEmailId(), "Complaint : " + optionalComplaintType.get().getCompTypeName(), messageBody);
 
             //send request complaint raised department also
             emailUtils.sendEmail(optionalDepartmentEntity.get().getDeptMailId(),
-                    "Complaint : "+optionalComplaintType.get().getCompTypeName(), messageBody);
+                    "Complaint : " + optionalComplaintType.get().getCompTypeName(), messageBody);
 
             return KPIResponse.builder()
                     .isSuccess(true)
@@ -118,7 +113,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmployeeComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
-        //ComplaintEntity complaintEntity = convertEmployeeComplaintUpdateRequestToEntity(complaintUpdateRequest);
+        log.debug("Inside ComplaintServiceImpl >> updateEmployeeComplaint() complaintUpdateRequest: {}", complaintUpdateRequest);
         try {
             complaintRepo.updateEmployeeComplaintDescription(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompDesc());
             return KPIResponse.builder()
@@ -127,7 +122,7 @@ public class ComplaintServiceImpl implements ComplaintService {
                     .build();
         } catch (Exception ex) {
             log.error("Inside ComplaintServiceImpl >> updateEmployeeComplaint() :{}", ex);
-            throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
+            throw new KPIException("ComplaintServiceImpl >> updateEmployeeComplaint()", false, ex.getMessage());
         }
     }
 
@@ -135,8 +130,9 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateAdminHandleComplaint(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
+        log.debug("Inside ComplaintServiceImpl >> updateAdminHandleComplaint() complaintUpdateRequest: {}", complaintUpdateRequest);
         try {
-            Instant complaintResolveDate = null != complaintUpdateRequest.getCompResolveDateTime()? DateTimeUtils.convertResolveDateStringToInstant(complaintUpdateRequest.getCompResolveDateTime()):null;
+            Instant complaintResolveDate = null != complaintUpdateRequest.getCompResolveDateTime() ? DateTimeUtils.convertResolveDateStringToInstant(complaintUpdateRequest.getCompResolveDateTime()) : null;
 
             complaintRepo.updateAdminHandleComplaintDescription(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompStatus(), complaintResolveDate, complaintUpdateRequest.getRemark());
             return KPIResponse.builder()
@@ -144,8 +140,8 @@ public class ComplaintServiceImpl implements ComplaintService {
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
         } catch (Exception ex) {
-            log.error("Inside ComplaintServiceImpl >> updateEmployeeComplaint() :{}", ex);
-            throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
+            log.error("Inside ComplaintServiceImpl >> updateAdminHandleComplaint() :{}", ex);
+            throw new KPIException("ComplaintServiceImpl >> updateAdminHandleComplaint()", false, ex.getMessage());
         }
     }
 
@@ -153,21 +149,23 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse updateEmpAssignComplaintHimself(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
+        log.debug("Inside ComplaintServiceImpl >> updateEmpAssignComplaintHimself() complaintUpdateRequest: {}", complaintUpdateRequest);
         try {
-            complaintRepo.updateEmpAssignComplaintHimself(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompStatus(), complaintUpdateRequest.getCompResolveEmpId(),complaintUpdateRequest.getCompResolveEmpName(), complaintUpdateRequest.getCompResolveEmpEId() );
+            complaintRepo.updateEmpAssignComplaintHimself(complaintUpdateRequest.getEmpCompId(), complaintUpdateRequest.getCompStatus(), complaintUpdateRequest.getCompResolveEmpId(), complaintUpdateRequest.getCompResolveEmpName(), complaintUpdateRequest.getCompResolveEmpEId());
             return KPIResponse.builder()
                     .isSuccess(true)
                     .responseMessage(KPIConstants.RECORD_UPDATE)
                     .build();
         } catch (Exception ex) {
             log.error("Inside ComplaintServiceImpl >> updateEmpAssignComplaintHimself() :{}", ex);
-            throw new KPIException("ComplaintServiceImpl", false, ex.getMessage());
+            throw new KPIException("ComplaintServiceImpl >> updateEmpAssignComplaintHimself()", false, ex.getMessage());
         }
     }
+
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse advSearchEmployeeComplaintDetails(ComplaintAdvSearch complaintAdvSearch, Pageable requestPageable) {
-
+        log.debug("Inside ComplaintServiceImpl >> advSearchEmployeeComplaintDetails() complaintAdvSearch: {}", complaintAdvSearch);
         String compFromDate = StringUtils.isNotEmpty(complaintAdvSearch.getCompFromDate()) ? complaintAdvSearch.getCompFromDate() : null;
 
         String compToDate = StringUtils.isNotEmpty(complaintAdvSearch.getCompToDate()) ? complaintAdvSearch.getCompToDate() : null;
@@ -195,11 +193,65 @@ public class ComplaintServiceImpl implements ComplaintService {
             sortName = order.get().getProperty();  //order by this field
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+        try {
+            Integer totalCount = complaintRepo.getAdvSearchEmployeeComplaintCount(empId, deptId, asCompId, asDeptId, asCompStatus, compFromDate, compToDate, asCompResolveEmpId);
+            List<Object[]> complaintData = complaintRepo.getAdvSearchEmployeeComplaintDetail(empId, deptId, asCompId, asDeptId, asCompStatus, compFromDate, compToDate, asCompResolveEmpId, sortName, pageSize, pageOffset);
 
-        Integer totalCount = complaintRepo.getAdvSearchEmployeeComplaintCount(empId,deptId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate,asCompResolveEmpId);
-        List<Object[]> complaintData = complaintRepo.getAdvSearchEmployeeComplaintDetail(empId,deptId, asCompId,asDeptId, asCompStatus, compFromDate,compToDate,asCompResolveEmpId, sortName, pageSize, pageOffset);
+            if (null != complaintData) {
+                List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
-        if(null != complaintData) {
+                for (EmployeeComplaintResponse employeeComplaintResponse : complaintResponses) {
+                    employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+                }
+
+                complaintResponses = complaintResponses.stream()
+                        // .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
+                        .sorted((o1, o2) -> o2.getCompDate().
+                                compareTo(o1.getCompDate()))
+                        .collect(Collectors.toList());
+                if (complaintResponses.size() > 0) {
+                    return KPIResponse.builder()
+                            .isSuccess(true)
+                            .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
+                            .responseMessage(KPIConstants.RECORD_FETCH)
+                            .build();
+                }
+            }
+        } catch (Exception ex) {
+            log.error("Inside ComplaintServiceImpl >> advSearchEmployeeComplaintDetails() : {}", ex);
+            throw new KPIException("ComplaintServiceImpl >> advSearchEmployeeComplaintDetails()", false, ex.getMessage());
+        }
+        return KPIResponse.builder()
+                .isSuccess(false)
+                .responseData(null)
+                .responseMessage(KPIConstants.RECORD_NOT_FOUND)
+                .build();
+    }
+
+    @Override
+    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
+    public KPIResponse downloadEmployeeComplaints(HttpServletResponse httpServletResponse, String compFromDate, String compToDate, Integer empId, String empCompDeptId, Integer asCompTypeDeptId, String empCompId, String asCompStatus, Integer asCompResolveEmpId) {
+        log.debug("Inside ComplaintServiceImpl >> downloadEmployeeComplaints() compFromDate :{}, compToDate : {}, empId : {}, empCompDeptId : {}, asCompTypeDeptId : {}, empCompId : {}, asCompStatus : {}, asCompResolveEmpId : {}", compFromDate, compToDate, empId, empCompDeptId, asCompTypeDeptId, empCompId, asCompStatus, asCompResolveEmpId);
+        compFromDate = StringUtils.isNotEmpty(compFromDate) ? compFromDate : null;
+
+        compToDate = StringUtils.isNotEmpty(compToDate) ? compToDate : null;
+
+        empId = null != empId ? empId : null;
+
+
+        Integer deptId = StringUtils.isNotEmpty(empCompDeptId) ? Integer.parseInt(empCompDeptId) : null;
+
+        Integer asDeptId = null != asCompTypeDeptId ? asCompTypeDeptId : null;
+
+        String asCompId = StringUtils.isNotEmpty(empCompId) ? empCompId : null;
+
+        asCompStatus = StringUtils.isNotEmpty(asCompStatus) ? asCompStatus : null;
+
+        asCompResolveEmpId = null != asCompResolveEmpId ? asCompResolveEmpId : null;
+
+        try {
+            List<Object[]> complaintData = complaintRepo.downloadEmployeeComplaintDetail(empId, asCompId, deptId, asDeptId, asCompStatus, compFromDate, compToDate, asCompResolveEmpId);
+
             List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
             for (EmployeeComplaintResponse employeeComplaintResponse : complaintResponses) {
@@ -211,120 +263,58 @@ public class ComplaintServiceImpl implements ComplaintService {
                     .sorted((o1, o2) -> o2.getCompDate().
                             compareTo(o1.getCompDate()))
                     .collect(Collectors.toList());
+
             if (complaintResponses.size() > 0) {
+                complaintExcel.getEmployeeComplaintExcel(complaintResponses, httpServletResponse);
+
                 return KPIResponse.builder()
                         .isSuccess(true)
-                        .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
+                        .responseData(complaintResponses)
                         .responseMessage(KPIConstants.RECORD_FETCH)
                         .build();
             }
+        } catch (Exception ex) {
+            log.error("Inside ComplaintServiceImpl >> downloadEmployeeComplaints() : {}", ex);
+            throw new KPIException("ComplaintServiceImpl >> downloadEmployeeComplaints()", false, ex.getMessage());
         }
         return KPIResponse.builder()
                 .isSuccess(false)
                 .responseData(null)
                 .responseMessage(KPIConstants.RECORD_NOT_FOUND)
                 .build();
-    }
-
-    @Override
-    @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public KPIResponse downloadEmployeeComplaints(HttpServletResponse httpServletResponse, String compFromDate,String compToDate,Integer empId,String empCompDeptId,Integer asCompTypeDeptId,String empCompId,String asCompStatus,Integer asCompResolveEmpId) {
-        compFromDate = StringUtils.isNotEmpty(compFromDate) ? compFromDate : null;
-
-        compToDate = StringUtils.isNotEmpty(compToDate) ? compToDate : null;
-
-        empId = null != empId ? empId : null;
-
-
-        Integer deptId = StringUtils.isNotEmpty(empCompDeptId) ?Integer.parseInt(empCompDeptId) : null;
-
-        Integer asDeptId = null != asCompTypeDeptId ? asCompTypeDeptId : null;
-
-        String asCompId = StringUtils.isNotEmpty(empCompId) ? empCompId : null;
-
-        asCompStatus = StringUtils.isNotEmpty(asCompStatus) ? asCompStatus : null;
-
-        asCompResolveEmpId = null != asCompResolveEmpId ? asCompResolveEmpId : null;
-
-
-        List<Object[]> complaintData = complaintRepo.downloadEmployeeComplaintDetail(empId, asCompId,deptId,asDeptId, asCompStatus, compFromDate,compToDate,asCompResolveEmpId);
-
-        List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
-
-        for(EmployeeComplaintResponse employeeComplaintResponse : complaintResponses){
-            employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
-        }
-
-        complaintResponses = complaintResponses.stream()
-                // .sorted(Comparator.comparing(EmployeeComplaintResponse::getCompId))
-                .sorted((o1, o2)->o2.getCompDate().
-                        compareTo(o1.getCompDate()))
-                .collect(Collectors.toList());
-
-        if(complaintResponses.size()>0) {
-            complaintExcel.getEmployeeComplaintExcel(complaintResponses, httpServletResponse);
-
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(complaintResponses)
-                    .responseMessage(KPIConstants.RECORD_FETCH)
-                    .build();
-        }
-        return KPIResponse.builder()
-                .isSuccess(false)
-                .responseData(null)
-                .responseMessage(KPIConstants.RECORD_NOT_FOUND)
-                .build();
-    }
-
-
-    private ComplaintEntity convertEmployeeComplaintUpdateRequestToEntity(EmployeeComplaintUpdateRequest complaintUpdateRequest) {
-        ComplaintEntity complaintEntity = new ComplaintEntity();
-        complaintEntity.setEmpCompId(complaintUpdateRequest.getEmpCompId());
-        complaintEntity.setEmpId(complaintUpdateRequest.getEmpId());
-        complaintEntity.setEmpEId(complaintUpdateRequest.getEmpEId());
-        complaintEntity.setRoleId(complaintUpdateRequest.getRoleId());
-        complaintEntity.setDeptId(complaintUpdateRequest.getDeptId());
-        complaintEntity.setDesigId(complaintUpdateRequest.getDesigId());
-        complaintEntity.setCompDate(Instant.now());
-        complaintEntity.setCompDesc(complaintUpdateRequest.getCompDesc());
-
-
-        complaintEntity.setCompTypeDeptId(complaintUpdateRequest.getCompTypeDeptId());
-        complaintEntity.setCompTypeId(complaintUpdateRequest.getCompTypeId());
-        complaintEntity.setCompStatus(complaintUpdateRequest.getCompStatus());
-        complaintEntity.setRemark(complaintUpdateRequest.getRemark());
-        complaintEntity.setStatusCd(complaintUpdateRequest.getStatusCd());
-        complaintEntity.setRemark(complaintUpdateRequest.getRemark());
-        complaintEntity.setCreatedUserId(complaintUpdateRequest.getEmployeeId());
-        return complaintEntity;
     }
 
     private ComplaintEntity convertComplaintCreateRequestToEntity(ComplaintCreateRequest complaintCreateRequest) {
+        log.debug("Inside ComplaintServiceImpl >> convertComplaintCreateRequestToEntity() complaintCreateRequest :{}", complaintCreateRequest);
+        try {
+            ComplaintEntity complaintEntity = new ComplaintEntity();
 
-        ComplaintEntity complaintEntity = new ComplaintEntity();
+            complaintEntity.setEmpId(complaintCreateRequest.getEmpId());
+            complaintEntity.setEmpEId(complaintCreateRequest.getEmpEId());
+            complaintEntity.setRoleId(complaintCreateRequest.getRoleId());
+            complaintEntity.setDeptId(complaintCreateRequest.getDeptId());
+            complaintEntity.setDesigId(complaintCreateRequest.getDesigId());
+            complaintEntity.setCompDate(Instant.now());
+            complaintEntity.setCompDesc(complaintCreateRequest.getCompDesc());
 
-        complaintEntity.setEmpId(complaintCreateRequest.getEmpId());
-        complaintEntity.setEmpEId(complaintCreateRequest.getEmpEId());
-        complaintEntity.setRoleId(complaintCreateRequest.getRoleId());
-        complaintEntity.setDeptId(complaintCreateRequest.getDeptId());
-        complaintEntity.setDesigId(complaintCreateRequest.getDesigId());
-        complaintEntity.setCompDate(Instant.now());
-        complaintEntity.setCompDesc(complaintCreateRequest.getCompDesc());
-
-        complaintEntity.setCompTypeDeptId(complaintCreateRequest.getCompTypeDeptId());
-        complaintEntity.setCompTypeId(complaintCreateRequest.getCompTypeId());
-        complaintEntity.setCompStatus("Pending");
-        complaintEntity.setRemark(complaintCreateRequest.getRemark());
-        complaintEntity.setStatusCd(complaintCreateRequest.getStatusCd());
-        complaintEntity.setCreatedUserId(complaintCreateRequest.getEmployeeId());
-        return complaintEntity;
+            complaintEntity.setCompTypeDeptId(complaintCreateRequest.getCompTypeDeptId());
+            complaintEntity.setCompTypeId(complaintCreateRequest.getCompTypeId());
+            complaintEntity.setCompStatus("Pending");
+            complaintEntity.setRemark(complaintCreateRequest.getRemark());
+            complaintEntity.setStatusCd(complaintCreateRequest.getStatusCd());
+            complaintEntity.setCreatedUserId(complaintCreateRequest.getEmployeeId());
+            return complaintEntity;
+        } catch (Exception ex) {
+            log.error("Inside ComplaintServiceImpl >> convertComplaintCreateRequestToEntity() : {}", ex);
+            throw new KPIException("ComplaintServiceImpl >> convertComplaintCreateRequestToEntity()", false, ex.getMessage());
+        }
     }
 
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public EmployeeComplaintResponse findAllEmployeeCompById(Integer empCompId) {
+        log.debug("Inside ComplaintServiceImpl >> findAllEmployeeCompById() empCompId :{}", empCompId);
         try {
             List<Object[]> comlaintData = complaintRepo.getEmployeeComplaintByIdDetail(empCompId);
             List<EmployeeComplaintResponse> complaintReponses = comlaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
@@ -333,14 +323,15 @@ public class ComplaintServiceImpl implements ComplaintService {
             }
             return null;
         } catch (Exception ex) {
-            log.error("ComplaintServiceImpl >>findAllEmployeeCompById :{}", ex);
-            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+            log.error("ComplaintServiceImpl >>findAllEmployeeCompById() :{}", ex);
+            throw new KPIException("DepartmentServiceImpl >> findAllEmployeeCompById()", false, ex.getMessage());
         }
     }
 
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
-    public KPIResponse findComplaintDetails(Integer empId, String compId, Integer roleId, Integer deptId, String compDesc, String compStatus, Integer compTypeDeptId,Integer resolveEmpId, String statusCd, Pageable requestPageable) {
+    public KPIResponse findComplaintDetails(Integer empId, String compId, Integer roleId, Integer deptId, String compDesc, String compStatus, Integer compTypeDeptId, Integer resolveEmpId, String statusCd, Pageable requestPageable) {
+        log.debug("Inside ComplaintServiceImpl >> findComplaintDetails() empId : {},compId : {},roleId : {}, deptId :{}, compTypeDeptId : {}, resolveEmpId : {}", empId, compId, roleId, deptId, compTypeDeptId, resolveEmpId);
         String sortName = null;
         //  String sortDirection = null;
         Integer pageSize = requestPageable.getPageSize();
@@ -351,28 +342,32 @@ public class ComplaintServiceImpl implements ComplaintService {
             sortName = order.get().getProperty();  //order by this field
             //sortDirection = order.get().getDirection().toString(); // Sort ASC or DESC
         }
+        try {
+            Integer totalCount = complaintRepo.getEmployeeComplaintCount(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId, resolveEmpId, statusCd);
+            List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId, resolveEmpId, statusCd, sortName, pageSize, pageOffset);
 
-        Integer totalCount = complaintRepo.getEmployeeComplaintCount(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId,resolveEmpId, statusCd);
-        List<Object[]> complaintData = complaintRepo.getEmployeeComplaintDetail(empId, compId, roleId, deptId, compDesc, compStatus, compTypeDeptId,resolveEmpId, statusCd, sortName, pageSize, pageOffset);
+            if (null != complaintData && complaintData.size() > 0) {
+                List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
 
-        if(null != complaintData && complaintData.size()>0) {
-            List<EmployeeComplaintResponse> complaintResponses = complaintData.stream().map(EmployeeComplaintResponse::new).collect(Collectors.toList());
+                for (EmployeeComplaintResponse employeeComplaintResponse : complaintResponses) {
+                    employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+                }
 
-            for (EmployeeComplaintResponse employeeComplaintResponse : complaintResponses) {
-                employeeComplaintResponse.setCompTypeDeptName(findDepartmentNameById(employeeComplaintResponse.getCompTypeDeptId()));
+                complaintResponses = complaintResponses.stream()
+                        //.sorted(Comparator.comparing(EmployeeComplaintResponse::getCompDate))
+                        .sorted((o1, o2) -> o2.getCreatedDate().
+                                compareTo(o1.getCreatedDate()))
+                        .collect(Collectors.toList());
+
+                return KPIResponse.builder()
+                        .isSuccess(true)
+                        .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
+                        .responseMessage(KPIConstants.RECORD_FETCH)
+                        .build();
             }
-
-            complaintResponses = complaintResponses.stream()
-                    //.sorted(Comparator.comparing(EmployeeComplaintResponse::getCompDate))
-                    .sorted((o1, o2) -> o2.getCreatedDate().
-                            compareTo(o1.getCreatedDate()))
-                    .collect(Collectors.toList());
-
-            return KPIResponse.builder()
-                    .isSuccess(true)
-                    .responseData(new PageImpl<>(complaintResponses, requestPageable, totalCount))
-                    .responseMessage(KPIConstants.RECORD_FETCH)
-                    .build();
+        } catch (Exception ex) {
+            log.error("ComplaintServiceImpl >> findComplaintDetails() :{}", ex);
+            throw new KPIException("DepartmentServiceImpl >> findComplaintDetails()", false, ex.getMessage());
         }
         return KPIResponse.builder()
                 .isSuccess(false)
@@ -382,10 +377,16 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
 
-    public String findDepartmentNameById(Integer deptId){
-        Optional<DepartmentEntity> departmentEntity =   departmentRepo.findById(deptId);
-        if(departmentEntity.isPresent()){
-            return departmentEntity.get().getDeptName();
+    public String findDepartmentNameById(Integer deptId) {
+        log.debug("Inside ComplaintServiceImpl >> findDepartmentNameById() deptId :{}", deptId);
+        try {
+            Optional<DepartmentEntity> departmentEntity = departmentRepo.findById(deptId);
+            if (departmentEntity.isPresent()) {
+                return departmentEntity.get().getDeptName();
+            }
+        } catch (Exception ex) {
+            log.error("ComplaintServiceImpl >> findDepartmentNameById() :{}", ex);
+            throw new KPIException("DepartmentServiceImpl >> findDepartmentNameById()", false, ex.getMessage());
         }
         return null;
     }
@@ -394,6 +395,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Retryable(include = {KPIException.class}, maxAttemptsExpression = "${retry-max-attempts}")
     public KPIResponse deleteEmployeeComplaint(Integer empCompId) {
+        log.debug("Inside ComplaintServiceImpl >> deleteEmployeeComplaint() empCompId :{}", empCompId);
         KPIResponse kpiResponse = new KPIResponse();
         try {
             complaintRepo.deleteEmployeeComplaint(empCompId);
@@ -401,8 +403,8 @@ public class ComplaintServiceImpl implements ComplaintService {
             kpiResponse.setResponseMessage("Employee Complaint Deleted Successfully");
             return kpiResponse;
         } catch (Exception ex) {
-            log.error("ComplaintServiceImpl >>findAllEmployeeCompById :{}", ex);
-            throw new KPIException("DepartmentServiceImpl", false, ex.getMessage());
+            log.error("ComplaintServiceImpl >>deleteEmployeeComplaint :{}", ex);
+            throw new KPIException("ComplaintServiceImpl >> deleteEmployeeComplaint()", false, ex.getMessage());
         }
     }
 
