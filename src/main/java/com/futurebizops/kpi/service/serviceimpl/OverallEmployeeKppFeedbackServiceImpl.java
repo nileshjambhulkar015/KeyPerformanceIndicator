@@ -20,6 +20,7 @@ import com.futurebizops.kpi.request.yearlykpprequest.FreezeEmpKPPMasterRequest;
 import com.futurebizops.kpi.response.EmpKppStatusResponse;
 import com.futurebizops.kpi.response.FreezeEmpKppStatusResponse;
 import com.futurebizops.kpi.response.KPIResponse;
+import com.futurebizops.kpi.response.KppStatusDetails;
 import com.futurebizops.kpi.response.OverallEmpDetailsKppFeedbackResponse;
 import com.futurebizops.kpi.response.dropdown.KppFinancialYearDDResponse;
 import com.futurebizops.kpi.service.OverallEmployeeKppFeedbackService;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -434,10 +436,10 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
                     statusResponse.setDesigId(masterDtoListEntry.getKey().getDesigId());
                     statusResponse.setDesigName(masterDtoListEntry.getKey().getDesigName());
 
-                    totalEmpAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
+                    /*totalEmpAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpAchivedWeight());
                     totalEmpOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallAchieve());
                     totalEmpOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalEmpOverallTaskComp());
-
+*/
                     statusResponse.setTotalOverallRatings(masterDtoListEntry.getKey().getTotalOverallRatings());
                     statusResponse.setTotalOverallPercentage(masterDtoListEntry.getKey().getTotalOverallPercentage());
                     //statusResponse.setEmpKppAppliedDate(masterDtoListEntry.getKey().getEmpKppAppliedDate());
@@ -445,20 +447,23 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
                     statusResponse.setEmpRemark(masterDtoListEntry.getKey().getEmpRemark());
                     statusResponse.setHodEmpId(masterDtoListEntry.getKey().getHodEmpId());
 
+                    /*
                     totalHodAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodAchivedWeight());
                     totalHodOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallAchieve());
 
                     totalHodOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalHodOverallTaskComp());
-
+*/
 
                     //  statusResponse.setHodKppAppliedDate(masterDtoListEntry.getKey().getHodKppAppliedDate());
                     statusResponse.setHodKppStatus(masterDtoListEntry.getKey().getHodKppStatus());
                     statusResponse.setHodRemark(masterDtoListEntry.getKey().getHodRemark());
                     statusResponse.setGmEmpId(masterDtoListEntry.getKey().getGmEmpId());
 
+                    /*
                     totalGmAchivedWeight += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmAchivedWeight());
                     totalGmOverallAchieve += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallAchieve());
                     totalGmOverallTaskComp += Double.parseDouble(masterDtoListEntry.getKey().getTotalGmOverallTaskComp());
+*/
 
                     // statusResponse.setGmKppAppliedDate(masterDtoListEntry.getKey().getGmKppAppliedDate());
                     statusResponse.setGmKppStatus(masterDtoListEntry.getKey().getGmKppStatus());
@@ -474,32 +479,32 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
 
                     List<EmployeeKppDetailsDto> employeeKppDetailsDtos = new ArrayList<>();
 
+                    //Value need to updated automatically
 
                     employeeKppDetailsDtos = masterDtoListEntry.getValue().stream().collect(Collectors.groupingBy(EmployeeKppDetailsDto::getKppId,
                             Collectors.collectingAndThen(Collectors.toList(),
                                     data -> {
 
                                         Integer totalMonth = data.size();
-                                        //   double empAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpAchivedWeight())).sum();
-                                        double empOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallAchieve())).sum();
-                                        // double empOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallTaskComp())).sum();
 
-//empAchivedWeight calculation remain
+
+                                        double empOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getEmpOverallAchieve())).sum();
+
                                         empOverallAchieve = empOverallAchieve / totalMonth;
                                         double empAchivedWeight = ((Double.parseDouble(data.iterator().next().getKppOverallWeightage())) * (empOverallAchieve / 5 * 100)) / 100;
                                         double empOverallTaskComp = (empOverallAchieve / 5) * 100;
 
-                                        // double hodAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodAchivedWeight())).sum();
+
                                         double hodOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallAchieve())).sum();
-                                        //double hodOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getHodOverallTaskComp())).sum();
+
 
                                         hodOverallAchieve = hodOverallAchieve / totalMonth;
                                         double hodAchivedWeight = ((Double.parseDouble(data.iterator().next().getKppOverallWeightage())) * (hodOverallAchieve / 5 * 100)) / 100;
                                         double hodOverallTaskComp = (hodOverallAchieve / 5) * 100;
 
-                                        //double gmAchivedWeight = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmAchivedWeight())).sum();
+
                                         double gmOverallAchieve = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallAchieve())).sum();
-                                        //double gmOverallTaskComp = data.stream().mapToDouble(test -> Double.parseDouble(test.getGmOverallTaskComp())).sum();
+
 
                                         gmOverallAchieve = gmOverallAchieve / totalMonth;
                                         double gmAchivedWeight = ((Double.parseDouble(data.iterator().next().getKppOverallWeightage())) * (gmOverallAchieve / 5 * 100)) / 100;
@@ -511,6 +516,7 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
                                     })
                     )).values().stream().collect(Collectors.toList());
 
+
                     statusResponse.setKppStatusDetails(employeeKppDetailsDtos);
                 }
             } else {
@@ -518,6 +524,20 @@ public class OverallEmployeeKppFeedbackServiceImpl implements OverallEmployeeKpp
                 //  throw new KPIException("DepartmentServiceImpl", false, "No record found");
                 return null;
             }
+            for(EmployeeKppDetailsDto kppStatusDetails : statusResponse.getKppStatusDetails()){
+                totalEmpOverallAchieve +=Double.parseDouble(kppStatusDetails.getEmpOverallAchieve());
+                totalHodOverallAchieve+=Double.parseDouble(kppStatusDetails.getHodOverallAchieve());
+                totalGmOverallAchieve+=Double.parseDouble(kppStatusDetails.getGmOverallAchieve());
+            }
+
+            totalEmpOverallAchieve = (totalEmpOverallAchieve/statusResponse.getKppStatusDetails().size());
+            totalEmpOverallTaskComp = (totalEmpOverallAchieve / 5) * 100;
+
+            totalHodOverallAchieve = (totalHodOverallAchieve/statusResponse.getKppStatusDetails().size());
+            totalHodOverallTaskComp = (totalHodOverallAchieve / 5) * 100;
+
+            totalGmOverallAchieve = (totalGmOverallAchieve/statusResponse.getKppStatusDetails().size());
+            totalGmOverallTaskComp = (totalGmOverallAchieve / 5) * 100;
 
 
             statusResponse.setTotalEmpAchivedWeight(totalEmpAchivedWeight.toString());
